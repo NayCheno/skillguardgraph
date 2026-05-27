@@ -1,0 +1,105 @@
+\section{Background and Motivation}
+\label{sec:background}
+
+This section establishes the conceptual foundations for SkillGuardGraph. We introduce skills as platform-neutral external capability units, describe the Model Context Protocol (MCP) as a representative standardized substrate, survey existing defense layers and their structural limitations, and argue that naive composition of defenses is insufficient against compositional attacks.
+
+\subsection{Skills in Agent Ecosystems}
+\label{sec:skills}
+
+Large language model agents increasingly delegate capabilities to external code artifacts. These artifacts are called by different names across platforms: tools in LangChain and AutoGen, actions and apps in OpenAI's GPT ecosystem, connectors and MCP servers in Anthropic's Claude ecosystem, plugins and connectors in Microsoft Copilot, blocks and agents in AutoGPT, and extensions in Google Vertex AI Agent Builder. Despite naming differences, these artifacts share a common structure. We use the term \emph{skill} as a platform-neutral abstraction for any discoverable, reusable external capability unit that an LLM agent can register, invoke, and reuse.
+
+A skill is characterized by four properties that are relevant to security analysis:
+
+\begin{enumerate}
+    \item \textbf{Declared metadata.} Every skill exposes metadata that describes its capabilities, typically through a manifest, description, tool schema, or annotation. This metadata is the primary input for discovery, tool selection, and user consent.
+    \item \textbf{Permission requirements.} Most skills require permissions or credentials to function: OAuth scopes, API keys, filesystem access rights, or network capabilities. The requested scope may or may not align with the declared purpose.
+    \item \textbf{Context-reentrant output.} Skill outputs---text, structured data, resource links, or embedded content---may re-enter the model's context window and influence subsequent reasoning, tool selection, or approval decisions. This re-entry point is the primary vector for indirect prompt injection and confused deputy attacks.
+    \item \textbf{Temporal evolution.} Skills may evolve through version updates, dependency changes, configuration drift, or publisher-controlled modifications. A skill that is safe at registration time may not remain safe after an update.
+\end{enumerate}
+
+These four properties span the skill lifecycle: discovery (metadata), registration (permissions), invocation (output and context), and update (evolution). Each property is an attack surface, and most existing defenses address at most one.
+
+\subsection{Model Context Protocol as Representative Substrate}
+\label{sec:mcp}
+
+The Model Context Protocol (MCP)~\cite{mcp_spec_2025} provides a standardized interface for integrating external data sources and tools with LLM applications. MCP defines five principal roles: \emph{hosts} (the LLM application), \emph{clients} (protocol adapters within the host), \emph{servers} (external capability providers), \emph{resources} (data exposed by servers), and \emph{tools} (callable functions exposed by servers that the model may invoke).
+
+MCP tools are the primary security-relevant construct. A tool has a name, description, input schema (JSON Schema), and annotations that describe its behavior (e.g., whether it is read-only, whether it is destructive, whether user confirmation is recommended). The MCP specification explicitly states that tool descriptions and annotations should be treated as untrusted unless they originate from a trusted server~\cite{mcp_tools_2025}.
+
+MCP also defines authorization mechanisms (OAuth 2.0-based), server trust boundaries (roots), and transport layers (stdio, HTTP with SSE). These elements expose the full surface area needed for security analysis: metadata (descriptions, schemas, annotations), permissions (OAuth scopes), runtime provenance (tool call traces, results), and trust boundaries (server identity, transport security).
+
+MCP is useful as a representative substrate for this paper because it surfaces the same structural elements found across all major skill ecosystems: discoverable metadata, schema-defined interfaces, model-controlled invocation, tool results that re-enter context, authorization scopes, and version-managed servers. However, SkillGuardGraph's evidence model and constraint system are not MCP-specific. The framework applies to any skill ecosystem that exposes metadata, permissions, implementation artifacts, and runtime traces.
+
+\subsection{Existing Defenses and Their Limitations}
+\label{sec:existing_defenses}
+
+Existing approaches to securing LLM agent skills can be organized into six defense layers. Each layer addresses a specific aspect of the skill lifecycle, and each has structural limitations that prevent it from detecting compositional attacks.
+
+\begin{table}[ht]
+\centering
+\caption{Existing defense layers, representative approaches, and structural limitations.}
+\label{tab:defense_layers}
+\begin{tabular}{@{}p{2.2cm}p{4.5cm}p{7.5cm}@{}}
+\toprule
+\textbf{Layer} & \textbf{Representative Defenses} & \textbf{Structural Limitation} \\
+\midrule
+Metadata &
+Description vetting, LLM-based metadata classifiers, schema validation, marketplace curation &
+Detects suspicious text or schema anomalies but cannot observe implementation behavior or runtime outcomes. Misses capability laundering where metadata is genuinely benign~\cite{wang2026mcptox}. \\
+\addlinespace
+Implementation &
+Static application security testing (SAST), taint analysis, capability extraction from source code, dependency auditing &
+Requires access to source code, which is unavailable for closed-source skills, hosted SaaS tools, or obfuscated handlers. Weak on cross-tool sequences and runtime-only behaviors~\cite{li2026mcpitp}. \\
+\addlinespace
+Dynamic &
+Sandbox probing with synthetic tasks, honeypot credentials, network sinkholes &
+Coverage is limited by the space of synthetic tasks. A well-crafted malicious skill can detect sandbox environments and behave benignly. High per-skill cost limits scalability~\cite{sun2026vipermcp}. \\
+\addlinespace
+Runtime &
+Least-privilege enforcement, tool-call policy engines, output filtering, context isolation &
+Requires provenance information to make source-aware decisions. Without knowledge of where data originated (user input vs.\ external webpage vs.\ tool output), runtime policy cannot distinguish trusted from untrusted flows~\cite{hou2026mcpbiflow}. \\
+\addlinespace
+Approval &
+Human-in-the-loop (HITL) confirmation prompts, action summaries, scope review dialogs &
+Approval text may be generated from model context rather than execution-layer facts. If the model's summary of an action is influenced by untrusted content, the user approves a misrepresentation~\cite{zhou2026mcpshield}. \\
+\addlinespace
+Governance &
+Code signing, publisher reputation, audit logging, version pinning, rollback mechanisms &
+Governance mechanisms are typically post-hoc: they record events for later review but do not enforce real-time constraints. Reputation scores do not reflect behavioral drift after approval~\cite{owasp_mcp_tool_poisoning}. \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Table~\ref{tab:defense_layers} shows that each defense layer addresses a legitimate concern, but no layer spans the full lifecycle. Metadata defenses operate at registration. Implementation defenses require code access. Dynamic defenses are point-in-time snapshots. Runtime defenses lack pre-deployment context. Approval defenses can be compromised by the same untrusted inputs they are meant to gate. Governance defenses are reactive.
+
+\subsubsection{Why Naive Composition Is Insufficient}
+
+A natural engineering response is to stack these defenses sequentially:
+
+\begin{verbatim}
+  metadata scan -> code analysis -> sandbox -> runtime policy -> HITL -> audit
+\end{verbatim}
+
+This pipeline is better than any single layer, but it has three structural deficiencies:
+
+\begin{enumerate}
+    \item \textbf{No cross-layer consistency enforcement.} A metadata scanner may confirm that a skill declares ``read-only summary.'' A code analyzer may separately confirm that the handler does not contain obvious shell calls. A sandbox may confirm that one specific test input did not trigger network access. None of these layers compare their findings against each other. The metadata says read-only; the OAuth scope requests write; the sandbox did not exercise the write path. The inconsistency is invisible to each layer individually.
+
+    \item \textbf{No sequence-level reasoning.} Each defense evaluates a skill in isolation. The metadata scanner evaluates one skill's description. The code analyzer evaluates one skill's handler. The sandbox tests one skill's behavior. But the most damaging attacks---data exfiltration through a three-skill pipeline, confused deputy through untrusted output reaching a privileged tool, persistence writes that affect future sessions---are properties of \emph{sequences}, not of individual artifacts. Naive composition inherits the per-skill boundary from each component.
+
+    \item \textbf{No trust propagation model.} When an untrusted webpage is read by a skill, and the skill's output enters the model context, and the model subsequently calls a high-privilege internal tool, the trust degradation from ``external webpage'' to ``model context'' to ``internal tool call'' is a path property. No single defense layer tracks this propagation. The metadata layer does not know about the webpage. The runtime layer does not know the webpage was untrusted. The approval layer shows the user a summary that omits the provenance.
+\end{enumerate}
+
+\subsubsection{The Cross-Layer Trust Gap}
+
+We define the \emph{cross-layer trust gap} as the set of security properties that:
+
+\begin{itemize}
+    \item arise from the composition of two or more lifecycle stages (e.g., registration + invocation, approval + update);
+    \item cannot be expressed as a property of any single stage in isolation; and
+    \item are not enforced by any existing defense layer because each layer operates within its own stage boundary.
+\end{itemize}
+
+The seven compositional attack classes defined in this paper---capability laundering, cross-skill confused deputy, delayed rug-pull, consent laundering, persistence pivot, split exfiltration, and scope inflation---all exploit cross-layer trust gaps. Each attack requires evidence from at least two layers to detect, and most require temporal or sequential reasoning that no single layer provides.
+
+SkillGuardGraph addresses this gap by representing evidence from all layers as a typed graph and enforcing constraints over graph paths and sequences. The key insight is that the security property belongs to the \emph{path} through the graph, not to any individual node or edge. This design enables the system to detect inconsistencies (declared vs.\ observed capability), sequences (read-transform-exfiltrate chains), temporal transitions (approved version to drifted version), and trust propagation (untrusted source to privileged sink) in a unified formal framework.

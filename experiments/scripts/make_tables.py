@@ -1,0 +1,218 @@
+#!/usr/bin/env python3
+"""Read JSON results and produce formatted tables.
+
+Tables:
+  1. Detection comparison (method × precision/recall/F1/FPR)
+  2. Per-attack-class recall for full fusion
+  3. Ablation results
+  4. Runtime defense metrics
+  5. Usability metrics
+
+Output:
+  - experiments/results/main/tables.txt  (plain text)
+  - experiments/results/main/tables.tex  (LaTeX tabular)
+"""
+from __future__ import annotations
+
+import json
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parent.parent  # experiments/
+RESULTS = ROOT / "results" / "main"
+DETECTOR_PATH = RESULTS / "detector_eval.json"
+ABLATION_PATH = RESULTS / "ablation.json"
+REDTEAM_PATH = RESULTS / "runtime_redteam.json"
+TXT_PATH = RESULTS / "tables.txt"
+TEX_PATH = RESULTS / "tables.tex"
+
+
+def load_json(path: Path) -> dict:
+    with path.open("r", encoding="utf-8") as fh:
+        return json.load(fh)
+
+
+# ---------------------------------------------------------------------------
+# Plain text formatter
+# ---------------------------------------------------------------------------
+
+def _txt_hline(widths: list[int]) -> str:
+    return "+" + "+".join("-" * w for w in widths) + "+"
+
+
+def _txt_row(cells: list[str], widths: list[int]) -> str:
+    parts = []
+    for cell, w in zip(cells, widths):
+        parts.append(f" {cell:<{w - 2}} ")
+    return "|" + "|".join(parts) + "|"
+
+
+def _txt_table(title: str, headers: list[str], rows: list[list[str]]) -> str:
+    widths = [max(len(h) + 2, max((len(r[i]) for r in rows), default=0) + 2)
+              for i, h in enumerate(headers)]
+    lines = [f"\n{title}", _txt_hline(widths), _txt_row(headers, widths), _txt_hline(widths)]
+    for r in rows:
+        lines.append(_txt_row(r, widths))
+    lines.append(_txt_hline(widths))
+    return "\n".join(lines)
+
+
+# ---------------------------------------------------------------------------
+# LaTeX formatter
+# ---------------------------------------------------------------------------
+
+def _tex_table(title: str, label: str, headers: list[str], rows: list[list[str]], col_fmt: str = "") -> str:
+    ncols = len(headers)
+    if not col_fmt:
+        col_fmt = "l" + "r" * (ncols - 1)
+    lines = [
+        "",
+        f"% --- {title} ---",
+        "\\begin{table}[htbp]",
+        "\\centering",
+        f"\\caption{{{title}}}",
+        f"\\label{{{label}}}",
+        f"\\begin{{tabular}}{{{col_fmt}}}",
+        "\\toprule",
+        " & ".join(f"\\textbf{{{h}}}" for h in headers) + " \\\\",
+        "\\midrule",
+    ]
+    for r in rows:
+        lines.append(" & ".join(r) + " \\\\")
+    lines.extend([
+        "\\bottomrule",
+        "\\end{tabular}",
+        "\\end{table}",
+        "",
+    ])
+    return "\n".join(lines)
+
+
+# ---------------------------------------------------------------------------
+# Table builders
+# ---------------------------------------------------------------------------
+
+def build_table1(detector: dict) -> tuple[str, str]:
+    """Detection comparison."""
+    title = "Table 1: Detection Comparison"
+    headers = ["Method", "Precision", "Recall", "F1", "FPR"]
+    rows_txt: list[list[str]] = []
+    rows_tex: list[list[str]] = []
+    for method, m in detector["methods"].items():
+        rows_txt.append([method, f"{m['precision']:.4f}", f"{m['recall']:.4f}",
+                         f"{m['f1']:.4f}", f"{m['fpr']:.4f}"])
+        rows_tex.append([method.replace("_", "\\_"), f"{m['precision']:.4f}", f"{m['recall']:.4f}",
+                         f"{m['f1']:.4f}", f"{m['fpr']:.4f}"])
+    return _txt_table(title, headers, rows_txt), _tex_table(title, "tab:detection", headers, rows_tex)
+
+
+def build_table2(detector: dict) -> tuple[str, str]:
+    """Per-attack-class recall for full fusion."""
+    title = "Table 2: Per-Attack-Class Recall (Full Fusion)"
+    headers = ["Attack Class", "Total", "TP", "FN", "Recall"]
+    rows_txt: list[list[str]] = []
+    rows_tex: list[list[str]] = []
+    per_class = detector.get("per_attack_class_recall", {})
+    for ac, c in per_class.items():
+        rows_txt.append([ac, str(c["total"]), str(c["TP"]), str(c["FN"]),
+                         f"{c['recall']:.4f}"])
+        rows_tex.append([ac.replace("_", "\\_"), str(c["total"]), str(c["TP"]),
+                         str(c["FN"]), f"{c['recall']:.4f}"])
+    return _txt_table(title, headers, rows_txt), _tex_table(title, "tab:per_class", headers, rows_tex)
+
+
+def build_table3(ablation: dict) -> tuple[str, str]:
+    """Ablation results."""
+    title = "Table 3: Ablation Results"
+    headers = ["Ablation", "Precision", "Recall", "F1", "FPR", "F1 Delta"]
+    full_f1 = ablation["ablations"]["full"]["f1"]
+    rows_txt: list[list[str]] = []
+    rows_tex: list[list[str]] = []
+    for name, a in ablation["ablations"].items():
+        delta = a["f1"] - full_f1
+        delta_str = f"{delta:+.4f}"
+        rows_txt.append([name, f"{a['precision']:.4f}", f"{a['recall']:.4f}",
+                         f"{a['f1']:.4f}", f"{a['fpr']:.4f}", delta_str])
+        rows_tex.append([name.replace("_", "\\_"), f"{a['precision']:.4f}",
+                         f"{a['recall']:.4f}", f"{a['f1']:.4f}", f"{a['fpr']:.4f}",
+                         delta_str])
+    return _txt_table(title, headers, rows_txt), _tex_table(title, "tab:ablation", headers, rows_tex)
+
+
+def build_table4(redteam: dict) -> tuple[str, str]:
+    """Runtime defense metrics."""
+    title = "Table 4: Runtime Defense Metrics"
+    rt = redteam["runtime_defense"]
+    headers = ["Metric", "Value"]
+    pairs = [
+        ("ASR (Attack Success Rate)", f"{rt['ASR']:.4f}"),
+        ("ASR Blocked", f"{rt['ASR_blocked']:.4f}"),
+        ("UTCR (per sample)", f"{rt['UTCR']:.4f}"),
+        ("UTCR Blocked Rate", f"{rt['UTCR_blocked_rate']:.4f}"),
+        ("EDR (per sample)", f"{rt['EDR']:.4f}"),
+        ("EDR Blocked Rate", f"{rt['EDR_blocked_rate']:.4f}"),
+        ("BRI (avg sensitive nodes)", f"{rt['BRI']:.4f}"),
+        ("PS Blocked Rate", f"{rt['PS_blocked_rate']:.4f}"),
+        ("SC (Stealth Coefficient)", f"{rt['SC']:.4f}"),
+    ]
+    rows_txt = [[k, v] for k, v in pairs]
+    rows_tex = [[k.replace("_", "\\_"), v] for k, v in pairs]
+    return _txt_table(title, headers, rows_txt), _tex_table(title, "tab:runtime", headers, rows_tex, "lr")
+
+
+def build_table5(redteam: dict) -> tuple[str, str]:
+    """Usability metrics."""
+    title = "Table 5: Usability Metrics"
+    us = redteam["usability"]
+    headers = ["Metric", "Value"]
+    pairs = [
+        ("Task Success Rate", f"{us['task_success_rate']:.4f}"),
+        ("False Block Rate", f"{us['false_block_rate']:.4f}"),
+        ("Approval Burden", f"{us['approval_burden']:.4f}"),
+        ("Task Success Count", str(us["task_success_count"])),
+        ("False Block Count", str(us["false_block_count"])),
+        ("HITL Count", str(us["hitl_count"])),
+    ]
+    rows_txt = [[k, v] for k, v in pairs]
+    rows_tex = [[k.replace("_", "\\_"), v] for k, v in pairs]
+    return _txt_table(title, headers, rows_txt), _tex_table(title, "tab:usability", headers, rows_tex, "lr")
+
+
+# ---------------------------------------------------------------------------
+# Main
+# ---------------------------------------------------------------------------
+
+def main() -> None:
+    print("Loading results ...")
+    detector = load_json(DETECTOR_PATH)
+    ablation = load_json(ABLATION_PATH)
+    redteam = load_json(REDTEAM_PATH)
+
+    txt_parts: list[str] = ["=" * 72, "SkillGuardGraph Experiment Results", "=" * 72]
+    tex_parts: list[str] = [
+        "% SkillGuardGraph experiment tables",
+        "% Auto-generated by make_tables.py",
+        "",
+    ]
+
+    builders = [build_table1, build_table2, build_table3, build_table4, build_table5]
+    # Table 1 & 2 need detector, 3 needs ablation, 4 & 5 need redteam
+    args = [detector, detector, ablation, redteam, redteam]
+
+    for builder, arg in zip(builders, args):
+        txt, tex = builder(arg)
+        txt_parts.append(txt)
+        tex_parts.append(tex)
+
+    TXT_PATH.parent.mkdir(parents=True, exist_ok=True)
+    with TXT_PATH.open("w", encoding="utf-8") as fh:
+        fh.write("\n".join(txt_parts) + "\n")
+    with TEX_PATH.open("w", encoding="utf-8") as fh:
+        fh.write("\n".join(tex_parts) + "\n")
+
+    print(f"Tables written to:")
+    print(f"  {TXT_PATH}")
+    print(f"  {TEX_PATH}")
+
+
+if __name__ == "__main__":
+    main()

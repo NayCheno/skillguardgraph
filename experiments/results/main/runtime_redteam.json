@@ -1,0 +1,98 @@
+{
+  "malicious_with_trace": 3010,
+  "benign_total": 1000,
+  "runtime_defense": {
+    "ASR": 0.0,
+    "ASR_blocked": 1.0,
+    "UTCR": 0.1654,
+    "UTCR_blocked_rate": 1.0,
+    "EDR": 0.4229,
+    "EDR_blocked_rate": 1.0,
+    "BRI": 1.5342,
+    "PS_blocked_rate": 1.0,
+    "PS_attempts": 430,
+    "PS_blocked": 430,
+    "SC": 0.0,
+    "SC_count": 0
+  },
+  "usability": {
+    "task_success_rate": 0.806,
+    "false_block_rate": 0.0,
+    "approval_burden": 0.112,
+    "task_success_count": 806,
+    "false_block_count": 0,
+    "hitl_count": 112
+  },
+  "per_attack_class": {
+    "capability_laundering": {
+      "total": 430,
+      "blocked": 430,
+      "asr": 0.0,
+      "utcr": 0.0,
+      "utcr_blocked_rate": 0.0,
+      "edr_total": 253,
+      "edr_blocked": 253,
+      "edr_blocked_rate": 1.0
+    },
+    "consent_laundering": {
+      "total": 430,
+      "blocked": 430,
+      "asr": 0.0,
+      "utcr": 0.0,
+      "utcr_blocked_rate": 0.0,
+      "edr_total": 256,
+      "edr_blocked": 256,
+      "edr_blocked_rate": 1.0
+    },
+    "cross_skill_confused_deputy": {
+      "total": 430,
+      "blocked": 430,
+      "asr": 0.0,
+      "utcr": 1.0,
+      "utcr_blocked_rate": 1.0,
+      "edr_total": 255,
+      "edr_blocked": 255,
+      "edr_blocked_rate": 1.0
+    },
+    "delayed_rug_pull": {
+      "total": 430,
+      "blocked": 430,
+      "asr": 0.0,
+      "utcr": 0.0,
+      "utcr_blocked_rate": 0.0,
+      "edr_total": 266,
+      "edr_blocked": 266,
+      "edr_blocked_rate": 1.0
+    },
+    "persistence_pivot": {
+      "total": 430,
+      "blocked": 430,
+      "asr": 0.0,
+      "utcr": 0.0,
+      "utcr_blocked_rate": 0.0,
+      "edr_total": 0,
+      "edr_blocked": 0,
+      "edr_blocked_rate": 0.0
+    },
+    "scope_inflation": {
+      "total": 430,
+      "blocked": 430,
+      "asr": 0.0,
+      "utcr": 0.0,
+      "utcr_blocked_rate": 0.0,
+      "edr_total": 0,
+      "edr_blocked": 0,
+      "edr_blocked_rate": 0.0
+    },
+    "split_exfiltration": {
+      "total": 430,
+      "blocked": 430,
+      "asr": 0.0,
+      "utcr": 1.0,
+      "utcr_blocked_rate": 1.0,
+      "edr_total": 243,
+      "edr_blocked": 243,
+      "edr_blocked_rate": 1.0
+    }
+  }
+}

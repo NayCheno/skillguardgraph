@@ -1,66 +1,228 @@
-# SkillGuardGraph Prototype Skeleton
+# SkillGuardGraph — Research Prototype
 
-This is a defensive research prototype scaffold for the paper idea:
+Cross-layer evidence fusion for detecting and containing malicious skills
+in LLM agent ecosystems.
 
-> Cross-layer evidence fusion for detecting and containing malicious skills in LLM agent ecosystems.
+This repository contains the full experimental artifact accompanying the
+paper. All data is synthetic; no real credentials, real enterprise data, or
+real external network calls are involved. See `SECURITY_ETHICS.md` for
+details.
 
-The code is intentionally non-operational with respect to real exploit payloads. It provides a safe skeleton for manifest scanning, trace normalization, graph construction, and policy evaluation.
+---
 
-## Quick start
+## Quick Start
+
+**Prerequisites:** Python 3.10+, any OS. No external packages required
+beyond the standard library (unit tests use `pytest`).
 
 ```bash
+cd experiments
 python -m venv .venv
-source .venv/bin/activate
-pip install -e .
-python -m skillguardgraph.cli scan-manifest examples/manifests/suspicious_scope_drift.json
-python -m skillguardgraph.cli eval-trace examples/traces/cross_skill_flow.json
-python -m pytest -q
+source .venv/bin/activate          # Windows: .venv\Scripts\activate
+pip install -e ".[dev]"
 ```
 
-## Modules
+### Smoke test (~5 min)
 
-| Module | Purpose |
-|---|---|
-| `models.py` | Dataclasses for evidence, findings, policy decisions |
-| `metadata_analyzer.py` | Safe manifest/schema/scope analyzer |
-| `runtime_monitor.py` | Converts runtime traces into evidence |
-| `evidence_graph.py` | Lightweight typed evidence graph |
-| `policy_engine.py` | Cross-layer constraint evaluation |
-| `sandbox_prober.py` | Placeholder for isolated probing results |
-| `scoring.py` | Risk and confidence scoring helpers |
-| `cli.py` | CLI entry points |
-
-## Design constraints
-
-- No real external network calls.
-- No real credential handling.
-- No exploit payload generation.
-- All examples use synthetic data and sinkhole labels.
-
-## Example output
-
-```json
-{
-  "risk": "high",
-  "decision": "hitl_or_deny",
-  "findings": [
-    {
-      "constraint": "C1_DECLARED_READONLY_BUT_WRITE_SCOPE",
-      "severity": "high",
-      "summary": "Skill declares read-only behavior but requests write/export scope."
-    }
-  ]
-}
-```
-
-
-
-## Makefile commands
+Validates that the system is functional. Runs the demo CLI and unit tests.
 
 ```bash
-make demo
-make test
-make scan
-make trace
-make ablation
+make smoke
+```
+
+Expected: demo JSON output printed to stdout, all tests pass.
+
+### Reproduce main results (~30 min)
+
+Builds the benchmark (seed=42), validates labels, runs detection evaluation,
+ablation study, runtime red-team evaluation, and generates all paper tables.
+
+```bash
+make reproduce
+```
+
+### Full reproduction (~2+ hours)
+
+Includes the ecosystem corpus crawl (1200 synthetic samples) and triage.
+
+```bash
+make eval-all
+```
+
+---
+
+## Directory Structure
+
+```
+experiments/
+├── Makefile                 # Reproducible experiment targets
+├── README.md                # This file
+├── pyproject.toml           # Python package metadata
+├── requirements.txt         # Runtime dependencies
+├── SECURITY_ETHICS.md       # Ethics and safety constraints
+├── configs/
+│   ├── policy.yaml          # Human-readable policy rules
+│   └── sandbox.yaml         # Sandbox isolation configuration
+├── data/
+│   └── README.md            # Data directory placeholder
+├── examples/
+│   ├── manifests/           # Sample skill manifests
+│   └── traces/              # Sample runtime traces
+├── results/
+│   ├── main/                # Detection, ablation, runtime, tables
+│   ├── ecosystem/           # Ecosystem crawl + triage results
+│   └── README.md
+├── scripts/
+│   ├── build_benchmark.py   # Generate benchmark (1000 benign + 3010 malicious)
+│   ├── validate_labels.py   # Validate benchmark label integrity
+│   ├── run_detector_eval.py # Detection comparison (8 methods)
+│   ├── run_ablation.py      # Layer ablation study (6 configs)
+│   ├── run_runtime_redteam.py # Runtime defense + usability evaluation
+│   ├── make_tables.py       # Generate paper tables (txt + LaTeX)
+│   ├── crawl_ecosystem.py   # Generate synthetic ecosystem corpus
+│   ├── triage_findings.py   # Triage ecosystem findings
+│   ├── run_demo.py          # Quick demo of scanning + evaluation
+│   └── run_ablation_stub.py # Minimal ablation for smoke tests
+├── src/
+│   └── skillguardgraph/     # Core library
+└── tests/
+    ├── test_analyzers.py    # Tests for metadata, static, sandbox analyzers
+    └── test_policy_engine.py # Tests for cross-layer policy engine
+```
+
+---
+
+## Makefile Targets
+
+| Target | Description | Time |
+|---|---|---|
+| `make smoke` | Demo + unit tests | ~5 min |
+| `make test` | Unit tests (verbose) | ~2 min |
+| `make benchmark` | Build benchmark (4010 samples) | ~5 min |
+| `make validate` | Validate benchmark labels | ~2 min |
+| `make eval-main` | Detection + ablation + runtime eval | ~15 min |
+| `make tables` | Generate tables from results | ~1 min |
+| `make ecosystem` | Crawl synthetic ecosystem corpus | ~10 min |
+| `make triage` | Triage ecosystem findings | ~5 min |
+| `make reproduce` | benchmark + validate + eval-main + tables | ~30 min |
+| `make eval-all` | reproduce + ecosystem + triage | ~2+ hours |
+| `make scan` | Scan a sample manifest | ~5 sec |
+| `make trace` | Evaluate a sample trace | ~5 sec |
+| `make clean` | Remove all generated results and data | instant |
+
+---
+
+## Expected Outputs
+
+After `make reproduce`, the following files are generated:
+
+```
+results/main/detector_eval.json   # Detection metrics for 8 methods
+results/main/ablation.json        # Ablation results for 6 configurations
+results/main/runtime_redteam.json # Runtime defense + usability metrics
+results/main/tables.txt           # Formatted plain-text tables
+results/main/tables.tex           # LaTeX tables for paper inclusion
+```
+
+After `make eval-all` (additional files):
+
+```
+results/ecosystem/ecosystem_triage.json  # Full ecosystem triage (1200 samples)
+results/ecosystem/risk_patterns.json     # Aggregated risk pattern statistics
+```
+
+Key result numbers:
+
+| Metric | Value |
+|---|---|
+| Benchmark size | 4,010 (1,000 benign + 3,010 malicious, 7 classes) |
+| Fusion F1 | 0.909 |
+| Fusion FPR | 0.194 |
+| FPR reduction vs naive union | 80.6% |
+| Naive union F1 | 0.858 |
+| Naive union FPR | 1.000 |
+| Ablation: no_runtime F1 drop | -0.291 |
+| Ablation: no_metadata F1 drop | -0.233 |
+| Runtime ASR | 0.000 |
+| Task success rate | 0.806 |
+| False block rate | 0.000 |
+| Approval burden | 0.112 |
+See `../artifact/EXPECTED_OUTPUTS.md` for full output documentation.
+
+---
+
+## Individual Commands
+
+Each experiment step can be run independently:
+
+```bash
+# Build benchmark
+PYTHONPATH=src python scripts/build_benchmark.py
+
+# Validate labels
+PYTHONPATH=src python scripts/validate_labels.py
+
+# Detection evaluation (8 methods: metadata, static, sandbox, runtime,
+# naive_union, weighted_voting, llm_judge, fusion)
+PYTHONPATH=src python scripts/run_detector_eval.py
+
+# Ablation study (6 configs: full, no_metadata, no_static, no_sandbox,
+# no_runtime, no_sequence)
+PYTHONPATH=src python scripts/run_ablation.py
+
+# Runtime red-team evaluation
+PYTHONPATH=src python scripts/run_runtime_redteam.py
+
+# Generate paper tables
+PYTHONPATH=src python scripts/make_tables.py
+
+# Ecosystem corpus (1200 synthetic samples from 5 sources)
+PYTHONPATH=src python scripts/crawl_ecosystem.py
+
+# Triage ecosystem findings
+PYTHONPATH=src python scripts/triage_findings.py
+
+# Unit tests
+PYTHONPATH=src python -m pytest tests/ -v
+```
+
+---
+
+## Reproducibility
+
+- All random generation uses `seed=42` (hardcoded in scripts).
+- The benchmark is deterministic: rebuilding produces identical samples.
+- No network access is required for any experiment.
+- No external Python packages are required beyond `pytest` (for tests).
+- All synthetic data is generated in-memory; `make clean` removes caches.
+
+---
+
+## Ethics and Safety
+
+This prototype is for **defensive research only**. Key constraints:
+
+- All attack samples use synthetic data with fake credentials.
+- All network destinations point to sinkhole domains (`*.sinkhole.test`,
+  `*.example.invalid`, `127.0.0.1`).
+- No real credentials, tokens, or API keys appear anywhere.
+- No real exploit code targeting production systems is included.
+- Dynamic sandbox experiments run in isolated containers with no host access.
+
+See `SECURITY_ETHICS.md` for the full policy, and
+`../docs/ethics_protocol.md` for the complete ethics protocol.
+
+---
+
+## Citation
+
+If you use this artifact, please cite:
+
+```bibtex
+@software{skillguardgraph2026,
+  title   = {SkillGuardGraph: Cross-Layer Evidence Fusion for
+             Detecting Malicious Skills in LLM Agent Ecosystems},
+  year    = {2026},
+  url     = {https://github.com/skillguardgraph/skillguardgraph}
+}
 ```

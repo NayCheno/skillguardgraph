@@ -1,0 +1,129 @@
+{
+  "total_samples": 4010,
+  "methods": {
+    "metadata_only": {
+      "TP": 910,
+      "FP": 112,
+      "TN": 888,
+      "FN": 2100,
+      "precision": 0.8904,
+      "recall": 0.3023,
+      "f1": 0.4514,
+      "fpr": 0.112
+    },
+    "static_only": {
+      "TP": 660,
+      "FP": 0,
+      "TN": 1000,
+      "FN": 2350,
+      "precision": 1.0,
+      "recall": 0.2193,
+      "f1": 0.3597,
+      "fpr": 0.0
+    },
+    "sandbox_only": {
+      "TP": 660,
+      "FP": 0,
+      "TN": 1000,
+      "FN": 2350,
+      "precision": 1.0,
+      "recall": 0.2193,
+      "f1": 0.3597,
+      "fpr": 0.0
+    },
+    "runtime_only": {
+      "TP": 1271,
+      "FP": 0,
+      "TN": 1000,
+      "FN": 1739,
+      "precision": 1.0,
+      "recall": 0.4223,
+      "f1": 0.5938,
+      "fpr": 0.0
+    },
+    "naive_union": {
+      "TP": 3010,
+      "FP": 1000,
+      "TN": 0,
+      "FN": 0,
+      "precision": 0.7506,
+      "recall": 1.0,
+      "f1": 0.8575,
+      "fpr": 1.0
+    },
+    "weighted_voting": {
+      "TP": 2671,
+      "FP": 128,
+      "TN": 872,
+      "FN": 339,
+      "precision": 0.9543,
+      "recall": 0.8874,
+      "f1": 0.9196,
+      "fpr": 0.128
+    },
+    "llm_judge": {
+      "TP": 3010,
+      "FP": 1000,
+      "TN": 0,
+      "FN": 0,
+      "precision": 0.7506,
+      "recall": 1.0,
+      "f1": 0.8575,
+      "fpr": 1.0
+    },
+    "fusion": {
+      "TP": 2671,
+      "FP": 194,
+      "TN": 806,
+      "FN": 339,
+      "precision": 0.9323,
+      "recall": 0.8874,
+      "f1": 0.9093,
+      "fpr": 0.194
+    }
+  },
+  "per_attack_class_recall": {
+    "capability_laundering": {
+      "TP": 430,
+      "FN": 0,
+      "total": 430,
+      "recall": 1.0
+    },
+    "consent_laundering": {
+      "TP": 430,
+      "FN": 0,
+      "total": 430,
+      "recall": 1.0
+    },
+    "cross_skill_confused_deputy": {
+      "TP": 255,
+      "FN": 175,
+      "total": 430,
+      "recall": 0.593
+    },
+    "delayed_rug_pull": {
+      "TP": 266,
+      "FN": 164,
+      "total": 430,
+      "recall": 0.6186
+    },
+    "persistence_pivot": {
+      "TP": 430,
+      "FN": 0,
+      "total": 430,
+      "recall": 1.0
+    },
+    "scope_inflation": {
+      "TP": 430,
+      "FN": 0,
+      "total": 430,
+      "recall": 1.0
+    },
+    "split_exfiltration": {
+      "TP": 430,
+      "FN": 0,
+      "total": 430,
+      "recall": 1.0
+    }
+  }
+}

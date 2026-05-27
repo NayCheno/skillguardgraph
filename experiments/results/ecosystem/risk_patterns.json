@@ -1,0 +1,74 @@
+{
+  "total_triaged": 1200,
+  "risk_pattern_rates": {
+    "scope_inflation": {
+      "count": 244,
+      "rate": 0.2033
+    },
+    "description_mismatch": {
+      "count": 273,
+      "rate": 0.2275
+    },
+    "untrusted_publisher": {
+      "count": 910,
+      "rate": 0.7583
+    },
+    "missing_signature": {
+      "count": 910,
+      "rate": 0.7583
+    },
+    "open_world": {
+      "count": 66,
+      "rate": 0.055
+    },
+    "instruction_like": {
+      "count": 68,
+      "rate": 0.0567
+    }
+  },
+  "severity_distribution": {
+    "low": 890,
+    "high": 310
+  },
+  "decision_distribution": {
+    "allow": 890,
+    "hitl": 310
+  },
+  "per_source_risk": {
+    "huggingface_spaces": {
+      "count": 169,
+      "mean_score": 2.84,
+      "max_score": 10.0,
+      "high_risk_count": 48
+    },
+    "npm_registry": {
+      "count": 361,
+      "mean_score": 2.327,
+      "max_score": 10.0,
+      "high_risk_count": 84
+    },
+    "enterprise_catalog": {
+      "count": 121,
+      "mean_score": 2.975,
+      "max_score": 10.0,
+      "high_risk_count": 36
+    },
+    "github_mcp": {
+      "count": 357,
+      "mean_score": 2.493,
+      "max_score": 10.0,
+      "high_risk_count": 89
+    },
+    "community_forum": {
+      "count": 192,
+      "mean_score": 2.76,
+      "max_score": 10.0,
+      "high_risk_count": 53
+    }
+  },
+  "constraint_frequency": {
+    "C1_DECLARED_READONLY_BUT_WRITE_SCOPE": 310,
+    "C7_LEAST_PRIVILEGE_SCOPE": 310
+  },
+  "analyzed_at": "2026-05-27T11:36:09Z"
+}

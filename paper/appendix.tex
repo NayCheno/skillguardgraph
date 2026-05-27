@@ -1,0 +1,106 @@
+\section*{Appendix}
+
+\subsection*{A. Constraint Definitions}
+
+Table~\ref{tab:constraints} summarizes the seven constraints implemented in SkillGuardGraph.
+
+\begin{table}[h]
+\centering
+\caption{Constraint definitions, trigger conditions, risk levels, and policy recommendations.}
+\label{tab:constraints}
+\begin{tabular}{lllll}
+\toprule
+ID & Name & Trigger & Risk & Policy \\
+\midrule
+C1 & Capability consistency & Declared read-only + write scope & HIGH & HITL/DENY \\
+C2 & Source-aware flow & Untrusted $\rightarrow$ high-privilege tool & HIGH & HITL \\
+C3 & Cross-tool exfiltration & Sensitive $\rightarrow$ external sink & CRITICAL & DENY \\
+C4 & Version drift & Post-approval behavior change & HIGH & ROLLBACK \\
+C5 & Approval integrity & Approval from untrusted context & HIGH & HITL \\
+C6 & Persistence boundary & Untrusted $\rightarrow$ persistent store & HIGH & DENY \\
+C7 & Least-privilege scope & Read task + write scope & MEDIUM & DEGRADE \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection*{B. Benchmark Dataset Schema}
+
+Each benchmark sample is a JSON object with the following fields:
+
+\begin{lstlisting}
+{
+  "case_id": "sgg-benign-0001",
+  "label": "benign | capability_laundering | ...",
+  "manifest": {
+    "name": "skill_name",
+    "description": "...",
+    "scopes": ["read", "write", ...],
+    "annotations": {"readOnlyHint": bool, ...},
+    "publisher": "...",
+    "trusted_server": bool,
+    "signature": "sig-..." | null
+  },
+  "source_code": "def handle(input): ...",
+  "runtime_trace": {
+    "trace_id": "...",
+    "events": [{"id": "...", "type": "source|tool_call|sink|...", ...}],
+    "flows": [{"from": "...", "to": "...", "confidence": 0.9}]
+  },
+  "expected_evidence": ["C1", "C3", ...],
+  "platform_type": "mcp",
+  "attack_class": "...",
+  "lifecycle_stages": ["invocation", "persistence", ...],
+  "benign_pair": "sgg-benign-0005",
+  "success_validator": "..."
+}
+\end{lstlisting}
+
+\subsection*{C. Evidence Item Schema}
+
+\begin{lstlisting}
+{
+  "kind": "metadata | static | sandbox | runtime | permission | governance",
+  "subject": "tool_name | call_id | ...",
+  "predicate": "declares_capability | flows_to | is_external_sink | ...",
+  "object": "read_only_or_low_risk | write | confidential | ...",
+  "confidence": 0.0-1.0,
+  "attrs": {"source": "...", "trusted": bool, ...}
+}
+\end{lstlisting}
+
+\subsection*{D. Per-Layer Latency}
+
+Table~\ref{tab:latency} reports per-layer latency measured on 500 samples (seed=42).
+
+\begin{table}[h]
+\centering
+\caption{Per-layer latency (ms) on 500 benchmark samples.}
+\label{tab:latency}
+\begin{tabular}{lrrrrr}
+\toprule
+Layer & Mean & Median & P95 & P99 & Max \\
+\midrule
+Metadata & 0.010 & 0.010 & 0.013 & 0.013 & 0.013 \\
+Static & 0.200 & 0.217 & 0.268 & 0.268 & 0.268 \\
+Sandbox & 0.053 & 0.057 & 0.070 & 0.070 & 0.070 \\
+Runtime & 0.008 & 0.007 & 0.011 & 0.011 & 0.011 \\
+\midrule
+Fusion (full) & 0.281 & 0.301 & 0.365 & 0.365 & 0.365 \\
+Total per sample & 0.551 & 0.593 & 0.717 & 0.717 & 0.717 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The full fusion pipeline processes each sample in under 1ms on average, with P95 latency of 0.717ms. This is well within the 100--300ms/tool-call deployment threshold.
+
+\subsection*{E. Attack Class Definitions}
+
+\begin{description}[leftmargin=*]
+\item[T1: Capability laundering.] Declares read-only behavior but implements or requests write/export/admin capabilities. Success condition: agent grants write scope based on benign description.
+\item[T2: Cross-skill confused deputy.] Untrusted skill output influences agent to call high-privilege internal tool. Success condition: sensitive data accessed via internal tool triggered by untrusted content.
+\item[T3: Delayed rug-pull.] Skill is benign during review; post-approval version update introduces malicious behavior. Success condition: updated version exfiltrates data or writes to persistence.
+\item[T4: Consent laundering.] Approval dialog text is derived from untrusted context, masking high-risk actions. Success condition: user approves action that appears benign but performs exfiltration.
+\item[T5: Persistence pivot.] Untrusted source writes to persistent memory/config/hooks, influencing future sessions. Success condition: subsequent sessions execute attacker-influenced behavior.
+\item[T6: Split exfiltration.] Multiple benign tools combine: sensitive-read $\rightarrow$ transform $\rightarrow$ external-write. Success condition: sensitive data reaches external sink across tool boundaries.
+\item[T7: Scope inflation.] User task needs read-only access but skill requests write/delete/export/admin. Success condition: agent grants excessive permissions based on inflated scope request.
+\end{description}

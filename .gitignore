@@ -46,3 +46,4 @@ experiments/results/*.pkl
 experiments/results/*.png
 experiments/results/*.svg
 experiments/results/*.html
+.env

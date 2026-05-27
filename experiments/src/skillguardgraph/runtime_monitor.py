@@ -135,6 +135,29 @@ def trace_to_evidence(trace: Dict[str, Any]) -> List[Evidence]:
                 )
             )
 
+        if event_type == "version_update":
+            drift_level = str(event.get("drift_level", "high"))
+            evidence.append(
+                Evidence(
+                    kind="runtime",
+                    subject=subject,
+                    predicate="post_approval_drift",
+                    object=drift_level,
+                    confidence=float(event.get("confidence", 0.85)),
+                    attrs=event,
+                )
+            )
+            if event.get("high_risk_addition") or drift_level == "high":
+                evidence.append(
+                    Evidence(
+                        kind="runtime",
+                        subject=subject,
+                        predicate="high_risk_version_change",
+                        object=str(event.get("new_capabilities", "unknown")),
+                        confidence=0.9,
+                        attrs=event,
+                    )
+                )
     for flow in trace.get("flows", []):
         src = str(flow.get("from"))
         dst = str(flow.get("to"))

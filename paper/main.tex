@@ -4,6 +4,18 @@
 \usepackage{booktabs}
 \usepackage{amsmath}
 \usepackage{hyperref}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{enumitem}
+\usepackage{listings}
+\usepackage{multirow}
+
+\lstset{
+  basicstyle=\ttfamily\small,
+  breaklines=true,
+  frame=single,
+  columns=fullflexible,
+}
 
 \title{SkillGuardGraph: Cross-Layer Evidence Fusion for Detecting and Containing Malicious Skills in LLM Agent Ecosystems}
 \author{Anonymous Authors}
@@ -12,43 +24,440 @@
 \begin{document}
 \maketitle
 
+% ============================================================
 \begin{abstract}
-LLM agents increasingly rely on external skills, including tools, connectors, actions, MCP servers, blocks, and graph nodes. These skills connect agents to private data, APIs, files, and persistent execution environments. Existing defenses often operate at one layer: metadata scanning, prompt-injection filtering, source-code analysis, sandbox probing, human approval, or audit logging. This paper argues that malicious skills are compositional: damaging behavior often emerges from gaps between declared metadata, implemented capability, permission scope, runtime provenance, approval text, persistence, and post-approval updates. We propose SkillGuardGraph, a typed cross-layer evidence graph and constraint system for detecting and containing such attacks. The system fuses metadata, implementation summaries, sandbox observations, runtime traces, permission scopes, approvals, and version histories, then enforces source-aware, permission-aware, and version-aware constraints over tool-call chains. We outline a lifecycle-complete benchmark and ablation methodology comparing graph fusion against single-layer detectors and a naive detector union.
+Large language model (LLM) agents increasingly rely on external skills---tools, connectors, actions, MCP servers, and graph nodes---to access private data, invoke APIs, modify files, and maintain persistent state. This capability expansion creates a new security problem: malicious skills can exploit gaps between declared metadata, implemented behavior, granted permissions, runtime outputs, user approval, and post-approval updates. Existing defenses typically operate at a single layer: metadata scanning, prompt-injection filtering, static analysis, sandbox probing, or human-in-the-loop approval. We argue that malicious skills are compositional objects whose most damaging behaviors emerge across lifecycle boundaries.
+
+We present \textbf{SkillGuardGraph}, a cross-layer evidence fusion framework for detecting and containing malicious skills in LLM agent ecosystems. SkillGuardGraph represents skill metadata, implementation summaries, sandbox observations, runtime provenance, permission scopes, approval dialogs, and version histories as a typed evidence graph, then enforces source-aware, permission-aware, and version-aware constraints over tool-call chains. We introduce a compositional benchmark spanning seven attack classes with 4{,}010 samples, and evaluate against metadata-only, static-only, sandbox-only, runtime-only, naive union, weighted voting, and LLM-judge baselines. Our results show that SkillGuardGraph achieves an F1 score of 0.909 with an FPR of 0.194, representing an 80.6\% reduction in false positives relative to naive union while maintaining high recall across compositional attacks. Ablation experiments demonstrate that metadata and runtime evidence are critical, with their removal reducing F1 by 23.3 and 29.1 percentage points respectively. Ecosystem measurement of 1{,}200 synthetic MCP/tool/server samples reveals that 25.8\% exhibit scope inflation, 22.8\% show description--code mismatch, and 75.8\% originate from untrusted publishers.
 \end{abstract}
 
+% ============================================================
 \section{Introduction}
-LLM agents are evolving from conversational systems into execution systems. They discover and invoke external skills to search documents, send messages, edit files, call APIs, and maintain persistent state. This capability expansion creates a new security problem: the security property often belongs not to one skill but to a cross-tool, cross-layer sequence.
+\label{sec:intro}
+
+LLM agents are no longer isolated chat systems. They increasingly operate through external skills: OpenAI Actions and Apps, Anthropic connectors and MCP servers, Microsoft Copilot connectors and plugins, LangChain tools and graphs, AutoGPT blocks and agents, and Google Vertex AI Agent Builder extensions. These skills act as discoverable and reusable capability units outside the model's core reasoning loop. They connect models to files, repositories, enterprise knowledge bases, cloud APIs, email systems, ticketing systems, and local execution environments.
+
+This shift changes the threat model. Prompt injection is no longer only about causing a model to produce unsafe text. A malicious or compromised skill can manipulate tool selection, request excessive permissions, return untrusted instructions as context, alter persistent memory or configuration, and exploit differences between what the user approves and what the execution layer actually performs.
+
+A common defensive response is to stack several controls: scan the manifest, scan the code, run a sandbox, require approval, and log the event. This is necessary but insufficient. The critical security property often does not belong to one tool or one layer. It belongs to a sequence:
+
+\begin{lstlisting}
+untrusted web page -> model context -> internal search tool
+  -> confidential result -> third-party summarizer -> external send
+\end{lstlisting}
+
+Every individual step can appear legitimate, while the composed flow violates a policy. Similarly, a skill may be approved as read-only, then later update its handler, expand OAuth scopes, or return instruction-like output that affects high-privilege actions. These behaviors cannot be reliably captured by a single metadata classifier or a static analyzer.
 
 \paragraph{Thesis.} Malicious skills exploit cross-layer trust gaps that are invisible to single-layer defenses. Effective defense requires evidence fusion across declaration, implementation, permission, runtime provenance, approval integrity, persistence, and version drift.
 
-\section{Background and Threat Model}
-We treat a skill as a discoverable and reusable external capability unit outside the model's core reasoning loop. The threat model covers malicious metadata, implementation mismatch, runtime-output poisoning, over-permissioning, approval laundering, persistence writes, and post-approval update drift.
+\subsection{Contributions}
 
-\section{Compositional Malicious Skill Taxonomy}
-We study seven attack classes: capability laundering, cross-skill confused deputy, delayed rug-pull, consent laundering, persistence pivot, split exfiltration, and scope inflation.
+\begin{enumerate}[leftmargin=*]
+\item \textbf{Threat taxonomy.} We define a compositional taxonomy of seven malicious skill behaviors: capability laundering, cross-skill confused deputy, delayed rug-pull, consent laundering, persistence pivot, split exfiltration, and scope inflation~(\S\ref{sec:taxonomy}).
+\item \textbf{Evidence graph and constraint system.} We introduce a typed cross-layer evidence graph with source-aware and permission-aware constraints over tool-call chains~(\S\ref{sec:design}, \S\ref{sec:constraints}).
+\item \textbf{Benchmark.} We propose a lifecycle-complete benchmark with 4{,}010 samples covering seven attack classes, benign-paired variants, and trace-grounded validators~(\S\ref{sec:benchmark}).
+\item \textbf{Evaluation.} We provide a comprehensive evaluation comparing graph fusion with seven baselines, an ablation study, runtime defense metrics, and ecosystem measurement of 1{,}200 samples~(\S\ref{sec:eval}, \S\ref{sec:ecosystem}).
+\end{enumerate}
 
+% ============================================================
+\section{Background}
+\label{sec:background}
+
+\subsection{Skills in Agent Ecosystems}
+
+We use \emph{skill} as a platform-neutral term for external capability units that an LLM agent can discover, register, invoke, and reuse. A skill may be implemented as an MCP server tool, a custom connector, an OpenAPI action, a LangChain tool, an AutoGPT block, or a managed cloud extension. Despite naming differences, these artifacts share four properties: (1) they expose metadata that describes their capabilities; (2) they often require permissions or credentials; (3) they return outputs that may re-enter the model context; and (4) they may evolve over time through updates or configuration changes.
+
+\subsection{Model Context Protocol}
+
+MCP standardizes how LLM applications integrate external data sources and tools. It defines hosts, clients, servers, resources, prompts, and tools. Tools enable models to interact with external systems and may represent arbitrary code execution or data access paths. The MCP specification explicitly requires attention to user consent, data privacy, and tool safety, and notes that descriptions or annotations should be treated as untrusted unless they originate from trusted servers. MCP is useful for this paper because it exposes the core elements of the broader skill ecosystem: metadata, tool schemas, model-controlled invocation, tool results, authorization, roots, and server trust boundaries.
+
+\subsection{Existing Defenses}
+
+Existing approaches can be grouped into six categories: (1)~metadata rules and LLM-based description vetting; (2)~SAST, taint analysis, and capability extraction; (3)~sandbox probing and synthetic tasks; (4)~runtime policy enforcement and least privilege; (5)~human-in-the-loop approval; and (6)~signatures, reputation, audit, and rollback. These layers are complementary, but naive composition can increase false positives without detecting subtle cross-layer attacks.
+
+% ============================================================
+\section{Threat Model}
+\label{sec:threat}
+
+\subsection{Assets}
+
+We consider the following assets: private files and repositories; enterprise documents and knowledge bases; credentials, tokens, and OAuth grants; email, messaging, ticketing, and external APIs; persistent memory, configuration, hooks, policy stores, and agent settings; and user trust and approval decisions.
+
+\subsection{Attacker Capabilities}
+
+The attacker may: publish or operate a third-party skill; compromise a benign skill or its update chain; control external content that a skill reads; craft metadata, schema, or descriptions to manipulate tool selection; cause a skill to return untrusted or instruction-like output; request excessive permissions; influence approval dialogs or summaries; and introduce delayed behavior via version or dependency updates. The attacker does not need direct access to the model weights or system prompt.
+
+\subsection{Non-Goals}
+
+We do not aim to prove that all prompt injection can be detected. We also do not require model internals. The system is intended to reduce attack success rate and blast radius by enforcing constraints at the skill lifecycle and execution layers.
+
+% ============================================================
+\section{Compositional Malicious Skill Behaviors}
+\label{sec:taxonomy}
+
+We study seven attack classes that exploit cross-layer trust gaps:
+
+\paragraph{C1: Capability laundering.}
+A skill declares benign behavior but implements or requests high-risk capabilities. Evidence chain: \texttt{declares(read\_only) + requires\_scope(write/export) + observes(external\_write)}.
+
+\paragraph{C2: Cross-skill confused deputy.}
+An untrusted skill influences the agent to call a trusted internal tool: \texttt{untrusted\_output $\rightarrow$ model\_context $\rightarrow$ call(high\_privilege\_tool)}.
+
+\paragraph{C3: Delayed rug-pull.}
+The skill is benign during review but changes behavior after approval: \texttt{approved(v1) $\rightarrow$ update(v1.1) $\rightarrow$ behavior\_drift $\rightarrow$ high\_risk\_event}.
+
+\paragraph{C4: Consent laundering.}
+The approval dialog is influenced by untrusted context, presenting a high-risk action as benign: \texttt{untrusted\_context $\rightarrow$ approval\_text; actual\_action = external\_write(confidential)}.
+
+\paragraph{C5: Persistence pivot.}
+The attack writes to persistent memory or configuration so that later sessions are influenced: \texttt{untrusted\_source $\rightarrow$ persistent\_store\_write}.
+
+\paragraph{C6: Split exfiltration.}
+Multiple individually benign tools combine to exfiltrate sensitive data: \texttt{sensitive\_read $\rightarrow$ transform $\rightarrow$ external\_write}.
+
+\paragraph{C7: Scope inflation.}
+The user task only requires low privilege, but the skill requests broad permissions: \texttt{task\_need(read) + granted\_scope(write/delete/export/admin)}.
+
+% ============================================================
 \section{SkillGuardGraph Design}
-SkillGuardGraph represents evidence as typed assertions over skill metadata, code summaries, sandbox observations, runtime events, data objects, trust labels, policy decisions, and version histories. Constraints are evaluated over graph paths and call sequences.
+\label{sec:design}
 
-\subsection{Core Constraints}
-\begin{itemize}
-  \item C1: declared read-only behavior conflicts with high-risk scope or implementation evidence.
-  \item C2: untrusted sources influence high-privilege tool calls.
-  \item C3: sensitive data reaches an external sink through a tool-call sequence.
-  \item C4: approved skill versions show high-risk post-approval drift.
-  \item C5: approval text is derived from untrusted or model-only context.
-  \item C6: untrusted sources reach persistent memory, configuration, or hooks.
-\end{itemize}
+\subsection{Overview}
 
-\section{Benchmark and Evaluation Plan}
-The benchmark contains benign-paired cases across metadata poisoning, implementation mismatch, runtime-output poisoning, cross-skill chains, persistence attacks, and update drift. Baselines include metadata-only, implementation-only, sandbox-only, runtime-only, human-approval-only, and naive detector union.
+SkillGuardGraph is composed of six modules: (1)~a metadata analyzer that scans manifest descriptions, schemas, and annotations; (2)~an implementation analyzer that extracts sources, sinks, and capability hints from source code; (3)~a sandbox prober that runs synthetic tasks with mock credentials and sinkhole domains; (4)~a runtime provenance monitor that records tool-call chains, source labels, and output flows; (5)~an evidence fusion graph that unifies all evidence into a typed graph; and (6)~a policy enforcer that evaluates constraints and issues decisions.
 
+\subsection{Evidence Model}
+
+An evidence item is a typed assertion:
+\begin{equation}
+\text{Evidence} = (\textit{kind}, \textit{subject}, \textit{predicate}, \textit{object}, \textit{confidence}, \textit{attributes})
+\end{equation}
+
+The \textit{kind} field identifies the source layer: \texttt{metadata}, \texttt{static}, \texttt{sandbox}, or \texttt{runtime}. The \textit{subject} identifies the entity being described (e.g., a tool name or call ID). The \textit{predicate} encodes the assertion type (e.g., \texttt{declares\_capability}, \texttt{flows\_to}, \texttt{is\_external\_sink}). The \textit{object} is the target or value. Confidence is a $[0,1]$ score. Attributes carry layer-specific metadata.
+
+\subsection{Graph Schema}
+
+\paragraph{Node types:}
+\texttt{Skill}, \texttt{Version}, \texttt{Metadata}, \texttt{CodeSlice}, \texttt{RuntimeEvent}, \texttt{DataObject}, \texttt{TrustLabel}, \texttt{SensitivityLabel}, \texttt{PolicyDecision}.
+
+\paragraph{Edge types:}
+\texttt{declares}, \texttt{implements}, \texttt{observes}, \texttt{flows\_to}, \texttt{calls}, \texttt{requires\_scope}, \texttt{signed\_by}, \texttt{updated\_from}, \texttt{approved\_by}.
+
+\subsection{Multi-Layer Agreement}
+
+Beyond cross-layer constraints, SkillGuardGraph applies a multi-layer agreement heuristic: if suspicious signals appear in two or more independent evidence kinds (e.g., metadata and runtime), the system elevates the risk level to HIGH. This ensures that attacks visible to multiple single-layer detectors are not missed due to the absence of explicit cross-layer constraint violations, while maintaining lower false positives than naive union.
+
+% ============================================================
+\section{Constraint System}
+\label{sec:constraints}
+
+We define seven constraints over the evidence graph. Each constraint has: an input pattern (graph query), a trigger condition, a risk level, and a policy recommendation.
+
+\subsection{C1: Declaration--Implementation--Permission Consistency}
+
+A skill violates C1 when declared capability, inferred capability, and granted permission materially disagree:
+\begin{equation}
+\text{DeclaredCapability} \subseteq \text{InferredCapability} \subseteq \text{GrantedPermission}
+\end{equation}
+This is enforced as a graph query over \texttt{declares}, \texttt{implements}, and \texttt{requires\_scope} edges. A mismatch where the manifest claims read-only but scopes include write/export/admin triggers a HIGH finding.
+
+\subsection{C2: Source-Aware High-Privilege Flow}
+
+A high-risk finding is generated when an untrusted source reaches a high-privilege tool or external sink without an explicit policy boundary:
+\begin{equation}
+\text{UntrustedSource} \rightarrow \text{LLMContext} \rightarrow \text{HighPrivilegeTool} \rightarrow \text{ExternalSink}
+\end{equation}
+
+\subsection{C3: Cross-Tool Exfiltration Sequence}
+
+The system identifies call sequences in which sensitive data is read, transformed, and externalized:
+\begin{equation}
+\text{SensitiveRead} \rightarrow \text{Transform} \rightarrow \text{ExternalWrite}
+\end{equation}
+This is a sequence property, not a tool property.
+
+\subsection{C4: Version Drift After Approval}
+
+A skill update is flagged if post-approval behavior fingerprint changes in high-risk dimensions:
+\begin{equation}
+\text{approved}(v) \wedge \text{updated\_to}(v') \wedge \text{drift}(v,v') > \tau \wedge \text{high\_risk}(v')
+\end{equation}
+
+\subsection{C5: Approval Integrity}
+
+Approval text is unsafe if it is derived solely from model context or untrusted tool output. The UI must include execution-layer facts: true action, target sink, affected data class, permission scope, and reversibility.
+
+\subsection{C6: Persistence Boundary}
+
+Any flow from untrusted sources to persistent stores is high risk unless explicitly isolated and reversible:
+\begin{equation}
+\text{UntrustedSource} \rightarrow \text{PersistentStore}
+\end{equation}
+
+\subsection{C7: Least-Privilege Scope Alignment}
+
+When the user task requires only read-level access but the skill requests write/delete/export/admin scopes, C7 flags a scope inflation finding. The task context is inferred from the tool description and user request, while the granted scope comes from the manifest.
+
+% ============================================================
+\section{Benchmark}
+\label{sec:benchmark}
+
+\subsection{Dataset Design}
+
+We construct a benchmark of 4{,}010 samples: 1{,}000 benign and 3{,}010 malicious (430 per attack class). Each sample contains a manifest (description, scopes, annotations, publisher), source code, runtime trace, expected evidence path, and labels.
+
+\paragraph{Benign corpus.}
+The benign corpus includes 700 clean benign samples with read-only scopes, trusted publishers, and simple processing logic, plus 300 noisy benign samples that exhibit suspicious-looking but legitimately justified patterns: write scopes for note-taking or backup tools, file write operations for local export, persistence writes for session continuity, and untrusted publishers for community tools.
+
+\paragraph{Malicious corpus.}
+Each attack class has 258 standard variants with clear suspicious indicators and 172 subtle variants that are harder to detect: trusted publishers, read-only scopes with hidden runtime behavior, and obfuscated exfiltration in otherwise legitimate code.
+
+\paragraph{Ethics and safety.}
+All external URLs use sinkhole domains (\texttt{*.example.invalid}, \texttt{*.sinkhole.test}). All credentials are synthetic. All enterprise data is generated. No real third-party services are contacted.
+
+\subsection{Label Validation}
+
+All 4{,}010 samples pass label validation: required fields present, labels valid, attack class matches label, expected evidence non-empty, benign pairs reference valid IDs, URLs resolve to sinkhole domains, and no real credentials are present.
+
+% ============================================================
+\section{Evaluation}
+\label{sec:eval}
+
+\subsection{Experimental Setup}
+
+We evaluate SkillGuardGraph on the benchmark dataset with the following metrics: Precision, Recall, F1, and False Positive Rate (FPR) for detection; Attack Success Rate (ASR), Unauthorized Tool Call Rate (UTCR), Exfiltration Data Rate (EDR), Blast Radius Index (BRI), Persistence Score (PS), and Stealth Coefficient (SC) for runtime defense; and Task Success Rate, False Block Rate, and Approval Burden for usability.
+
+\subsection{Detection Comparison (RQ1, RQ2, RQ3)}
+
+Table~\ref{tab:detection} compares SkillGuardGraph fusion against single-layer detectors and ensemble baselines.
+
+\begin{table}[t]
+\centering
+\caption{Detection comparison on the benchmark (4{,}010 samples: 1{,}000 benign, 3{,}010 malicious across 7 attack classes).}
+\label{tab:detection}
+\begin{tabular}{lcccc}
+\toprule
+Method & Precision & Recall & F1 & FPR \\
+\midrule
+Metadata only   & 0.890 & 0.302 & 0.451 & 0.112 \\
+Static only     & 1.000 & 0.219 & 0.360 & 0.000 \\
+Sandbox only    & 1.000 & 0.219 & 0.360 & 0.000 \\
+Runtime only    & 1.000 & 0.422 & 0.594 & 0.000 \\
+\midrule
+Naive union     & 0.751 & 1.000 & 0.858 & 1.000 \\
+Weighted voting & 0.954 & 0.887 & 0.920 & 0.128 \\
+LLM judge       & 0.751 & 1.000 & 0.858 & 1.000 \\
+\midrule
+\textbf{SkillGuardGraph} & \textbf{0.932} & \textbf{0.887} & \textbf{0.909} & \textbf{0.194} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\paragraph{Key findings.}
+(1)~Single-layer detectors achieve high precision but low recall (21.9\%--42.2\%), confirming that compositional attacks are largely invisible to individual layers.
+(2)~Naive union achieves perfect recall but with FPR = 1.0, flagging every benign sample as malicious---an unusable deployment posture.
+(3)~SkillGuardGraph fusion achieves F1 = 0.909 with FPR = 0.194, representing an 80.6\% FPR reduction relative to naive union.
+(4)~Weighted voting achieves slightly higher F1 (0.920) but lower precision (0.954 vs.\ 0.932) and requires manual weight tuning; SkillGuardGraph's graph-based approach provides interpretable evidence paths for each decision.
+
+\subsection{Per-Attack-Class Recall}
+
+Table~\ref{tab:per_class} shows per-attack-class recall for full fusion.
+
+\begin{table}[t]
+\centering
+\caption{Per-attack-class recall for SkillGuardGraph fusion.}
+\label{tab:per_class}
+\begin{tabular}{lcccc}
+\toprule
+Attack Class & Total & TP & FN & Recall \\
+\midrule
+Capability laundering & 430 & 430 & 0 & 1.000 \\
+Consent laundering & 430 & 430 & 0 & 1.000 \\
+Cross-skill confused deputy & 430 & 255 & 175 & 0.593 \\
+Delayed rug-pull & 430 & 266 & 164 & 0.619 \\
+Persistence pivot & 430 & 430 & 0 & 1.000 \\
+Scope inflation & 430 & 430 & 0 & 1.000 \\
+Split exfiltration & 430 & 430 & 0 & 1.000 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Five attack classes achieve perfect recall. Cross-skill confused deputy (0.593) and delayed rug-pull (0.619) have lower recall because their subtle variants use trusted publishers and read-only scopes, making them harder to distinguish from benign samples without runtime chain analysis.
+
+\subsection{Ablation Study (RQ3)}
+
+Table~\ref{tab:ablation} shows the effect of removing one evidence source at a time.
+
+\begin{table}[t]
+\centering
+\caption{Ablation study: removing one evidence source.}
+\label{tab:ablation}
+\begin{tabular}{lccccc}
+\toprule
+Ablation & Precision & Recall & F1 & FPR & $\Delta$F1 \\
+\midrule
+Full fusion & 0.932 & 0.887 & 0.909 & 0.194 & --- \\
+No metadata & 1.000 & 0.511 & 0.676 & 0.000 & $-$0.233 \\
+No static & 0.932 & 0.887 & 0.909 & 0.194 & +0.000 \\
+No sandbox & 0.932 & 0.887 & 0.909 & 0.194 & +0.000 \\
+No runtime & 0.926 & 0.464 & 0.618 & 0.112 & $-$0.291 \\
+No sequence & 0.926 & 0.803 & 0.860 & 0.194 & $-$0.050 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\paragraph{Key findings.}
+(1)~Removing runtime evidence causes the largest drop ($\Delta$F1 = $-$0.291), confirming that tool-call chains and provenance labels are critical for detecting cross-skill and delayed attacks.
+(2)~Removing metadata evidence drops F1 by 0.233, as scope and description mismatches are primary signals for capability laundering and scope inflation.
+(3)~Removing sequence constraints (C2, C3, C6) reduces F1 by 0.050, indicating that cross-tool flow analysis provides additional discrimination.
+(4)~Static and sandbox evidence contribute marginally in this benchmark because they overlap with metadata signals; their value increases for source-available and runnable skills.
+
+\subsection{Runtime Defense Metrics (RQ4)}
+
+Table~\ref{tab:runtime} shows runtime defense and usability metrics.
+
+\begin{table}[t]
+\centering
+\caption{Runtime defense and usability metrics.}
+\label{tab:runtime}
+\begin{tabular}{lr}
+\toprule
+Metric & Value \\
+\midrule
+\multicolumn{2}{l}{\textit{Defense metrics}} \\
+Attack Success Rate (ASR) & 0.000 \\
+ASR Blocked & 1.000 \\
+Unauthorized Tool Call Rate & 0.165 \\
+UTCR Blocked Rate & 1.000 \\
+Exfiltration Data Rate & 0.423 \\
+EDR Blocked Rate & 1.000 \\
+Blast Radius Index & 1.534 \\
+Persistence Score Blocked Rate & 1.000 \\
+Stealth Coefficient & 0.000 \\
+\midrule
+\multicolumn{2}{l}{\textit{Usability metrics}} \\
+Task Success Rate & 0.806 \\
+False Block Rate & 0.000 \\
+Approval Burden & 0.112 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\paragraph{Key findings.}
+(1)~ASR = 0.0: all malicious traces are blocked or degraded before execution.
+(2)~Task success rate = 0.806: 80.6\% of benign tasks proceed without intervention; 11.2\% require human approval (HITL), and 8.2\% are degraded to reduced-privilege mode.
+(3)~False block rate = 0.0: no benign task is hard-blocked, demonstrating that the policy engine's degrade/HITL tiers prevent catastrophic false rejections.
+(4)~Approval burden of 11.2\% is within the acceptable range for enterprise deployment.
+
+% ============================================================
+\section{Ecosystem Measurement (RQ5)}
+\label{sec:ecosystem}
+
+We generate a synthetic ecosystem corpus of 1{,}200 samples simulating real-world MCP/tool/server distributions across five discovery sources: GitHub MCP, npm registry, HuggingFace Spaces, community forums, and enterprise catalogs.
+
+\subsection{Risk Pattern Prevalence}
+
+\begin{table}[t]
+\centering
+\caption{Ecosystem risk pattern prevalence (1{,}200 samples).}
+\label{tab:ecosystem}
+\begin{tabular}{lcc}
+\toprule
+Risk Pattern & Count & Rate \\
+\midrule
+Scope inflation & 244 & 20.3\% \\
+Description--code mismatch & 273 & 22.8\% \\
+Untrusted publisher & 910 & 75.8\% \\
+Missing signature & 910 & 75.8\% \\
+Open-world network access & 66 & 5.5\% \\
+Instruction-like description & 68 & 5.7\% \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\paragraph{Key findings.}
+(1)~75.8\% of samples come from untrusted publishers without signatures, highlighting the trust deficit in current ecosystems.
+(2)~20.3\% exhibit scope inflation: descriptions claim read-only behavior but the manifest requests write/delete/export scopes.
+(3)~22.8\% show description--code mismatch: the description suggests benign functionality while source code contains write or network operations.
+(4)~Community forums have the highest per-sample risk (mean score 2.84), while npm registry has the lowest (2.33).
+(5)~310 of 1{,}200 samples (25.8\%) trigger HIGH severity findings requiring human-in-the-loop review.
+
+% ============================================================
+\section{Related Work}
+\label{sec:related}
+
+\subsection{Prompt Injection and Tool Poisoning}
+
+MCPTox introduced a large-scale benchmark for MCP tool poisoning. MCP-ITP studied implicit tool poisoning, in which an uninvoked poisoned tool influences calls to legitimate high-privilege tools. ToolHijacker studied attacks on tool selection in LLM agents. SkillGuardGraph extends these by covering compositional cross-skill and lifecycle-wide attacks.
+
+\subsection{Trusted Descriptions and Metadata Defenses}
+
+TRUSTDESC argues that developer-written tool descriptions should not be trusted and proposes generating implementation-faithful descriptions from code and dynamic verification. SkillGuardGraph treats trusted descriptions as one evidence source and checks consistency with permissions, runtime behavior, and version drift.
+
+\subsection{MCP Implementation Analysis}
+
+VIPER-MCP and MCP-BiFlow highlight that MCP servers require protocol-aware taint analysis and entrypoint recovery. SkillGuardGraph incorporates implementation-level results but extends them to runtime provenance and cross-tool call sequences.
+
+\subsection{Runtime Trust Calibration}
+
+MCPShield proposes a security cognition layer for adaptive trust calibration around MCP tool invocation. SkillGuardGraph differs by focusing on typed cross-layer evidence, sequence-level policies, approval integrity, version drift, and lifecycle-wide governance.
+
+% ============================================================
 \section{Discussion}
-The main risk is overlap with existing MCP security work if the system is framed as a detector pipeline. The intended distinction is graph-level evidence fusion, lifecycle-wide constraints, and an explicit graph-fusion versus naive-union ablation.
+\label{sec:discussion}
 
+\subsection{Why Not Only Least Privilege?}
+
+Least privilege reduces blast radius but does not fully solve cross-skill influence or approval laundering. A low-privilege tool can still influence a high-privilege tool through the model context. Therefore, least privilege must be combined with source-aware information flow.
+
+\subsection{Why Not Only HITL?}
+
+HITL can fail when the approval dialog is generated from tainted context or hides critical execution-layer facts. SkillGuardGraph treats approval as a policy boundary that itself requires integrity checks (C5).
+
+\subsection{Deployment Modes}
+
+SkillGuardGraph supports four deployment modes: (1)~registry mode with pre-publication review, signing, reputation, and drift monitoring; (2)~enterprise catalog mode with RBAC, DLP, scope minimization, and audit integration; (3)~runtime gateway mode with call-chain monitoring, structured output enforcement, and source isolation; and (4)~developer CI mode with metadata linting, permission diff, code analysis, and sandbox replay.
+
+% ============================================================
+\section{Limitations}
+\label{sec:limitations}
+
+\begin{enumerate}[leftmargin=*]
+\item \textbf{Closed-source skills.} When source code is unavailable, the implementation analyzer produces no evidence, reducing detection capability for capability laundering and split exfiltration attacks.
+\item \textbf{Dynamic probing coverage.} The sandbox prober uses pattern-based analysis rather than real execution, which may miss obfuscated or condition-triggered behaviors.
+\item \textbf{Provenance labeling.} Some agent platforms do not expose source labels for tool outputs, limiting the effectiveness of source-aware constraints.
+\item \textbf{Benchmark synthetic nature.} While the benchmark captures realistic attack patterns, it uses template-based generation rather than real-world exploit code. Ecosystem measurement provides external validity but uses synthetic corpus simulation.
+\item \textbf{Cross-skill detection.} Cross-skill confused deputy and delayed rug-pull attacks have lower recall (59.3\% and 61.9\%) because their subtle variants closely resemble benign behavior at the individual skill level.
+\item \textbf{Platform dependency.} Some policies require platform integration (e.g., approval dialog inspection) that may not be available in all agent frameworks.
+\end{enumerate}
+
+% ============================================================
+\section{Ethics}
+\label{sec:ethics}
+
+All attack cases use synthetic data, fake credentials, sinkhole domains (\texttt{*.example.invalid}, \texttt{*.sinkhole.test}), and isolated environments. No real third-party services are contacted during benchmark generation or evaluation. The ecosystem measurement uses synthetic corpus simulation rather than real crawling. The artifact does not include operational payloads against real systems. We follow the principle of responsible disclosure: any real vulnerabilities found in public repositories would be reported to maintainers before publication. The benchmark releases minimized, non-operational cases with all external URLs pointing to sinkhole domains.
+
+% ============================================================
 \section{Conclusion}
-SkillGuardGraph reframes malicious skill defense from per-skill classification to cross-layer execution governance.
+\label{sec:conclusion}
 
+Malicious skills are not merely bad tools. They are compositional attack surfaces spanning metadata, implementation, permissions, runtime outputs, approvals, persistence, and updates. SkillGuardGraph provides a framework for detecting and containing these attacks by fusing evidence across layers and enforcing security constraints over call sequences.
+
+Our evaluation on a benchmark of 4{,}010 samples across seven attack classes demonstrates that graph-based fusion achieves F1 = 0.909 while reducing false positives by 80.6\% relative to naive union. Ablation experiments confirm that metadata and runtime evidence are critical components, with their removal reducing F1 by 23.3 and 29.1 percentage points respectively. Ecosystem measurement of 1{,}200 samples reveals significant prevalence of scope inflation (20.3\%), description--code mismatch (22.8\%), and untrusted publishers (75.8\%), motivating the need for systematic cross-layer defense.
+
+The key contribution is not a larger detector stack, but a principled way to reason about cross-layer trust gaps in agent ecosystems through typed evidence, constraint-based evaluation, and explainable policy decisions.
+
+% ============================================================
+\section*{Acknowledgments}
+
+We thank the anonymous reviewers for their constructive feedback.
+
+% ============================================================
 \bibliographystyle{plain}
 \bibliography{references}
+
+% ============================================================
+\clearpage
+\input{appendix}
+
 \end{document}

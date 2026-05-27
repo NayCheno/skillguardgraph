@@ -4,6 +4,7 @@ from typing import List, Set
 
 from .evidence_graph import EvidenceGraph
 from .models import Decision, Evidence, Finding, RiskReport, Severity
+from .scoring import aggregate_score
 
 HIGH_RISK_SCOPES = {"write", "delete", "export", "send", "admin", "modify"}
 
@@ -16,14 +17,17 @@ def evaluate(graph: EvidenceGraph) -> RiskReport:
     findings.extend(_c4_post_approval_drift(graph))
     findings.extend(_c5_tainted_approval_text(graph))
     findings.extend(_c6_untrusted_persistence_write(graph))
+    findings.extend(_c7_least_privilege_scope(graph))
+
+    score = aggregate_score(findings)
 
     if any(f.severity == Severity.CRITICAL for f in findings):
-        return RiskReport(Severity.CRITICAL, Decision.DENY, findings)
+        return RiskReport(Severity.CRITICAL, Decision.DENY, findings, score=score)
     if any(f.severity == Severity.HIGH for f in findings):
-        return RiskReport(Severity.HIGH, Decision.HITL, findings)
+        return RiskReport(Severity.HIGH, Decision.HITL, findings, score=score)
     if any(f.severity == Severity.MEDIUM for f in findings):
-        return RiskReport(Severity.MEDIUM, Decision.DEGRADE, findings)
-    return RiskReport(Severity.LOW, Decision.ALLOW, findings)
+        return RiskReport(Severity.MEDIUM, Decision.DEGRADE, findings, score=score)
+    return RiskReport(Severity.LOW, Decision.ALLOW, findings, score=score)
 
 
 def _c1_declared_readonly_but_write_scope(graph: EvidenceGraph) -> List[Finding]:
@@ -51,8 +55,7 @@ def _c1_declared_readonly_but_write_scope(graph: EvidenceGraph) -> List[Finding]
                 Finding(
                     constraint="C1_DECLARED_READONLY_BUT_WRITE_SCOPE",
                     severity=Severity.HIGH,
-                    decision=Decision.HITL,
-                    summary="Skill declares read-only or low-risk behavior but requests write/export/admin-like scope.",
+                    message="Skill declares read-only or low-risk behavior but requests write/export/admin-like scope.",
                     evidence=supporting,
                 )
             )
@@ -96,8 +99,7 @@ def _c2_untrusted_to_high_privilege(graph: EvidenceGraph) -> List[Finding]:
             Finding(
                 constraint="C2_UNTRUSTED_TO_HIGH_PRIVILEGE",
                 severity=Severity.HIGH,
-                decision=Decision.HITL,
-                summary="Untrusted source reaches a high-privilege tool call through runtime provenance.",
+                message="Untrusted source reaches a high-privilege tool call through runtime provenance.",
                 evidence=_path_evidence(graph, untrusted, high_priv),
             )
         ]
@@ -116,8 +118,7 @@ def _c3_sensitive_to_external_sequence(graph: EvidenceGraph) -> List[Finding]:
             Finding(
                 constraint="C3_SENSITIVE_TO_EXTERNAL_SEQUENCE",
                 severity=Severity.CRITICAL,
-                decision=Decision.DENY,
-                summary="Sensitive data reaches an external sink through a tool-call sequence.",
+                message="Sensitive data reaches an external sink through a tool-call sequence.",
                 evidence=_path_evidence(graph, sensitive, external),
             )
         ]
@@ -126,16 +127,28 @@ def _c3_sensitive_to_external_sequence(graph: EvidenceGraph) -> List[Finding]:
 
 def _c4_post_approval_drift(graph: EvidenceGraph) -> List[Finding]:
     findings: List[Finding] = []
+    seen_subjects: Set[str] = set()
     for drift in graph.find(predicate="post_approval_drift", object="high"):
         findings.append(
             Finding(
                 constraint="C4_POST_APPROVAL_DRIFT",
                 severity=Severity.HIGH,
-                decision=Decision.QUARANTINE,
-                summary="A previously approved skill version shows high-risk post-approval behavior drift.",
+                message="A previously approved skill version shows high-risk post-approval behavior drift.",
                 evidence=[drift],
             )
         )
+        seen_subjects.add(drift.subject)
+    # Also detect high_risk_version_change evidence (from version_update events)
+    for change in graph.find(predicate="high_risk_version_change"):
+        if change.subject not in seen_subjects:
+            findings.append(
+                Finding(
+                    constraint="C4_POST_APPROVAL_DRIFT",
+                    severity=Severity.HIGH,
+                    message="A skill version update introduces high-risk capabilities after approval.",
+                    evidence=[change],
+                )
+            )
     return findings
 
 
@@ -146,8 +159,7 @@ def _c5_tainted_approval_text(graph: EvidenceGraph) -> List[Finding]:
             Finding(
                 constraint="C5_TAINTED_APPROVAL_TEXT",
                 severity=Severity.HIGH,
-                decision=Decision.HITL,
-                summary="Approval dialog is derived only from untrusted/model context instead of execution-layer facts.",
+                message="Approval dialog is derived only from untrusted/model context instead of execution-layer facts.",
                 evidence=[approval],
             )
         )
@@ -162,9 +174,51 @@ def _c6_untrusted_persistence_write(graph: EvidenceGraph) -> List[Finding]:
             Finding(
                 constraint="C6_UNTRUSTED_PERSISTENCE_WRITE",
                 severity=Severity.HIGH,
-                decision=Decision.DENY,
-                summary="Untrusted source reaches a persistent store such as memory/config/hooks/policy store.",
+                message="Untrusted source reaches a persistent store such as memory/config/hooks/policy store.",
                 evidence=_path_evidence(graph, untrusted, persistent),
             )
         ]
     return []
+
+
+def _c7_least_privilege_scope(graph: EvidenceGraph) -> List[Finding]:
+    """C7: least-privilege scope alignment.
+
+    Flag skills whose task context suggests only read needs but whose
+    manifest requests write/delete/export/admin scope.
+    """
+    findings: List[Finding] = []
+
+    # Subjects with a read-only or low-risk task context.
+    # Check explicit task_context, declared capability, and annotation claims.
+    read_only_tasks: Set[str] = {
+        e.subject
+        for e in graph.evidence
+        if e.predicate == "task_context"
+        and e.object in {"read", "summarize", "search", "query", "list"}
+    }
+    read_only_tasks |= graph.subjects_with("declares_capability", "read_only_or_low_risk")
+    read_only_tasks |= graph.subjects_with("annotation_claims", "read_only")
+
+    for subject in read_only_tasks:
+        scope_evidence = [
+            e
+            for e in graph.find(subject=subject, predicate="requires_scope")
+            if e.object in HIGH_RISK_SCOPES
+        ]
+        scope_evidence.extend(
+            graph.find(subject=subject, predicate="requires_high_risk_scope")
+        )
+        if scope_evidence:
+            task_ctx = graph.find(subject=subject, predicate="task_context")
+            task_ctx += graph.find(subject=subject, predicate="declares_capability")
+            task_ctx += graph.find(subject=subject, predicate="annotation_claims")
+            findings.append(
+                Finding(
+                    constraint="C7_LEAST_PRIVILEGE_SCOPE",
+                    severity=Severity.MEDIUM,
+                    message="Task context indicates read-only need but skill requests elevated scope.",
+                    evidence=task_ctx + scope_evidence,
+                )
+            )
+    return findings
