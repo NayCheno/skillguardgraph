@@ -31,7 +31,7 @@ sys.path.insert(0, str(ROOT / "src"))
 
 from skillguardgraph.fusion import fuse_and_evaluate  # noqa: E402
 from skillguardgraph.models import Decision  # noqa: E402
-from skillguardgraph.sandbox_prober import probe_skill  # noqa: E402
+from skillguardgraph.simulated_prober import probe_skill  # noqa: E402
 
 
 # ---------------------------------------------------------------------------

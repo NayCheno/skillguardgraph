@@ -1,6 +1,6 @@
 """Comprehensive tests for all SkillGuardGraph analyzer modules.
 
-Covers: metadata_analyzer, static_analyzer, sandbox_prober, runtime_monitor.
+Covers: metadata_analyzer, static_analyzer, simulated_prober, runtime_monitor.
 """
 from __future__ import annotations
 
@@ -9,7 +9,7 @@ import pytest
 from skillguardgraph.metadata_analyzer import analyze_manifest
 from skillguardgraph.models import Decision, Evidence, Severity
 from skillguardgraph.runtime_monitor import trace_to_evidence
-from skillguardgraph.sandbox_prober import (
+from skillguardgraph.simulated_prober import (
     observations_to_evidence,
     probe_skill,
     probe_skill_as_evidence,

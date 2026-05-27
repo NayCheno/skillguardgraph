@@ -15,7 +15,7 @@ from .evidence_graph import EvidenceGraph
 from .metadata_analyzer import analyze_manifest
 from .models import Decision, Evidence, Finding, RiskReport, Severity
 from .policy_engine import evaluate as policy_evaluate
-from .sandbox_prober import probe_skill, observations_to_evidence
+from .simulated_prober import probe_skill, observations_to_evidence
 from .scoring import aggregate_score
 from .static_analyzer import analyze_source
 from .runtime_monitor import trace_to_evidence

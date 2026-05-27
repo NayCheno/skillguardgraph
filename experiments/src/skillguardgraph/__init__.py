@@ -10,6 +10,6 @@ from .metadata_analyzer import analyze_manifest, load_manifest
 from .runtime_monitor import load_trace, trace_to_evidence
 from .policy_engine import evaluate
 from .static_analyzer import analyze_source
-from .sandbox_prober import probe_skill, probe_skill_as_evidence, observations_to_evidence
+from .simulated_prober import probe_skill, probe_skill_as_evidence, observations_to_evidence
 from .fusion import fuse_and_evaluate, fuse_from_evidence_list
 from .baselines import BASELINES, run_all_baselines

@@ -27,7 +27,7 @@ from skillguardgraph.fusion import fuse_from_evidence_list  # noqa: E402
 from skillguardgraph.metadata_analyzer import analyze_manifest  # noqa: E402
 from skillguardgraph.models import Evidence, Severity  # noqa: E402
 from skillguardgraph.runtime_monitor import trace_to_evidence  # noqa: E402
-from skillguardgraph.sandbox_prober import observations_to_evidence, probe_skill  # noqa: E402
+from skillguardgraph.simulated_prober import observations_to_evidence, probe_skill  # noqa: E402
 from skillguardgraph.static_analyzer import analyze_source  # noqa: E402
 
 

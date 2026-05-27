@@ -255,7 +255,7 @@
 |---|---|
 | `metadata_analyzer.py` | 元数据检测 |
 | `static_analyzer.py` | 轻量实现分析 |
-| `sandbox_prober.py` | 离线沙箱探测 |
+| `simulated_prober.py` | 离线模拟沙箱探测（不执行 untrusted code） |
 | `runtime_monitor.py` | 运行时 trace 收集 |
 | `experiments/configs/sandbox.yaml` | 沙箱配置 |
 | `experiments/tests/test_analyzers.py` | 测试 |

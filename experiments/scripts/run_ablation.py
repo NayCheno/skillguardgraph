@@ -37,7 +37,7 @@ from skillguardgraph.models import (  # noqa: E402
 )
 from skillguardgraph.policy_engine import evaluate as policy_evaluate  # noqa: E402
 from skillguardgraph.runtime_monitor import trace_to_evidence  # noqa: E402
-from skillguardgraph.sandbox_prober import probe_skill, observations_to_evidence  # noqa: E402
+from skillguardgraph.simulated_prober import probe_skill, observations_to_evidence  # noqa: E402
 from skillguardgraph.scoring import aggregate_score  # noqa: E402
 from skillguardgraph.static_analyzer import analyze_source  # noqa: E402
 
