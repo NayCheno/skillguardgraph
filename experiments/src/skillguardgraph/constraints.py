@@ -21,6 +21,12 @@ from .models import Evidence, Finding, Severity
 
 HIGH_RISK_SCOPES = {"write", "delete", "export", "send", "admin", "modify"}
 
+# Source labels that indicate untrusted / external origins
+_UNTRUSTED_LABELS = frozenset({
+    "untrusted", "external_web", "external_email", "external_api_response",
+    "synthetic_web_page", "synthetic_email", "synthetic_chat", "external",
+})
+
 
 # ---------------------------------------------------------------------------
 # Helpers
@@ -117,7 +123,10 @@ def c2_untrusted_to_high_privilege(graph: EvidenceGraph) -> List[Finding]:
     Risk level: HIGH.
     Policy: HITL.
     """
-    untrusted = graph.subjects_with("has_source_label", "untrusted")
+    untrusted = {
+        e.subject for e in graph.evidence
+        if e.predicate == "has_source_label" and e.object in _UNTRUSTED_LABELS
+    }
     high_priv = graph.subjects_with("is_high_privilege_call")
     if untrusted and high_priv and _reachable(graph, untrusted, high_priv):
         return [
@@ -236,7 +245,10 @@ def c6_untrusted_persistence_write(graph: EvidenceGraph) -> List[Finding]:
     Risk level: HIGH.
     Policy: DENY or QUARANTINE.
     """
-    untrusted = graph.subjects_with("has_source_label", "untrusted")
+    untrusted = {
+        e.subject for e in graph.evidence
+        if e.predicate == "has_source_label" and e.object in _UNTRUSTED_LABELS
+    }
     persistent = graph.subjects_with("writes_persistent_store")
     if untrusted and persistent and _reachable(graph, untrusted, persistent):
         return [

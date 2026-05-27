@@ -341,3 +341,145 @@ class TestEvaluateAll:
         # No high-risk constraints should trigger for a clean skill
         high_findings = [f for f in findings if f.severity in (Severity.HIGH, Severity.CRITICAL)]
         assert len(high_findings) == 0
+
+
+# ---------------------------------------------------------------------------
+# Negative tests: benign patterns should NOT trigger constraints
+# ---------------------------------------------------------------------------
+
+
+class TestNegativeCases:
+    """Verify that legitimate/benign patterns do not produce false positives."""
+
+    def test_c1_no_readonly_declaration_no_trigger(self):
+        """C1 should not trigger when no read-only declaration exists."""
+        evidence = [
+            _ev(predicate="declares_capability", object_="data_processing"),
+            _ev(kind="perm", predicate="requires_scope", object_="write"),
+        ]
+        graph = EvidenceGraph(evidence=evidence)
+        findings = c1_declared_readonly_but_write_scope(graph)
+        assert len(findings) == 0
+
+    def test_c1_readonly_with_read_scope_no_trigger(self):
+        """C1 should not trigger when scopes are read-only."""
+        evidence = [
+            _ev(predicate="declares_capability", object_="read_only_or_low_risk"),
+            _ev(kind="perm", predicate="requires_scope", object_="read"),
+        ]
+        graph = EvidenceGraph(evidence=evidence)
+        findings = c1_declared_readonly_but_write_scope(graph)
+        assert len(findings) == 0
+
+    def test_c2_trusted_source_no_trigger(self):
+        """C2 should not trigger when source is trusted (not external)."""
+        evidence = [
+            _ev(kind="runtime", subject="call1", predicate="has_source_label", object_="internal"),
+            _ev(kind="runtime", subject="call1", predicate="is_high_privilege_call", object_="admin_tool"),
+            _ev(kind="runtime", subject="call1", predicate="flows_to", object_="call1"),
+        ]
+        graph = EvidenceGraph(evidence=evidence)
+        findings = c2_untrusted_to_high_privilege(graph)
+        assert len(findings) == 0
+
+    def test_c2_untrusted_no_path_no_trigger(self):
+        """C2 should not trigger when untrusted source has no path to high-priv tool."""
+        evidence = [
+            _ev(kind="runtime", subject="src1", predicate="has_source_label", object_="untrusted"),
+            _ev(kind="runtime", subject="tool1", predicate="is_high_privilege_call", object_="admin"),
+        ]
+        graph = EvidenceGraph(evidence=evidence)
+        findings = c2_untrusted_to_high_privilege(graph)
+        assert len(findings) == 0
+
+    def test_c2_external_web_recognized_as_untrusted(self):
+        """C2 should recognize external_web as untrusted source."""
+        evidence = [
+            _ev(kind="runtime", subject="src1", predicate="has_source_label", object_="external_web"),
+            _ev(kind="runtime", subject="tool1", predicate="is_high_privilege_call", object_="admin"),
+            _ev(kind="runtime", subject="src1", predicate="flows_to", object_="tool1"),
+        ]
+        graph = EvidenceGraph(evidence=evidence)
+        findings = c2_untrusted_to_high_privilege(graph)
+        assert len(findings) == 1
+
+    def test_c3_public_data_no_trigger(self):
+        """C3 should not trigger when data is not sensitive."""
+        evidence = [
+            _ev(kind="runtime", subject="d1", predicate="has_data_label", object_="public"),
+            _ev(kind="runtime", subject="s1", predicate="is_external_sink", object_="api"),
+            _ev(kind="runtime", subject="d1", predicate="flows_to", object_="s1"),
+        ]
+        graph = EvidenceGraph(evidence=evidence)
+        findings = c3_sensitive_to_external_sequence(graph)
+        assert len(findings) == 0
+
+    def test_c3_sensitive_to_internal_no_trigger(self):
+        """C3 should not trigger when sensitive data stays internal."""
+        evidence = [
+            _ev(kind="runtime", subject="d1", predicate="has_data_label", object_="confidential"),
+        ]
+        graph = EvidenceGraph(evidence=evidence)
+        findings = c3_sensitive_to_external_sequence(graph)
+        assert len(findings) == 0
+
+    def test_c4_no_drift_no_trigger(self):
+        """C4 should not trigger when no version drift is present."""
+        evidence = [
+            _ev(kind="runtime", subject="v1", predicate="post_approval_drift", object_="low"),
+        ]
+        graph = EvidenceGraph(evidence=evidence)
+        findings = c4_post_approval_drift(graph)
+        assert len(findings) == 0
+
+    def test_c5_clean_approval_no_trigger(self):
+        """C5 should not trigger when approval text is from execution facts."""
+        evidence = [
+            _ev(kind="approval", subject="a1", predicate="approval_text_lineage", object_="execution_facts"),
+        ]
+        graph = EvidenceGraph(evidence=evidence)
+        findings = c5_tainted_approval_text(graph)
+        assert len(findings) == 0
+
+    def test_c6_trusted_to_persistence_no_trigger(self):
+        """C6 should not trigger when source is trusted."""
+        evidence = [
+            _ev(kind="runtime", subject="src1", predicate="has_source_label", object_="internal"),
+            _ev(kind="runtime", subject="store1", predicate="writes_persistent_store", object_="config"),
+            _ev(kind="runtime", subject="src1", predicate="flows_to", object_="store1"),
+        ]
+        graph = EvidenceGraph(evidence=evidence)
+        findings = c6_untrusted_persistence_write(graph)
+        assert len(findings) == 0
+
+    def test_c7_readwrite_task_no_trigger(self):
+        """C7 should not trigger when task context requires write."""
+        evidence = [
+            _ev(predicate="task_context", object_="write"),
+            _ev(kind="perm", predicate="requires_scope", object_="write"),
+        ]
+        graph = EvidenceGraph(evidence=evidence)
+        findings = c7_least_privilege_scope(graph)
+        assert len(findings) == 0
+
+    def test_c7_readonly_task_with_read_scope_no_trigger(self):
+        """C7 should not trigger when scopes match task needs."""
+        evidence = [
+            _ev(predicate="task_context", object_="read"),
+            _ev(kind="perm", predicate="requires_scope", object_="read"),
+        ]
+        graph = EvidenceGraph(evidence=evidence)
+        findings = c7_least_privilege_scope(graph)
+        assert len(findings) == 0
+
+    def test_all_clean_no_findings(self):
+        """A completely clean skill should produce no findings."""
+        evidence = [
+            _ev(predicate="declares_capability", object_="data_processing"),
+            _ev(kind="perm", predicate="requires_scope", object_="read"),
+            _ev(kind="runtime", subject="call1", predicate="calls_tool", object_="search"),
+        ]
+        graph = EvidenceGraph(evidence=evidence)
+        findings = evaluate_all(graph)
+        high = [f for f in findings if f.severity in (Severity.HIGH, Severity.CRITICAL)]
+        assert len(high) == 0
