@@ -376,6 +376,25 @@ Latency p99 (ms) & 0.4 \\
 (2)~Task success rate = 1.0: all benign tasks complete successfully without defense interference.
 (3)~False block rate = 0.0: no benign task is hard-blocked.
 (4)~Latency is negligible: p50 = 0.3\,ms, p95 = 0.4\,ms per skill evaluation, well within the 100--300\,ms deployment target.
+(5)~\textbf{Evidence path attribution:} 100\% of true-positive detections (2{,}308/2{,}308) include a complete evidence path, exceeding the 95\% strong target. Every detected attack comes with an explainable chain of constraint violations.
+
+\subsection{Failure Analysis}
+
+We analyze the 702 false negatives (malicious samples not detected) and 91 false positives (benign samples incorrectly flagged).
+
+\paragraph{False negative analysis.}
+The four attack classes with non-zero FN counts are:
+
+\begin{itemize}[leftmargin=*]
+\item \textbf{Split exfiltration} (187 FN, mean score = 3.03): These variants use legitimate-looking data pipelines. Without runtime chain evidence showing the sensitive-read $\rightarrow$ transform $\rightarrow$ external-write sequence, the fusion score stays below the decision threshold.
+\item \textbf{Capability laundering} (177 FN, mean score = 3.37): Subtle variants use trusted publishers and read-only scopes with hidden runtime behavior. The metadata and static signals alone are insufficient.
+\item \textbf{Consent laundering} (174 FN, mean score = 4.0): These require evidence that approval text derives from untrusted context, which is only available when the runtime trace includes approval events.
+\item \textbf{Delayed rug-pull} (164 FN, mean score = 1.08): The lowest-scoring class. These variants have minimal distinguishing signals because version drift evidence is absent from single-sample evaluation. Detecting rug-pulls requires cross-version comparison, which our current per-sample evaluation does not support.
+\end{itemize}
+
+\paragraph{False positive analysis.}
+All 91 false positives share a common pattern: benign tools with legitimate write scopes (\texttt{requires\_high\_risk\_scope}) and persistence writes (\texttt{writes\_persistent\_store}). These are note-taking tools, backup utilities, and session-continuity connectors that legitimately need write access. The fusion system flags them because the scope and persistence signals overlap with malicious patterns. We mitigate this through the degrade/HITL policy tiers rather than hard blocking.
+
 % ============================================================
 \section{Ecosystem Measurement (RQ5)}
 \label{sec:ecosystem}
