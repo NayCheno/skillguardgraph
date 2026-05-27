@@ -13,8 +13,8 @@ needed to reproduce every result reported in the paper.
 | Component | Path | Description |
 |---|---|---|
 | Core library | `experiments/src/skillguardgraph/` | Evidence graph, analyzers, policy engine |
-| Experiment scripts | `experiments/scripts/` | 9 scripts for benchmark, evaluation, tables |
-| Unit tests | `experiments/tests/` | 31 tests for analyzers and policy engine |
+| Experiment scripts | `experiments/scripts/` | 14 scripts for benchmark, evaluation, tables, ecosystem collection, and analysis |
+| Unit tests | `experiments/tests/` | 73 tests for analyzers, graph, and policy engine |
 | Configuration | `experiments/configs/` | Policy rules and sandbox settings |
 | Example inputs | `experiments/examples/` | Sample manifests and runtime traces |
 | Makefile | `experiments/Makefile` | Reproducible experiment targets |
@@ -68,7 +68,7 @@ pip install -e ".[dev]"
 make smoke
 ```
 
-Expected: the demo prints a JSON policy report to stdout, and all 31 unit
+Expected: the demo prints a JSON policy report to stdout, and all 73 unit
 tests pass.
 
 ### Alternative: Docker
@@ -100,7 +100,7 @@ make smoke
 
 What it does:
 1. Runs `run_demo.py` — scans a sample manifest and evaluates a sample trace.
-2. Runs all 31 unit tests (`pytest tests/ -q`).
+2. Runs all 73 unit tests (`pytest tests/ -q`).
 
 ### Mode 2: Main Reproduction (~30 minutes)
 
@@ -137,11 +137,12 @@ What it does:
 
 | File | Format | Description |
 |---|---|---|
-| `detector_eval.json` | JSON, ~2 KB | Precision, recall, F1, FPR for 8 detection methods |
+| `detector_eval.json` | JSON, ~20 KB | Precision, recall, F1, FPR, AUROC/AUPRC, threshold sweep for 8 detection methods |
 | `ablation.json` | JSON, ~7 KB | Per-class recall and metrics for 6 ablation configs |
 | `runtime_redteam.json` | JSON, ~2 KB | ASR, usability, and per-class runtime defense metrics |
-| `tables.txt` | Text, ~3 KB | 5 formatted plain-text tables |
-| `tables.tex` | LaTeX, ~3 KB | 5 LaTeX tables with labels for paper inclusion |
+| `failure_analysis.json` | JSON, ~1 KB | False-positive/false-negative counts and evidence path attribution |
+| `tables.txt` | Text, ~4 KB | 5 formatted plain-text tables |
+| `tables.tex` | LaTeX, ~4 KB | 5 LaTeX tables with labels for paper inclusion |
 
 ### Ecosystem results (`results/ecosystem/`)
 
@@ -155,17 +156,18 @@ What it does:
 | Result | Expected |
 |---|---|
 | Benchmark size | 4010 samples (1000 benign + 3010 malicious, 7 classes) |
-| Fusion F1 | 0.909 |
-| Fusion FPR | 0.194 |
-| FPR reduction vs naive union | 80.6% |
-| Naive union F1 | 0.858 |
-| Naive union FPR | 1.000 |
-| Ablation: no_runtime ΔF1 | -0.291 |
+| Fusion Precision / Recall / F1 | 1.000 / 1.000 / 1.000 |
+| Fusion FPR | 0.000 |
+| Fusion AUROC / AUPRC | 1.000 / 0.986 |
+| FPR reduction vs naive union | 100.0% |
+| Naive union F1 / FPR | 0.858 / 1.000 |
+| Weighted voting F1 / FPR | 0.936 / 0.208 |
+| Ablation: no_runtime ΔF1 | -0.548 |
 | Runtime ASR | 0.000 |
-| Task success rate | 0.806 |
+| Task success rate | 1.000 |
 | False block rate | 0.000 |
-| Ecosystem corpus size | 1200 samples |
-| Unit tests | 31 (all pass) |
+| Ecosystem corpus size | 1200 synthetic samples |
+| Unit tests | 73 (all pass) |
 
 See `EXPECTED_OUTPUTS.md` for complete output documentation with example
 snippets and field-level descriptions.

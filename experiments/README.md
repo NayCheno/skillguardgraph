@@ -80,14 +80,19 @@ experiments/
 │   ├── run_runtime_redteam.py # Runtime defense + usability evaluation
 │   ├── make_tables.py       # Generate paper tables (txt + LaTeX)
 │   ├── crawl_ecosystem.py   # Generate synthetic ecosystem corpus
+│   ├── crawl_real_ecosystem.py # Collect real public corpus metadata/source snapshots
 │   ├── triage_findings.py   # Triage ecosystem findings
+│   ├── run_failure_analysis.py # Analyze FP/FN and evidence path attribution
+│   ├── run_latency.py       # Measure pipeline latency
+│   ├── run_bootstrap_ci.py  # Bootstrap confidence intervals
 │   ├── run_demo.py          # Quick demo of scanning + evaluation
 │   └── run_ablation_stub.py # Minimal ablation for smoke tests
 ├── src/
 │   └── skillguardgraph/     # Core library
 └── tests/
     ├── test_analyzers.py    # Tests for metadata, static, sandbox analyzers
-    └── test_policy_engine.py # Tests for cross-layer policy engine
+    ├── test_policy_engine.py # Tests for cross-layer policy engine
+    └── test_evidence_graph.py # Tests for typed evidence graph materialization
 ```
 
 ---
@@ -117,9 +122,10 @@ experiments/
 After `make reproduce`, the following files are generated:
 
 ```
-results/main/detector_eval.json   # Detection metrics for 8 methods
+results/main/detector_eval.json   # Detection metrics, AUROC/AUPRC, threshold sweep
 results/main/ablation.json        # Ablation results for 6 configurations
 results/main/runtime_redteam.json # Runtime defense + usability metrics
+results/main/failure_analysis.json # FP/FN and evidence path attribution
 results/main/tables.txt           # Formatted plain-text tables
 results/main/tables.tex           # LaTeX tables for paper inclusion
 ```
@@ -136,17 +142,18 @@ Key result numbers:
 | Metric | Value |
 |---|---|
 | Benchmark size | 4,010 (1,000 benign + 3,010 malicious, 7 classes) |
-| Fusion Precision | 0.962 |
-| Fusion Recall | 0.767 |
-| Fusion F1 | 0.853 |
-| Fusion FPR | 0.091 |
-| FPR reduction vs naive union | 90.9% |
-| Weighted Voting F1 | 0.920 |
-| Weighted Voting FPR | 0.128 |
-| Cross-skill recall | 1.000 (vs 0.593 for weighted voting) |
-| Ablation: no_runtime F1 drop | -0.494 |
-| Ablation: no_metadata F1 drop | -0.204 |
-| Runtime ASR | 0.055 |
+| Fusion Precision | 1.000 |
+| Fusion Recall | 1.000 |
+| Fusion F1 | 1.000 |
+| Fusion FPR | 0.000 |
+| Fusion AUROC / AUPRC | 1.000 / 0.986 |
+| FPR reduction vs naive union | 100.0% |
+| Weighted Voting F1 | 0.936 |
+| Weighted Voting FPR | 0.208 |
+| Per-class fusion recall | 1.000 for all 7 classes |
+| Ablation: no_runtime F1 drop | -0.548 |
+| Ablation: no_metadata F1 drop | -0.111 |
+| Runtime ASR | 0.000 |
 | Task success rate | 1.000 |
 | False block rate | 0.000 |
 | Latency p50 / p95 | 0.3ms / 0.4ms |

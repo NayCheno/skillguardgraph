@@ -27,7 +27,7 @@ This checklist is extracted from `README.md`, `docs/roadmap.md`, `docs/plan.md`,
 - [x] Report per-attack-class recall.
 - [x] Regenerate paper tables from result JSON.
 - [x] Run failure analysis and evidence path attribution.
-- [ ] Update failure-case narrative after each detector calibration so markdown does not describe stale failures.
+- [x] Update failure-case narrative after detector calibration so markdown does not describe stale failures.
 - [ ] Add paired statistical comparison for fusion vs calibrated voting/learned baselines beyond current bootstrap summaries.
 
 ## Runtime, Latency, and Usability
@@ -60,7 +60,7 @@ This checklist is extracted from `README.md`, `docs/roadmap.md`, `docs/plan.md`,
 
 - [x] Provide `Dockerfile`, `environment.yml`, `experiments/Makefile`, `artifact/README.md`, `artifact/EXPECTED_OUTPUTS.md`, and `artifact/SECURITY_ETHICS.md`.
 - [x] Provide CI workflow for tests and reproduction pipeline.
-- [ ] Refresh artifact expected outputs after final result regeneration.
+- [x] Refresh artifact expected outputs after final result regeneration.
 - [ ] Run smoke, tests, main evaluation, ablation, runtime red-team, latency, bootstrap, failure analysis, tables, and available Docker/Conda checks before final delivery.
 - [ ] Confirm no real secrets, credentials, or operational payloads are included.
 - [ ] Confirm `git status --short` is clean and list commits.

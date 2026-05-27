@@ -29,7 +29,7 @@ Use this as the final gate before marking the active goal complete.
 - [x] Ablation results are generated.
 - [x] Runtime red-team metrics are generated.
 - [x] Latency and bootstrap CI results are available.
-- [ ] Failure-case markdown is current with latest detector outputs.
+- [x] Failure-case markdown is current with latest detector outputs.
 - [ ] Fusion vs calibrated/learned baseline significance is documented.
 
 ## Ecosystem and Ethics

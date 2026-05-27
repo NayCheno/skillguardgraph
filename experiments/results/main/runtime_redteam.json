@@ -2,8 +2,8 @@
   "malicious_with_trace": 3010,
   "benign_total": 1000,
   "runtime_defense": {
-    "ASR": 0.0515,
-    "ASR_blocked": 0.9485,
+    "ASR": 0.0,
+    "ASR_blocked": 1.0,
     "UTCR": 0.1635,
     "UTCR_blocked_rate": 1.0,
     "EDR": 0.4206,
@@ -12,8 +12,8 @@
     "PS_blocked_rate": 1.0,
     "PS_attempts": 430,
     "PS_blocked": 430,
-    "SC": 0.0515,
-    "SC_count": 155
+    "SC": 0.0,
+    "SC_count": 0
   },
   "usability": {
     "task_success_rate": 1.0,
@@ -56,8 +56,8 @@
     },
     "delayed_rug_pull": {
       "total": 430,
-      "blocked": 275,
-      "asr": 0.3605,
+      "blocked": 430,
+      "asr": 0.0,
       "utcr": 0.0,
       "utcr_blocked_rate": 0.0,
       "edr_total": 275,

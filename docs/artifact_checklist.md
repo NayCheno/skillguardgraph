@@ -14,7 +14,7 @@
 - [x] 提供 `experiments/README.md`。
 - [x] 提供 `experiments/Makefile`（支持 Windows 和 Linux）。
 - [x] 提供 `scripts/run_demo.py`。
-- [x] 提供 pytest 单元测试（71 tests，覆盖 C1-C7 正负例）。
+- [x] 提供 pytest 单元测试（73 tests，覆盖 C1-C7 正负例与 analyzer schema edge cases）。
 - [x] 提供 benchmark generation seed（`seed=42`，在 `build_benchmark.py` 中硬编码）。
 - [x] 提供完整 ablation runner（`run_ablation.py`，6 种配置）。
 - [x] 提供结果聚合与图表生成脚本（`make_tables.py`）。
@@ -42,8 +42,8 @@
 - [x] 有 sequence constraint ablation。
 - [x] 有 CCF-A 风险评分。
 - [x] 有统计显著性检验（bootstrap 95% CI）。
-- [x] 有 FPR 分析（FPR = 0.091，95% CI [0.074, 0.111]）。
-- [x] 有 latency 测量（p50 = 0.3ms，p95 = 0.4ms）。
+- [x] 有 FPR 分析（当前 fusion FPR = 0.000，bootstrap 95% CI [0.000, 0.000]）。
+- [x] 有 latency 测量（total pipeline p50 = 0.3ms，p95 = 0.4ms）。
 - [x] 有 per-attack-class recall 报告。
 - [x] 论文有相关工作对比表。
 - [ ] 需要补齐真实生态测量运行结果（已有真实 corpus 入口脚本；当前报告仍主要是 synthetic measurement）。

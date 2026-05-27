@@ -57,8 +57,8 @@ from standard repositories.
 
 ## 3. Attack Sample Handling
 
-All malicious samples in the 1020-sample benchmark (700 malicious across 7
-attack classes) use **de-weaponized patterns** designed for detection
+All malicious samples in the 4,010-sample benchmark (3,010 malicious across 7
+attack classes and 1,000 benign samples) use **de-weaponized patterns** designed for detection
 research, not exploitation.
 
 ### 3.1 De-weaponization
@@ -128,7 +128,7 @@ safety constraints.
 | Property | Implementation |
 |---|---|
 | Deterministic results | All experiments use a fixed random seed (`42`). Outputs are bitwise reproducible across runs and platforms. |
-| Fixed corpus | The 1020-sample benchmark and 1200-sample ecosystem corpus are generated deterministically. Re-running `make benchmark` and `make ecosystem` produces identical datasets. |
+| Fixed corpus | The 4,010-sample benchmark and 1,200-sample synthetic ecosystem corpus are generated deterministically. Re-running `make benchmark` and `make ecosystem` produces identical datasets. |
 | No real-world data | Real-world data is not included in the public artifact. The ecosystem corpus simulates real-world patterns from 5 source categories (GitHub MCP, npm, HuggingFace, enterprise catalog, community forum) using synthetic samples. |
 | Self-contained | All code, data, configurations, and expected outputs are included. No external datasets, APIs, or services are required to reproduce any result. |
 | Expected outputs | `EXPECTED_OUTPUTS.md` documents every output file, its format, size, and the key metrics it contains — enabling bit-level verification. |

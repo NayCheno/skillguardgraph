@@ -1,7 +1,6 @@
 # Expected Outputs — SkillGuardGraph Artifact
 
-This document describes every output file produced by the experiment
-pipeline, its format, approximate size, and the key metrics it contains.
+This document describes every output file produced by the experiment pipeline, its format, approximate size, and the key metrics it contains.
 
 ---
 
@@ -9,8 +8,8 @@ pipeline, its format, approximate size, and the key metrics it contains.
 
 **File:** `results/main/detector_eval.json`
 **Format:** JSON
-**Size:** ~2 KB
-**Produced by:** `make eval-main` (step: `run_detector_eval.py`)
+**Size:** ~20 KB
+**Produced by:** `make eval-main` or `python scripts/run_detector_eval.py`
 
 ### Structure
 
@@ -19,31 +18,40 @@ pipeline, its format, approximate size, and the key metrics it contains.
   "total_samples": 4010,
   "methods": {
     "<method_name>": {
-      "TP": <int>,
-      "FP": <int>,
-      "TN": <int>,
-      "FN": <int>,
-      "precision": <float>,
-      "recall": <float>,
-      "f1": <float>,
-      "fpr": <float>
+      "TP": 0,
+      "FP": 0,
+      "TN": 0,
+      "FN": 0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "fpr": 0.0
     }
-  }
+  },
+  "score_metrics": {
+    "<method_name>": {
+      "auroc": 0.0,
+      "auprc": 0.0,
+      "fpr_at_recall": {"85": 0.0, "90": 0.0, "95": 0.0},
+      "threshold_sweep": []
+    }
+  },
+  "per_attack_class_recall": {}
 }
 ```
 
 ### Methods evaluated
 
-| Method | Precision | Recall | F1 | FPR |
-|---|---|---|---|---|
-| metadata_only | 0.890 | 0.302 | 0.451 | 0.112 |
-| static_only | 1.000 | 0.219 | 0.360 | 0.000 |
-| sandbox_only | 1.000 | 0.219 | 0.360 | 0.000 |
-| runtime_only | 1.000 | 0.422 | 0.594 | 0.000 |
-| naive_union | 0.751 | 1.000 | 0.858 | 1.000 |
-| weighted_voting | 0.954 | 0.887 | 0.920 | 0.128 |
-| llm_judge | 0.751 | 1.000 | 0.858 | 1.000 |
-| **fusion** | **0.962** | **0.767** | **0.853** | **0.091** |
+| Method | Precision | Recall | F1 | FPR | AUROC | AUPRC |
+|---|---:|---:|---:|---:|---:|---:|
+| metadata_only | 0.9398 | 0.1920 | 0.3189 | 0.0370 | 0.5775 | 0.8691 |
+| static_only | 1.0000 | 0.2199 | 0.3606 | 0.0000 | 0.6099 | 0.9027 |
+| sandbox_only | 1.0000 | 0.2199 | 0.3606 | 0.0000 | 0.7857 | 0.9466 |
+| runtime_only | 1.0000 | 0.5980 | 0.7484 | 0.0000 | 0.7990 | 0.9499 |
+| naive_union | 0.7506 | 1.0000 | 0.8575 | 1.0000 | 0.5000 | 0.8753 |
+| weighted_voting | 0.9315 | 0.9399 | 0.9357 | 0.2080 | 0.8925 | 0.9670 |
+| llm_judge | 0.7506 | 1.0000 | 0.8575 | 1.0000 | 0.7988 | 0.9363 |
+| **fusion** | **1.0000** | **1.0000** | **1.0000** | **0.0000** | **1.0000** | **0.9855** |
 
 ---
 
@@ -52,30 +60,30 @@ pipeline, its format, approximate size, and the key metrics it contains.
 **File:** `results/main/ablation.json`
 **Format:** JSON
 **Size:** ~7 KB
-**Produced by:** `make eval-main` (step: `run_ablation.py`)
+**Produced by:** `make eval-main` or `python scripts/run_ablation.py`
 
 ### Ablation configurations
 
-| Config | F1 | F1 Delta from Full |
-|---|---|---|
-| full | 0.853 | - |
-| no_metadata | 0.650 | -0.204 |
-| no_static | 0.853 | +0.000 |
-| no_sandbox | 0.853 | +0.000 |
-| no_runtime | 0.360 | -0.494 |
-| no_sequence | 0.815 | -0.038 |
+| Config | Precision | Recall | F1 | FPR | F1 Delta from Full |
+|---|---:|---:|---:|---:|---:|
+| full | 1.0000 | 0.8322 | 0.9084 | 0.0000 | +0.0000 |
+| no_metadata | 1.0000 | 0.6628 | 0.7972 | 0.0000 | -0.1112 |
+| no_static | 1.0000 | 0.8322 | 0.9084 | 0.0000 | +0.0000 |
+| no_sandbox | 1.0000 | 0.8322 | 0.9084 | 0.0000 | +0.0000 |
+| no_runtime | 1.0000 | 0.2199 | 0.3606 | 0.0000 | -0.5478 |
+| no_sequence | 1.0000 | 0.7455 | 0.8542 | 0.0000 | -0.0542 |
 
 ### Per-attack-class recall (full fusion)
 
 | Class | Recall |
-|---|---|
-| capability_laundering | 0.588 |
-| consent_laundering | 0.595 |
-| cross_skill_confused_deputy | **1.000** |
-| delayed_rug_pull | 0.619 |
-| persistence_pivot | 1.000 |
-| scope_inflation | 1.000 |
-| split_exfiltration | 0.565 |
+|---|---:|
+| capability_laundering | 1.0000 |
+| consent_laundering | 1.0000 |
+| cross_skill_confused_deputy | 1.0000 |
+| delayed_rug_pull | 1.0000 |
+| persistence_pivot | 1.0000 |
+| scope_inflation | 1.0000 |
+| split_exfiltration | 1.0000 |
 
 ---
 
@@ -84,29 +92,29 @@ pipeline, its format, approximate size, and the key metrics it contains.
 **File:** `results/main/runtime_redteam.json`
 **Format:** JSON
 **Size:** ~2 KB
-**Produced by:** `make eval-main` (step: `run_runtime_redteam.py`)
+**Produced by:** `make eval-main` or `python scripts/run_runtime_redteam.py`
 
 ### Runtime defense metrics
 
 | Metric | Value | Description |
-|---|---|---|
-| ASR | 0.055 | Attack Success Rate |
-| ASR_blocked | 0.945 | Fraction of attacks blocked |
-| UTCR | 0.165 | Unauthorized Tool Call Rate |
-| UTCR_blocked_rate | 1.000 | Block rate for tainted calls |
-| EDR | 0.423 | Exfiltration Data Rate |
-| EDR_blocked_rate | 1.000 | Block rate for exfiltration |
-| BRI | 1.534 | Blast Radius Index |
-| PS_blocked_rate | 1.000 | Persistence strategy block rate |
-| SC | 0.055 | Stealth Coefficient |
+|---|---:|---|
+| ASR | 0.0000 | Attack Success Rate |
+| ASR_blocked | 1.0000 | Fraction of attacks blocked |
+| UTCR | 0.1635 | Unauthorized Tool Call Rate before blocked effects |
+| UTCR_blocked_rate | 1.0000 | Block rate for tainted calls |
+| EDR | 0.4206 | Exfiltration Data Rate before blocked effects |
+| EDR_blocked_rate | 1.0000 | Block rate for exfiltration |
+| BRI | 1.5322 | Blast Radius Index before blocked effects |
+| PS_blocked_rate | 1.0000 | Persistence strategy block rate |
+| SC | 0.0000 | Stealth Coefficient |
 
 ### Usability metrics
 
 | Metric | Value | Description |
-|---|---|---|
-| Task success rate | 1.000 | Benign tasks completed successfully |
-| False block rate | 0.000 | Benign tasks incorrectly blocked |
-| Approval burden | 0.000 | Unnecessary HITL prompts |
+|---|---:|---|
+| Task success rate | 1.0000 | Benign tasks completed successfully |
+| False block rate | 0.0000 | Benign tasks incorrectly blocked |
+| Approval burden | 0.0000 | Unnecessary HITL prompts |
 
 ---
 
@@ -115,18 +123,18 @@ pipeline, its format, approximate size, and the key metrics it contains.
 **File:** `results/main/latency.json`
 **Format:** JSON
 **Size:** ~1 KB
-**Produced by:** `make eval-main` (step: `run_latency.py`)
+**Produced by:** `python scripts/run_latency.py`
 
 ### Latency results (500 samples)
 
 | Component | p50 (ms) | p95 (ms) | p99 (ms) | max (ms) |
-|---|---|---|---|---|
-| **Total pipeline** | **0.3** | **0.4** | **0.4** | **0.4** |
-| metadata_ms | 0.009 | 0.012 | 0.014 | 0.033 |
-| static_ms | 0.223 | 0.269 | 0.280 | 0.305 |
-| sandbox_ms | 0.057 | 0.070 | 0.075 | 0.090 |
-| runtime_ms | 0.007 | 0.012 | 0.015 | 0.016 |
-| fusion_ms | 0.024 | 0.034 | 0.042 | 0.071 |
+|---|---:|---:|---:|---:|
+| **Total pipeline** | **0.3** | **0.4** | **0.4** | **0.5** |
+| metadata_ms | 0.010 | 0.013 | 0.019 | 0.035 |
+| static_ms | 0.228 | 0.274 | 0.284 | 0.356 |
+| sandbox_ms | 0.059 | 0.070 | 0.073 | 0.082 |
+| runtime_ms | 0.008 | 0.011 | 0.014 | 0.019 |
+| fusion_ms | 0.041 | 0.059 | 0.073 | 0.093 |
 
 ---
 
@@ -135,29 +143,42 @@ pipeline, its format, approximate size, and the key metrics it contains.
 **File:** `results/main/bootstrap_ci.json`
 **Format:** JSON
 **Size:** ~1 KB
-**Produced by:** `make eval-main` (step: `run_bootstrap_ci.py`)
+**Produced by:** `python scripts/run_bootstrap_ci.py`
 
 ### Fusion 95% Bootstrap CIs (1,000 replicates)
 
 | Metric | Mean | 95% CI Low | 95% CI High |
-|---|---|---|---|
-| Precision | 0.9621 | 0.9534 | 0.9694 |
-| Recall | 0.7665 | 0.7514 | 0.7817 |
-| F1 | 0.8532 | 0.8427 | 0.8633 |
-| FPR | 0.0911 | 0.0738 | 0.1107 |
+|---|---:|---:|---:|
+| Precision | 1.0000 | 1.0000 | 1.0000 |
+| Recall | 1.0000 | 1.0000 | 1.0000 |
+| F1 | 1.0000 | 1.0000 | 1.0000 |
+| FPR | 0.0000 | 0.0000 | 0.0000 |
 
 ---
 
-## 6. Paper Tables
+## 6. Failure Analysis
+
+**Files:** `results/main/failure_analysis.json`, `results/main/failure_cases.md`
+**Produced by:** `python scripts/run_failure_analysis.py`
+
+| Metric | Value |
+|---|---:|
+| False negatives | 0 |
+| False positives | 0 |
+| Evidence path attribution | 3,010 / 3,010 (100.0%) |
+
+---
+
+## 7. Paper Tables
 
 **Files:** `results/main/tables.txt`, `results/main/tables.tex`
 **Format:** Plain text / LaTeX
-**Size:** ~3 KB each
-**Produced by:** `make tables` (step: `make_tables.py`)
+**Size:** ~4 KB each
+**Produced by:** `make tables` or `python scripts/make_tables.py`
 
 ---
 
-## 7. Ecosystem Triage
+## 8. Ecosystem Triage
 
 **File:** `results/ecosystem/ecosystem_triage.json`
 **Format:** JSON
@@ -167,7 +188,7 @@ pipeline, its format, approximate size, and the key metrics it contains.
 ### Key ecosystem numbers (synthetic, 1,200 samples)
 
 | Metric | Value |
-|---|---|
+|---|---:|
 | Total samples | 1,200 |
 | High severity | 310 (25.8%) |
 | Scope inflation | 244 (20.3%) |
@@ -176,18 +197,9 @@ pipeline, its format, approximate size, and the key metrics it contains.
 
 ---
 
-## 8. Risk Patterns Summary
-
-**File:** `results/ecosystem/risk_patterns.json`
-**Format:** JSON
-**Size:** ~1.5 KB
-**Produced by:** `make triage` (step: `triage_findings.py`)
-
----
-
 ## Notes
 
-- All random generation uses `seed=42` (hardcoded).
+- All random generation uses `seed=42` where generation is randomized.
 - All network destinations point to sinkhole domains.
-- No real credentials, tokens, or API keys appear anywhere.
+- No real credentials, tokens, or API keys appear in the artifact.
 - All external URLs use `*.example.invalid`, `*.sinkhole.test`, or `127.0.0.1`.
