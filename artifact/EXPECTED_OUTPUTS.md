@@ -88,13 +88,34 @@ All seven attack classes retain 1.0000 recall under full fusion in the current a
 | Task success rate | 1.0000 |
 | False block rate | 0.0000 |
 | Evidence path coverage | 1.0000 |
-| Policy p95 latency | 0.255 ms |
+| Policy p95 latency | 0.430 ms |
 
 The harness executes only deterministic local toy task templates and records provenance events; it does not execute third-party code.
 
 ---
 
-## 5. Latency Measurement
+## 5. Local Sandbox Harness
+
+**File:** `results/main/sandbox_harness.json`
+**Format:** JSON
+**Produced by:** `python scripts/run_sandbox_harness.py`
+
+| Metric | Value |
+|---|---:|
+| Benign cases | 16 |
+| Malicious cases | 24 |
+| Blocked network attempts | 8 |
+| Blocked shell attempts | 8 |
+| Malicious detection recall | 1.0000 |
+| Benign alert rate | 0.0000 |
+| Unsafe egress events | 0 |
+| Sandbox p95 latency | 49.639 ms |
+
+The sandbox harness executes only repository-controlled toy snippets in fresh temporary directories with mocked network and shell helpers; it does not execute third-party code.
+
+---
+
+## 6. Latency Measurement
 
 **File:** `results/main/latency.json`
 **Format:** JSON
@@ -102,16 +123,16 @@ The harness executes only deterministic local toy task templates and records pro
 
 | Component | p50 (ms) | p95 (ms) | p99 (ms) | max (ms) |
 |---|---:|---:|---:|---:|
-| Total pipeline | 0.417 | 0.505 | 0.532 | 0.569 |
-| metadata_ms | 0.012 | 0.015 | 0.018 | 0.032 |
-| static_ms | 0.291 | 0.356 | 0.368 | 0.403 |
-| sandbox_ms | 0.058 | 0.070 | 0.072 | 0.085 |
-| runtime_ms | 0.008 | 0.012 | 0.015 | 0.019 |
-| fusion_ms | 0.047 | 0.066 | 0.077 | 0.087 |
+| Total pipeline | 0.469 | 0.624 | 0.850 | 0.913 |
+| metadata_ms | 0.014 | 0.021 | 0.026 | 0.037 |
+| static_ms | 0.325 | 0.425 | 0.587 | 0.658 |
+| sandbox_ms | 0.065 | 0.093 | 0.121 | 0.142 |
+| runtime_ms | 0.009 | 0.015 | 0.020 | 0.028 |
+| fusion_ms | 0.055 | 0.085 | 0.105 | 0.133 |
 
 ---
 
-## 6. Bootstrap Confidence Intervals
+## 7. Bootstrap Confidence Intervals
 
 **File:** `results/main/bootstrap_ci.json`
 **Format:** JSON
@@ -126,7 +147,7 @@ The harness executes only deterministic local toy task templates and records pro
 
 ---
 
-## 7. Failure Analysis
+## 8. Failure Analysis
 
 **Files:** `results/main/failure_analysis.json`, `results/main/failure_cases.md`
 **Produced by:** `python scripts/run_failure_analysis.py`
@@ -139,7 +160,7 @@ The harness executes only deterministic local toy task templates and records pro
 
 ---
 
-## 8. Significance Tests
+## 9. Significance Tests
 
 **File:** `results/main/significance_tests.json`
 **Format:** JSON
@@ -157,7 +178,7 @@ The harness executes only deterministic local toy task templates and records pro
 
 ---
 
-## 9. Generalization Stress Checks
+## 10. Generalization Stress Checks
 
 **File:** `results/main/generalization_eval.json`
 **Format:** JSON
@@ -174,7 +195,7 @@ All generalization acceptance booleans in the JSON are `true`. These checks are 
 
 ---
 
-## 10. Paper Tables
+## 11. Paper Tables
 
 **Files:** `results/main/tables.txt`, `results/main/tables.tex`
 **Format:** Plain text / LaTeX
@@ -182,7 +203,7 @@ All generalization acceptance booleans in the JSON are `true`. These checks are 
 
 ---
 
-## 11. Synthetic Ecosystem Triage
+## 12. Synthetic Ecosystem Triage
 
 **Files:** `results/ecosystem/ecosystem_triage.json`, `results/ecosystem/risk_patterns.json`
 **Produced by:** `python scripts/crawl_ecosystem.py` and `python scripts/triage_findings.py`
@@ -198,7 +219,7 @@ All generalization acceptance booleans in the JSON are `true`. These checks are 
 
 ---
 
-## 12. Real Public Ecosystem Measurement
+## 13. Real Public Ecosystem Measurement
 
 **Files:**
 

@@ -482,18 +482,43 @@ ASR reduction vs. no defense & 1.000 \\
 Task success rate & 1.000 \\
 False block rate & 0.000 \\
 Evidence path coverage & 1.000 \\
-Policy p95 latency (ms) & 0.255 \\
+Policy p95 latency (ms) & 0.430 \\
 \bottomrule
 \end{tabular}
 \end{table}
 
 All local harness acceptance gates pass: the suite has at least 50 benign and 50 attack tasks, ASR reduction is above 80\%, benign task success is above 85\%, false block rate is below 8\%, p95 policy latency is below 300\,ms, and evidence-path coverage is above 90\%. This is stronger than static trace replay because events are emitted by an instrumented executor, but it remains a local toy harness rather than deployment in a production agent runtime.
+
+\paragraph{Local isolated sandbox harness.}
+We also add a subprocess-based sandbox harness that runs only repository-controlled toy snippets inside fresh temporary working directories with mocked network and shell helpers. The harness never executes third-party code and never allows real outbound traffic; instead, it records blocked network, shell, file-write, and persistence events as execution-time observations.
+
+\begin{table}[t]
+\centering
+\caption{Local isolated sandbox harness.}
+\label{tab:sandbox_harness}
+\begin{tabular}{lr}
+\toprule
+Metric & Value \\
+\midrule
+Benign cases & 16 \\
+Malicious cases & 24 \\
+Blocked network attempts & 8 \\
+Blocked shell attempts & 8 \\
+Malicious detection recall & 1.000 \\
+Benign alert rate & 0.000 \\
+Unsafe egress events & 0 \\
+Sandbox p95 latency (ms) & 49.639 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+All sandbox-harness acceptance gates pass: no unsafe egress is observed, malicious-case detection recall is 100\%, benign alert rate is 0\%, and p95 overhead remains below 50\,ms. This is still a local toy harness rather than sandboxed execution of third-party skills, but it materially strengthens the artifact's isolation story beyond a purely pattern-based placeholder.
 \subsection{Failure Analysis}
 
 The current fusion run has 0 false negatives and 0 false positives on the synthetic benchmark. The failure-analysis output therefore functions as an attribution audit rather than a missed-case catalogue: all 3{,}010 malicious samples are true positives with non-empty evidence paths, and all 1{,}000 benign samples are true negatives.
 
 \paragraph{Residual risk.}
-A zero-error synthetic result does not imply zero real-world risk. The benchmark is template-generated, the simulated prober does not execute untrusted code, and real agent platforms may omit provenance labels needed by C2/C3/C6. We therefore treat the current result as evidence that the artifact is internally consistent and use RQ5 to evaluate external validity.
+A zero-error synthetic result does not imply zero real-world risk. The benchmark is template-generated, the default simulated prober does not execute untrusted code, and even the local sandbox/runtime harnesses operate only on repository-controlled toy cases rather than third-party packages. Real agent platforms may also omit provenance labels needed by C2/C3/C6. We therefore treat the current result as evidence that the artifact is internally consistent and use RQ5 to evaluate external validity.
 
 % ============================================================
 \section{Ecosystem Measurement (RQ5)}

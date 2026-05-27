@@ -12,7 +12,7 @@ Deliverables:
 - metadata/static/sandbox/runtime baselines;
 - graph fusion and policy constraints C1-C7;
 - detector evaluation with precision, recall, F1, FPR, AUROC, AUPRC, and threshold sweeps;
-- ablation, runtime red-team, local instrumented runtime harness, latency, bootstrap CI, failure analysis, held-out/hard-negative robustness checks, label-leakage audit, and generated paper tables;
+- ablation, runtime red-team, local instrumented runtime harness, local isolated sandbox harness, latency, bootstrap CI, failure analysis, held-out/hard-negative robustness checks, label-leakage audit, and generated paper tables;
 - artifact guide, expected outputs, ethics note, Dockerfile, and environment file.
 
 Acceptance:
@@ -22,6 +22,7 @@ Acceptance:
 - high-risk decisions include evidence paths;
 - held-out-template, hard-negative, mutation, and label-blinding checks meet their recorded acceptance gates;
 - local runtime harness contains at least 50 benign and 50 attack tasks and passes ASR, task-success, false-block, latency, and evidence-path gates;
+- local sandbox harness blocks unsafe egress and records malicious sandbox observations within its acceptance gates;
 - tables regenerate from JSON results.
 
 ## Phase 2 — Paper Consistency Pass

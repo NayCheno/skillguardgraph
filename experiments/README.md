@@ -80,6 +80,7 @@ experiments/
 │   ├── run_runtime_redteam.py # Runtime defense + usability evaluation
 │   ├── make_tables.py       # Generate paper tables (txt + LaTeX)
 │   ├── run_runtime_harness.py # Local instrumented toy runtime harness
+│   ├── run_sandbox_harness.py # Local isolated sandbox harness
 │   ├── run_generalization_eval.py # Held-out, hard-negative, mutation, leakage checks
 │   ├── crawl_ecosystem.py   # Generate synthetic ecosystem corpus
 │   ├── crawl_real_ecosystem.py # Collect real public corpus metadata/source snapshots
@@ -92,12 +93,14 @@ experiments/
 │   └── run_ablation_stub.py # Minimal ablation for smoke tests
 ├── src/
 │   └── skillguardgraph/     # Core library
-│       └── runtime_harness.py # Safe local runtime task templates
+│       ├── runtime_harness.py # Safe local runtime task templates
+│       └── sandbox_harness.py # Local isolated sandbox case runner
 └── tests/
     ├── test_analyzers.py    # Tests for metadata, static, sandbox analyzers
     ├── test_policy_engine.py # Tests for cross-layer policy engine
     ├── test_evidence_graph.py # Tests for typed evidence graph materialization
-    └── test_runtime_harness.py # Tests for local runtime harness instrumentation
+    ├── test_runtime_harness.py # Tests for local runtime harness instrumentation
+    └── test_sandbox_harness.py # Tests for local isolated sandbox harness
 ```
 
 ---
@@ -110,7 +113,7 @@ experiments/
 | `make test` | Unit tests (verbose) | ~2 min |
 | `make benchmark` | Build benchmark (4010 samples) | ~5 min |
 | `make validate` | Validate benchmark labels | ~2 min |
-| `make eval-main` | Detection + ablation + runtime eval + runtime harness + bootstrap + generalization | ~15 min |
+| `make eval-main` | Detection + ablation + runtime eval + runtime/sandbox harnesses + bootstrap + generalization | ~15 min |
 | `make tables` | Generate tables + failure analysis + significance | ~1 min |
 | `make ecosystem` | Crawl synthetic ecosystem corpus | ~10 min |
 | `make real-ecosystem` | Crawl passive real public GitHub + npm MCP corpus | network-bound |
@@ -120,6 +123,7 @@ experiments/
 | `make scan` | Scan a sample manifest | ~5 sec |
 | `make trace` | Evaluate a sample trace | ~5 sec |
 | `make runtime-harness` | Run local instrumented runtime harness | ~1 min |
+| `make sandbox-harness` | Run local isolated sandbox harness | ~1 min |
 | `make clean` | Remove all generated results and data | instant |
 
 ---
@@ -133,6 +137,7 @@ results/main/detector_eval.json   # Detection metrics, AUROC/AUPRC, threshold sw
 results/main/ablation.json        # Ablation results for 6 configurations
 results/main/runtime_redteam.json  # Runtime defense + usability metrics
 results/main/runtime_harness.json # Local instrumented runtime harness metrics
+results/main/sandbox_harness.json # Local isolated sandbox harness metrics
 results/main/failure_analysis.json # FP/FN and evidence path attribution
 results/main/significance_tests.json # McNemar + paired-bootstrap baseline comparison
 results/main/tables.txt           # Formatted plain-text tables
@@ -170,7 +175,8 @@ Key result numbers:
 | Runtime ASR | 0.000 |
 | Task success rate | 1.000 |
 | False block rate | 0.000 |
-| Latency p50 / p95 | 0.4ms / 0.5ms |
+| Latency p50 / p95 | 0.5ms / 0.6ms |
+| Sandbox harness recall / benign alert rate | 1.000 / 0.000 |
 | Real public corpus | 1,000 artifacts (750 GitHub + 250 npm) |
 | Real corpus high severity | 3 |
 | Real corpus confirmed vulnerabilities | 0 |

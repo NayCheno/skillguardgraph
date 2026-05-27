@@ -89,5 +89,19 @@ Table 7: Local Runtime Harness
 | Task success rate       | 1.0000 |
 | False block rate        | 0.0000 |
 | Evidence path coverage  | 1.0000 |
-| Policy p95 latency (ms) | 0.255  |
+| Policy p95 latency (ms) | 0.430  |
 +-------------------------+--------+
+
+Table 8: Local Sandbox Harness
++----------------------------+--------+
+| Metric                     | Value  |
++----------------------------+--------+
+| Benign cases               | 16     |
+| Malicious cases            | 24     |
+| Blocked network attempts   | 8      |
+| Blocked shell attempts     | 8      |
+| Malicious detection recall | 1.0000 |
+| Benign alert rate          | 0.0000 |
+| Unsafe egress events       | 0      |
+| Sandbox p95 latency (ms)   | 49.639 |
++----------------------------+--------+

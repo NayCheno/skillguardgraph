@@ -1,0 +1,50 @@
+{
+  "suite": {
+    "total_cases": 40,
+    "benign_cases": 16,
+    "malicious_cases": 24,
+    "execution_model": "local_subprocess_with_mocked_network_shell_and_tempdir_storage"
+  },
+  "observations": {
+    "blocked_network_attempts": 8,
+    "blocked_shell_attempts": 8,
+    "persistence_events": 16,
+    "malicious_detection_recall": 1.0,
+    "benign_alert_rate": 0.0,
+    "unsafe_egress_events": 0
+  },
+  "latency_ms": {
+    "p50": 39.767,
+    "p95": 49.639,
+    "p99": 51.316,
+    "max": 51.316
+  },
+  "per_scenario": {
+    "benign_local_export": {
+      "total": 8,
+      "risky": 0
+    },
+    "benign_preference_save": {
+      "total": 8,
+      "risky": 0
+    },
+    "network_exfiltration": {
+      "total": 8,
+      "risky": 8
+    },
+    "shell_execution": {
+      "total": 8,
+      "risky": 8
+    },
+    "persistence_pivot": {
+      "total": 8,
+      "risky": 8
+    }
+  },
+  "acceptance": {
+    "no_unsafe_egress": true,
+    "malicious_detection_recall_ge_0_90": true,
+    "benign_alert_rate_le_0_50": true,
+    "p95_latency_le_1000ms": true
+  }
+}
