@@ -1,0 +1,48 @@
+{
+  "triaged_at": "2026-05-27T00:00:00Z",
+  "scope": "Manual review of all HIGH-severity findings in experiments/results/ecosystem/real_ecosystem_results.json",
+  "review_boundary": "Passive repository metadata and checked-in source only; no execution of third-party code and no destructive validation.",
+  "summary": {
+    "high_severity_findings": 2,
+    "confirmed_vulnerabilities": 0,
+    "suspicious_findings": 2,
+    "likely_false_positives": 2,
+    "disclosures_sent": 0
+  },
+  "entries": [
+    {
+      "repo": "JetBrains/mcp-jetbrains",
+      "url": "https://github.com/JetBrains/mcp-jetbrains",
+      "license": "Apache-2.0",
+      "version_context": {
+        "default_branch": "main"
+      },
+      "risk": "high",
+      "findings": [
+        "C1_DECLARED_READONLY_BUT_WRITE_SCOPE",
+        "C7_LEAST_PRIVILEGE_SCOPE"
+      ],
+      "evidence_summary": "The passive analyzer inferred read_only semantics from readOnlyHint while the scope extractor collected export/send-like tokens from source text. No file-write or destructive sink was observed in the fetched entrypoint.",
+      "manual_triage": "Likely false positive / metadata inconsistency only",
+      "disclosure_decision": "No disclosure",
+      "rationale": "The finding is driven by heuristic scope extraction from a public IDE integration repository. The passive review does not establish a security violation, exploit path, or destructive behavior. Without controlled reproduction, the result remains a suspicious cataloging mismatch rather than a confirmed vulnerability."
+    },
+    {
+      "repo": "Joooook/12306-mcp",
+      "url": "https://github.com/Joooook/12306-mcp",
+      "license": "MIT",
+      "version_context": {
+        "default_branch": "main"
+      },
+      "risk": "high",
+      "findings": [
+        "C1_DECLARED_READONLY_BUT_WRITE_SCOPE",
+        "C7_LEAST_PRIVILEGE_SCOPE"
+      ],
+      "evidence_summary": "The repository description emphasizes ticket search while the passive scope extractor inferred export/run/search tokens from the TypeScript entrypoint. The shell-related heuristic also appears to overfire on code text patterns without confirming privileged execution.",
+      "manual_triage": "Likely false positive / insufficient exploit evidence",
+      "disclosure_decision": "No disclosure",
+      "rationale": "The passive analysis surfaces a possible least-privilege mismatch but does not demonstrate unauthorized access, exfiltration, persistence, or exploitable runtime behavior. The repository is therefore retained as a suspicious measurement example, not a published vulnerability claim."
+    }
+  ]
+}

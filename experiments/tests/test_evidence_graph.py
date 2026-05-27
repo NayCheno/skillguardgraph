@@ -101,9 +101,38 @@ class TestEvidenceGraph:
         assert graph.find(predicate="anything") == []
 
 
+    def test_materialized_graph_is_consistent(self):
+        graph = EvidenceGraph(evidence=[
+            _ev(kind="runtime", subject="trace:e1", predicate="flows_to", object_="trace:e2"),
+            _ev(kind="runtime", subject="trace:e2", predicate="calls_tool", object_="write_file"),
+        ])
+        assert graph.is_consistent()
+        assert graph.validate_consistency() == []
+
+    def test_explicit_edge_missing_target_is_reported(self):
+        from skillguardgraph.models import EdgeType, GraphEdge, GraphNode, NodeType
+
+        graph = EvidenceGraph(
+            nodes=[GraphNode(id="skill1", node_type=NodeType.SKILL)],
+            edges=[GraphEdge(source="skill1", target="missing_node", edge_type=EdgeType.CALLS)],
+        )
+        issues = graph.validate_consistency()
+        assert any("edge target missing node: missing_node" == issue for issue in issues)
+
+    def test_evidence_path_serialization_fields_are_preserved(self):
+        graph = EvidenceGraph(evidence=[
+            _ev(kind="metadata", subject="skill1", predicate="declares_capability", object_="read_only_or_low_risk"),
+            _ev(kind="permission", subject="skill1", predicate="requires_scope", object_="write"),
+        ])
+        evidence_dicts = [ev.to_dict() for ev in graph.evidence_path_for({"skill1"})]
+        assert evidence_dicts
+        assert all("subject" in item and "predicate" in item and "attrs" in item for item in evidence_dicts)
+
+
 # ---------------------------------------------------------------------------
 # C1: Capability Consistency
 # ---------------------------------------------------------------------------
+
 
 
 class TestC1CapabilityConsistency:

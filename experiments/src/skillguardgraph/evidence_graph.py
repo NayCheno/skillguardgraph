@@ -142,9 +142,41 @@ class EvidenceGraph:
             )
 
 
+    def validate_consistency(self) -> List[str]:
+        """Return graph consistency issues.
+
+        The validator is intentionally structural: it verifies that every edge
+        references existing nodes and that serialized evidence paths can be
+        represented as JSON-friendly dicts with stable required fields.
+        """
+        issues: List[str] = []
+
+        for ge in self._edges:
+            if ge.source not in self._nodes:
+                issues.append(f"edge source missing node: {ge.source}")
+            if ge.target not in self._nodes:
+                issues.append(f"edge target missing node: {ge.target}")
+
+        for idx, ev in enumerate(self._evidence):
+            serialized = ev.to_dict()
+            missing = {"kind", "subject", "predicate", "object", "confidence", "attrs"} - set(serialized)
+            if missing:
+                issues.append(
+                    f"evidence[{idx}] serialization missing fields: {','.join(sorted(missing))}"
+                )
+            if not isinstance(serialized.get("attrs"), dict):
+                issues.append(f"evidence[{idx}] attrs is not a dict")
+
+        return issues
+
+    def is_consistent(self) -> bool:
+        return not self.validate_consistency()
+
+
     # ------------------------------------------------------------------
     # Edge ingestion
     # ------------------------------------------------------------------
+
 
     def _add_edge(self, ge: GraphEdge) -> None:
         self._edges.append(ge)

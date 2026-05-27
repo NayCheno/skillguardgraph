@@ -1,0 +1,33 @@
+{
+  "crawl_started_goal": "Passive real-public MCP/tool repository measurement",
+  "crawl_completed_at": "2026-05-27T19:46:05Z",
+  "target_samples": 1000,
+  "actual_samples": 1000,
+  "queries": [
+    "\"model context protocol\" server",
+    "\"model context protocol\" tool",
+    "mcp server language:python",
+    "mcp server language:typescript",
+    "mcp tool server",
+    "mcp-server in:name",
+    "modelcontextprotocol server",
+    "model context protocol client tool"
+  ],
+  "pages_per_query": 3,
+  "search_per_page": 100,
+  "source_budget": 100,
+  "dedup_rule": "Deduplicate by repository full_name; merge matched queries into query_matches.",
+  "filter_rule": "Public GitHub repositories returned by MCP-related search queries; include metadata-only samples when source entrypoints are not recognized or source budget is exhausted.",
+  "version_rule": "Record default_branch together with created_at/updated_at/pushed_at from GitHub Search API metadata.",
+  "license_rule": "Record SPDX identifier when GitHub provides it; otherwise mark unknown.",
+  "availability_rule": {
+    "manifest_only": 955,
+    "source_available": 45
+  },
+  "safety_boundary": "Passive metadata/source collection only; no third-party code execution, no destructive calls, no credential use.",
+  "limitations": [
+    "GitHub Search API coverage is incomplete and query-biased.",
+    "Repository-level signals do not prove deployable vulnerabilities.",
+    "Manifest-only samples retain metadata evidence but weak implementation coverage."
+  ]
+}

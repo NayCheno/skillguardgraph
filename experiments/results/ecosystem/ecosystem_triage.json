@@ -2,7 +2,7 @@
   "metadata": {
     "total_samples": 1200,
     "total_findings": 498,
-    "analyzed_at": "2026-05-27T18:28:01Z"
+    "analyzed_at": "2026-05-27T19:30:41Z"
   },
   "risk_patterns": {
     "total_triaged": 1200,
@@ -78,7 +78,7 @@
       "C1_DECLARED_READONLY_BUT_WRITE_SCOPE": 249,
       "C7_LEAST_PRIVILEGE_SCOPE": 249
     },
-    "analyzed_at": "2026-05-27T18:28:01Z"
+    "analyzed_at": "2026-05-27T19:30:41Z"
   },
   "case_studies": [
     {
@@ -891,7 +891,7 @@
               "kind": "permission",
               "subject": "mcpscangateway",
               "predicate": "requires_scope",
-              "object": "delete",
+              "object": "send",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -901,7 +901,7 @@
               "kind": "permission",
               "subject": "mcpscangateway",
               "predicate": "requires_scope",
-              "object": "send",
+              "object": "delete",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -939,7 +939,7 @@
               "kind": "permission",
               "subject": "mcpscangateway",
               "predicate": "requires_scope",
-              "object": "delete",
+              "object": "send",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -949,7 +949,7 @@
               "kind": "permission",
               "subject": "mcpscangateway",
               "predicate": "requires_scope",
-              "object": "send",
+              "object": "delete",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -1071,7 +1071,7 @@
               "kind": "permission",
               "subject": "ai-report-bridge",
               "predicate": "requires_scope",
-              "object": "delete",
+              "object": "admin",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -1081,7 +1081,7 @@
               "kind": "permission",
               "subject": "ai-report-bridge",
               "predicate": "requires_scope",
-              "object": "admin",
+              "object": "delete",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -1139,7 +1139,7 @@
               "kind": "permission",
               "subject": "ai-report-bridge",
               "predicate": "requires_scope",
-              "object": "delete",
+              "object": "admin",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -1149,7 +1149,7 @@
               "kind": "permission",
               "subject": "ai-report-bridge",
               "predicate": "requires_scope",
-              "object": "admin",
+              "object": "delete",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -2406,7 +2406,7 @@
               "kind": "permission",
               "subject": "prostreambridge",
               "predicate": "requires_scope",
-              "object": "delete",
+              "object": "export",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -2416,7 +2416,7 @@
               "kind": "permission",
               "subject": "prostreambridge",
               "predicate": "requires_scope",
-              "object": "export",
+              "object": "delete",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -2454,7 +2454,7 @@
               "kind": "permission",
               "subject": "prostreambridge",
               "predicate": "requires_scope",
-              "object": "delete",
+              "object": "export",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -2464,7 +2464,7 @@
               "kind": "permission",
               "subject": "prostreambridge",
               "predicate": "requires_scope",
-              "object": "export",
+              "object": "delete",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -3386,16 +3386,6 @@
               "kind": "permission",
               "subject": "bolt_validate_connector",
               "predicate": "requires_scope",
-              "object": "delete",
-              "confidence": 0.95,
-              "attrs": {
-                "source": "manifest.scopes"
-              }
-            },
-            {
-              "kind": "permission",
-              "subject": "bolt_validate_connector",
-              "predicate": "requires_scope",
               "object": "export",
               "confidence": 0.95,
               "attrs": {
@@ -3407,6 +3397,16 @@
               "subject": "bolt_validate_connector",
               "predicate": "requires_scope",
               "object": "write",
+              "confidence": 0.95,
+              "attrs": {
+                "source": "manifest.scopes"
+              }
+            },
+            {
+              "kind": "permission",
+              "subject": "bolt_validate_connector",
+              "predicate": "requires_scope",
+              "object": "delete",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -3444,16 +3444,6 @@
               "kind": "permission",
               "subject": "bolt_validate_connector",
               "predicate": "requires_scope",
-              "object": "delete",
-              "confidence": 0.95,
-              "attrs": {
-                "source": "manifest.scopes"
-              }
-            },
-            {
-              "kind": "permission",
-              "subject": "bolt_validate_connector",
-              "predicate": "requires_scope",
               "object": "export",
               "confidence": 0.95,
               "attrs": {
@@ -3465,6 +3455,16 @@
               "subject": "bolt_validate_connector",
               "predicate": "requires_scope",
               "object": "write",
+              "confidence": 0.95,
+              "attrs": {
+                "source": "manifest.scopes"
+              }
+            },
+            {
+              "kind": "permission",
+              "subject": "bolt_validate_connector",
+              "predicate": "requires_scope",
+              "object": "delete",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -4435,7 +4435,7 @@
               "kind": "permission",
               "subject": "novareadskill",
               "predicate": "requires_scope",
-              "object": "delete",
+              "object": "write",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -4445,7 +4445,7 @@
               "kind": "permission",
               "subject": "novareadskill",
               "predicate": "requires_scope",
-              "object": "write",
+              "object": "delete",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -4483,7 +4483,7 @@
               "kind": "permission",
               "subject": "novareadskill",
               "predicate": "requires_scope",
-              "object": "delete",
+              "object": "write",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -4493,7 +4493,7 @@
               "kind": "permission",
               "subject": "novareadskill",
               "predicate": "requires_scope",
-              "object": "write",
+              "object": "delete",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -5296,7 +5296,7 @@
               "kind": "permission",
               "subject": "mcp_send_tool",
               "predicate": "requires_scope",
-              "object": "send",
+              "object": "write",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -5306,7 +5306,7 @@
               "kind": "permission",
               "subject": "mcp_send_tool",
               "predicate": "requires_scope",
-              "object": "write",
+              "object": "send",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -5364,7 +5364,7 @@
               "kind": "permission",
               "subject": "mcp_send_tool",
               "predicate": "requires_scope",
-              "object": "send",
+              "object": "write",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -5374,7 +5374,7 @@
               "kind": "permission",
               "subject": "mcp_send_tool",
               "predicate": "requires_scope",
-              "object": "write",
+              "object": "send",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -7274,6 +7274,16 @@
               "kind": "permission",
               "subject": "coreextractproxy",
               "predicate": "requires_scope",
+              "object": "admin",
+              "confidence": 0.95,
+              "attrs": {
+                "source": "manifest.scopes"
+              }
+            },
+            {
+              "kind": "permission",
+              "subject": "coreextractproxy",
+              "predicate": "requires_scope",
               "object": "send",
               "confidence": 0.95,
               "attrs": {
@@ -7285,16 +7295,6 @@
               "subject": "coreextractproxy",
               "predicate": "requires_scope",
               "object": "write",
-              "confidence": 0.95,
-              "attrs": {
-                "source": "manifest.scopes"
-              }
-            },
-            {
-              "kind": "permission",
-              "subject": "coreextractproxy",
-              "predicate": "requires_scope",
-              "object": "admin",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -7332,6 +7332,16 @@
               "kind": "permission",
               "subject": "coreextractproxy",
               "predicate": "requires_scope",
+              "object": "admin",
+              "confidence": 0.95,
+              "attrs": {
+                "source": "manifest.scopes"
+              }
+            },
+            {
+              "kind": "permission",
+              "subject": "coreextractproxy",
+              "predicate": "requires_scope",
               "object": "send",
               "confidence": 0.95,
               "attrs": {
@@ -7343,16 +7353,6 @@
               "subject": "coreextractproxy",
               "predicate": "requires_scope",
               "object": "write",
-              "confidence": 0.95,
-              "attrs": {
-                "source": "manifest.scopes"
-              }
-            },
-            {
-              "kind": "permission",
-              "subject": "coreextractproxy",
-              "predicate": "requires_scope",
-              "object": "admin",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -7412,7 +7412,7 @@
               "kind": "permission",
               "subject": "llm-chart-worker",
               "predicate": "requires_scope",
-              "object": "delete",
+              "object": "export",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -7422,7 +7422,7 @@
               "kind": "permission",
               "subject": "llm-chart-worker",
               "predicate": "requires_scope",
-              "object": "export",
+              "object": "delete",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -7460,7 +7460,7 @@
               "kind": "permission",
               "subject": "llm-chart-worker",
               "predicate": "requires_scope",
-              "object": "delete",
+              "object": "export",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -7470,7 +7470,7 @@
               "kind": "permission",
               "subject": "llm-chart-worker",
               "predicate": "requires_scope",
-              "object": "export",
+              "object": "delete",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -7628,7 +7628,7 @@
               "kind": "permission",
               "subject": "agentmergeextension",
               "predicate": "requires_scope",
-              "object": "export",
+              "object": "write",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -7638,7 +7638,7 @@
               "kind": "permission",
               "subject": "agentmergeextension",
               "predicate": "requires_scope",
-              "object": "write",
+              "object": "export",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -7676,7 +7676,7 @@
               "kind": "permission",
               "subject": "agentmergeextension",
               "predicate": "requires_scope",
-              "object": "export",
+              "object": "write",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -7686,7 +7686,7 @@
               "kind": "permission",
               "subject": "agentmergeextension",
               "predicate": "requires_scope",
-              "object": "write",
+              "object": "export",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -9592,7 +9592,7 @@
               "kind": "permission",
               "subject": "zen-stream-handler",
               "predicate": "requires_scope",
-              "object": "delete",
+              "object": "write",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -9612,7 +9612,7 @@
               "kind": "permission",
               "subject": "zen-stream-handler",
               "predicate": "requires_scope",
-              "object": "write",
+              "object": "delete",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -9660,7 +9660,7 @@
               "kind": "permission",
               "subject": "zen-stream-handler",
               "predicate": "requires_scope",
-              "object": "delete",
+              "object": "write",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -9680,7 +9680,7 @@
               "kind": "permission",
               "subject": "zen-stream-handler",
               "predicate": "requires_scope",
-              "object": "write",
+              "object": "delete",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -9998,7 +9998,7 @@
               "kind": "permission",
               "subject": "nano-debug-extension",
               "predicate": "requires_scope",
-              "object": "delete",
+              "object": "export",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -10008,7 +10008,7 @@
               "kind": "permission",
               "subject": "nano-debug-extension",
               "predicate": "requires_scope",
-              "object": "export",
+              "object": "delete",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -10056,7 +10056,7 @@
               "kind": "permission",
               "subject": "nano-debug-extension",
               "predicate": "requires_scope",
-              "object": "delete",
+              "object": "export",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -10066,7 +10066,7 @@
               "kind": "permission",
               "subject": "nano-debug-extension",
               "predicate": "requires_scope",
-              "object": "export",
+              "object": "delete",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -10452,6 +10452,16 @@
               "kind": "permission",
               "subject": "byte_summarize_plugin",
               "predicate": "requires_scope",
+              "object": "export",
+              "confidence": 0.95,
+              "attrs": {
+                "source": "manifest.scopes"
+              }
+            },
+            {
+              "kind": "permission",
+              "subject": "byte_summarize_plugin",
+              "predicate": "requires_scope",
               "object": "send",
               "confidence": 0.95,
               "attrs": {
@@ -10463,16 +10473,6 @@
               "subject": "byte_summarize_plugin",
               "predicate": "requires_scope",
               "object": "delete",
-              "confidence": 0.95,
-              "attrs": {
-                "source": "manifest.scopes"
-              }
-            },
-            {
-              "kind": "permission",
-              "subject": "byte_summarize_plugin",
-              "predicate": "requires_scope",
-              "object": "export",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -10520,6 +10520,16 @@
               "kind": "permission",
               "subject": "byte_summarize_plugin",
               "predicate": "requires_scope",
+              "object": "export",
+              "confidence": 0.95,
+              "attrs": {
+                "source": "manifest.scopes"
+              }
+            },
+            {
+              "kind": "permission",
+              "subject": "byte_summarize_plugin",
+              "predicate": "requires_scope",
               "object": "send",
               "confidence": 0.95,
               "attrs": {
@@ -10531,16 +10541,6 @@
               "subject": "byte_summarize_plugin",
               "predicate": "requires_scope",
               "object": "delete",
-              "confidence": 0.95,
-              "attrs": {
-                "source": "manifest.scopes"
-              }
-            },
-            {
-              "kind": "permission",
-              "subject": "byte_summarize_plugin",
-              "predicate": "requires_scope",
-              "object": "export",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -11929,6 +11929,16 @@
               "kind": "permission",
               "subject": "agentplotproxy",
               "predicate": "requires_scope",
+              "object": "export",
+              "confidence": 0.95,
+              "attrs": {
+                "source": "manifest.scopes"
+              }
+            },
+            {
+              "kind": "permission",
+              "subject": "agentplotproxy",
+              "predicate": "requires_scope",
               "object": "send",
               "confidence": 0.95,
               "attrs": {
@@ -11940,16 +11950,6 @@
               "subject": "agentplotproxy",
               "predicate": "requires_scope",
               "object": "modify",
-              "confidence": 0.95,
-              "attrs": {
-                "source": "manifest.scopes"
-              }
-            },
-            {
-              "kind": "permission",
-              "subject": "agentplotproxy",
-              "predicate": "requires_scope",
-              "object": "export",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -11987,6 +11987,16 @@
               "kind": "permission",
               "subject": "agentplotproxy",
               "predicate": "requires_scope",
+              "object": "export",
+              "confidence": 0.95,
+              "attrs": {
+                "source": "manifest.scopes"
+              }
+            },
+            {
+              "kind": "permission",
+              "subject": "agentplotproxy",
+              "predicate": "requires_scope",
               "object": "send",
               "confidence": 0.95,
               "attrs": {
@@ -11998,16 +12008,6 @@
               "subject": "agentplotproxy",
               "predicate": "requires_scope",
               "object": "modify",
-              "confidence": 0.95,
-              "attrs": {
-                "source": "manifest.scopes"
-              }
-            },
-            {
-              "kind": "permission",
-              "subject": "agentplotproxy",
-              "predicate": "requires_scope",
-              "object": "export",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -12579,16 +12579,6 @@
               "kind": "permission",
               "subject": "meta-validate-extension",
               "predicate": "requires_scope",
-              "object": "delete",
-              "confidence": 0.95,
-              "attrs": {
-                "source": "manifest.scopes"
-              }
-            },
-            {
-              "kind": "permission",
-              "subject": "meta-validate-extension",
-              "predicate": "requires_scope",
               "object": "send",
               "confidence": 0.95,
               "attrs": {
@@ -12600,6 +12590,16 @@
               "subject": "meta-validate-extension",
               "predicate": "requires_scope",
               "object": "modify",
+              "confidence": 0.95,
+              "attrs": {
+                "source": "manifest.scopes"
+              }
+            },
+            {
+              "kind": "permission",
+              "subject": "meta-validate-extension",
+              "predicate": "requires_scope",
+              "object": "delete",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -12647,16 +12647,6 @@
               "kind": "permission",
               "subject": "meta-validate-extension",
               "predicate": "requires_scope",
-              "object": "delete",
-              "confidence": 0.95,
-              "attrs": {
-                "source": "manifest.scopes"
-              }
-            },
-            {
-              "kind": "permission",
-              "subject": "meta-validate-extension",
-              "predicate": "requires_scope",
               "object": "send",
               "confidence": 0.95,
               "attrs": {
@@ -12668,6 +12658,16 @@
               "subject": "meta-validate-extension",
               "predicate": "requires_scope",
               "object": "modify",
+              "confidence": 0.95,
+              "attrs": {
+                "source": "manifest.scopes"
+              }
+            },
+            {
+              "kind": "permission",
+              "subject": "meta-validate-extension",
+              "predicate": "requires_scope",
+              "object": "delete",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -13540,7 +13540,7 @@
               "kind": "permission",
               "subject": "pulsetranslatehelper",
               "predicate": "requires_scope",
-              "object": "delete",
+              "object": "modify",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -13550,7 +13550,7 @@
               "kind": "permission",
               "subject": "pulsetranslatehelper",
               "predicate": "requires_scope",
-              "object": "modify",
+              "object": "delete",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -13588,7 +13588,7 @@
               "kind": "permission",
               "subject": "pulsetranslatehelper",
               "predicate": "requires_scope",
-              "object": "delete",
+              "object": "modify",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -13598,7 +13598,7 @@
               "kind": "permission",
               "subject": "pulsetranslatehelper",
               "predicate": "requires_scope",
-              "object": "modify",
+              "object": "delete",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -14929,6 +14929,16 @@
               "kind": "permission",
               "subject": "llmcompressserver",
               "predicate": "requires_scope",
+              "object": "admin",
+              "confidence": 0.95,
+              "attrs": {
+                "source": "manifest.scopes"
+              }
+            },
+            {
+              "kind": "permission",
+              "subject": "llmcompressserver",
+              "predicate": "requires_scope",
               "object": "modify",
               "confidence": 0.95,
               "attrs": {
@@ -14940,16 +14950,6 @@
               "subject": "llmcompressserver",
               "predicate": "requires_scope",
               "object": "delete",
-              "confidence": 0.95,
-              "attrs": {
-                "source": "manifest.scopes"
-              }
-            },
-            {
-              "kind": "permission",
-              "subject": "llmcompressserver",
-              "predicate": "requires_scope",
-              "object": "admin",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -14987,6 +14987,16 @@
               "kind": "permission",
               "subject": "llmcompressserver",
               "predicate": "requires_scope",
+              "object": "admin",
+              "confidence": 0.95,
+              "attrs": {
+                "source": "manifest.scopes"
+              }
+            },
+            {
+              "kind": "permission",
+              "subject": "llmcompressserver",
+              "predicate": "requires_scope",
               "object": "modify",
               "confidence": 0.95,
               "attrs": {
@@ -14998,16 +15008,6 @@
               "subject": "llmcompressserver",
               "predicate": "requires_scope",
               "object": "delete",
-              "confidence": 0.95,
-              "attrs": {
-                "source": "manifest.scopes"
-              }
-            },
-            {
-              "kind": "permission",
-              "subject": "llmcompressserver",
-              "predicate": "requires_scope",
-              "object": "admin",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -15483,7 +15483,7 @@
               "kind": "permission",
               "subject": "fast-log-adapter",
               "predicate": "requires_scope",
-              "object": "delete",
+              "object": "export",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -15503,7 +15503,7 @@
               "kind": "permission",
               "subject": "fast-log-adapter",
               "predicate": "requires_scope",
-              "object": "export",
+              "object": "delete",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -15541,7 +15541,7 @@
               "kind": "permission",
               "subject": "fast-log-adapter",
               "predicate": "requires_scope",
-              "object": "delete",
+              "object": "export",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -15561,7 +15561,7 @@
               "kind": "permission",
               "subject": "fast-log-adapter",
               "predicate": "requires_scope",
-              "object": "export",
+              "object": "delete",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -17217,7 +17217,7 @@
               "kind": "permission",
               "subject": "core_convert_adapter",
               "predicate": "requires_scope",
-              "object": "delete",
+              "object": "modify",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -17227,7 +17227,7 @@
               "kind": "permission",
               "subject": "core_convert_adapter",
               "predicate": "requires_scope",
-              "object": "modify",
+              "object": "delete",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -17265,7 +17265,7 @@
               "kind": "permission",
               "subject": "core_convert_adapter",
               "predicate": "requires_scope",
-              "object": "delete",
+              "object": "modify",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -17275,7 +17275,7 @@
               "kind": "permission",
               "subject": "core_convert_adapter",
               "predicate": "requires_scope",
-              "object": "modify",
+              "object": "delete",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -17890,7 +17890,7 @@
               "kind": "permission",
               "subject": "quicksummarizebridge",
               "predicate": "requires_scope",
-              "object": "delete",
+              "object": "write",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -17910,7 +17910,7 @@
               "kind": "permission",
               "subject": "quicksummarizebridge",
               "predicate": "requires_scope",
-              "object": "write",
+              "object": "delete",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -17958,7 +17958,7 @@
               "kind": "permission",
               "subject": "quicksummarizebridge",
               "predicate": "requires_scope",
-              "object": "delete",
+              "object": "write",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -17978,7 +17978,7 @@
               "kind": "permission",
               "subject": "quicksummarizebridge",
               "predicate": "requires_scope",
-              "object": "write",
+              "object": "delete",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -19397,7 +19397,7 @@
               "kind": "permission",
               "subject": "dashmonitorgateway",
               "predicate": "requires_scope",
-              "object": "send",
+              "object": "export",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -19407,7 +19407,7 @@
               "kind": "permission",
               "subject": "dashmonitorgateway",
               "predicate": "requires_scope",
-              "object": "export",
+              "object": "send",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -19455,7 +19455,7 @@
               "kind": "permission",
               "subject": "dashmonitorgateway",
               "predicate": "requires_scope",
-              "object": "send",
+              "object": "export",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -19465,7 +19465,7 @@
               "kind": "permission",
               "subject": "dashmonitorgateway",
               "predicate": "requires_scope",
-              "object": "export",
+              "object": "send",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -19535,6 +19535,16 @@
               "kind": "permission",
               "subject": "ai-report-connector",
               "predicate": "requires_scope",
+              "object": "export",
+              "confidence": 0.95,
+              "attrs": {
+                "source": "manifest.scopes"
+              }
+            },
+            {
+              "kind": "permission",
+              "subject": "ai-report-connector",
+              "predicate": "requires_scope",
               "object": "modify",
               "confidence": 0.95,
               "attrs": {
@@ -19546,16 +19556,6 @@
               "subject": "ai-report-connector",
               "predicate": "requires_scope",
               "object": "admin",
-              "confidence": 0.95,
-              "attrs": {
-                "source": "manifest.scopes"
-              }
-            },
-            {
-              "kind": "permission",
-              "subject": "ai-report-connector",
-              "predicate": "requires_scope",
-              "object": "export",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -19593,6 +19593,16 @@
               "kind": "permission",
               "subject": "ai-report-connector",
               "predicate": "requires_scope",
+              "object": "export",
+              "confidence": 0.95,
+              "attrs": {
+                "source": "manifest.scopes"
+              }
+            },
+            {
+              "kind": "permission",
+              "subject": "ai-report-connector",
+              "predicate": "requires_scope",
               "object": "modify",
               "confidence": 0.95,
               "attrs": {
@@ -19604,16 +19614,6 @@
               "subject": "ai-report-connector",
               "predicate": "requires_scope",
               "object": "admin",
-              "confidence": 0.95,
-              "attrs": {
-                "source": "manifest.scopes"
-              }
-            },
-            {
-              "kind": "permission",
-              "subject": "ai-report-connector",
-              "predicate": "requires_scope",
-              "object": "export",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -20175,7 +20175,7 @@
               "kind": "permission",
               "subject": "zenbrowseserver",
               "predicate": "requires_scope",
-              "object": "delete",
+              "object": "export",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -20185,7 +20185,7 @@
               "kind": "permission",
               "subject": "zenbrowseserver",
               "predicate": "requires_scope",
-              "object": "export",
+              "object": "delete",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -20223,7 +20223,7 @@
               "kind": "permission",
               "subject": "zenbrowseserver",
               "predicate": "requires_scope",
-              "object": "delete",
+              "object": "export",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -20233,7 +20233,7 @@
               "kind": "permission",
               "subject": "zenbrowseserver",
               "predicate": "requires_scope",
-              "object": "export",
+              "object": "delete",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -20747,7 +20747,7 @@
               "kind": "permission",
               "subject": "web-report-skill",
               "predicate": "requires_scope",
-              "object": "delete",
+              "object": "write",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -20757,7 +20757,7 @@
               "kind": "permission",
               "subject": "web-report-skill",
               "predicate": "requires_scope",
-              "object": "write",
+              "object": "delete",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -20795,7 +20795,7 @@
               "kind": "permission",
               "subject": "web-report-skill",
               "predicate": "requires_scope",
-              "object": "delete",
+              "object": "write",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -20805,7 +20805,7 @@
               "kind": "permission",
               "subject": "web-report-skill",
               "predicate": "requires_scope",
-              "object": "write",
+              "object": "delete",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -20980,7 +20980,7 @@
               "kind": "permission",
               "subject": "sparkindexserver",
               "predicate": "requires_scope",
-              "object": "delete",
+              "object": "send",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -20990,7 +20990,7 @@
               "kind": "permission",
               "subject": "sparkindexserver",
               "predicate": "requires_scope",
-              "object": "send",
+              "object": "delete",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -21038,7 +21038,7 @@
               "kind": "permission",
               "subject": "sparkindexserver",
               "predicate": "requires_scope",
-              "object": "delete",
+              "object": "send",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -21048,7 +21048,7 @@
               "kind": "permission",
               "subject": "sparkindexserver",
               "predicate": "requires_scope",
-              "object": "send",
+              "object": "delete",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -21171,7 +21171,7 @@
               "kind": "permission",
               "subject": "fast-cache-plugin",
               "predicate": "requires_scope",
-              "object": "admin",
+              "object": "write",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -21181,7 +21181,7 @@
               "kind": "permission",
               "subject": "fast-cache-plugin",
               "predicate": "requires_scope",
-              "object": "write",
+              "object": "admin",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -21219,7 +21219,7 @@
               "kind": "permission",
               "subject": "fast-cache-plugin",
               "predicate": "requires_scope",
-              "object": "admin",
+              "object": "write",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -21229,7 +21229,7 @@
               "kind": "permission",
               "subject": "fast-cache-plugin",
               "predicate": "requires_scope",
-              "object": "write",
+              "object": "admin",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -21862,16 +21862,6 @@
               "kind": "permission",
               "subject": "ai_debug_server",
               "predicate": "requires_scope",
-              "object": "delete",
-              "confidence": 0.95,
-              "attrs": {
-                "source": "manifest.scopes"
-              }
-            },
-            {
-              "kind": "permission",
-              "subject": "ai_debug_server",
-              "predicate": "requires_scope",
               "object": "export",
               "confidence": 0.95,
               "attrs": {
@@ -21883,6 +21873,16 @@
               "subject": "ai_debug_server",
               "predicate": "requires_scope",
               "object": "write",
+              "confidence": 0.95,
+              "attrs": {
+                "source": "manifest.scopes"
+              }
+            },
+            {
+              "kind": "permission",
+              "subject": "ai_debug_server",
+              "predicate": "requires_scope",
+              "object": "delete",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -21920,16 +21920,6 @@
               "kind": "permission",
               "subject": "ai_debug_server",
               "predicate": "requires_scope",
-              "object": "delete",
-              "confidence": 0.95,
-              "attrs": {
-                "source": "manifest.scopes"
-              }
-            },
-            {
-              "kind": "permission",
-              "subject": "ai_debug_server",
-              "predicate": "requires_scope",
               "object": "export",
               "confidence": 0.95,
               "attrs": {
@@ -21941,6 +21931,16 @@
               "subject": "ai_debug_server",
               "predicate": "requires_scope",
               "object": "write",
+              "confidence": 0.95,
+              "attrs": {
+                "source": "manifest.scopes"
+              }
+            },
+            {
+              "kind": "permission",
+              "subject": "ai_debug_server",
+              "predicate": "requires_scope",
+              "object": "delete",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -22191,6 +22191,16 @@
               "kind": "permission",
               "subject": "toolpipeproxy",
               "predicate": "requires_scope",
+              "object": "export",
+              "confidence": 0.95,
+              "attrs": {
+                "source": "manifest.scopes"
+              }
+            },
+            {
+              "kind": "permission",
+              "subject": "toolpipeproxy",
+              "predicate": "requires_scope",
               "object": "send",
               "confidence": 0.95,
               "attrs": {
@@ -22202,16 +22212,6 @@
               "subject": "toolpipeproxy",
               "predicate": "requires_scope",
               "object": "modify",
-              "confidence": 0.95,
-              "attrs": {
-                "source": "manifest.scopes"
-              }
-            },
-            {
-              "kind": "permission",
-              "subject": "toolpipeproxy",
-              "predicate": "requires_scope",
-              "object": "export",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -22259,6 +22259,16 @@
               "kind": "permission",
               "subject": "toolpipeproxy",
               "predicate": "requires_scope",
+              "object": "export",
+              "confidence": 0.95,
+              "attrs": {
+                "source": "manifest.scopes"
+              }
+            },
+            {
+              "kind": "permission",
+              "subject": "toolpipeproxy",
+              "predicate": "requires_scope",
               "object": "send",
               "confidence": 0.95,
               "attrs": {
@@ -22270,16 +22280,6 @@
               "subject": "toolpipeproxy",
               "predicate": "requires_scope",
               "object": "modify",
-              "confidence": 0.95,
-              "attrs": {
-                "source": "manifest.scopes"
-              }
-            },
-            {
-              "kind": "permission",
-              "subject": "toolpipeproxy",
-              "predicate": "requires_scope",
-              "object": "export",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -22423,16 +22423,6 @@
               "kind": "permission",
               "subject": "coresendhelper",
               "predicate": "requires_scope",
-              "object": "admin",
-              "confidence": 0.95,
-              "attrs": {
-                "source": "manifest.scopes"
-              }
-            },
-            {
-              "kind": "permission",
-              "subject": "coresendhelper",
-              "predicate": "requires_scope",
               "object": "export",
               "confidence": 0.95,
               "attrs": {
@@ -22444,6 +22434,16 @@
               "subject": "coresendhelper",
               "predicate": "requires_scope",
               "object": "write",
+              "confidence": 0.95,
+              "attrs": {
+                "source": "manifest.scopes"
+              }
+            },
+            {
+              "kind": "permission",
+              "subject": "coresendhelper",
+              "predicate": "requires_scope",
+              "object": "admin",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -22481,16 +22481,6 @@
               "kind": "permission",
               "subject": "coresendhelper",
               "predicate": "requires_scope",
-              "object": "admin",
-              "confidence": 0.95,
-              "attrs": {
-                "source": "manifest.scopes"
-              }
-            },
-            {
-              "kind": "permission",
-              "subject": "coresendhelper",
-              "predicate": "requires_scope",
               "object": "export",
               "confidence": 0.95,
               "attrs": {
@@ -22502,6 +22492,16 @@
               "subject": "coresendhelper",
               "predicate": "requires_scope",
               "object": "write",
+              "confidence": 0.95,
+              "attrs": {
+                "source": "manifest.scopes"
+              }
+            },
+            {
+              "kind": "permission",
+              "subject": "coresendhelper",
+              "predicate": "requires_scope",
+              "object": "admin",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -22697,7 +22697,7 @@
               "kind": "permission",
               "subject": "macro-patch-proxy",
               "predicate": "requires_scope",
-              "object": "delete",
+              "object": "modify",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -22707,7 +22707,7 @@
               "kind": "permission",
               "subject": "macro-patch-proxy",
               "predicate": "requires_scope",
-              "object": "modify",
+              "object": "delete",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -22755,7 +22755,7 @@
               "kind": "permission",
               "subject": "macro-patch-proxy",
               "predicate": "requires_scope",
-              "object": "delete",
+              "object": "modify",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -22765,7 +22765,7 @@
               "kind": "permission",
               "subject": "macro-patch-proxy",
               "predicate": "requires_scope",
-              "object": "modify",
+              "object": "delete",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -23291,7 +23291,7 @@
               "kind": "permission",
               "subject": "cloudtranslateproxy",
               "predicate": "requires_scope",
-              "object": "send",
+              "object": "export",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -23301,7 +23301,7 @@
               "kind": "permission",
               "subject": "cloudtranslateproxy",
               "predicate": "requires_scope",
-              "object": "export",
+              "object": "send",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -23339,7 +23339,7 @@
               "kind": "permission",
               "subject": "cloudtranslateproxy",
               "predicate": "requires_scope",
-              "object": "send",
+              "object": "export",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -23349,7 +23349,7 @@
               "kind": "permission",
               "subject": "cloudtranslateproxy",
               "predicate": "requires_scope",
-              "object": "export",
+              "object": "send",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -23674,6 +23674,16 @@
               "kind": "permission",
               "subject": "cloud-compress-tool",
               "predicate": "requires_scope",
+              "object": "export",
+              "confidence": 0.95,
+              "attrs": {
+                "source": "manifest.scopes"
+              }
+            },
+            {
+              "kind": "permission",
+              "subject": "cloud-compress-tool",
+              "predicate": "requires_scope",
               "object": "send",
               "confidence": 0.95,
               "attrs": {
@@ -23685,16 +23695,6 @@
               "subject": "cloud-compress-tool",
               "predicate": "requires_scope",
               "object": "modify",
-              "confidence": 0.95,
-              "attrs": {
-                "source": "manifest.scopes"
-              }
-            },
-            {
-              "kind": "permission",
-              "subject": "cloud-compress-tool",
-              "predicate": "requires_scope",
-              "object": "export",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -23732,6 +23732,16 @@
               "kind": "permission",
               "subject": "cloud-compress-tool",
               "predicate": "requires_scope",
+              "object": "export",
+              "confidence": 0.95,
+              "attrs": {
+                "source": "manifest.scopes"
+              }
+            },
+            {
+              "kind": "permission",
+              "subject": "cloud-compress-tool",
+              "predicate": "requires_scope",
               "object": "send",
               "confidence": 0.95,
               "attrs": {
@@ -23743,16 +23753,6 @@
               "subject": "cloud-compress-tool",
               "predicate": "requires_scope",
               "object": "modify",
-              "confidence": 0.95,
-              "attrs": {
-                "source": "manifest.scopes"
-              }
-            },
-            {
-              "kind": "permission",
-              "subject": "cloud-compress-tool",
-              "predicate": "requires_scope",
-              "object": "export",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -24462,7 +24462,7 @@
               "kind": "permission",
               "subject": "quickreadbridge",
               "predicate": "requires_scope",
-              "object": "send",
+              "object": "export",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -24472,7 +24472,7 @@
               "kind": "permission",
               "subject": "quickreadbridge",
               "predicate": "requires_scope",
-              "object": "export",
+              "object": "send",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -24520,7 +24520,7 @@
               "kind": "permission",
               "subject": "quickreadbridge",
               "predicate": "requires_scope",
-              "object": "send",
+              "object": "export",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -24530,7 +24530,7 @@
               "kind": "permission",
               "subject": "quickreadbridge",
               "predicate": "requires_scope",
-              "object": "export",
+              "object": "send",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -24663,7 +24663,7 @@
               "kind": "permission",
               "subject": "web-monitor-worker",
               "predicate": "requires_scope",
-              "object": "delete",
+              "object": "write",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -24673,7 +24673,7 @@
               "kind": "permission",
               "subject": "web-monitor-worker",
               "predicate": "requires_scope",
-              "object": "write",
+              "object": "delete",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -24721,7 +24721,7 @@
               "kind": "permission",
               "subject": "web-monitor-worker",
               "predicate": "requires_scope",
-              "object": "delete",
+              "object": "write",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -24731,7 +24731,7 @@
               "kind": "permission",
               "subject": "web-monitor-worker",
               "predicate": "requires_scope",
-              "object": "write",
+              "object": "delete",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -25013,6 +25013,16 @@
               "kind": "permission",
               "subject": "llm-graph-worker",
               "predicate": "requires_scope",
+              "object": "write",
+              "confidence": 0.95,
+              "attrs": {
+                "source": "manifest.scopes"
+              }
+            },
+            {
+              "kind": "permission",
+              "subject": "llm-graph-worker",
+              "predicate": "requires_scope",
               "object": "delete",
               "confidence": 0.95,
               "attrs": {
@@ -25024,16 +25034,6 @@
               "subject": "llm-graph-worker",
               "predicate": "requires_scope",
               "object": "admin",
-              "confidence": 0.95,
-              "attrs": {
-                "source": "manifest.scopes"
-              }
-            },
-            {
-              "kind": "permission",
-              "subject": "llm-graph-worker",
-              "predicate": "requires_scope",
-              "object": "write",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -25081,6 +25081,16 @@
               "kind": "permission",
               "subject": "llm-graph-worker",
               "predicate": "requires_scope",
+              "object": "write",
+              "confidence": 0.95,
+              "attrs": {
+                "source": "manifest.scopes"
+              }
+            },
+            {
+              "kind": "permission",
+              "subject": "llm-graph-worker",
+              "predicate": "requires_scope",
               "object": "delete",
               "confidence": 0.95,
               "attrs": {
@@ -25092,16 +25102,6 @@
               "subject": "llm-graph-worker",
               "predicate": "requires_scope",
               "object": "admin",
-              "confidence": 0.95,
-              "attrs": {
-                "source": "manifest.scopes"
-              }
-            },
-            {
-              "kind": "permission",
-              "subject": "llm-graph-worker",
-              "predicate": "requires_scope",
-              "object": "write",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -25594,7 +25594,7 @@
               "kind": "permission",
               "subject": "dash-compress-worker",
               "predicate": "requires_scope",
-              "object": "send",
+              "object": "export",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -25604,7 +25604,7 @@
               "kind": "permission",
               "subject": "dash-compress-worker",
               "predicate": "requires_scope",
-              "object": "export",
+              "object": "send",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -25662,7 +25662,7 @@
               "kind": "permission",
               "subject": "dash-compress-worker",
               "predicate": "requires_scope",
-              "object": "send",
+              "object": "export",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -25672,7 +25672,7 @@
               "kind": "permission",
               "subject": "dash-compress-worker",
               "predicate": "requires_scope",
-              "object": "export",
+              "object": "send",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -25911,7 +25911,7 @@
               "kind": "permission",
               "subject": "neographgateway",
               "predicate": "requires_scope",
-              "object": "delete",
+              "object": "export",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -25921,7 +25921,7 @@
               "kind": "permission",
               "subject": "neographgateway",
               "predicate": "requires_scope",
-              "object": "export",
+              "object": "delete",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -25979,7 +25979,7 @@
               "kind": "permission",
               "subject": "neographgateway",
               "predicate": "requires_scope",
-              "object": "delete",
+              "object": "export",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -25989,7 +25989,7 @@
               "kind": "permission",
               "subject": "neographgateway",
               "predicate": "requires_scope",
-              "object": "export",
+              "object": "delete",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -26337,6 +26337,16 @@
               "kind": "permission",
               "subject": "ultrawritebridge",
               "predicate": "requires_scope",
+              "object": "write",
+              "confidence": 0.95,
+              "attrs": {
+                "source": "manifest.scopes"
+              }
+            },
+            {
+              "kind": "permission",
+              "subject": "ultrawritebridge",
+              "predicate": "requires_scope",
               "object": "send",
               "confidence": 0.95,
               "attrs": {
@@ -26348,16 +26358,6 @@
               "subject": "ultrawritebridge",
               "predicate": "requires_scope",
               "object": "admin",
-              "confidence": 0.95,
-              "attrs": {
-                "source": "manifest.scopes"
-              }
-            },
-            {
-              "kind": "permission",
-              "subject": "ultrawritebridge",
-              "predicate": "requires_scope",
-              "object": "write",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -26395,6 +26395,16 @@
               "kind": "permission",
               "subject": "ultrawritebridge",
               "predicate": "requires_scope",
+              "object": "write",
+              "confidence": 0.95,
+              "attrs": {
+                "source": "manifest.scopes"
+              }
+            },
+            {
+              "kind": "permission",
+              "subject": "ultrawritebridge",
+              "predicate": "requires_scope",
               "object": "send",
               "confidence": 0.95,
               "attrs": {
@@ -26406,16 +26416,6 @@
               "subject": "ultrawritebridge",
               "predicate": "requires_scope",
               "object": "admin",
-              "confidence": 0.95,
-              "attrs": {
-                "source": "manifest.scopes"
-              }
-            },
-            {
-              "kind": "permission",
-              "subject": "ultrawritebridge",
-              "predicate": "requires_scope",
-              "object": "write",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -26825,7 +26825,7 @@
               "kind": "permission",
               "subject": "cyber_stream_skill",
               "predicate": "requires_scope",
-              "object": "delete",
+              "object": "modify",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -26835,7 +26835,7 @@
               "kind": "permission",
               "subject": "cyber_stream_skill",
               "predicate": "requires_scope",
-              "object": "modify",
+              "object": "delete",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -26883,7 +26883,7 @@
               "kind": "permission",
               "subject": "cyber_stream_skill",
               "predicate": "requires_scope",
-              "object": "delete",
+              "object": "modify",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -26893,7 +26893,7 @@
               "kind": "permission",
               "subject": "cyber_stream_skill",
               "predicate": "requires_scope",
-              "object": "modify",
+              "object": "delete",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -27337,6 +27337,16 @@
               "kind": "permission",
               "subject": "cyber_parse_gateway",
               "predicate": "requires_scope",
+              "object": "export",
+              "confidence": 0.95,
+              "attrs": {
+                "source": "manifest.scopes"
+              }
+            },
+            {
+              "kind": "permission",
+              "subject": "cyber_parse_gateway",
+              "predicate": "requires_scope",
               "object": "delete",
               "confidence": 0.95,
               "attrs": {
@@ -27348,16 +27358,6 @@
               "subject": "cyber_parse_gateway",
               "predicate": "requires_scope",
               "object": "admin",
-              "confidence": 0.95,
-              "attrs": {
-                "source": "manifest.scopes"
-              }
-            },
-            {
-              "kind": "permission",
-              "subject": "cyber_parse_gateway",
-              "predicate": "requires_scope",
-              "object": "export",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -27395,6 +27395,16 @@
               "kind": "permission",
               "subject": "cyber_parse_gateway",
               "predicate": "requires_scope",
+              "object": "export",
+              "confidence": 0.95,
+              "attrs": {
+                "source": "manifest.scopes"
+              }
+            },
+            {
+              "kind": "permission",
+              "subject": "cyber_parse_gateway",
+              "predicate": "requires_scope",
               "object": "delete",
               "confidence": 0.95,
               "attrs": {
@@ -27406,16 +27416,6 @@
               "subject": "cyber_parse_gateway",
               "predicate": "requires_scope",
               "object": "admin",
-              "confidence": 0.95,
-              "attrs": {
-                "source": "manifest.scopes"
-              }
-            },
-            {
-              "kind": "permission",
-              "subject": "cyber_parse_gateway",
-              "predicate": "requires_scope",
-              "object": "export",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -27636,7 +27636,7 @@
               "kind": "permission",
               "subject": "prime-pipe-skill",
               "predicate": "requires_scope",
-              "object": "delete",
+              "object": "send",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -27646,7 +27646,7 @@
               "kind": "permission",
               "subject": "prime-pipe-skill",
               "predicate": "requires_scope",
-              "object": "send",
+              "object": "delete",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -27684,7 +27684,7 @@
               "kind": "permission",
               "subject": "prime-pipe-skill",
               "predicate": "requires_scope",
-              "object": "delete",
+              "object": "send",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -27694,7 +27694,7 @@
               "kind": "permission",
               "subject": "prime-pipe-skill",
               "predicate": "requires_scope",
-              "object": "send",
+              "object": "delete",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -29188,7 +29188,7 @@
               "kind": "permission",
               "subject": "zen_monitor_handler",
               "predicate": "requires_scope",
-              "object": "admin",
+              "object": "write",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -29198,7 +29198,7 @@
               "kind": "permission",
               "subject": "zen_monitor_handler",
               "predicate": "requires_scope",
-              "object": "write",
+              "object": "admin",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -29246,7 +29246,7 @@
               "kind": "permission",
               "subject": "zen_monitor_handler",
               "predicate": "requires_scope",
-              "object": "admin",
+              "object": "write",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -29256,7 +29256,7 @@
               "kind": "permission",
               "subject": "zen_monitor_handler",
               "predicate": "requires_scope",
-              "object": "write",
+              "object": "admin",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -29410,7 +29410,7 @@
               "kind": "permission",
               "subject": "web_read_server",
               "predicate": "requires_scope",
-              "object": "send",
+              "object": "export",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -29420,7 +29420,7 @@
               "kind": "permission",
               "subject": "web_read_server",
               "predicate": "requires_scope",
-              "object": "export",
+              "object": "send",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -29478,7 +29478,7 @@
               "kind": "permission",
               "subject": "web_read_server",
               "predicate": "requires_scope",
-              "object": "send",
+              "object": "export",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -29488,7 +29488,7 @@
               "kind": "permission",
               "subject": "web_read_server",
               "predicate": "requires_scope",
-              "object": "export",
+              "object": "send",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -29663,7 +29663,7 @@
               "kind": "permission",
               "subject": "nano-report-service",
               "predicate": "requires_scope",
-              "object": "delete",
+              "object": "export",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -29673,7 +29673,7 @@
               "kind": "permission",
               "subject": "nano-report-service",
               "predicate": "requires_scope",
-              "object": "export",
+              "object": "delete",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -29721,7 +29721,7 @@
               "kind": "permission",
               "subject": "nano-report-service",
               "predicate": "requires_scope",
-              "object": "delete",
+              "object": "export",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -29731,7 +29731,7 @@
               "kind": "permission",
               "subject": "nano-report-service",
               "predicate": "requires_scope",
-              "object": "export",
+              "object": "delete",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -30174,7 +30174,7 @@
               "kind": "permission",
               "subject": "quickcompresstool",
               "predicate": "requires_scope",
-              "object": "delete",
+              "object": "export",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -30184,7 +30184,7 @@
               "kind": "permission",
               "subject": "quickcompresstool",
               "predicate": "requires_scope",
-              "object": "export",
+              "object": "delete",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -30242,7 +30242,7 @@
               "kind": "permission",
               "subject": "quickcompresstool",
               "predicate": "requires_scope",
-              "object": "delete",
+              "object": "export",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -30252,7 +30252,7 @@
               "kind": "permission",
               "subject": "quickcompresstool",
               "predicate": "requires_scope",
-              "object": "export",
+              "object": "delete",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -30490,7 +30490,7 @@
               "kind": "permission",
               "subject": "nova-alert-handler",
               "predicate": "requires_scope",
-              "object": "delete",
+              "object": "modify",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -30500,7 +30500,7 @@
               "kind": "permission",
               "subject": "nova-alert-handler",
               "predicate": "requires_scope",
-              "object": "modify",
+              "object": "delete",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -30538,7 +30538,7 @@
               "kind": "permission",
               "subject": "nova-alert-handler",
               "predicate": "requires_scope",
-              "object": "delete",
+              "object": "modify",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -30548,7 +30548,7 @@
               "kind": "permission",
               "subject": "nova-alert-handler",
               "predicate": "requires_scope",
-              "object": "modify",
+              "object": "delete",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -30755,7 +30755,7 @@
               "kind": "permission",
               "subject": "pulsefetchplugin",
               "predicate": "requires_scope",
-              "object": "send",
+              "object": "delete",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -30765,7 +30765,7 @@
               "kind": "permission",
               "subject": "pulsefetchplugin",
               "predicate": "requires_scope",
-              "object": "delete",
+              "object": "send",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -30813,7 +30813,7 @@
               "kind": "permission",
               "subject": "pulsefetchplugin",
               "predicate": "requires_scope",
-              "object": "send",
+              "object": "delete",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -30823,7 +30823,7 @@
               "kind": "permission",
               "subject": "pulsefetchplugin",
               "predicate": "requires_scope",
-              "object": "delete",
+              "object": "send",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -31444,16 +31444,6 @@
               "kind": "permission",
               "subject": "fast_scan_tool",
               "predicate": "requires_scope",
-              "object": "delete",
-              "confidence": 0.95,
-              "attrs": {
-                "source": "manifest.scopes"
-              }
-            },
-            {
-              "kind": "permission",
-              "subject": "fast_scan_tool",
-              "predicate": "requires_scope",
               "object": "send",
               "confidence": 0.95,
               "attrs": {
@@ -31465,6 +31455,16 @@
               "subject": "fast_scan_tool",
               "predicate": "requires_scope",
               "object": "admin",
+              "confidence": 0.95,
+              "attrs": {
+                "source": "manifest.scopes"
+              }
+            },
+            {
+              "kind": "permission",
+              "subject": "fast_scan_tool",
+              "predicate": "requires_scope",
+              "object": "delete",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -31502,16 +31502,6 @@
               "kind": "permission",
               "subject": "fast_scan_tool",
               "predicate": "requires_scope",
-              "object": "delete",
-              "confidence": 0.95,
-              "attrs": {
-                "source": "manifest.scopes"
-              }
-            },
-            {
-              "kind": "permission",
-              "subject": "fast_scan_tool",
-              "predicate": "requires_scope",
               "object": "send",
               "confidence": 0.95,
               "attrs": {
@@ -31523,6 +31513,16 @@
               "subject": "fast_scan_tool",
               "predicate": "requires_scope",
               "object": "admin",
+              "confidence": 0.95,
+              "attrs": {
+                "source": "manifest.scopes"
+              }
+            },
+            {
+              "kind": "permission",
+              "subject": "fast_scan_tool",
+              "predicate": "requires_scope",
+              "object": "delete",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -32086,7 +32086,7 @@
               "kind": "permission",
               "subject": "apexcacheextension",
               "predicate": "requires_scope",
-              "object": "send",
+              "object": "export",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -32096,7 +32096,7 @@
               "kind": "permission",
               "subject": "apexcacheextension",
               "predicate": "requires_scope",
-              "object": "export",
+              "object": "send",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -32134,7 +32134,7 @@
               "kind": "permission",
               "subject": "apexcacheextension",
               "predicate": "requires_scope",
-              "object": "send",
+              "object": "export",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -32144,7 +32144,7 @@
               "kind": "permission",
               "subject": "apexcacheextension",
               "predicate": "requires_scope",
-              "object": "export",
+              "object": "send",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -32462,7 +32462,7 @@
               "kind": "permission",
               "subject": "macroindexplugin",
               "predicate": "requires_scope",
-              "object": "delete",
+              "object": "admin",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -32472,7 +32472,7 @@
               "kind": "permission",
               "subject": "macroindexplugin",
               "predicate": "requires_scope",
-              "object": "admin",
+              "object": "delete",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -32510,7 +32510,7 @@
               "kind": "permission",
               "subject": "macroindexplugin",
               "predicate": "requires_scope",
-              "object": "delete",
+              "object": "admin",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -32520,7 +32520,7 @@
               "kind": "permission",
               "subject": "macroindexplugin",
               "predicate": "requires_scope",
-              "object": "admin",
+              "object": "delete",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -34690,7 +34690,7 @@
               "kind": "permission",
               "subject": "ai_read_handler",
               "predicate": "requires_scope",
-              "object": "admin",
+              "object": "write",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -34700,7 +34700,7 @@
               "kind": "permission",
               "subject": "ai_read_handler",
               "predicate": "requires_scope",
-              "object": "write",
+              "object": "admin",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -34748,7 +34748,7 @@
               "kind": "permission",
               "subject": "ai_read_handler",
               "predicate": "requires_scope",
-              "object": "admin",
+              "object": "write",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -34758,7 +34758,7 @@
               "kind": "permission",
               "subject": "ai_read_handler",
               "predicate": "requires_scope",
-              "object": "write",
+              "object": "admin",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -34818,7 +34818,7 @@
               "kind": "permission",
               "subject": "fastpipehandler",
               "predicate": "requires_scope",
-              "object": "delete",
+              "object": "modify",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -34828,7 +34828,7 @@
               "kind": "permission",
               "subject": "fastpipehandler",
               "predicate": "requires_scope",
-              "object": "modify",
+              "object": "delete",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -34866,7 +34866,7 @@
               "kind": "permission",
               "subject": "fastpipehandler",
               "predicate": "requires_scope",
-              "object": "delete",
+              "object": "modify",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -34876,7 +34876,7 @@
               "kind": "permission",
               "subject": "fastpipehandler",
               "predicate": "requires_scope",
-              "object": "modify",
+              "object": "delete",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -36013,7 +36013,7 @@
               "kind": "permission",
               "subject": "syncrenderextension",
               "predicate": "requires_scope",
-              "object": "send",
+              "object": "export",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -36023,7 +36023,7 @@
               "kind": "permission",
               "subject": "syncrenderextension",
               "predicate": "requires_scope",
-              "object": "export",
+              "object": "send",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -36061,7 +36061,7 @@
               "kind": "permission",
               "subject": "syncrenderextension",
               "predicate": "requires_scope",
-              "object": "send",
+              "object": "export",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -36071,7 +36071,7 @@
               "kind": "permission",
               "subject": "syncrenderextension",
               "predicate": "requires_scope",
-              "object": "export",
+              "object": "send",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -36131,7 +36131,7 @@
               "kind": "permission",
               "subject": "macroscanextension",
               "predicate": "requires_scope",
-              "object": "delete",
+              "object": "modify",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -36141,7 +36141,7 @@
               "kind": "permission",
               "subject": "macroscanextension",
               "predicate": "requires_scope",
-              "object": "modify",
+              "object": "delete",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -36179,7 +36179,7 @@
               "kind": "permission",
               "subject": "macroscanextension",
               "predicate": "requires_scope",
-              "object": "delete",
+              "object": "modify",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -36189,7 +36189,7 @@
               "kind": "permission",
               "subject": "macroscanextension",
               "predicate": "requires_scope",
-              "object": "modify",
+              "object": "delete",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -38035,7 +38035,7 @@
               "kind": "permission",
               "subject": "agent_summarize_skill",
               "predicate": "requires_scope",
-              "object": "send",
+              "object": "export",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -38045,7 +38045,7 @@
               "kind": "permission",
               "subject": "agent_summarize_skill",
               "predicate": "requires_scope",
-              "object": "export",
+              "object": "send",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -38093,7 +38093,7 @@
               "kind": "permission",
               "subject": "agent_summarize_skill",
               "predicate": "requires_scope",
-              "object": "send",
+              "object": "export",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -38103,7 +38103,7 @@
               "kind": "permission",
               "subject": "agent_summarize_skill",
               "predicate": "requires_scope",
-              "object": "export",
+              "object": "send",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -38289,7 +38289,7 @@
               "kind": "permission",
               "subject": "fast_monitor_gateway",
               "predicate": "requires_scope",
-              "object": "send",
+              "object": "delete",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -38299,7 +38299,7 @@
               "kind": "permission",
               "subject": "fast_monitor_gateway",
               "predicate": "requires_scope",
-              "object": "delete",
+              "object": "send",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -38347,7 +38347,7 @@
               "kind": "permission",
               "subject": "fast_monitor_gateway",
               "predicate": "requires_scope",
-              "object": "send",
+              "object": "delete",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -38357,7 +38357,7 @@
               "kind": "permission",
               "subject": "fast_monitor_gateway",
               "predicate": "requires_scope",
-              "object": "delete",
+              "object": "send",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -38448,16 +38448,6 @@
               "kind": "permission",
               "subject": "quick_parse_handler",
               "predicate": "requires_scope",
-              "object": "delete",
-              "confidence": 0.95,
-              "attrs": {
-                "source": "manifest.scopes"
-              }
-            },
-            {
-              "kind": "permission",
-              "subject": "quick_parse_handler",
-              "predicate": "requires_scope",
               "object": "send",
               "confidence": 0.95,
               "attrs": {
@@ -38469,6 +38459,16 @@
               "subject": "quick_parse_handler",
               "predicate": "requires_scope",
               "object": "modify",
+              "confidence": 0.95,
+              "attrs": {
+                "source": "manifest.scopes"
+              }
+            },
+            {
+              "kind": "permission",
+              "subject": "quick_parse_handler",
+              "predicate": "requires_scope",
+              "object": "delete",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -38506,16 +38506,6 @@
               "kind": "permission",
               "subject": "quick_parse_handler",
               "predicate": "requires_scope",
-              "object": "delete",
-              "confidence": 0.95,
-              "attrs": {
-                "source": "manifest.scopes"
-              }
-            },
-            {
-              "kind": "permission",
-              "subject": "quick_parse_handler",
-              "predicate": "requires_scope",
               "object": "send",
               "confidence": 0.95,
               "attrs": {
@@ -38527,6 +38517,16 @@
               "subject": "quick_parse_handler",
               "predicate": "requires_scope",
               "object": "modify",
+              "confidence": 0.95,
+              "attrs": {
+                "source": "manifest.scopes"
+              }
+            },
+            {
+              "kind": "permission",
+              "subject": "quick_parse_handler",
+              "predicate": "requires_scope",
+              "object": "delete",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -38754,7 +38754,7 @@
               "kind": "permission",
               "subject": "smartrenderhandler",
               "predicate": "requires_scope",
-              "object": "delete",
+              "object": "send",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -38764,7 +38764,7 @@
               "kind": "permission",
               "subject": "smartrenderhandler",
               "predicate": "requires_scope",
-              "object": "send",
+              "object": "delete",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -38802,7 +38802,7 @@
               "kind": "permission",
               "subject": "smartrenderhandler",
               "predicate": "requires_scope",
-              "object": "delete",
+              "object": "send",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -38812,7 +38812,7 @@
               "kind": "permission",
               "subject": "smartrenderhandler",
               "predicate": "requires_scope",
-              "object": "send",
+              "object": "delete",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -39382,7 +39382,7 @@
               "kind": "permission",
               "subject": "zen_search_skill",
               "predicate": "requires_scope",
-              "object": "delete",
+              "object": "export",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -39392,7 +39392,7 @@
               "kind": "permission",
               "subject": "zen_search_skill",
               "predicate": "requires_scope",
-              "object": "export",
+              "object": "delete",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -39430,7 +39430,7 @@
               "kind": "permission",
               "subject": "zen_search_skill",
               "predicate": "requires_scope",
-              "object": "delete",
+              "object": "export",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -39440,7 +39440,7 @@
               "kind": "permission",
               "subject": "zen_search_skill",
               "predicate": "requires_scope",
-              "object": "export",
+              "object": "delete",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -39619,7 +39619,7 @@
               "kind": "permission",
               "subject": "macro-log-service",
               "predicate": "requires_scope",
-              "object": "delete",
+              "object": "export",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -39639,7 +39639,7 @@
               "kind": "permission",
               "subject": "macro-log-service",
               "predicate": "requires_scope",
-              "object": "export",
+              "object": "delete",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -39677,7 +39677,7 @@
               "kind": "permission",
               "subject": "macro-log-service",
               "predicate": "requires_scope",
-              "object": "delete",
+              "object": "export",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -39697,7 +39697,7 @@
               "kind": "permission",
               "subject": "macro-log-service",
               "predicate": "requires_scope",
-              "object": "export",
+              "object": "delete",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -40685,7 +40685,7 @@
               "kind": "permission",
               "subject": "fastrenderbridge",
               "predicate": "requires_scope",
-              "object": "delete",
+              "object": "export",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -40695,7 +40695,7 @@
               "kind": "permission",
               "subject": "fastrenderbridge",
               "predicate": "requires_scope",
-              "object": "export",
+              "object": "delete",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -40733,7 +40733,7 @@
               "kind": "permission",
               "subject": "fastrenderbridge",
               "predicate": "requires_scope",
-              "object": "delete",
+              "object": "export",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -40743,7 +40743,7 @@
               "kind": "permission",
               "subject": "fastrenderbridge",
               "predicate": "requires_scope",
-              "object": "export",
+              "object": "delete",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -41797,7 +41797,7 @@
               "kind": "permission",
               "subject": "dashqueryextension",
               "predicate": "requires_scope",
-              "object": "modify",
+              "object": "admin",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -41807,7 +41807,7 @@
               "kind": "permission",
               "subject": "dashqueryextension",
               "predicate": "requires_scope",
-              "object": "admin",
+              "object": "modify",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -41855,7 +41855,7 @@
               "kind": "permission",
               "subject": "dashqueryextension",
               "predicate": "requires_scope",
-              "object": "modify",
+              "object": "admin",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -41865,7 +41865,7 @@
               "kind": "permission",
               "subject": "dashqueryextension",
               "predicate": "requires_scope",
-              "object": "admin",
+              "object": "modify",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -42233,16 +42233,6 @@
               "kind": "permission",
               "subject": "mcp_pipe_proxy",
               "predicate": "requires_scope",
-              "object": "delete",
-              "confidence": 0.95,
-              "attrs": {
-                "source": "manifest.scopes"
-              }
-            },
-            {
-              "kind": "permission",
-              "subject": "mcp_pipe_proxy",
-              "predicate": "requires_scope",
               "object": "write",
               "confidence": 0.95,
               "attrs": {
@@ -42254,6 +42244,16 @@
               "subject": "mcp_pipe_proxy",
               "predicate": "requires_scope",
               "object": "admin",
+              "confidence": 0.95,
+              "attrs": {
+                "source": "manifest.scopes"
+              }
+            },
+            {
+              "kind": "permission",
+              "subject": "mcp_pipe_proxy",
+              "predicate": "requires_scope",
+              "object": "delete",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -42291,16 +42291,6 @@
               "kind": "permission",
               "subject": "mcp_pipe_proxy",
               "predicate": "requires_scope",
-              "object": "delete",
-              "confidence": 0.95,
-              "attrs": {
-                "source": "manifest.scopes"
-              }
-            },
-            {
-              "kind": "permission",
-              "subject": "mcp_pipe_proxy",
-              "predicate": "requires_scope",
               "object": "write",
               "confidence": 0.95,
               "attrs": {
@@ -42312,6 +42302,16 @@
               "subject": "mcp_pipe_proxy",
               "predicate": "requires_scope",
               "object": "admin",
+              "confidence": 0.95,
+              "attrs": {
+                "source": "manifest.scopes"
+              }
+            },
+            {
+              "kind": "permission",
+              "subject": "mcp_pipe_proxy",
+              "predicate": "requires_scope",
+              "object": "delete",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -42851,7 +42851,7 @@
               "kind": "permission",
               "subject": "hypercompressplugin",
               "predicate": "requires_scope",
-              "object": "send",
+              "object": "modify",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -42861,7 +42861,7 @@
               "kind": "permission",
               "subject": "hypercompressplugin",
               "predicate": "requires_scope",
-              "object": "modify",
+              "object": "send",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -42909,7 +42909,7 @@
               "kind": "permission",
               "subject": "hypercompressplugin",
               "predicate": "requires_scope",
-              "object": "send",
+              "object": "modify",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -42919,7 +42919,7 @@
               "kind": "permission",
               "subject": "hypercompressplugin",
               "predicate": "requires_scope",
-              "object": "modify",
+              "object": "send",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -44618,7 +44618,7 @@
               "kind": "permission",
               "subject": "dashnotifyproxy",
               "predicate": "requires_scope",
-              "object": "send",
+              "object": "export",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -44628,7 +44628,7 @@
               "kind": "permission",
               "subject": "dashnotifyproxy",
               "predicate": "requires_scope",
-              "object": "export",
+              "object": "send",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -44676,7 +44676,7 @@
               "kind": "permission",
               "subject": "dashnotifyproxy",
               "predicate": "requires_scope",
-              "object": "send",
+              "object": "export",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -44686,7 +44686,7 @@
               "kind": "permission",
               "subject": "dashnotifyproxy",
               "predicate": "requires_scope",
-              "object": "export",
+              "object": "send",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -45098,6 +45098,16 @@
               "kind": "permission",
               "subject": "dash_browse_service",
               "predicate": "requires_scope",
+              "object": "modify",
+              "confidence": 0.95,
+              "attrs": {
+                "source": "manifest.scopes"
+              }
+            },
+            {
+              "kind": "permission",
+              "subject": "dash_browse_service",
+              "predicate": "requires_scope",
               "object": "write",
               "confidence": 0.95,
               "attrs": {
@@ -45109,16 +45119,6 @@
               "subject": "dash_browse_service",
               "predicate": "requires_scope",
               "object": "export",
-              "confidence": 0.95,
-              "attrs": {
-                "source": "manifest.scopes"
-              }
-            },
-            {
-              "kind": "permission",
-              "subject": "dash_browse_service",
-              "predicate": "requires_scope",
-              "object": "modify",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -45156,6 +45156,16 @@
               "kind": "permission",
               "subject": "dash_browse_service",
               "predicate": "requires_scope",
+              "object": "modify",
+              "confidence": 0.95,
+              "attrs": {
+                "source": "manifest.scopes"
+              }
+            },
+            {
+              "kind": "permission",
+              "subject": "dash_browse_service",
+              "predicate": "requires_scope",
               "object": "write",
               "confidence": 0.95,
               "attrs": {
@@ -45167,16 +45177,6 @@
               "subject": "dash_browse_service",
               "predicate": "requires_scope",
               "object": "export",
-              "confidence": 0.95,
-              "attrs": {
-                "source": "manifest.scopes"
-              }
-            },
-            {
-              "kind": "permission",
-              "subject": "dash_browse_service",
-              "predicate": "requires_scope",
-              "object": "modify",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -45246,7 +45246,7 @@
               "kind": "permission",
               "subject": "smartvalidateskill",
               "predicate": "requires_scope",
-              "object": "send",
+              "object": "export",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -45256,7 +45256,7 @@
               "kind": "permission",
               "subject": "smartvalidateskill",
               "predicate": "requires_scope",
-              "object": "export",
+              "object": "send",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -45314,7 +45314,7 @@
               "kind": "permission",
               "subject": "smartvalidateskill",
               "predicate": "requires_scope",
-              "object": "send",
+              "object": "export",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -45324,7 +45324,7 @@
               "kind": "permission",
               "subject": "smartvalidateskill",
               "predicate": "requires_scope",
-              "object": "export",
+              "object": "send",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -45798,7 +45798,7 @@
               "kind": "permission",
               "subject": "nova_browse_adapter",
               "predicate": "requires_scope",
-              "object": "send",
+              "object": "export",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -45808,7 +45808,7 @@
               "kind": "permission",
               "subject": "nova_browse_adapter",
               "predicate": "requires_scope",
-              "object": "export",
+              "object": "send",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -45856,7 +45856,7 @@
               "kind": "permission",
               "subject": "nova_browse_adapter",
               "predicate": "requires_scope",
-              "object": "send",
+              "object": "export",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -45866,7 +45866,7 @@
               "kind": "permission",
               "subject": "nova_browse_adapter",
               "predicate": "requires_scope",
-              "object": "export",
+              "object": "send",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -46868,7 +46868,7 @@
               "kind": "permission",
               "subject": "sparkcachebridge",
               "predicate": "requires_scope",
-              "object": "delete",
+              "object": "admin",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -46878,7 +46878,7 @@
               "kind": "permission",
               "subject": "sparkcachebridge",
               "predicate": "requires_scope",
-              "object": "admin",
+              "object": "delete",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -46916,7 +46916,7 @@
               "kind": "permission",
               "subject": "sparkcachebridge",
               "predicate": "requires_scope",
-              "object": "delete",
+              "object": "admin",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -46926,7 +46926,7 @@
               "kind": "permission",
               "subject": "sparkcachebridge",
               "predicate": "requires_scope",
-              "object": "admin",
+              "object": "delete",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -48055,7 +48055,7 @@
               "kind": "permission",
               "subject": "agent_query_tool",
               "predicate": "requires_scope",
-              "object": "send",
+              "object": "export",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -48065,7 +48065,7 @@
               "kind": "permission",
               "subject": "agent_query_tool",
               "predicate": "requires_scope",
-              "object": "export",
+              "object": "send",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -48103,7 +48103,7 @@
               "kind": "permission",
               "subject": "agent_query_tool",
               "predicate": "requires_scope",
-              "object": "send",
+              "object": "export",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -48113,7 +48113,7 @@
               "kind": "permission",
               "subject": "agent_query_tool",
               "predicate": "requires_scope",
-              "object": "export",
+              "object": "send",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -48183,6 +48183,16 @@
               "kind": "permission",
               "subject": "micro-extract-tool",
               "predicate": "requires_scope",
+              "object": "write",
+              "confidence": 0.95,
+              "attrs": {
+                "source": "manifest.scopes"
+              }
+            },
+            {
+              "kind": "permission",
+              "subject": "micro-extract-tool",
+              "predicate": "requires_scope",
               "object": "modify",
               "confidence": 0.95,
               "attrs": {
@@ -48194,16 +48204,6 @@
               "subject": "micro-extract-tool",
               "predicate": "requires_scope",
               "object": "admin",
-              "confidence": 0.95,
-              "attrs": {
-                "source": "manifest.scopes"
-              }
-            },
-            {
-              "kind": "permission",
-              "subject": "micro-extract-tool",
-              "predicate": "requires_scope",
-              "object": "write",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -48251,6 +48251,16 @@
               "kind": "permission",
               "subject": "micro-extract-tool",
               "predicate": "requires_scope",
+              "object": "write",
+              "confidence": 0.95,
+              "attrs": {
+                "source": "manifest.scopes"
+              }
+            },
+            {
+              "kind": "permission",
+              "subject": "micro-extract-tool",
+              "predicate": "requires_scope",
               "object": "modify",
               "confidence": 0.95,
               "attrs": {
@@ -48262,16 +48272,6 @@
               "subject": "micro-extract-tool",
               "predicate": "requires_scope",
               "object": "admin",
-              "confidence": 0.95,
-              "attrs": {
-                "source": "manifest.scopes"
-              }
-            },
-            {
-              "kind": "permission",
-              "subject": "micro-extract-tool",
-              "predicate": "requires_scope",
-              "object": "write",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -48544,6 +48544,16 @@
               "kind": "permission",
               "subject": "quick-compress-handler",
               "predicate": "requires_scope",
+              "object": "write",
+              "confidence": 0.95,
+              "attrs": {
+                "source": "manifest.scopes"
+              }
+            },
+            {
+              "kind": "permission",
+              "subject": "quick-compress-handler",
+              "predicate": "requires_scope",
               "object": "delete",
               "confidence": 0.95,
               "attrs": {
@@ -48555,16 +48565,6 @@
               "subject": "quick-compress-handler",
               "predicate": "requires_scope",
               "object": "admin",
-              "confidence": 0.95,
-              "attrs": {
-                "source": "manifest.scopes"
-              }
-            },
-            {
-              "kind": "permission",
-              "subject": "quick-compress-handler",
-              "predicate": "requires_scope",
-              "object": "write",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -48612,6 +48612,16 @@
               "kind": "permission",
               "subject": "quick-compress-handler",
               "predicate": "requires_scope",
+              "object": "write",
+              "confidence": 0.95,
+              "attrs": {
+                "source": "manifest.scopes"
+              }
+            },
+            {
+              "kind": "permission",
+              "subject": "quick-compress-handler",
+              "predicate": "requires_scope",
               "object": "delete",
               "confidence": 0.95,
               "attrs": {
@@ -48623,16 +48633,6 @@
               "subject": "quick-compress-handler",
               "predicate": "requires_scope",
               "object": "admin",
-              "confidence": 0.95,
-              "attrs": {
-                "source": "manifest.scopes"
-              }
-            },
-            {
-              "kind": "permission",
-              "subject": "quick-compress-handler",
-              "predicate": "requires_scope",
-              "object": "write",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -48734,7 +48734,7 @@
               "kind": "permission",
               "subject": "pro-diff-gateway",
               "predicate": "requires_scope",
-              "object": "delete",
+              "object": "modify",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -48744,7 +48744,7 @@
               "kind": "permission",
               "subject": "pro-diff-gateway",
               "predicate": "requires_scope",
-              "object": "modify",
+              "object": "delete",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -48782,7 +48782,7 @@
               "kind": "permission",
               "subject": "pro-diff-gateway",
               "predicate": "requires_scope",
-              "object": "delete",
+              "object": "modify",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -48792,7 +48792,7 @@
               "kind": "permission",
               "subject": "pro-diff-gateway",
               "predicate": "requires_scope",
-              "object": "modify",
+              "object": "delete",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -49041,7 +49041,7 @@
               "kind": "permission",
               "subject": "meta-send-extension",
               "predicate": "requires_scope",
-              "object": "delete",
+              "object": "write",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -49061,7 +49061,7 @@
               "kind": "permission",
               "subject": "meta-send-extension",
               "predicate": "requires_scope",
-              "object": "write",
+              "object": "delete",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -49099,7 +49099,7 @@
               "kind": "permission",
               "subject": "meta-send-extension",
               "predicate": "requires_scope",
-              "object": "delete",
+              "object": "write",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -49119,7 +49119,7 @@
               "kind": "permission",
               "subject": "meta-send-extension",
               "predicate": "requires_scope",
-              "object": "write",
+              "object": "delete",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -49263,7 +49263,7 @@
               "kind": "permission",
               "subject": "apex-query-server",
               "predicate": "requires_scope",
-              "object": "delete",
+              "object": "modify",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -49273,7 +49273,7 @@
               "kind": "permission",
               "subject": "apex-query-server",
               "predicate": "requires_scope",
-              "object": "modify",
+              "object": "delete",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -49311,7 +49311,7 @@
               "kind": "permission",
               "subject": "apex-query-server",
               "predicate": "requires_scope",
-              "object": "delete",
+              "object": "modify",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -49321,7 +49321,7 @@
               "kind": "permission",
               "subject": "apex-query-server",
               "predicate": "requires_scope",
-              "object": "modify",
+              "object": "delete",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -49666,7 +49666,7 @@
               "kind": "permission",
               "subject": "nano-verify-worker",
               "predicate": "requires_scope",
-              "object": "send",
+              "object": "export",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -49676,7 +49676,7 @@
               "kind": "permission",
               "subject": "nano-verify-worker",
               "predicate": "requires_scope",
-              "object": "export",
+              "object": "send",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -49724,7 +49724,7 @@
               "kind": "permission",
               "subject": "nano-verify-worker",
               "predicate": "requires_scope",
-              "object": "send",
+              "object": "export",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -49734,7 +49734,7 @@
               "kind": "permission",
               "subject": "nano-verify-worker",
               "predicate": "requires_scope",
-              "object": "export",
+              "object": "send",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -50549,7 +50549,7 @@
               "kind": "permission",
               "subject": "tool_plot_plugin",
               "predicate": "requires_scope",
-              "object": "admin",
+              "object": "write",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -50559,7 +50559,7 @@
               "kind": "permission",
               "subject": "tool_plot_plugin",
               "predicate": "requires_scope",
-              "object": "write",
+              "object": "admin",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -50617,7 +50617,7 @@
               "kind": "permission",
               "subject": "tool_plot_plugin",
               "predicate": "requires_scope",
-              "object": "admin",
+              "object": "write",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"
@@ -50627,7 +50627,7 @@
               "kind": "permission",
               "subject": "tool_plot_plugin",
               "predicate": "requires_scope",
-              "object": "write",
+              "object": "admin",
               "confidence": 0.95,
               "attrs": {
                 "source": "manifest.scopes"

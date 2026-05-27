@@ -1,28 +1,118 @@
 {
-  "total_samples": 431,
+  "total_samples": 1000,
   "sources": {
-    "github_mcp": 431
+    "github_mcp": 1000
+  },
+  "code_availability": {
+    "manifest_only": 955,
+    "source_available": 45
+  },
+  "languages": {
+    "typescript": 400,
+    "python": 422,
+    "go": 48,
+    "unknown": 20,
+    "c#": 11,
+    "java": 3,
+    "javascript": 52,
+    "php": 6,
+    "swift": 5,
+    "kotlin": 2,
+    "astro": 1,
+    "c++": 4,
+    "ruby": 2,
+    "rust": 5,
+    "max": 1,
+    "qml": 1,
+    "objective-c": 1,
+    "shell": 4,
+    "pascal": 1,
+    "clojure": 2,
+    "html": 3,
+    "handlebars": 1,
+    "zig": 1,
+    "wolfram language": 1,
+    "tex": 1,
+    "dockerfile": 1,
+    "api blueprint": 1
+  },
+  "licenses": {
+    "NOASSERTION": 51,
+    "MIT": 623,
+    "unknown": 118,
+    "Apache-2.0": 150,
+    "GPL-3.0": 21,
+    "BSD-3-Clause": 3,
+    "MPL-2.0": 5,
+    "UPL-1.0": 1,
+    "AGPL-3.0": 12,
+    "CC-BY-SA-4.0": 1,
+    "Unlicense": 1,
+    "BSD-2-Clause": 2,
+    "MIT-0": 3,
+    "0BSD": 1,
+    "ISC": 3,
+    "GPL-2.0": 2,
+    "CC0-1.0": 2,
+    "CC-BY-4.0": 1
   },
   "risk_patterns": {
-    "scope_inflation": {
-      "count": 24,
-      "rate": 0.0557
-    },
-    "description_mismatch": {
-      "count": 13,
-      "rate": 0.0302
-    },
-    "untrusted_publisher": {
-      "count": 83,
-      "rate": 0.1926
-    },
     "missing_signature": {
-      "count": 431,
+      "count": 1000,
       "rate": 1.0
     },
     "open_world_network": {
-      "count": 83,
-      "rate": 0.1926
+      "count": 19,
+      "rate": 0.019
+    },
+    "scope_inflation": {
+      "count": 5,
+      "rate": 0.005
+    },
+    "untrusted_publisher": {
+      "count": 232,
+      "rate": 0.232
     }
-  }
+  },
+  "severity": {
+    "low": 979,
+    "medium": 19,
+    "high": 2
+  },
+  "per_source_risk": {
+    "github_mcp": {
+      "count": 1000,
+      "mean_score": 0.134,
+      "max_score": 10.0,
+      "high_risk_count": 2
+    }
+  },
+  "top_high_risk": [
+    {
+      "repo": "JetBrains/mcp-jetbrains",
+      "url": "https://github.com/JetBrains/mcp-jetbrains",
+      "license": "Apache-2.0",
+      "stars": 957,
+      "code_availability": "source_available",
+      "policy_risk": "high",
+      "policy_decision": "hitl",
+      "policy_score": 10.0,
+      "findings": [
+        "C1_DECLARED_READONLY_BUT_WRITE_SCOPE"
+      ]
+    },
+    {
+      "repo": "Joooook/12306-mcp",
+      "url": "https://github.com/Joooook/12306-mcp",
+      "license": "MIT",
+      "stars": 896,
+      "code_availability": "source_available",
+      "policy_risk": "high",
+      "policy_decision": "hitl",
+      "policy_score": 10.0,
+      "findings": [
+        "C1_DECLARED_READONLY_BUT_WRITE_SCOPE"
+      ]
+    }
+  ]
 }
