@@ -1,0 +1,27 @@
+{
+  "n_samples": 4010,
+  "n_bootstrap": 1000,
+  "seed": 42,
+  "fusion_ci": {
+    "precision": {
+      "mean": 0.9621,
+      "ci_low": 0.9534,
+      "ci_high": 0.9694
+    },
+    "recall": {
+      "mean": 0.7665,
+      "ci_low": 0.7514,
+      "ci_high": 0.7817
+    },
+    "f1": {
+      "mean": 0.8532,
+      "ci_low": 0.8427,
+      "ci_high": 0.8633
+    },
+    "fpr": {
+      "mean": 0.0911,
+      "ci_low": 0.0738,
+      "ci_high": 0.1107
+    }
+  }
+}
