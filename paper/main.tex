@@ -428,6 +428,38 @@ VIPER-MCP and MCP-BiFlow highlight that MCP servers require protocol-aware taint
 
 MCPShield proposes a security cognition layer for adaptive trust calibration around MCP tool invocation. SkillGuardGraph differs by focusing on typed cross-layer evidence, sequence-level policies, approval integrity, version drift, and lifecycle-wide governance.
 
+
+\subsection{Comparison with Existing Work}
+
+Table~\ref{tab:comparison} positions SkillGuardGraph against existing approaches across key dimensions.
+
+\begin{table}[t]
+\centering
+\caption{Comparison of SkillGuardGraph with existing approaches.}
+\label{tab:comparison}
+\begin{tabular}{lccccccc}
+\toprule
+& \rotatebox{60}{MCPTox} & \rotatebox{60}{TRUSTDESC} & \rotatebox{60}{VIPER-MCP} & \rotatebox{60}{MCP-BiFlow} & \rotatebox{60}{MCPShield} & \rotatebox{60}{Naive Union} & \rotatebox{60}{\textbf{Ours}} \\
+\midrule
+Metadata scan & \checkmark & \checkmark & & & \checkmark & \checkmark & \checkmark \\
+Static analysis & & & \checkmark & \checkmark & & \checkmark & \checkmark \\
+Sandbox probing & & & & & & \checkmark & \checkmark \\
+Runtime provenance & & & & \checkmark & \checkmark & \checkmark & \checkmark \\
+Typed evidence graph & & & & & & & \checkmark \\
+Cross-layer constraints & & & & & & & \checkmark \\
+Approval integrity & & & & & & & \checkmark \\
+Version drift & & & & & & & \checkmark \\
+Persistence boundary & & & & & & & \checkmark \\
+Cross-skill chains & & & & \checkmark & & \checkmark & \checkmark \\
+Benchmark (compositional) & \checkmark & & & & & & \checkmark \\
+Explainable evidence path & & & & & \checkmark & & \checkmark \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+MCPTox focuses on metadata-level tool poisoning. TRUSTDESC addresses description-code consistency. VIPER-MCP and MCP-BiFlow perform implementation-level taint analysis. MCPShield introduces runtime trust calibration. None of these combine metadata, implementation, sandbox, runtime, approval, and version evidence in a unified graph with cross-layer constraints. Naive union stacks all detectors but lacks cross-layer reasoning, producing excessive false positives (FPR = 1.0).
+
+
 % ============================================================
 \section{Discussion}
 \label{sec:discussion}
@@ -470,8 +502,9 @@ All attack cases use synthetic data, fake credentials, sinkhole domains (\texttt
 
 Malicious skills are not merely bad tools. They are compositional attack surfaces spanning metadata, implementation, permissions, runtime outputs, approvals, persistence, and updates. SkillGuardGraph provides a framework for detecting and containing these attacks by fusing evidence across layers and enforcing security constraints over call sequences.
 
-
 Our evaluation on a benchmark of 4{,}010 samples across seven attack classes demonstrates that graph-based fusion achieves the highest precision (96.2\%) and lowest false positive rate (9.1\%) among all evaluated methods, with a 90.9\% FPR reduction relative to naive union. SkillGuardGraph achieves 100\% recall on cross-skill confused deputy attacks, a class where weighted voting achieves only 59.3\%, demonstrating the value of cross-layer consistency reasoning. Ablation experiments confirm that runtime evidence is the single most critical component, with its removal reducing F1 by 49.4 percentage points. Ecosystem measurement of 1{,}200 samples reveals significant prevalence of scope inflation (20.3\%), description--code mismatch (22.8\%), and untrusted publishers (75.8\%). Latency measurement shows p50 = 0.3\,ms and p95 = 0.4\,ms per skill evaluation, confirming deployment feasibility.
+
+The key contribution is not a larger detector stack, but a principled way to reason about cross-layer trust gaps in agent ecosystems through typed evidence, constraint-based evaluation, and explainable policy decisions.
 
 % ============================================================
 \section*{Acknowledgments}
