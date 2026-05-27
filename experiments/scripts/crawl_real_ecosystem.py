@@ -123,6 +123,14 @@ def fetch_raw(owner: str, repo: str, path: str, branch: str) -> Optional[str]:
         return None
 
 
+def github_contents(owner: str, repo: str, branch: str, path: str = "") -> Any:
+    encoded_path = urllib.parse.quote(path.strip("/"))
+    url = f"https://api.github.com/repos/{owner}/{repo}/contents"
+    if encoded_path:
+        url += f"/{encoded_path}"
+    sep = "&" if "?" in url else "?"
+    return github_request(f"{url}{sep}ref={urllib.parse.quote(branch)}")
+
 def npm_search(term: str, offset: int) -> Dict[str, Any]:
     query = urllib.parse.quote(term)
     url = f"https://registry.npmjs.org/-/v1/search?text={query}&size={NPM_SEARCH_SIZE}&from={offset}"
@@ -185,6 +193,112 @@ def entrypoint_candidates() -> Iterable[str]:
         "src/index.js",
     )
 
+
+def _normalize_repo_path(path: str) -> str:
+    value = path.lstrip("./")
+    return value[1:] if value.startswith("/") else value
+
+
+def _package_json_entrypoints(package_json_text: str) -> List[str]:
+    try:
+        doc = json.loads(package_json_text)
+    except Exception:
+        return []
+
+    values: List[str] = []
+    for key in ("main", "module", "types"):
+        value = doc.get(key)
+        if isinstance(value, str):
+            values.append(value)
+    bin_field = doc.get("bin")
+    if isinstance(bin_field, str):
+        values.append(bin_field)
+    elif isinstance(bin_field, dict):
+        values.extend(str(v) for v in bin_field.values())
+    exports = doc.get("exports")
+    if isinstance(exports, str):
+        values.append(exports)
+    elif isinstance(exports, dict):
+        for export_value in exports.values():
+            if isinstance(export_value, str):
+                values.append(export_value)
+            elif isinstance(export_value, dict):
+                values.extend(str(v) for v in export_value.values() if isinstance(v, str))
+    normalized = []
+    for value in values:
+        value = _normalize_repo_path(value)
+        if value.endswith((".py", ".ts", ".js")) and value not in normalized:
+            normalized.append(value)
+    return normalized
+
+
+def npm_entrypoint_candidates(version_doc: Dict[str, Any]) -> List[str]:
+    candidates: List[str] = []
+    for key in ("main", "module", "types"):
+        value = version_doc.get(key)
+        if isinstance(value, str):
+            normalized = _normalize_repo_path(value)
+            if normalized.endswith((".py", ".ts", ".js")) and normalized not in candidates:
+                candidates.append(normalized)
+    bin_field = version_doc.get("bin")
+    if isinstance(bin_field, str):
+        normalized = _normalize_repo_path(bin_field)
+        if normalized.endswith((".py", ".ts", ".js")) and normalized not in candidates:
+            candidates.append(normalized)
+    elif isinstance(bin_field, dict):
+        for value in bin_field.values():
+            normalized = _normalize_repo_path(str(value))
+            if normalized.endswith((".py", ".ts", ".js")) and normalized not in candidates:
+                candidates.append(normalized)
+    return candidates
+
+
+def discover_source_paths(owner: str, repo: str, branch: str, extra_paths: Optional[List[str]] = None) -> List[str]:
+    candidates: List[str] = []
+    seen: set[str] = set()
+
+    def add(path: str) -> None:
+        normalized = _normalize_repo_path(path)
+        if normalized and normalized not in seen:
+            seen.add(normalized)
+            candidates.append(normalized)
+
+    for path in entrypoint_candidates():
+        add(path)
+    for path in extra_paths or []:
+        add(path)
+
+    for listing_path in ("", "src", "server", "app"):
+        try:
+            listing = github_contents(owner, repo, branch, listing_path)
+        except Exception:
+            continue
+        items = listing if isinstance(listing, list) else [listing]
+        for item in items:
+            if not isinstance(item, dict) or item.get("type") != "file":
+                continue
+            rel_path = str(item.get("path") or "")
+            name = str(item.get("name") or "").lower()
+            if name == "package.json":
+                add(rel_path)
+            elif rel_path.endswith((".py", ".ts", ".js")) and any(token in name for token in ("mcp", "server", "index", "main", "tool", "cli")):
+                add(rel_path)
+
+    package_json_paths = [path for path in list(candidates) if path.endswith("package.json")]
+    for package_json_path in package_json_paths[:2]:
+        content = fetch_raw(owner, repo, package_json_path, branch)
+        if not content:
+            continue
+        for path in _package_json_entrypoints(content):
+            add(path)
+
+    source_paths = [path for path in candidates if path.endswith((".py", ".ts", ".js"))]
+    return source_paths[:12]
+
+
+# ---------------------------------------------------------------------------
+# Tool extraction
+# ---------------------------------------------------------------------------
 
 # ---------------------------------------------------------------------------
 # Tool extraction
@@ -447,11 +561,11 @@ def analyze_github_repo(repo: Dict[str, Any], source_label: str, attempt_source_
 
     source_files: List[Dict[str, str]] = []
     if attempt_source_fetch:
-        for path in entrypoint_candidates():
+        for path in discover_source_paths(owner, name, default_branch):
             content = fetch_raw(owner, name, path, default_branch)
             if content and len(content) > 100:
                 source_files.append({"path": path, "content": content})
-                if len(source_files) >= 2:
+                if len(source_files) >= 3:
                     break
 
     source_blobs = [item["content"] for item in source_files]
@@ -575,11 +689,12 @@ def analyze_npm_package(entry: Dict[str, Any], attempt_source_fetch: bool) -> Di
             linked_repo = None
     if attempt_source_fetch and linked_repo is not None:
         default_branch = linked_repo.get("default_branch") or "main"
-        for path in entrypoint_candidates():
+        extra_paths = npm_entrypoint_candidates(version_doc)
+        for path in discover_source_paths(owner_repo[0], owner_repo[1], default_branch, extra_paths=extra_paths):
             content = fetch_raw(owner_repo[0], owner_repo[1], path, default_branch)
             if content and len(content) > 100:
                 source_files.append({"path": path, "content": content})
-                if len(source_files) >= 2:
+                if len(source_files) >= 3:
                     break
 
     source_blobs = [item["content"] for item in source_files]

@@ -178,7 +178,7 @@ Key result numbers:
 | Latency p50 / p95 | 0.5ms / 0.6ms |
 | Sandbox harness recall / benign alert rate | 1.000 / 0.000 |
 | Real public corpus | 1,000 artifacts (750 GitHub + 250 npm) |
-| Real corpus high severity | 3 |
+| Real corpus high severity | 2 |
 | Real corpus confirmed vulnerabilities | 0 |
 
 See `../artifact/EXPECTED_OUTPUTS.md` for full output documentation.

@@ -17,7 +17,6 @@ This log records the disposition of real-ecosystem findings reviewed during the 
 |---|---|---|---|
 | `idosal/git-mcp` | HIGH | Likely false positive / metadata-capability mismatch only | Not sent |
 | `firecrawl/firecrawl-mcp-server` | HIGH | Likely false positive / insufficient exploit evidence | Not sent |
-| `excalidraw/excalidraw-mcp` | HIGH | Likely false positive / heuristic scope extraction overfire | Not sent |
 
 ### Rationale
 

@@ -23,7 +23,7 @@ The real measurement does **not** execute third-party code, perform destructive 
 - Dedup rule: source-specific artifact identifier (`full_name` for GitHub, package name for npm), with `linked_repository` recorded when an npm package points to GitHub.
 - Version provenance: GitHub `default_branch` plus `created_at`/`updated_at`/`pushed_at`; npm latest package version plus publication/update timestamps.
 - License provenance: SPDX identifier when an upstream API provides one; otherwise `unknown`.
-- Source coverage: fetch likely Python/TypeScript/JavaScript entrypoints for a bounded subset of GitHub repositories or linked npm repositories; retain the rest as metadata-only samples.
+- Source coverage: fetch a bounded set of likely Python/TypeScript/JavaScript entrypoints using explicit candidates, GitHub contents listings, and package.json-derived entrypoints when available; retain the rest as metadata-only samples.
 
 ### 2.2 Dataset statistics
 
@@ -32,11 +32,11 @@ The real measurement does **not** execute third-party code, perform destructive 
 | Total public artifacts | 1,000 |
 | GitHub MCP repositories | 750 |
 | npm MCP packages | 250 |
-| Source-available samples | 34 |
-| Manifest-only samples | 966 |
-| High severity | 3 |
-| Medium severity | 26 |
-| Low severity | 971 |
+| Source-available samples | 23 |
+| Manifest-only samples | 977 |
+| High severity | 2 |
+| Medium severity | 15 |
+| Low severity | 983 |
 
 ### 2.3 Language and license mix
 
@@ -44,18 +44,18 @@ Top language counts in the measured corpus:
 
 | Language | Count |
 |---|---:|
-| TypeScript | 361 |
+| TypeScript | 323 |
 | Python | 308 |
-| Unknown | 225 |
+| Unknown | 265 |
 | Go | 31 |
-| JavaScript | 17 |
+| JavaScript | 16 |
 
 Top license counts:
 
 | License | Count |
 |---|---:|
-| MIT | 475 |
-| Apache-2.0 | 220 |
+| MIT | 474 |
+| Apache-2.0 | 221 |
 | Unknown | 96 |
 | NOASSERTION | 89 |
 | AGPL-3.0 | 40 |
@@ -65,19 +65,20 @@ Top license counts:
 | Pattern | Count | Rate |
 |---|---:|---:|
 | Missing signature | 750 | 75.0% |
-| Untrusted publisher | 188 | 18.8% |
-| Open-world network access | 10 | 1.0% |
-| Scope inflation | 9 | 0.9% |
+| Untrusted publisher | 205 | 20.5% |
+| Open-world network access | 8 | 0.8% |
+| Scope inflation | 7 | 0.7% |
 | Instruction-like descriptions | 0 | 0.0% |
 | Description-code mismatch | 0 | 0.0% |
 
 ### 2.5 Interpretation
 
 1. **Governance provenance remains weak, but npm is measurably better than GitHub-only metadata.** Missing signatures drop from the prior GitHub-only 100.0% result to 75.0% once npm package attestations and signatures are included, but the public ecosystem still lacks ubiquitous provenance.
-2. **Only a small fraction of artifacts trigger high-severity passive findings.** After the multi-source passive crawl, the real corpus produces 3 HIGH findings and 26 MEDIUM findings, and all 3 HIGH findings remain unconfirmed after manual review.
-3. **Metadata-only coverage still dominates.** 966/1,000 artifacts remain manifest-only because the collector intentionally bounds source probing and does not recurse through full repositories or package tarballs. This is acceptable for catalog-level measurement but not for code-complete vulnerability confirmation.
-4. **Multi-source coverage is better than the prior GitHub-only snapshot, but still incomplete.** The current batch spans GitHub MCP repositories and npm MCP packages; it still does not cover PyPI, hosted marketplaces, or enterprise-private catalogs.
-5. **Real-world prevalence is much lower than synthetic stress prevalence.** This is expected: the synthetic corpus is designed to exercise suspicious patterns, while the public corpus is used as a conservative external-validity check.
+2. **Only a very small fraction of artifacts trigger high-severity passive findings.** After the refined multi-source passive crawl, the real corpus produces 2 HIGH findings and 15 MEDIUM findings, and both HIGH findings remain unconfirmed after manual review.
+3. **Metadata-only coverage still dominates.** 977/1,000 artifacts remain manifest-only because the collector intentionally bounds source probing and does not recurse through full repositories or package tarballs. This is acceptable for catalog-level measurement but not for code-complete vulnerability confirmation.
+4. **Source discovery is slightly richer but still bounded.** The collector now consults GitHub contents listings and package.json-derived entrypoints before source fetch, which improves bounded recovery on smaller validation batches, but the full 1,000-artifact batch still remains overwhelmingly metadata-only.
+5. **Multi-source coverage is better than the prior GitHub-only snapshot, but still incomplete.** The current batch spans GitHub MCP repositories and npm MCP packages; it still does not cover PyPI, hosted marketplaces, or enterprise-private catalogs.
+6. **Real-world prevalence is much lower than synthetic stress prevalence.** This is expected: the synthetic corpus is designed to exercise suspicious patterns, while the public corpus is used as a conservative external-validity check.
 
 ## 3. Manual triage and disclosure status
 
@@ -87,7 +88,6 @@ All HIGH-severity real findings were manually reviewed in `experiments/results/e
 |---|---|---|---|
 | `idosal/git-mcp` | HIGH | Likely false positive / metadata-capability mismatch only | Not sent |
 | `firecrawl/firecrawl-mcp-server` | HIGH | Likely false positive / insufficient exploit evidence | Not sent |
-| `excalidraw/excalidraw-mcp` | HIGH | Likely false positive / heuristic scope extraction overfire | Not sent |
 
 `docs/disclosure_log.md` records the disclosure decision. The current batch yields **0 confirmed vulnerabilities** and **0 outbound disclosures** because passive evidence alone does not satisfy the disclosure threshold in `docs/disclosure_log_template.md`.
 

@@ -5,20 +5,20 @@
     "npm_mcp": 250
   },
   "code_availability": {
-    "manifest_only": 966,
-    "source_available": 34
+    "manifest_only": 977,
+    "source_available": 23
   },
   "languages": {
     "python": 308,
     "shell": 5,
-    "typescript": 361,
-    "unknown": 225,
+    "typescript": 323,
+    "unknown": 265,
     "rust": 15,
     "html": 6,
     "go": 31,
     "jupyter notebook": 7,
-    "c#": 6,
-    "javascript": 17,
+    "c#": 5,
+    "javascript": 16,
     "ocaml": 1,
     "php": 1,
     "swift": 4,
@@ -32,8 +32,8 @@
     "emacs lisp": 1
   },
   "licenses": {
-    "Apache-2.0": 220,
-    "MIT": 475,
+    "Apache-2.0": 221,
+    "MIT": 474,
     "NOASSERTION": 89,
     "GPL-3.0": 18,
     "unknown": 96,
@@ -66,29 +66,29 @@
       "rate": 0.75
     },
     "open_world_network": {
-      "count": 10,
-      "rate": 0.01
+      "count": 8,
+      "rate": 0.008
     },
     "scope_inflation": {
-      "count": 9,
-      "rate": 0.009
+      "count": 7,
+      "rate": 0.007
     },
     "untrusted_publisher": {
-      "count": 188,
-      "rate": 0.188
+      "count": 205,
+      "rate": 0.205
     }
   },
   "severity": {
-    "low": 971,
-    "medium": 26,
-    "high": 3
+    "low": 983,
+    "medium": 15,
+    "high": 2
   },
   "per_source_risk": {
     "github_mcp": {
       "count": 750,
-      "mean_score": 0.208,
+      "mean_score": 0.107,
       "max_score": 10.0,
-      "high_risk_count": 3
+      "high_risk_count": 2
     },
     "npm_mcp": {
       "count": 250,
@@ -116,19 +116,6 @@
       "url": "https://github.com/firecrawl/firecrawl-mcp-server",
       "license": "MIT",
       "stars": 6399,
-      "code_availability": "source_available",
-      "policy_risk": "high",
-      "policy_decision": "hitl",
-      "policy_score": 10.0,
-      "findings": [
-        "C1_DECLARED_READONLY_BUT_WRITE_SCOPE"
-      ]
-    },
-    {
-      "repo": "excalidraw/excalidraw-mcp",
-      "url": "https://github.com/excalidraw/excalidraw-mcp",
-      "license": "unknown",
-      "stars": 4572,
       "code_availability": "source_available",
       "policy_risk": "high",
       "policy_decision": "hitl",

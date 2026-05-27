@@ -1,12 +1,12 @@
 {
-  "triaged_at": "2026-05-27T21:55:00Z",
+  "triaged_at": "2026-05-27T22:35:00Z",
   "scope": "Manual review of all HIGH-severity findings in experiments/results/ecosystem/real_ecosystem_results.json",
   "review_boundary": "Passive metadata and checked-in source review only across GitHub and npm public artifacts; no third-party code execution and no destructive validation.",
   "summary": {
-    "high_severity_findings": 3,
+    "high_severity_findings": 2,
     "confirmed_vulnerabilities": 0,
-    "suspicious_findings": 3,
-    "likely_false_positives": 3,
+    "suspicious_findings": 2,
+    "likely_false_positives": 2,
     "disclosures_sent": 0
   },
   "entries": [
@@ -22,10 +22,10 @@
         "C1_DECLARED_READONLY_BUT_WRITE_SCOPE",
         "C7_LEAST_PRIVILEGE_SCOPE"
       ],
-      "evidence_summary": "The passive analyzer inferred read-only semantics from the repository description while the TypeScript entrypoint exposed generic verbs such as delete/export/search and outbound network patterns. The bounded source fetch did not recover a destructive file-write path or a runtime-confirmed exploit chain.",
+      "evidence_summary": "The passive analyzer inferred read-only semantics from the repository description while the bounded TypeScript entrypoint exposed generic verbs such as delete/export/search and outbound network patterns. The fetched source slice still does not demonstrate a destructive file-write path or a runtime-confirmed exploit chain.",
       "manual_triage": "Likely false positive / metadata-capability mismatch only",
       "disclosure_decision": "No disclosure",
-      "rationale": "The current evidence is limited to catalog-level description and entrypoint token extraction. It suggests a least-privilege mismatch worth manual follow-up, but it does not establish unauthorized writes, exfiltration, or an exploitable runtime path under the disclosure threshold."
+      "rationale": "The current evidence is limited to catalog-level description and bounded entrypoint analysis. It suggests a least-privilege mismatch worth manual follow-up, but it does not establish unauthorized writes, exfiltration, or an exploitable runtime path under the disclosure threshold."
     },
     {
       "repo": "firecrawl/firecrawl-mcp-server",
@@ -39,27 +39,10 @@
         "C1_DECLARED_READONLY_BUT_WRITE_SCOPE",
         "C7_LEAST_PRIVILEGE_SCOPE"
       ],
-      "evidence_summary": "The public description emphasizes web scraping and search, while the bounded JavaScript entrypoint includes broad verbs and shell-related strings that trigger destructive-capability heuristics. Passive review confirms open-world retrieval behavior but not a harmful write or privileged exploit chain.",
+      "evidence_summary": "The public description emphasizes web scraping and search, while the bounded source slice includes broad verbs and open-world retrieval logic that trigger least-privilege heuristics. Passive review confirms network retrieval behavior but not a harmful write or privileged exploit chain.",
       "manual_triage": "Likely false positive / insufficient exploit evidence",
       "disclosure_decision": "No disclosure",
-      "rationale": "The repository appears intentionally designed for network retrieval. The current finding is driven by conservative capability extraction from source text rather than validated malicious behavior, so the result remains a suspicious governance mismatch instead of a publishable vulnerability claim."
-    },
-    {
-      "repo": "excalidraw/excalidraw-mcp",
-      "url": "https://github.com/excalidraw/excalidraw-mcp",
-      "license": "unknown",
-      "version_context": {
-        "default_branch": "main"
-      },
-      "risk": "high",
-      "findings": [
-        "C1_DECLARED_READONLY_BUT_WRITE_SCOPE",
-        "C7_LEAST_PRIVILEGE_SCOPE"
-      ],
-      "evidence_summary": "The repository advertises a fast Excalidraw MCP app, but the bounded TypeScript entrypoint contains write/send/export-related terms that inflate the inferred scope set. Passive review did not confirm a destructive local write, persistence pivot, or runtime-confirmed exfiltration path.",
-      "manual_triage": "Likely false positive / heuristic scope extraction overfire",
-      "disclosure_decision": "No disclosure",
-      "rationale": "The alert is useful as a measurement example of metadata-versus-capability tension, but the available evidence is still catalog-level and insufficient for a coordinated disclosure workflow."
+      "rationale": "The repository appears intentionally designed for network retrieval. The current finding is driven by conservative capability extraction from bounded source text rather than validated malicious behavior, so the result remains a suspicious governance mismatch instead of a publishable vulnerability claim."
     }
   ]
 }
