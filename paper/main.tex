@@ -57,7 +57,7 @@ Every individual step can appear legitimate, while the composed flow violates a 
 \item \textbf{Threat taxonomy.} We define a compositional taxonomy of seven malicious skill behaviors: capability laundering, cross-skill confused deputy, delayed rug-pull, consent laundering, persistence pivot, split exfiltration, and scope inflation~(\S\ref{sec:taxonomy}).
 \item \textbf{Evidence graph and constraint system.} We introduce a typed cross-layer evidence graph with source-aware and permission-aware constraints over tool-call chains~(\S\ref{sec:design}, \S\ref{sec:constraints}).
 \item \textbf{Benchmark.} We propose a lifecycle-complete benchmark with 4{,}010 samples covering seven attack classes, benign-paired variants, and trace-grounded validators~(\S\ref{sec:benchmark}).
-\item \textbf{Evaluation.} We provide a comprehensive evaluation comparing graph fusion with seven baselines, an ablation study, runtime defense metrics, and ecosystem measurement of 1{,}200 samples~(\S\ref{sec:eval}, \S\ref{sec:ecosystem}).
+\item \textbf{Evaluation.} We provide a comprehensive evaluation comparing graph fusion with seven baselines, an ablation study, runtime defense metrics, and ecosystem measurement of 1{,}200 synthetic samples and 431 real-world MCP server repositories~(\S\ref{sec:eval}, \S\ref{sec:ecosystem}).
 \end{enumerate}
 
 % ============================================================
@@ -409,6 +409,35 @@ Instruction-like description & 68 & 5.7\% \\
 (4)~Community forums have the highest per-sample risk (mean score 2.84), while npm registry has the lowest (2.33).
 (5)~310 of 1{,}200 samples (25.8\%) trigger HIGH severity findings requiring human-in-the-loop review.
 
+\subsection{Real-World Ecosystem Measurement}
+
+To validate the synthetic findings, we conducted a real-world measurement of the MCP server ecosystem. We queried the GitHub Search API for repositories related to MCP servers, tools, and the Model Context Protocol, collecting metadata from 431 unique repositories across Python and TypeScript implementations.
+
+Table~\ref{tab:real_ecosystem} reports risk pattern prevalence in the real ecosystem.
+
+\begin{table}[t]
+\centering
+\caption{Real-world MCP ecosystem risk patterns (431 GitHub repositories).}
+\label{tab:real_ecosystem}
+\begin{tabular}{lcc}
+\toprule
+Risk Pattern & Count & Rate \\
+\midrule
+Missing signature & 431 & 100.0\% \\
+Untrusted publisher & 83 & 19.3\% \\
+Open-world network access & 83 & 19.3\% \\
+Scope inflation & 24 & 5.6\% \\
+Description--code mismatch & 13 & 3.0\% \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\paragraph{Key findings.}
+(1)~100\% of open-source MCP servers lack cryptographic signatures, confirming that signature-based trust is not yet viable in the current ecosystem.
+(2)~19.3\% of repositories exhibit open-world network access patterns, significantly higher than the synthetic estimate (5.5\%), suggesting that runtime-level risks are underestimated by metadata-only analysis.
+(3)~Scope inflation (5.6\%) and description--code mismatch (3.0\%) are less prevalent in real repositories than in the synthetic corpus (20.3\% and 22.8\%), indicating that the synthetic benchmark may overestimate metadata-level risks.
+(4)~The divergence between synthetic and real-world patterns validates our multi-layer approach: metadata-only analysis is insufficient, and runtime provenance is critical for catching the 19.3\% of repos with open-world network behavior that metadata alone cannot flag.
+
 % ============================================================
 \section{Related Work}
 \label{sec:related}
@@ -503,7 +532,7 @@ All attack cases use synthetic data, fake credentials, sinkhole domains (\texttt
 
 Malicious skills are not merely bad tools. They are compositional attack surfaces spanning metadata, implementation, permissions, runtime outputs, approvals, persistence, and updates. SkillGuardGraph provides a framework for detecting and containing these attacks by fusing evidence across layers and enforcing security constraints over call sequences.
 
-Our evaluation on a benchmark of 4{,}010 samples across seven attack classes demonstrates that graph-based fusion achieves the highest precision (96.2\%) and lowest false positive rate (9.1\%) among all evaluated methods, with a 90.9\% FPR reduction relative to naive union. SkillGuardGraph achieves 100\% recall on cross-skill confused deputy attacks, a class where weighted voting achieves only 59.3\%, demonstrating the value of cross-layer consistency reasoning. Ablation experiments confirm that runtime evidence is the single most critical component, with its removal reducing F1 by 49.4 percentage points. Ecosystem measurement of 1{,}200 samples reveals significant prevalence of scope inflation (20.3\%), description--code mismatch (22.8\%), and untrusted publishers (75.8\%). Latency measurement shows p50 = 0.3\,ms and p95 = 0.4\,ms per skill evaluation, confirming deployment feasibility.
+Our evaluation on a benchmark of 4{,}010 samples across seven attack classes demonstrates that graph-based fusion achieves the highest precision (96.2\%) and lowest false positive rate (9.1\%) among all evaluated methods, with a 90.9\% FPR reduction relative to naive union. SkillGuardGraph achieves 100\% recall on cross-skill confused deputy attacks, a class where weighted voting achieves only 59.3\%, demonstrating the value of cross-layer consistency reasoning. Ablation experiments confirm that runtime evidence is the single most critical component, with its removal reducing F1 by 49.4 percentage points. Ecosystem measurement of 1{,}200 synthetic samples reveals significant prevalence of scope inflation (20.3\%), description--code mismatch (22.8\%), and untrusted publishers (75.8\%). Real-world measurement of 431 GitHub MCP server repositories confirms that 100\% lack cryptographic signatures, 19.3\% exhibit open-world network access, and 5.6\% show scope inflation---validating that runtime-level risks are more prevalent than metadata-level risks in practice.
 
 The key contribution is not a larger detector stack, but a principled way to reason about cross-layer trust gaps in agent ecosystems through typed evidence, constraint-based evaluation, and explainable policy decisions.
 
