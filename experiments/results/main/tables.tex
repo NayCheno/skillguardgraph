@@ -107,3 +107,21 @@ HITL Count & 0 \\
 \end{tabular}
 \end{table}
 
+
+% --- Table 6: Generalization Stress Checks ---
+\begin{table}[htbp]
+\centering
+\caption{Table 6: Generalization Stress Checks}
+\label{tab:generalization}
+\begin{tabular}{lrrrrrr}
+\toprule
+\textbf{Check} & \textbf{Samples} & \textbf{Precision} & \textbf{Recall} & \textbf{F1} & \textbf{FPR} & \textbf{Evidence Paths} \\
+\midrule
+Held-out templates & 385 & 1.0000 & 1.0000 & 1.0000 & 0.0000 & 1.0000 \\
+Hard negatives & 250 & n/a & n/a & n/a & 0.0000 & 1.0000 \\
+Mutated held-out & 385 & 1.0000 & 1.0000 & 1.0000 & 0.0000 & 1.0000 \\
+Label-blinded audit & 475 & 1.0000 & 1.0000 & 1.0000 & 0.0000 & 0 \\
+\bottomrule
+\end{tabular}
+\end{table}
+

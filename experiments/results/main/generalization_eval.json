@@ -1,0 +1,141 @@
+{
+  "checks": {
+    "heldout_template_split": {
+      "samples": 385,
+      "confusion": {
+        "TP": 245,
+        "FP": 0,
+        "TN": 140,
+        "FN": 0
+      },
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "fpr": 0.0,
+      "per_class_recall": {
+        "capability_laundering": 1.0,
+        "consent_laundering": 1.0,
+        "cross_skill_confused_deputy": 1.0,
+        "delayed_rug_pull": 1.0,
+        "persistence_pivot": 1.0,
+        "scope_inflation": 1.0,
+        "split_exfiltration": 1.0
+      },
+      "evidence_path_coverage": 1.0
+    },
+    "hard_negative_benign": {
+      "samples": 250,
+      "confusion": {
+        "TP": 0,
+        "FP": 0,
+        "TN": 250,
+        "FN": 0
+      },
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "fpr": 0.0,
+      "per_class_recall": {},
+      "evidence_path_coverage": 1.0
+    },
+    "mutation_robustness": {
+      "samples": 385,
+      "confusion": {
+        "TP": 245,
+        "FP": 0,
+        "TN": 140,
+        "FN": 0
+      },
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "fpr": 0.0,
+      "per_class_recall": {
+        "capability_laundering": 1.0,
+        "consent_laundering": 1.0,
+        "cross_skill_confused_deputy": 1.0,
+        "delayed_rug_pull": 1.0,
+        "persistence_pivot": 1.0,
+        "scope_inflation": 1.0,
+        "split_exfiltration": 1.0
+      },
+      "evidence_path_coverage": 1.0,
+      "f1_drop_from_heldout": 0.0
+    },
+    "label_leakage_audit": {
+      "baseline": {
+        "samples": 475,
+        "confusion": {
+          "TP": 315,
+          "FP": 0,
+          "TN": 160,
+          "FN": 0
+        },
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "fpr": 0.0,
+        "per_class_recall": {
+          "capability_laundering": 1.0,
+          "consent_laundering": 1.0,
+          "cross_skill_confused_deputy": 1.0,
+          "delayed_rug_pull": 1.0,
+          "persistence_pivot": 1.0,
+          "scope_inflation": 1.0,
+          "split_exfiltration": 1.0
+        },
+        "evidence_path_coverage": 1.0
+      },
+      "blinded": {
+        "samples": 475,
+        "confusion": {
+          "TP": 315,
+          "FP": 0,
+          "TN": 160,
+          "FN": 0
+        },
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "fpr": 0.0,
+        "per_class_recall": {
+          "capability_laundering": 1.0,
+          "consent_laundering": 1.0,
+          "cross_skill_confused_deputy": 1.0,
+          "delayed_rug_pull": 1.0,
+          "persistence_pivot": 1.0,
+          "scope_inflation": 1.0,
+          "split_exfiltration": 1.0
+        },
+        "evidence_path_coverage": 1.0
+      },
+      "decision_changes_after_blinding": 0,
+      "critical_leakage_findings": 0,
+      "blinded_fields": [
+        "case_id",
+        "attack_class",
+        "expected_evidence",
+        "success_validator",
+        "benign_pair",
+        "lifecycle_stages",
+        "platform_type",
+        "manifest.name",
+        "manifest.id"
+      ]
+    }
+  },
+  "acceptance": {
+    "heldout_template_f1_ge_0_90": true,
+    "heldout_template_fpr_le_0_08": true,
+    "hard_negative_fpr_le_0_08": true,
+    "mutation_f1_drop_le_0_10": true,
+    "label_leakage_critical_zero": true,
+    "per_class_recall_ge_0_85": true,
+    "evidence_path_coverage_ge_0_90": true
+  },
+  "notes": [
+    "Held-out templates are synthetic and use different names/descriptions/source text from the main generator.",
+    "Hard negatives model legitimate write/export/network/persistence behavior and remain local or sinkhole-only.",
+    "Label-leakage audit blinds non-runtime identifiers and expected-evidence fields before re-evaluation."
+  ]
+}

@@ -93,6 +93,29 @@ def analyze_manifest(manifest: Dict[str, Any]) -> List[Evidence]:
             )
         )
 
+    if manifest.get("trusted_server") is True:
+        evidence.append(
+            Evidence(
+                kind="governance",
+                subject=name,
+                predicate="has_trust_label",
+                object="trusted_server",
+                confidence=0.85,
+                attrs={"source": "manifest.trusted_server"},
+            )
+        )
+    if annotations.get("openWorldHint") is True:
+        evidence.append(
+            Evidence(
+                kind="metadata",
+                subject=name,
+                predicate="declares_external_access",
+                object="open_world",
+                confidence=0.8,
+                attrs={"source": "manifest.annotations.openWorldHint"},
+            )
+        )
+
     read_only_hint = annotations.get("readOnlyHint")
     if read_only_hint is True:
         evidence.append(

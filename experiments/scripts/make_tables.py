@@ -22,6 +22,7 @@ RESULTS = ROOT / "results" / "main"
 DETECTOR_PATH = RESULTS / "detector_eval.json"
 ABLATION_PATH = RESULTS / "ablation.json"
 REDTEAM_PATH = RESULTS / "runtime_redteam.json"
+GENERALIZATION_PATH = RESULTS / "generalization_eval.json"
 TXT_PATH = RESULTS / "tables.txt"
 TEX_PATH = RESULTS / "tables.tex"
 
@@ -181,6 +182,61 @@ def build_table5(redteam: dict) -> tuple[str, str]:
     return _txt_table(title, headers, rows_txt), _tex_table(title, "tab:usability", headers, rows_tex, "lr")
 
 
+
+def build_table6(generalization: dict) -> tuple[str, str]:
+    """Generalization and leakage stress checks."""
+    title = "Table 6: Generalization Stress Checks"
+    headers = ["Check", "Samples", "Precision", "Recall", "F1", "FPR", "Evidence Paths"]
+    checks = generalization["checks"]
+    rows_txt: list[list[str]] = []
+    rows_tex: list[list[str]] = []
+
+    check_order = [
+        ("heldout_template_split", "Held-out templates"),
+        ("hard_negative_benign", "Hard negatives"),
+        ("mutation_robustness", "Mutated held-out"),
+    ]
+    for key, label in check_order:
+        item = checks[key]
+        if key == "hard_negative_benign":
+            row = [
+                label,
+                str(item["samples"]),
+                "n/a",
+                "n/a",
+                "n/a",
+                f"{item['fpr']:.4f}",
+                f"{item['evidence_path_coverage']:.4f}",
+            ]
+        else:
+            row = [
+                label,
+                str(item["samples"]),
+                f"{item['precision']:.4f}",
+                f"{item['recall']:.4f}",
+                f"{item['f1']:.4f}",
+                f"{item['fpr']:.4f}",
+                f"{item['evidence_path_coverage']:.4f}",
+            ]
+        rows_txt.append(row)
+        rows_tex.append(row)
+
+    leakage = checks["label_leakage_audit"]
+    blinded = leakage["blinded"]
+    row = [
+        "Label-blinded audit",
+        str(blinded["samples"]),
+        f"{blinded['precision']:.4f}",
+        f"{blinded['recall']:.4f}",
+        f"{blinded['f1']:.4f}",
+        f"{blinded['fpr']:.4f}",
+        str(leakage["critical_leakage_findings"]),
+    ]
+    rows_txt.append(row)
+    rows_tex.append(row)
+    return _txt_table(title, headers, rows_txt), _tex_table(title, "tab:generalization", headers, rows_tex)
+
+
 # ---------------------------------------------------------------------------
 # Main
 # ---------------------------------------------------------------------------
@@ -190,6 +246,7 @@ def main() -> None:
     detector = load_json(DETECTOR_PATH)
     ablation = load_json(ABLATION_PATH)
     redteam = load_json(REDTEAM_PATH)
+    generalization = load_json(GENERALIZATION_PATH)
 
     txt_parts: list[str] = ["=" * 72, "SkillGuardGraph Experiment Results", "=" * 72]
     tex_parts: list[str] = [
@@ -198,9 +255,9 @@ def main() -> None:
         "",
     ]
 
-    builders = [build_table1, build_table2, build_table3, build_table4, build_table5]
-    # Table 1 & 2 need detector, 3 needs ablation, 4 & 5 need redteam
-    args = [detector, detector, ablation, redteam, redteam]
+    builders = [build_table1, build_table2, build_table3, build_table4, build_table5, build_table6]
+    # Table 1 & 2 need detector, 3 needs ablation, 4 & 5 need redteam, 6 needs generalization.
+    args = [detector, detector, ablation, redteam, redteam, generalization]
 
     for builder, arg in zip(builders, args):
         txt, tex = builder(arg)

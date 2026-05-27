@@ -1,4 +1,4 @@
-.PHONY: demo test smoke eval-main eval-all tables validate benchmark ecosystem triage reproduce clean scan trace latency real-ecosystem significance
+.PHONY: demo test smoke eval-main eval-all tables validate benchmark ecosystem triage reproduce clean scan trace latency real-ecosystem significance generalization
 
 # Cross-platform PYTHONPATH setup
 ifeq ($(OS),Windows_NT)
@@ -26,6 +26,7 @@ eval-main:
 	$(PYTHONPATH_OPT) python scripts/run_runtime_redteam.py
 	$(PYTHONPATH_OPT) python scripts/run_latency.py
 	$(PYTHONPATH_OPT) python scripts/run_bootstrap_ci.py
+	$(PYTHONPATH_OPT) python scripts/run_generalization_eval.py
 
 tables:
 	$(PYTHONPATH_OPT) python scripts/run_failure_analysis.py
@@ -43,6 +44,9 @@ triage:
 
 significance:
 	$(PYTHONPATH_OPT) python scripts/run_significance_tests.py
+
+generalization:
+	$(PYTHONPATH_OPT) python scripts/run_generalization_eval.py
 
 latency:
 	$(PYTHONPATH_OPT) python scripts/run_latency.py

@@ -148,6 +148,23 @@ def _fuse_from_evidence(evidence: List[Evidence]) -> RiskReport:
 
     signal_score = min(sum(predicate_max.values()), 8.0)
 
+    has_declared_external_access = any(
+        ev.predicate == "declares_external_access" and ev.object == "open_world"
+        for ev in evidence
+    )
+    has_trusted_server = any(
+        ev.predicate == "has_trust_label" and ev.object == "trusted_server"
+        for ev in evidence
+    )
+    has_valid_signature = any(
+        ev.predicate == "signed" and ev.object == "true"
+        for ev in evidence
+    )
+    has_sensitive_runtime_data = any(
+        ev.predicate == "has_data_label" and ev.object in {"confidential", "secret", "pii", "credential"}
+        for ev in evidence
+    )
+
     # --- Step 3: Cross-layer bonus ---
     cross_layer_bonus = 0.0
     if len(evidence_kinds_with_signal) >= 3:
@@ -221,6 +238,22 @@ def _fuse_from_evidence(evidence: List[Evidence]) -> RiskReport:
     # Take the MAX to combine their strengths:
     #   - Path A catches metadata-based attacks (capability laundering, scope inflation)
     #   - Path B catches cross-layer attacks (cross-skill, version drift, approval)
+    authorized_external_low_context = (
+        has_external_network
+        and has_declared_external_access
+        and has_trusted_server
+        and has_valid_signature
+        and not has_sensitive_runtime_data
+        and not has_explicit_readonly_claim
+        and not has_high_priv_call
+        and not has_version_drift
+        and not has_tainted_approval
+        and not any(ev.predicate == "writes_persistent_store" for ev in evidence)
+    )
+    if authorized_external_low_context:
+        signal_score = max(0.0, signal_score - 4.5)
+        cross_layer_bonus = 0.0
+
     wv_path_score = signal_score + cross_layer_bonus
     constraint_path_score = constraint_score + consistency_bonus
     total_score = max(wv_path_score, constraint_path_score)
