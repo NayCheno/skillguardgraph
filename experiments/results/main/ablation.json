@@ -2,26 +2,26 @@
   "total_samples": 4010,
   "ablations": {
     "full": {
-      "TP": 2308,
-      "FP": 91,
-      "TN": 909,
-      "FN": 702,
-      "precision": 0.9621,
-      "recall": 0.7668,
-      "f1": 0.8534,
-      "fpr": 0.091,
+      "TP": 2307,
+      "FP": 92,
+      "TN": 908,
+      "FN": 703,
+      "precision": 0.9617,
+      "recall": 0.7664,
+      "f1": 0.853,
+      "fpr": 0.092,
       "per_attack_class_recall": {
         "capability_laundering": {
-          "TP": 253,
-          "FN": 177,
+          "TP": 251,
+          "FN": 179,
           "total": 430,
-          "recall": 0.5884
+          "recall": 0.5837
         },
         "consent_laundering": {
-          "TP": 256,
-          "FN": 174,
+          "TP": 248,
+          "FN": 182,
           "total": 430,
-          "recall": 0.5953
+          "recall": 0.5767
         },
         "cross_skill_confused_deputy": {
           "TP": 430,
@@ -30,10 +30,10 @@
           "recall": 1.0
         },
         "delayed_rug_pull": {
-          "TP": 266,
-          "FN": 164,
+          "TP": 275,
+          "FN": 155,
           "total": 430,
-          "recall": 0.6186
+          "recall": 0.6395
         },
         "persistence_pivot": {
           "TP": 430,
@@ -56,26 +56,26 @@
       }
     },
     "no_metadata": {
-      "TP": 1448,
+      "TP": 1447,
       "FP": 0,
       "TN": 1000,
-      "FN": 1562,
+      "FN": 1563,
       "precision": 1.0,
-      "recall": 0.4811,
-      "f1": 0.6496,
+      "recall": 0.4807,
+      "f1": 0.6493,
       "fpr": 0.0,
       "per_attack_class_recall": {
         "capability_laundering": {
-          "TP": 253,
-          "FN": 177,
+          "TP": 251,
+          "FN": 179,
           "total": 430,
-          "recall": 0.5884
+          "recall": 0.5837
         },
         "consent_laundering": {
-          "TP": 256,
-          "FN": 174,
+          "TP": 248,
+          "FN": 182,
           "total": 430,
-          "recall": 0.5953
+          "recall": 0.5767
         },
         "cross_skill_confused_deputy": {
           "TP": 430,
@@ -84,10 +84,10 @@
           "recall": 1.0
         },
         "delayed_rug_pull": {
-          "TP": 266,
-          "FN": 164,
+          "TP": 275,
+          "FN": 155,
           "total": 430,
-          "recall": 0.6186
+          "recall": 0.6395
         },
         "persistence_pivot": {
           "TP": 0,
@@ -110,26 +110,26 @@
       }
     },
     "no_static": {
-      "TP": 2308,
-      "FP": 91,
-      "TN": 909,
-      "FN": 702,
-      "precision": 0.9621,
-      "recall": 0.7668,
-      "f1": 0.8534,
-      "fpr": 0.091,
+      "TP": 2307,
+      "FP": 92,
+      "TN": 908,
+      "FN": 703,
+      "precision": 0.9617,
+      "recall": 0.7664,
+      "f1": 0.853,
+      "fpr": 0.092,
       "per_attack_class_recall": {
         "capability_laundering": {
-          "TP": 253,
-          "FN": 177,
+          "TP": 251,
+          "FN": 179,
           "total": 430,
-          "recall": 0.5884
+          "recall": 0.5837
         },
         "consent_laundering": {
-          "TP": 256,
-          "FN": 174,
+          "TP": 248,
+          "FN": 182,
           "total": 430,
-          "recall": 0.5953
+          "recall": 0.5767
         },
         "cross_skill_confused_deputy": {
           "TP": 430,
@@ -138,10 +138,10 @@
           "recall": 1.0
         },
         "delayed_rug_pull": {
-          "TP": 266,
-          "FN": 164,
+          "TP": 275,
+          "FN": 155,
           "total": 430,
-          "recall": 0.6186
+          "recall": 0.6395
         },
         "persistence_pivot": {
           "TP": 430,
@@ -164,26 +164,26 @@
       }
     },
     "no_sandbox": {
-      "TP": 2308,
-      "FP": 91,
-      "TN": 909,
-      "FN": 702,
-      "precision": 0.9621,
-      "recall": 0.7668,
-      "f1": 0.8534,
-      "fpr": 0.091,
+      "TP": 2307,
+      "FP": 92,
+      "TN": 908,
+      "FN": 703,
+      "precision": 0.9617,
+      "recall": 0.7664,
+      "f1": 0.853,
+      "fpr": 0.092,
       "per_attack_class_recall": {
         "capability_laundering": {
-          "TP": 253,
-          "FN": 177,
+          "TP": 251,
+          "FN": 179,
           "total": 430,
-          "recall": 0.5884
+          "recall": 0.5837
         },
         "consent_laundering": {
-          "TP": 256,
-          "FN": 174,
+          "TP": 248,
+          "FN": 182,
           "total": 430,
-          "recall": 0.5953
+          "recall": 0.5767
         },
         "cross_skill_confused_deputy": {
           "TP": 430,
@@ -192,10 +192,10 @@
           "recall": 1.0
         },
         "delayed_rug_pull": {
-          "TP": 266,
-          "FN": 164,
+          "TP": 275,
+          "FN": 155,
           "total": 430,
-          "recall": 0.6186
+          "recall": 0.6395
         },
         "persistence_pivot": {
           "TP": 430,
@@ -218,20 +218,20 @@
       }
     },
     "no_runtime": {
-      "TP": 660,
+      "TP": 662,
       "FP": 0,
       "TN": 1000,
-      "FN": 2350,
+      "FN": 2348,
       "precision": 1.0,
-      "recall": 0.2193,
-      "f1": 0.3597,
+      "recall": 0.2199,
+      "f1": 0.3606,
       "fpr": 0.0,
       "per_attack_class_recall": {
         "capability_laundering": {
-          "TP": 253,
-          "FN": 177,
+          "TP": 251,
+          "FN": 179,
           "total": 430,
-          "recall": 0.5884
+          "recall": 0.5837
         },
         "consent_laundering": {
           "TP": 0,
@@ -246,10 +246,10 @@
           "recall": 0.0
         },
         "delayed_rug_pull": {
-          "TP": 164,
-          "FN": 266,
+          "TP": 168,
+          "FN": 262,
           "total": 430,
-          "recall": 0.3814
+          "recall": 0.3907
         },
         "persistence_pivot": {
           "TP": 0,
@@ -272,38 +272,38 @@
       }
     },
     "no_sequence": {
-      "TP": 2133,
-      "FP": 91,
-      "TN": 909,
-      "FN": 877,
-      "precision": 0.9591,
-      "recall": 0.7086,
-      "f1": 0.8151,
-      "fpr": 0.091,
+      "TP": 2126,
+      "FP": 92,
+      "TN": 908,
+      "FN": 884,
+      "precision": 0.9585,
+      "recall": 0.7063,
+      "f1": 0.8133,
+      "fpr": 0.092,
       "per_attack_class_recall": {
         "capability_laundering": {
-          "TP": 253,
-          "FN": 177,
+          "TP": 251,
+          "FN": 179,
           "total": 430,
-          "recall": 0.5884
+          "recall": 0.5837
         },
         "consent_laundering": {
-          "TP": 256,
-          "FN": 174,
+          "TP": 248,
+          "FN": 182,
           "total": 430,
-          "recall": 0.5953
+          "recall": 0.5767
         },
         "cross_skill_confused_deputy": {
-          "TP": 255,
-          "FN": 175,
+          "TP": 249,
+          "FN": 181,
           "total": 430,
-          "recall": 0.593
+          "recall": 0.5791
         },
         "delayed_rug_pull": {
-          "TP": 266,
-          "FN": 164,
+          "TP": 275,
+          "FN": 155,
           "total": 430,
-          "recall": 0.6186
+          "recall": 0.6395
         },
         "persistence_pivot": {
           "TP": 430,

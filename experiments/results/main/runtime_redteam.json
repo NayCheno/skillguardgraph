@@ -2,18 +2,18 @@
   "malicious_with_trace": 3010,
   "benign_total": 1000,
   "runtime_defense": {
-    "ASR": 0.0545,
-    "ASR_blocked": 0.9455,
-    "UTCR": 0.1654,
+    "ASR": 0.0515,
+    "ASR_blocked": 0.9485,
+    "UTCR": 0.1635,
     "UTCR_blocked_rate": 1.0,
-    "EDR": 0.4229,
+    "EDR": 0.4206,
     "EDR_blocked_rate": 1.0,
-    "BRI": 1.5342,
+    "BRI": 1.5322,
     "PS_blocked_rate": 1.0,
     "PS_attempts": 430,
     "PS_blocked": 430,
-    "SC": 0.0545,
-    "SC_count": 164
+    "SC": 0.0515,
+    "SC_count": 155
   },
   "usability": {
     "task_success_rate": 1.0,
@@ -30,8 +30,8 @@
       "asr": 0.0,
       "utcr": 0.0,
       "utcr_blocked_rate": 0.0,
-      "edr_total": 253,
-      "edr_blocked": 253,
+      "edr_total": 251,
+      "edr_blocked": 251,
       "edr_blocked_rate": 1.0
     },
     "consent_laundering": {
@@ -40,8 +40,8 @@
       "asr": 0.0,
       "utcr": 0.0,
       "utcr_blocked_rate": 0.0,
-      "edr_total": 256,
-      "edr_blocked": 256,
+      "edr_total": 248,
+      "edr_blocked": 248,
       "edr_blocked_rate": 1.0
     },
     "cross_skill_confused_deputy": {
@@ -50,18 +50,18 @@
       "asr": 0.0,
       "utcr": 1.0,
       "utcr_blocked_rate": 1.0,
-      "edr_total": 255,
-      "edr_blocked": 255,
+      "edr_total": 249,
+      "edr_blocked": 249,
       "edr_blocked_rate": 1.0
     },
     "delayed_rug_pull": {
       "total": 430,
-      "blocked": 266,
-      "asr": 0.3814,
+      "blocked": 275,
+      "asr": 0.3605,
       "utcr": 0.0,
       "utcr_blocked_rate": 0.0,
-      "edr_total": 266,
-      "edr_blocked": 266,
+      "edr_total": 275,
+      "edr_blocked": 275,
       "edr_blocked_rate": 1.0
     },
     "persistence_pivot": {

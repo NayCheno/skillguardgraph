@@ -6,24 +6,24 @@ Table 1: Detection Comparison
 +-----------------+-----------+--------+--------+--------+
 | Method          | Precision | Recall | F1     | FPR    |
 +-----------------+-----------+--------+--------+--------+
-| metadata_only   | 0.8904    | 0.3023 | 0.4514 | 0.1120 |
-| static_only     | 1.0000    | 0.2193 | 0.3597 | 0.0000 |
-| sandbox_only    | 1.0000    | 0.2193 | 0.3597 | 0.0000 |
-| runtime_only    | 1.0000    | 0.4223 | 0.5938 | 0.0000 |
+| metadata_only   | 0.8832    | 0.3013 | 0.4493 | 0.1200 |
+| static_only     | 1.0000    | 0.2199 | 0.3606 | 0.0000 |
+| sandbox_only    | 1.0000    | 0.2199 | 0.3606 | 0.0000 |
+| runtime_only    | 1.0000    | 0.4159 | 0.5875 | 0.0000 |
 | naive_union     | 0.7506    | 1.0000 | 0.8575 | 1.0000 |
-| weighted_voting | 0.9543    | 0.8874 | 0.9196 | 0.1280 |
+| weighted_voting | 0.9526    | 0.8884 | 0.9194 | 0.1330 |
 | llm_judge       | 0.7506    | 1.0000 | 0.8575 | 1.0000 |
-| fusion          | 0.9621    | 0.7668 | 0.8534 | 0.0910 |
+| fusion          | 0.9617    | 0.7664 | 0.8530 | 0.0920 |
 +-----------------+-----------+--------+--------+--------+
 
 Table 2: Per-Attack-Class Recall (Full Fusion)
 +-----------------------------+-------+-----+-----+--------+
 | Attack Class                | Total | TP  | FN  | Recall |
 +-----------------------------+-------+-----+-----+--------+
-| capability_laundering       | 430   | 253 | 177 | 0.5884 |
-| consent_laundering          | 430   | 256 | 174 | 0.5953 |
+| capability_laundering       | 430   | 251 | 179 | 0.5837 |
+| consent_laundering          | 430   | 248 | 182 | 0.5767 |
 | cross_skill_confused_deputy | 430   | 430 | 0   | 1.0000 |
-| delayed_rug_pull            | 430   | 266 | 164 | 0.6186 |
+| delayed_rug_pull            | 430   | 275 | 155 | 0.6395 |
 | persistence_pivot           | 430   | 430 | 0   | 1.0000 |
 | scope_inflation             | 430   | 430 | 0   | 1.0000 |
 | split_exfiltration          | 430   | 243 | 187 | 0.5651 |
@@ -33,27 +33,27 @@ Table 3: Ablation Results
 +-------------+-----------+--------+--------+--------+----------+
 | Ablation    | Precision | Recall | F1     | FPR    | F1 Delta |
 +-------------+-----------+--------+--------+--------+----------+
-| full        | 0.9621    | 0.7668 | 0.8534 | 0.0910 | +0.0000  |
-| no_metadata | 1.0000    | 0.4811 | 0.6496 | 0.0000 | -0.2038  |
-| no_static   | 0.9621    | 0.7668 | 0.8534 | 0.0910 | +0.0000  |
-| no_sandbox  | 0.9621    | 0.7668 | 0.8534 | 0.0910 | +0.0000  |
-| no_runtime  | 1.0000    | 0.2193 | 0.3597 | 0.0000 | -0.4937  |
-| no_sequence | 0.9591    | 0.7086 | 0.8151 | 0.0910 | -0.0383  |
+| full        | 0.9617    | 0.7664 | 0.8530 | 0.0920 | +0.0000  |
+| no_metadata | 1.0000    | 0.4807 | 0.6493 | 0.0000 | -0.2037  |
+| no_static   | 0.9617    | 0.7664 | 0.8530 | 0.0920 | +0.0000  |
+| no_sandbox  | 0.9617    | 0.7664 | 0.8530 | 0.0920 | +0.0000  |
+| no_runtime  | 1.0000    | 0.2199 | 0.3606 | 0.0000 | -0.4924  |
+| no_sequence | 0.9585    | 0.7063 | 0.8133 | 0.0920 | -0.0397  |
 +-------------+-----------+--------+--------+--------+----------+
 
 Table 4: Runtime Defense Metrics
 +---------------------------+--------+
 | Metric                    | Value  |
 +---------------------------+--------+
-| ASR (Attack Success Rate) | 0.0545 |
-| ASR Blocked               | 0.9455 |
-| UTCR (per sample)         | 0.1654 |
+| ASR (Attack Success Rate) | 0.0515 |
+| ASR Blocked               | 0.9485 |
+| UTCR (per sample)         | 0.1635 |
 | UTCR Blocked Rate         | 1.0000 |
-| EDR (per sample)          | 0.4229 |
+| EDR (per sample)          | 0.4206 |
 | EDR Blocked Rate          | 1.0000 |
-| BRI (avg sensitive nodes) | 1.5342 |
+| BRI (avg sensitive nodes) | 1.5322 |
 | PS Blocked Rate           | 1.0000 |
-| SC (Stealth Coefficient)  | 0.0545 |
+| SC (Stealth Coefficient)  | 0.0515 |
 +---------------------------+--------+
 
 Table 5: Usability Metrics
