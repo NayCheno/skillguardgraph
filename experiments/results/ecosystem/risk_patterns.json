@@ -27,48 +27,50 @@
     }
   },
   "severity_distribution": {
-    "low": 890,
-    "high": 310
+    "low": 951,
+    "high": 95,
+    "medium": 154
   },
   "decision_distribution": {
-    "allow": 890,
-    "hitl": 310
+    "allow": 951,
+    "hitl": 95,
+    "degrade": 154
   },
   "per_source_risk": {
     "huggingface_spaces": {
       "count": 169,
-      "mean_score": 2.84,
+      "mean_score": 1.562,
       "max_score": 10.0,
-      "high_risk_count": 48
+      "high_risk_count": 9
     },
     "npm_registry": {
       "count": 361,
-      "mean_score": 2.327,
+      "mean_score": 1.479,
       "max_score": 10.0,
-      "high_risk_count": 84
+      "high_risk_count": 30
     },
     "enterprise_catalog": {
       "count": 121,
-      "mean_score": 2.975,
+      "mean_score": 1.521,
       "max_score": 10.0,
-      "high_risk_count": 36
+      "high_risk_count": 10
     },
     "github_mcp": {
       "count": 357,
-      "mean_score": 2.493,
+      "mean_score": 1.485,
       "max_score": 10.0,
-      "high_risk_count": 89
+      "high_risk_count": 29
     },
     "community_forum": {
       "count": 192,
-      "mean_score": 2.76,
+      "mean_score": 1.885,
       "max_score": 10.0,
-      "high_risk_count": 53
+      "high_risk_count": 17
     }
   },
   "constraint_frequency": {
-    "C1_DECLARED_READONLY_BUT_WRITE_SCOPE": 310,
-    "C7_LEAST_PRIVILEGE_SCOPE": 310
+    "C1_DECLARED_READONLY_BUT_WRITE_SCOPE": 249,
+    "C7_LEAST_PRIVILEGE_SCOPE": 249
   },
-  "analyzed_at": "2026-05-27T11:36:09Z"
+  "analyzed_at": "2026-05-27T18:28:01Z"
 }

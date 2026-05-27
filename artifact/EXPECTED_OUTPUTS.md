@@ -129,12 +129,12 @@ This document describes every output file produced by the experiment pipeline, i
 
 | Component | p50 (ms) | p95 (ms) | p99 (ms) | max (ms) |
 |---|---:|---:|---:|---:|
-| **Total pipeline** | **0.3** | **0.4** | **0.4** | **0.5** |
-| metadata_ms | 0.010 | 0.013 | 0.019 | 0.035 |
-| static_ms | 0.228 | 0.274 | 0.284 | 0.356 |
-| sandbox_ms | 0.059 | 0.070 | 0.073 | 0.082 |
-| runtime_ms | 0.008 | 0.011 | 0.014 | 0.019 |
-| fusion_ms | 0.041 | 0.059 | 0.073 | 0.093 |
+| **Total pipeline** | **0.3** | **0.4** | **0.5** | **0.6** |
+| metadata_ms | 0.011 | 0.016 | 0.022 | 0.038 |
+| static_ms | 0.223 | 0.273 | 0.292 | 0.386 |
+| sandbox_ms | 0.058 | 0.070 | 0.077 | 0.101 |
+| runtime_ms | 0.008 | 0.015 | 0.021 | 0.026 |
+| fusion_ms | 0.043 | 0.064 | 0.076 | 0.095 |
 
 ---
 
@@ -190,7 +190,7 @@ This document describes every output file produced by the experiment pipeline, i
 | Metric | Value |
 |---|---:|
 | Total samples | 1,200 |
-| High severity | 310 (25.8%) |
+| High severity | 95 (7.9%) |
 | Scope inflation | 244 (20.3%) |
 | Description-code mismatch | 273 (22.8%) |
 | Untrusted publisher | 910 (75.8%) |
