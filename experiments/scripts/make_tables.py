@@ -2,7 +2,7 @@
 """Read JSON results and produce formatted tables.
 
 Tables:
-  1. Detection comparison (method × precision/recall/F1/FPR)
+  1. Detection comparison (method × precision/recall/F1/FPR/AUROC/AUPRC)
   2. Per-attack-class recall for full fusion
   3. Ablation results
   4. Runtime defense metrics
@@ -94,14 +94,18 @@ def _tex_table(title: str, label: str, headers: list[str], rows: list[list[str]]
 def build_table1(detector: dict) -> tuple[str, str]:
     """Detection comparison."""
     title = "Table 1: Detection Comparison"
-    headers = ["Method", "Precision", "Recall", "F1", "FPR"]
+    headers = ["Method", "Precision", "Recall", "F1", "FPR", "AUROC", "AUPRC"]
     rows_txt: list[list[str]] = []
     rows_tex: list[list[str]] = []
+    score_metrics = detector.get("score_metrics", {})
     for method, m in detector["methods"].items():
+        sm = score_metrics.get(method, {})
         rows_txt.append([method, f"{m['precision']:.4f}", f"{m['recall']:.4f}",
-                         f"{m['f1']:.4f}", f"{m['fpr']:.4f}"])
+                         f"{m['f1']:.4f}", f"{m['fpr']:.4f}",
+                         f"{sm.get('auroc', 0.0):.4f}", f"{sm.get('auprc', 0.0):.4f}"])
         rows_tex.append([method.replace("_", "\\_"), f"{m['precision']:.4f}", f"{m['recall']:.4f}",
-                         f"{m['f1']:.4f}", f"{m['fpr']:.4f}"])
+                         f"{m['f1']:.4f}", f"{m['fpr']:.4f}",
+                         f"{sm.get('auroc', 0.0):.4f}", f"{sm.get('auprc', 0.0):.4f}"])
     return _txt_table(title, headers, rows_txt), _tex_table(title, "tab:detection", headers, rows_tex)
 
 

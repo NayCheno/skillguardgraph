@@ -32,7 +32,7 @@ _PREDICATE_WEIGHTS: Dict[str, float] = {
     "post_approval_drift": 4.0,
     "high_risk_version_change": 4.0,
     "approval_text_lineage": 3.0,
-    "writes_persistent_store": 3.5,
+    "writes_persistent_store": 1.5,
     "hidden_instruction": 4.0,
     # Metadata signals (moderate weight — noisy benign may have these)
     "declares_readonly_with_write_scope": 2.5,
@@ -60,7 +60,7 @@ _CONSTRAINT_WEIGHTS: Dict[str, float] = {
     "C3_SENSITIVE_TO_EXTERNAL_SEQUENCE": 5.0,
     "C4_POST_APPROVAL_DRIFT": 4.0,
     "C5_TAINTED_APPROVAL_TEXT": 3.5,
-    "C6_UNTRUSTED_PERSISTENCE_WRITE": 3.5,
+    "C6_UNTRUSTED_PERSISTENCE_WRITE": 4.5,
     "C7_LEAST_PRIVILEGE_SCOPE": 2.0,
 }
 
@@ -243,10 +243,12 @@ def _fuse_from_evidence(evidence: List[Evidence]) -> RiskReport:
             evidence_path.append(ev)
 
     # --- Step 6: Decision calibration ---
-    # Calibrated via threshold sweep on the benchmark.
+    # The HIGH cutoff is calibrated to catch subtle external-sink traces once
+    # runtime normalization exposes `is_external` sink fields.  Benign
+    # persistence-only traces remain below this cutoff.
     if total_score >= 9.0:
         risk, decision = Severity.CRITICAL, Decision.DENY
-    elif total_score >= 5.0:
+    elif total_score >= 4.5:
         risk, decision = Severity.HIGH, Decision.HITL
     elif total_score >= 3.0:
         risk, decision = Severity.MEDIUM, Decision.DEGRADE

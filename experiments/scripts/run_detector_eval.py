@@ -3,7 +3,7 @@
 
 Reads samples.jsonl, runs each baseline detector and the full fusion pipeline,
 then computes per-method TP/FP/TN/FN, Precision, Recall, F1, FPR,
-and per-attack-class recall for the full fusion.
+AUROC/AUPRC, FPR at target recalls, and per-attack-class recall for the full fusion.
 
 Output: experiments/results/main/detector_eval.json
 """
@@ -100,6 +100,75 @@ def compute_metrics(tp: int, fp: int, tn: int, fn: int) -> dict:
     }
 
 
+def _trapezoid_area(points: list[tuple[float, float]]) -> float:
+    area = 0.0
+    for (x0, y0), (x1, y1) in zip(points, points[1:]):
+        area += (x1 - x0) * (y0 + y1) / 2.0
+    return area
+
+
+def compute_score_metrics(labels: list[bool], scores: list[float]) -> dict:
+    """Compute threshold-independent detector metrics from continuous scores."""
+    positives = sum(labels)
+    negatives = len(labels) - positives
+    if positives == 0 or negatives == 0:
+        return {
+            "auroc": 0.0,
+            "auprc": 0.0,
+            "fpr_at_recall": {},
+            "threshold_sweep": [],
+        }
+
+    thresholds = sorted(set(scores), reverse=True)
+    roc_points: list[tuple[float, float]] = [(0.0, 0.0)]
+    pr_points: list[tuple[float, float]] = [(0.0, 1.0)]
+    sweep: list[dict] = []
+
+    for threshold in thresholds:
+        tp = fp = tn = fn = 0
+        for label, score in zip(labels, scores):
+            pred = score >= threshold
+            if label and pred:
+                tp += 1
+            elif label:
+                fn += 1
+            elif pred:
+                fp += 1
+            else:
+                tn += 1
+
+        metrics = compute_metrics(tp, fp, tn, fn)
+        roc_points.append((metrics["fpr"], metrics["recall"]))
+        pr_points.append((metrics["recall"], metrics["precision"] if tp + fp else 1.0))
+        sweep.append({
+            "threshold": round(threshold, 4),
+            "precision": metrics["precision"],
+            "recall": metrics["recall"],
+            "f1": metrics["f1"],
+            "fpr": metrics["fpr"],
+            "TP": tp,
+            "FP": fp,
+            "TN": tn,
+            "FN": fn,
+        })
+
+    roc_points.append((1.0, 1.0))
+    roc_points = sorted(set(roc_points))
+    pr_points = sorted(pr_points)
+
+    fpr_at_recall: dict[str, float | None] = {}
+    for target in (0.85, 0.90, 0.95):
+        candidates = [row["fpr"] for row in sweep if row["recall"] >= target]
+        fpr_at_recall[f"{int(target * 100)}"] = round(min(candidates), 4) if candidates else None
+
+    return {
+        "auroc": round(_trapezoid_area(roc_points), 4),
+        "auprc": round(_trapezoid_area(pr_points), 4),
+        "fpr_at_recall": fpr_at_recall,
+        "threshold_sweep": sweep,
+    }
+
+
 # ---------------------------------------------------------------------------
 # Main
 # ---------------------------------------------------------------------------
@@ -115,6 +184,9 @@ def main() -> None:
     method_names = list(BASELINES.keys()) + ["fusion"]
 
     # Per-method confusion counts
+    # Continuous scores for AUROC/AUPRC and threshold sweep
+    score_labels: list[bool] = []
+    method_scores: dict[str, list[float]] = {m: [] for m in method_names}
     confusion: dict[str, dict[str, int]] = {
         m: {"TP": 0, "FP": 0, "TN": 0, "FN": 0} for m in method_names
     }
@@ -156,6 +228,7 @@ def main() -> None:
             else:
                 confusion[bname]["TN"] += 1
             sample_result[bname] = pred_mal
+            method_scores[bname].append(float(breport.score))
 
         # Full fusion (uses individual sources, not pre-collected evidence)
         manifest = sample.get("manifest")
@@ -175,6 +248,7 @@ def main() -> None:
             skill_name=skill_name,
         )
         pred_mal = predicted_malicious(fusion_report)
+        method_scores["fusion"].append(float(fusion_report.score))
         if mal and pred_mal:
             confusion["fusion"]["TP"] += 1
         elif mal and not pred_mal:
@@ -185,6 +259,7 @@ def main() -> None:
             confusion["fusion"]["TN"] += 1
         sample_result["fusion"] = pred_mal
 
+        score_labels.append(mal)
         # Per-attack-class recall for fusion
         if mal:
             if pred_mal:
@@ -216,6 +291,10 @@ def main() -> None:
     result = {
         "total_samples": total,
         "methods": methods,
+        "score_metrics": {
+            m: compute_score_metrics(score_labels, method_scores[m])
+            for m in method_names
+        },
         "per_attack_class_recall": per_class_recall,
     }
 

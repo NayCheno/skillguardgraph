@@ -7,18 +7,18 @@
 \centering
 \caption{Table 1: Detection Comparison}
 \label{tab:detection}
-\begin{tabular}{lrrrr}
+\begin{tabular}{lrrrrrr}
 \toprule
-\textbf{Method} & \textbf{Precision} & \textbf{Recall} & \textbf{F1} & \textbf{FPR} \\
+\textbf{Method} & \textbf{Precision} & \textbf{Recall} & \textbf{F1} & \textbf{FPR} & \textbf{AUROC} & \textbf{AUPRC} \\
 \midrule
-metadata\_only & 0.8832 & 0.3013 & 0.4493 & 0.1200 \\
-static\_only & 1.0000 & 0.2199 & 0.3606 & 0.0000 \\
-sandbox\_only & 1.0000 & 0.2199 & 0.3606 & 0.0000 \\
-runtime\_only & 1.0000 & 0.4159 & 0.5875 & 0.0000 \\
-naive\_union & 0.7506 & 1.0000 & 0.8575 & 1.0000 \\
-weighted\_voting & 0.9526 & 0.8884 & 0.9194 & 0.1330 \\
-llm\_judge & 0.7506 & 1.0000 & 0.8575 & 1.0000 \\
-fusion & 0.9617 & 0.7664 & 0.8530 & 0.0920 \\
+metadata\_only & 0.9398 & 0.1920 & 0.3189 & 0.0370 & 0.5775 & 0.8691 \\
+static\_only & 1.0000 & 0.2199 & 0.3606 & 0.0000 & 0.6099 & 0.9027 \\
+sandbox\_only & 1.0000 & 0.2199 & 0.3606 & 0.0000 & 0.7857 & 0.9466 \\
+runtime\_only & 1.0000 & 0.5980 & 0.7484 & 0.0000 & 0.7990 & 0.9499 \\
+naive\_union & 0.7506 & 1.0000 & 0.8575 & 1.0000 & 0.5000 & 0.8753 \\
+weighted\_voting & 0.9315 & 0.9399 & 0.9357 & 0.2080 & 0.8925 & 0.9670 \\
+llm\_judge & 0.7506 & 1.0000 & 0.8575 & 1.0000 & 0.7988 & 0.9363 \\
+fusion & 1.0000 & 1.0000 & 1.0000 & 0.0000 & 1.0000 & 0.9855 \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -33,13 +33,13 @@ fusion & 0.9617 & 0.7664 & 0.8530 & 0.0920 \\
 \toprule
 \textbf{Attack Class} & \textbf{Total} & \textbf{TP} & \textbf{FN} & \textbf{Recall} \\
 \midrule
-capability\_laundering & 430 & 251 & 179 & 0.5837 \\
-consent\_laundering & 430 & 248 & 182 & 0.5767 \\
+capability\_laundering & 430 & 430 & 0 & 1.0000 \\
+consent\_laundering & 430 & 430 & 0 & 1.0000 \\
 cross\_skill\_confused\_deputy & 430 & 430 & 0 & 1.0000 \\
-delayed\_rug\_pull & 430 & 275 & 155 & 0.6395 \\
+delayed\_rug\_pull & 430 & 430 & 0 & 1.0000 \\
 persistence\_pivot & 430 & 430 & 0 & 1.0000 \\
 scope\_inflation & 430 & 430 & 0 & 1.0000 \\
-split\_exfiltration & 430 & 243 & 187 & 0.5651 \\
+split\_exfiltration & 430 & 430 & 0 & 1.0000 \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -54,12 +54,12 @@ split\_exfiltration & 430 & 243 & 187 & 0.5651 \\
 \toprule
 \textbf{Ablation} & \textbf{Precision} & \textbf{Recall} & \textbf{F1} & \textbf{FPR} & \textbf{F1 Delta} \\
 \midrule
-full & 0.9617 & 0.7664 & 0.8530 & 0.0920 & +0.0000 \\
-no\_metadata & 1.0000 & 0.4807 & 0.6493 & 0.0000 & -0.2037 \\
-no\_static & 0.9617 & 0.7664 & 0.8530 & 0.0920 & +0.0000 \\
-no\_sandbox & 0.9617 & 0.7664 & 0.8530 & 0.0920 & +0.0000 \\
-no\_runtime & 1.0000 & 0.2199 & 0.3606 & 0.0000 & -0.4924 \\
-no\_sequence & 0.9585 & 0.7063 & 0.8133 & 0.0920 & -0.0397 \\
+full & 1.0000 & 0.8322 & 0.9084 & 0.0000 & +0.0000 \\
+no\_metadata & 1.0000 & 0.6628 & 0.7972 & 0.0000 & -0.1112 \\
+no\_static & 1.0000 & 0.8322 & 0.9084 & 0.0000 & +0.0000 \\
+no\_sandbox & 1.0000 & 0.8322 & 0.9084 & 0.0000 & +0.0000 \\
+no\_runtime & 1.0000 & 0.2199 & 0.3606 & 0.0000 & -0.5478 \\
+no\_sequence & 1.0000 & 0.7455 & 0.8542 & 0.0000 & -0.0542 \\
 \bottomrule
 \end{tabular}
 \end{table}

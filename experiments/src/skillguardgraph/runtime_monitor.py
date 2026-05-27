@@ -86,7 +86,7 @@ def trace_to_evidence(trace: Dict[str, Any]) -> List[Evidence]:
             )
 
         if event_type == "sink":
-            sink_label = str(event.get("sink", "unknown_sink"))
+            sink_label = str(event.get("sink") or event.get("sink_type") or "unknown_sink")
             evidence.append(
                 Evidence(
                     kind="runtime",
@@ -97,7 +97,7 @@ def trace_to_evidence(trace: Dict[str, Any]) -> List[Evidence]:
                     attrs=event,
                 )
             )
-            if event.get("external") is True:
+            if event.get("external") is True or event.get("is_external") is True:
                 evidence.append(
                     Evidence(
                         kind="runtime",

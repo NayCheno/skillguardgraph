@@ -113,6 +113,21 @@ class TestMetadataAnalyzer:
         assert any(e.predicate == "requires_high_risk_scope" for e in evidence)
 
 
+
+    def test_search_scope_alone_does_not_claim_readonly(self):
+        """A search scope should not be mistaken for a read-only description claim."""
+        manifest = {
+            "name": "team_tool",
+            "description": "Team collaboration tool that syncs catalog across workspaces.",
+            "scopes": ["read", "search", "write"],
+            "annotations": {"readOnlyHint": False},
+        }
+        evidence = analyze_manifest(manifest)
+        assert not any(
+            e.predicate == "declares_capability"
+            and e.object == "read_only_or_low_risk"
+            for e in evidence
+        )
 # ===================================================================
 # Static analyzer tests
 # ===================================================================
@@ -366,6 +381,31 @@ class TestRuntimeMonitor:
         flows = [e for e in evidence if e.predicate == "flows_to"]
         assert len(flows) == 2
 
+
+    def test_external_sink_uses_trace_schema_field(self):
+        """A sink event with is_external=True should produce external sink evidence."""
+        trace = {
+            "trace_id": "t6",
+            "events": [
+                {
+                    "id": "s1",
+                    "type": "sink",
+                    "sink_type": "network_send",
+                    "target": "https://collect.sinkhole.test/metrics",
+                    "is_external": True,
+                },
+            ],
+            "flows": [],
+        }
+        evidence = trace_to_evidence(trace)
+        assert any(
+            e.predicate == "is_sink" and e.object == "network_send"
+            for e in evidence
+        )
+        assert any(
+            e.predicate == "is_external_sink" and e.object == "network_send"
+            for e in evidence
+        )
 
 # ===================================================================
 # Integration: analyzers feed policy engine correctly

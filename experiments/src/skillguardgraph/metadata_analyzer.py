@@ -46,9 +46,18 @@ def analyze_manifest(manifest: Dict[str, Any]) -> List[Evidence]:
 
     text_blob = "\n".join(_flatten_text(manifest)).lower()
     scopes = {str(s).lower() for s in manifest.get("scopes", [])}
+    capability_text_blob = "\n".join(
+        _flatten_text({
+            "name": manifest.get("name") or manifest.get("id") or "",
+            "description": manifest.get("description", ""),
+            "schema": manifest.get("schema", {}),
+            "parameters": manifest.get("parameters", {}),
+            "annotations": manifest.get("annotations", {}),
+        })
+    ).lower()
     annotations = manifest.get("annotations", {}) or {}
 
-    if any(hint in text_blob for hint in READ_ONLY_HINTS):
+    if any(hint in capability_text_blob for hint in READ_ONLY_HINTS):
         evidence.append(
             Evidence(
                 kind="metadata",
