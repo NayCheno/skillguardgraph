@@ -225,7 +225,7 @@ For experimental evaluation, seven baseline detectors are available alongside th
 | Baseline | Evidence Used | Approach |
 |---|---|---|
 | `metadata_only` | metadata, permission, governance | C1 + C5 constraints only |
-| `static_only` | static | Source-sink pattern detection |
+| `static_only` | static | Regex source/sink detection plus conservative Python AST source--sink summaries |
 | `sandbox_only` | sandbox | Sandbox observation flags |
 | `runtime_only` | runtime, approval | C2 + C3 + C6 constraints |
 | `naive_union` | all | Any suspicious signal → escalate |

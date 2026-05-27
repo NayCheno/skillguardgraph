@@ -235,7 +235,7 @@
 - 对源码可得的 MCP/tool/server 做 entrypoint recovery；
 - 识别 source：user data、file read、env/token、retrieved document；
 - 识别 sink：network send、email/send_message、file write/delete、memory/config write、shell/exec；
-- 输出 inferred capability 与 source-sink hints。
+- 输出 inferred capability、regex source/sink hints，以及保守的 Python AST source-sink summaries（敏感 source 或 high-privilege sink 才提升为 policy-strength flow evidence）。
 
 #### Sandbox prober
 

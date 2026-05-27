@@ -17,6 +17,7 @@ This checklist is extracted from `README.md`, `docs/roadmap.md`, `docs/plan.md`,
 - [x] Normalize runtime sink traces consistently (`sink_type`, `external`, `is_external`) so external dataflow evidence is not dropped.
 - [x] Treat benign local persistence as weaker than untrusted persistence; C6 remains the strong persistence signal.
 - [x] Add schema-level graph consistency validation for node/edge references and evidence path serialization.
+- [x] Add conservative Python AST source--sink summaries for aliased imports and variable-to-sink flows.
 
 ## Benchmark and Evaluation
 

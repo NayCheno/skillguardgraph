@@ -1,12 +1,13 @@
-"""Lightweight rule-based static analyzer for skill source code.
+"""Lightweight static analyzer for skill source code.
 
 Scans source code strings for common patterns that indicate security-relevant
-capabilities (sources, sinks, privilege escalation) without executing the code.
-Designed for the SkillGuardGraph evidence fusion pipeline.
+capabilities and extracts conservative Python AST source--sink summaries without
+executing code.
 """
 from __future__ import annotations
 
 import re
+import ast
 from typing import Any, Dict, List
 
 from .models import Evidence
@@ -151,6 +152,253 @@ def _any_match(patterns: List[re.Pattern[str]], text: str) -> bool:
     return any(p.search(text) for p in patterns)
 
 
+
+def _dotted_name(node: ast.AST) -> str:
+    """Return a dotted call/attribute name for a Python AST node."""
+    if isinstance(node, ast.Name):
+        return node.id
+    if isinstance(node, ast.Attribute):
+        base = _dotted_name(node.value)
+        return f"{base}.{node.attr}" if base else node.attr
+    if isinstance(node, ast.Call):
+        return _dotted_name(node.func)
+    if isinstance(node, ast.Subscript):
+        return _dotted_name(node.value)
+    return ""
+
+
+def _normalize_call_name(name: str, aliases: Dict[str, str]) -> str:
+    if not name:
+        return name
+    head, sep, tail = name.partition(".")
+    mapped = aliases.get(head)
+    if mapped is None:
+        return name
+    return f"{mapped}.{tail}" if sep else mapped
+
+
+def _target_names(target: ast.AST) -> List[str]:
+    if isinstance(target, ast.Name):
+        return [target.id]
+    if isinstance(target, (ast.Tuple, ast.List)):
+        names: List[str] = []
+        for item in target.elts:
+            names.extend(_target_names(item))
+        return names
+    return []
+
+
+def _names_used(node: ast.AST) -> set[str]:
+    return {n.id for n in ast.walk(node) if isinstance(n, ast.Name)}
+
+
+def _literal_text(node: ast.AST) -> str:
+    if isinstance(node, ast.Constant) and isinstance(node.value, str):
+        return node.value.lower()
+    return ""
+
+
+def _call_source_kind(call_name: str) -> str | None:
+    if call_name in {"os.getenv", "os.environ", "dotenv.get_key"}:
+        return "env_var"
+    if call_name in {"input", "getpass.getpass"} or call_name.startswith("request."):
+        return "user_input"
+    if call_name in {"open", "Path.read_text", "pathlib.Path.read_text", "read_file"}:
+        return "file_read"
+    if call_name.endswith(".execute") or call_name.endswith(".find") or call_name.endswith(".query"):
+        return "database_query"
+    return None
+
+
+def _call_sink_kind(call_name: str) -> str | None:
+    if call_name in {
+        "requests.post", "requests.put", "requests.patch", "requests.delete",
+        "httpx.post", "httpx.put", "httpx.patch", "httpx.delete",
+        "urllib.request.urlopen", "fetch", "socket.send", "socket.connect",
+    }:
+        return "network_send"
+    if call_name in {"send_email", "send_message", "sendmail"} or call_name.endswith(".sendmail"):
+        return "email_send"
+    if call_name in {"write_file", "Path.write_text", "pathlib.Path.write_text"}:
+        return "file_write"
+    if call_name in {"memory_write", "update_config", "set_config", "save_state"}:
+        return "memory_write"
+    if call_name in {"subprocess.run", "subprocess.Popen", "os.system", "os.popen", "exec", "eval"}:
+        return "shell_exec"
+    return None
+
+
+def _source_label_for(source_kind: str) -> str:
+    if source_kind in {"env_var", "user_input"}:
+        return "untrusted"
+    return "internal"
+
+
+def _data_label_for(source_kind: str, value: ast.AST) -> str:
+    text = " ".join(
+        part
+        for node in ast.walk(value)
+        for part in (_dotted_name(node), _literal_text(node))
+        if part
+    ).lower()
+    if source_kind == "env_var" or any(term in text for term in ("token", "secret", "api_key", "password", "credential")):
+        return "credential"
+    if any(term in text for term in ("ssn", "confidential", "personal", "customer")):
+        return "confidential"
+    return "unknown"
+
+
+def _infer_import_aliases(tree: ast.AST) -> Dict[str, str]:
+    aliases: Dict[str, str] = {}
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Import):
+            for alias in node.names:
+                aliases[alias.asname or alias.name.split(".")[0]] = alias.name
+        elif isinstance(node, ast.ImportFrom) and node.module:
+            for alias in node.names:
+                aliases[alias.asname or alias.name] = f"{node.module}.{alias.name}"
+    return aliases
+
+
+def _analyze_python_ast(skill_name: str, source_code: str) -> List[Evidence]:
+    """Extract lightweight AST source-to-sink summaries for Python code."""
+    try:
+        tree = ast.parse(source_code)
+    except SyntaxError:
+        return []
+
+    aliases = _infer_import_aliases(tree)
+    tainted: Dict[str, tuple[str, str]] = {}
+    evidence: List[Evidence] = []
+    seen_paths: set[tuple[str, str, str, str]] = set()
+
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Assign):
+            source_kind = None
+            data_label = "unknown"
+            for child in ast.walk(node.value):
+                if isinstance(child, ast.Call):
+                    call_name = _normalize_call_name(_dotted_name(child.func), aliases)
+                    source_kind = _call_source_kind(call_name)
+                    if source_kind is not None:
+                        data_label = _data_label_for(source_kind, node.value)
+                        break
+                elif isinstance(child, ast.Subscript):
+                    subscript_name = _normalize_call_name(_dotted_name(child), aliases)
+                    if subscript_name == "os.environ":
+                        source_kind = "env_var"
+                        data_label = _data_label_for(source_kind, node.value)
+                        break
+            if source_kind is None:
+                used = _names_used(node.value)
+                inherited = [tainted[name] for name in used if name in tainted]
+                if inherited:
+                    source_kind, data_label = inherited[0]
+            if source_kind is not None:
+                for target in node.targets:
+                    for name in _target_names(target):
+                        tainted[name] = (source_kind, data_label)
+
+    for node in ast.walk(tree):
+        if not isinstance(node, ast.Call):
+            continue
+        call_name = _normalize_call_name(_dotted_name(node.func), aliases)
+        sink_kind = _call_sink_kind(call_name)
+        if sink_kind is None:
+            continue
+        used_tainted = sorted(_names_used(node) & set(tainted))
+        if not used_tainted:
+            continue
+        source_kind, data_label = tainted[used_tainted[0]]
+        source_node = f"{skill_name}:static_source:{used_tainted[0]}"
+        sink_node = f"{skill_name}:static_sink:{sink_kind}"
+        path_key = (source_node, sink_node, source_kind, sink_kind)
+        if path_key in seen_paths:
+            continue
+        seen_paths.add(path_key)
+
+        label = data_label
+        should_emit_policy_flow = label in {"credential", "confidential", "secret", "pii"} or sink_kind == "shell_exec"
+        if should_emit_policy_flow:
+            evidence.extend([
+                Evidence(
+                    kind="static",
+                    subject=source_node,
+                    predicate="has_source_label",
+                    object=_source_label_for(source_kind),
+                    confidence=0.78,
+                    attrs={"source": "python_ast", "variable": used_tainted[0], "source_kind": source_kind},
+                ),
+                Evidence(
+                    kind="static",
+                    subject=source_node,
+                    predicate="flows_to",
+                    object=sink_node,
+                    confidence=0.74,
+                    attrs={"source": "python_ast", "call": call_name},
+                ),
+            ])
+        evidence.append(
+            Evidence(
+                kind="static",
+                subject=skill_name,
+                predicate="source_sink_path",
+                object=f"{source_kind}->{sink_kind}",
+                confidence=0.74,
+                attrs={
+                    "source": "python_ast",
+                    "variable": used_tainted[0],
+                    "data_label": label,
+                    "call": call_name,
+                },
+            )
+        )
+        if label in {"credential", "confidential", "secret", "pii"}:
+            evidence.append(
+                Evidence(
+                    kind="static",
+                    subject=source_node,
+                    predicate="has_data_label",
+                    object=label,
+                    confidence=0.78,
+                    attrs={"source": "python_ast", "variable": used_tainted[0]},
+                )
+            )
+        if should_emit_policy_flow:
+            evidence.append(
+                Evidence(
+                    kind="static",
+                    subject=sink_node,
+                    predicate="sink_identified",
+                    object=sink_kind,
+                    confidence=0.8,
+                    attrs={"source": "python_ast", "call": call_name},
+                )
+            )
+        if sink_kind in {"network_send", "email_send"} and label in {"credential", "confidential", "secret", "pii"}:
+            evidence.append(
+                Evidence(
+                    kind="static",
+                    subject=sink_node,
+                    predicate="is_external_sink",
+                    object="network" if sink_kind == "network_send" else "email",
+                    confidence=0.8,
+                    attrs={"source": "python_ast", "call": call_name},
+                )
+            )
+        if sink_kind == "shell_exec":
+            evidence.append(
+                Evidence(
+                    kind="static",
+                    subject=sink_node,
+                    predicate="is_high_privilege_call",
+                    object="shell_exec",
+                    confidence=0.82,
+                    attrs={"source": "python_ast", "call": call_name},
+                )
+            )
+
+    return evidence
 def _matching_pattern_texts(patterns: List[re.Pattern[str]], text: str) -> List[str]:
     """Return the first matched substring for each pattern that fires."""
     seen: set[str] = set()
@@ -170,8 +418,8 @@ def _matching_pattern_texts(patterns: List[re.Pattern[str]], text: str) -> List[
 def analyze_source(skill_name: str, source_code: str) -> List[Evidence]:
     """Analyze source code text and produce evidence items.
 
-    This is a lightweight rule-based scanner. It does not execute code,
-    perform taint tracking, or invoke external SAST tools.
+    This is a lightweight scanner. It does not execute code or invoke external
+    SAST tools; its AST pass is an intraprocedural source--sink summary, not full taint tracking.
     """
     if not source_code or not source_code.strip():
         return []
@@ -304,4 +552,7 @@ def analyze_source(skill_name: str, source_code: str) -> List[Evidence]:
                 )
             )
 
+
+    # --- Python AST source-to-sink summaries ---
+    evidence.extend(_analyze_python_ast(skill_name, code))
     return evidence

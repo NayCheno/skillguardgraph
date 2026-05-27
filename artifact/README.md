@@ -68,7 +68,7 @@ pip install -e ".[dev]"
 make smoke
 ```
 
-Expected: the demo prints a JSON policy report to stdout, and all 79 unit
+Expected: the demo prints a JSON policy report to stdout, and all 81 unit
 tests pass.
 
 ### Alternative: Docker
@@ -100,7 +100,7 @@ make smoke
 
 What it does:
 1. Runs `run_demo.py` — scans a sample manifest and evaluates a sample trace.
-2. Runs all 79 unit tests (`pytest tests/ -q`).
+2. Runs all 81 unit tests (`pytest tests/ -q`).
 
 ### Mode 2: Main Reproduction (~30 minutes)
 

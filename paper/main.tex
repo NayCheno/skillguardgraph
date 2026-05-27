@@ -134,7 +134,7 @@ The user task only requires low privilege, but the skill requests broad permissi
 
 \subsection{Overview}
 
-SkillGuardGraph is composed of six modules: (1)~a metadata analyzer that scans manifest descriptions, schemas, and annotations; (2)~an implementation analyzer that extracts sources, sinks, and capability hints from source code; (3)~a sandbox prober that runs synthetic tasks with mock credentials and sinkhole domains; (4)~a runtime provenance monitor that records tool-call chains, source labels, and output flows; (5)~an evidence fusion graph that unifies all evidence into a typed graph; and (6)~a policy enforcer that evaluates constraints and issues decisions.
+SkillGuardGraph is composed of six modules: (1)~a metadata analyzer that scans manifest descriptions, schemas, and annotations; (2)~an implementation analyzer that extracts sources, sinks, capability hints, and conservative Python AST source--sink summaries from source code; (3)~a sandbox prober that runs synthetic tasks with mock credentials and sinkhole domains; (4)~a runtime provenance monitor that records tool-call chains, source labels, and output flows; (5)~an evidence fusion graph that unifies all evidence into a typed graph; and (6)~a policy enforcer that evaluates constraints and issues decisions.
 
 \begin{figure}[t]
 \centering
@@ -245,6 +245,7 @@ normalized evidence; \texttt{evidence\_graph.py} materializes typed nodes and
 edges and now includes an explicit structural consistency validator used in
 unit tests; \texttt{policy\_engine.py} evaluates C1--C7; and
 \texttt{fusion.py} combines constraint findings with calibrated signal scoring.
+The static analyzer combines regex capability extraction with a lightweight Python AST pass that resolves common import aliases and emits source--sink summaries only as policy-strength flow evidence when the source is sensitive or the sink is high privilege. This keeps legitimate local write/export patterns as capability hints rather than automatic blocking evidence.
 The real-ecosystem measurement collector remains passive: it records
 repository metadata, optional source snippets, licenses, timestamps, and
 deduplication provenance without executing third-party code.
@@ -605,8 +606,8 @@ SkillGuardGraph supports four deployment modes: (1)~registry mode with pre-publi
 \label{sec:limitations}
 
 \begin{enumerate}[leftmargin=*]
-\item \textbf{Closed-source skills.} When source code is unavailable, the implementation analyzer produces no evidence, reducing detection capability for capability laundering and split exfiltration attacks.
-\item \textbf{Dynamic probing coverage.} The sandbox prober uses pattern-based analysis rather than real execution, which may miss obfuscated or condition-triggered behaviors.
+\item \textbf{Closed-source skills.} When source code is unavailable, the implementation analyzer produces no source--sink summaries, reducing detection capability for capability laundering and split exfiltration attacks.
+\item \textbf{Dynamic probing coverage.} The sandbox prober uses pattern-based analysis rather than real execution, and the AST source--sink pass is conservative rather than a full interprocedural taint analysis; both may miss obfuscated or condition-triggered behaviors.
 \item \textbf{Provenance labeling.} Some agent platforms do not expose source labels for tool outputs, limiting the effectiveness of source-aware constraints.
 \item \textbf{Benchmark synthetic nature.} While the benchmark captures realistic attack patterns, it uses template-based generation rather than real-world exploit code. The current artifact includes held-out-template, mutation, hard-negative, and label-blinding stress checks, but these checks are still synthetic and cannot establish real-world separability or deployment recall.
 \item \textbf{Ablation semantics.} Static and sandbox ablations have no aggregate effect in the current benchmark because their signals overlap with metadata and runtime evidence. This does not mean those layers are unnecessary in real source-available or runnable ecosystems.

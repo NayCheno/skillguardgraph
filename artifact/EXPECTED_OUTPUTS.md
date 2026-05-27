@@ -81,12 +81,12 @@ All seven attack classes retain 1.0000 recall under full fusion in the current a
 
 | Component | p50 (ms) | p95 (ms) | p99 (ms) | max (ms) |
 |---|---:|---:|---:|---:|
-| Total pipeline | 0.344 | 0.414 | 0.431 | 0.491 |
-| metadata_ms | 0.011 | 0.014 | 0.017 | 0.031 |
-| static_ms | 0.223 | 0.269 | 0.279 | 0.326 |
-| sandbox_ms | 0.058 | 0.069 | 0.075 | 0.094 |
-| runtime_ms | 0.007 | 0.011 | 0.013 | 0.014 |
-| fusion_ms | 0.046 | 0.065 | 0.075 | 0.084 |
+| Total pipeline | 0.408 | 0.496 | 0.512 | 0.585 |
+| metadata_ms | 0.012 | 0.014 | 0.017 | 0.029 |
+| static_ms | 0.286 | 0.352 | 0.362 | 0.409 |
+| sandbox_ms | 0.058 | 0.070 | 0.073 | 0.080 |
+| runtime_ms | 0.008 | 0.011 | 0.013 | 0.019 |
+| fusion_ms | 0.045 | 0.064 | 0.074 | 0.082 |
 
 ---
 
