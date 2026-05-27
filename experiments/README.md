@@ -136,17 +136,20 @@ Key result numbers:
 | Metric | Value |
 |---|---|
 | Benchmark size | 4,010 (1,000 benign + 3,010 malicious, 7 classes) |
-| Fusion F1 | 0.909 |
-| Fusion FPR | 0.194 |
-| FPR reduction vs naive union | 80.6% |
-| Naive union F1 | 0.858 |
-| Naive union FPR | 1.000 |
-| Ablation: no_runtime F1 drop | -0.291 |
-| Ablation: no_metadata F1 drop | -0.233 |
-| Runtime ASR | 0.000 |
-| Task success rate | 0.806 |
+| Fusion Precision | 0.962 |
+| Fusion Recall | 0.767 |
+| Fusion F1 | 0.853 |
+| Fusion FPR | 0.091 |
+| FPR reduction vs naive union | 90.9% |
+| Weighted Voting F1 | 0.920 |
+| Weighted Voting FPR | 0.128 |
+| Cross-skill recall | 1.000 (vs 0.593 for weighted voting) |
+| Ablation: no_runtime F1 drop | -0.494 |
+| Ablation: no_metadata F1 drop | -0.204 |
+| Runtime ASR | 0.055 |
+| Task success rate | 1.000 |
 | False block rate | 0.000 |
-| Approval burden | 0.112 |
+| Latency p50 / p95 | 0.3ms / 0.4ms |
 See `../artifact/EXPECTED_OUTPUTS.md` for full output documentation.
 
 ---
@@ -158,9 +161,6 @@ Each experiment step can be run independently:
 ```bash
 # Build benchmark
 PYTHONPATH=src python scripts/build_benchmark.py
-
-# Validate labels
-PYTHONPATH=src python scripts/validate_labels.py
 
 # Detection evaluation (8 methods: metadata, static, sandbox, runtime,
 # naive_union, weighted_voting, llm_judge, fusion)
