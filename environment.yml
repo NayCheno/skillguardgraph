@@ -1,4 +1,8 @@
 name: skillguardgraph
+channels:
+  - defaults
 dependencies:
   - python>=3.10
-  - pytest>=8
+  - pip
+  - pip:
+    - pytest>=8

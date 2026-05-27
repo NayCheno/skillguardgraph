@@ -1,11 +1,15 @@
 FROM python:3.12-slim
 
-RUN pip install --no-cache-dir pytest
+# Install dependencies
+RUN pip install --no-cache-dir pytest>=8
 
+# Copy experiment code
 COPY experiments/ /app/experiments/
 
 WORKDIR /app/experiments
 
-ENV PYTHONPATH="/app/experiments/src"
+# Install package in editable mode
+RUN pip install --no-cache-dir -e ".[dev]"
 
+# Default: run smoke test
 CMD ["make", "smoke"]
