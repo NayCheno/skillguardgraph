@@ -81,12 +81,12 @@ All seven attack classes retain 1.0000 recall under full fusion in the current a
 
 | Component | p50 (ms) | p95 (ms) | p99 (ms) | max (ms) |
 |---|---:|---:|---:|---:|
-| Total pipeline | 0.342 | 0.418 | 0.452 | 0.599 |
-| metadata_ms | 0.011 | 0.016 | 0.022 | 0.038 |
-| static_ms | 0.223 | 0.273 | 0.292 | 0.386 |
-| sandbox_ms | 0.058 | 0.070 | 0.077 | 0.101 |
-| runtime_ms | 0.008 | 0.015 | 0.021 | 0.026 |
-| fusion_ms | 0.043 | 0.064 | 0.076 | 0.095 |
+| Total pipeline | 0.344 | 0.414 | 0.431 | 0.491 |
+| metadata_ms | 0.011 | 0.014 | 0.017 | 0.031 |
+| static_ms | 0.223 | 0.269 | 0.279 | 0.326 |
+| sandbox_ms | 0.058 | 0.069 | 0.075 | 0.094 |
+| runtime_ms | 0.007 | 0.011 | 0.013 | 0.014 |
+| fusion_ms | 0.046 | 0.065 | 0.075 | 0.084 |
 
 ---
 
@@ -136,7 +136,24 @@ All seven attack classes retain 1.0000 recall under full fusion in the current a
 
 ---
 
-## 8. Paper Tables
+## 8. Generalization Stress Checks
+
+**File:** `results/main/generalization_eval.json`
+**Format:** JSON
+**Produced by:** `python scripts/run_generalization_eval.py`
+
+| Check | Samples | Precision | Recall | F1 | FPR | Key acceptance |
+|---|---:|---:|---:|---:|---:|---|
+| Held-out templates | 385 | 1.0000 | 1.0000 | 1.0000 | 0.0000 | F1 >= 0.90; FPR <= 0.08 |
+| Hard negatives | 250 | n/a | n/a | n/a | 0.0000 | FPR <= 0.08 |
+| Mutated held-out | 385 | 1.0000 | 1.0000 | 1.0000 | 0.0000 | F1 drop <= 0.10 |
+| Label-blinded audit | 475 | 1.0000 | 1.0000 | 1.0000 | 0.0000 | 0 decision changes |
+
+All generalization acceptance booleans in the JSON are `true`. These checks are synthetic robustness checks and do not replace real runtime or real exploit validation.
+
+---
+
+## 9. Paper Tables
 
 **Files:** `results/main/tables.txt`, `results/main/tables.tex`
 **Format:** Plain text / LaTeX
@@ -144,7 +161,7 @@ All seven attack classes retain 1.0000 recall under full fusion in the current a
 
 ---
 
-## 9. Synthetic Ecosystem Triage
+## 10. Synthetic Ecosystem Triage
 
 **Files:** `results/ecosystem/ecosystem_triage.json`, `results/ecosystem/risk_patterns.json`
 **Produced by:** `python scripts/crawl_ecosystem.py` and `python scripts/triage_findings.py`
@@ -160,7 +177,7 @@ All seven attack classes retain 1.0000 recall under full fusion in the current a
 
 ---
 
-## 10. Real Public Ecosystem Measurement
+## 11. Real Public Ecosystem Measurement
 
 **Files:**
 

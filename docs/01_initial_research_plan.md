@@ -12,7 +12,7 @@ Deliverables:
 - metadata/static/sandbox/runtime baselines;
 - graph fusion and policy constraints C1-C7;
 - detector evaluation with precision, recall, F1, FPR, AUROC, AUPRC, and threshold sweeps;
-- ablation, runtime red-team, latency, bootstrap CI, failure analysis, and generated paper tables;
+- ablation, runtime red-team, latency, bootstrap CI, failure analysis, held-out/hard-negative robustness checks, label-leakage audit, and generated paper tables;
 - artifact guide, expected outputs, ethics note, Dockerfile, and environment file.
 
 Acceptance:
@@ -20,6 +20,7 @@ Acceptance:
 - `python -m pytest -q` passes in `experiments/`;
 - detector results show fusion outperforming naive union and weighted voting on false-positive control;
 - high-risk decisions include evidence paths;
+- held-out-template, hard-negative, mutation, and label-blinding checks meet their recorded acceptance gates;
 - tables regenerate from JSON results.
 
 ## Phase 2 — Paper Consistency Pass

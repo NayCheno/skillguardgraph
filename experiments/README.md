@@ -35,7 +35,7 @@ Expected: demo JSON output printed to stdout, all tests pass.
 ### Reproduce main results (~30 min)
 
 Builds the benchmark (seed=42), validates labels, runs detection evaluation,
-ablation study, runtime red-team evaluation, and generates all paper tables.
+ablation study, runtime red-team evaluation, generalization stress checks, and generates all paper tables.
 
 ```bash
 make reproduce
@@ -79,6 +79,7 @@ experiments/
 │   ├── run_ablation.py      # Layer ablation study (6 configs)
 │   ├── run_runtime_redteam.py # Runtime defense + usability evaluation
 │   ├── make_tables.py       # Generate paper tables (txt + LaTeX)
+│   ├── run_generalization_eval.py # Held-out, hard-negative, mutation, leakage checks
 │   ├── crawl_ecosystem.py   # Generate synthetic ecosystem corpus
 │   ├── crawl_real_ecosystem.py # Collect real public corpus metadata/source snapshots
 │   ├── triage_findings.py   # Triage ecosystem findings
@@ -106,7 +107,7 @@ experiments/
 | `make test` | Unit tests (verbose) | ~2 min |
 | `make benchmark` | Build benchmark (4010 samples) | ~5 min |
 | `make validate` | Validate benchmark labels | ~2 min |
-| `make eval-main` | Detection + ablation + runtime eval + bootstrap | ~15 min |
+| `make eval-main` | Detection + ablation + runtime eval + bootstrap + generalization | ~15 min |
 | `make tables` | Generate tables + failure analysis + significance | ~1 min |
 | `make ecosystem` | Crawl synthetic ecosystem corpus | ~10 min |
 | `make real-ecosystem` | Crawl passive real public GitHub MCP corpus | network-bound |
@@ -130,6 +131,7 @@ results/main/runtime_redteam.json  # Runtime defense + usability metrics
 results/main/failure_analysis.json # FP/FN and evidence path attribution
 results/main/significance_tests.json # McNemar + paired-bootstrap baseline comparison
 results/main/tables.txt           # Formatted plain-text tables
+results/main/generalization_eval.json # Held-out/hard-negative/mutation/leakage checks
 results/main/tables.tex           # LaTeX tables for paper inclusion
 ```
 
@@ -190,6 +192,9 @@ PYTHONPATH=src python scripts/run_ablation.py
 # Runtime red-team evaluation
 PYTHONPATH=src python scripts/run_runtime_redteam.py
 
+
+# Generalization stress checks
+PYTHONPATH=src python scripts/run_generalization_eval.py
 # Generate paper tables
 PYTHONPATH=src python scripts/make_tables.py
 

@@ -31,6 +31,7 @@ Use this as the final gate before marking the active goal complete.
 - [x] Latency and bootstrap CI results are available.
 - [x] Failure-case markdown is current with latest detector outputs.
 - [x] Fusion vs calibrated/learned baseline significance is documented.
+- [x] Held-out-template, hard-negative, mutation-robustness, and label-leakage stress checks are generated.
 
 ## Ecosystem and Ethics
 
@@ -53,6 +54,7 @@ Use this as the final gate before marking the active goal complete.
 - [x] `make smoke` passes.
 - [x] `make test` or `python -m pytest -q` passes.
 - [x] Main reproduction scripts pass.
+- [x] Generalization stress checks regenerate and are included in generated paper tables.
 - [x] Tables regenerate.
 - [x] Docker/Conda instructions are verified or limitations are recorded (Docker build/run passed; `conda` command is unavailable on this workstation).
 - [x] No secrets, credentials, real third-party payloads, or unsafe egress targets are present.

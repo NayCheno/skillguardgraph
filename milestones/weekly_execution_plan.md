@@ -18,7 +18,7 @@ This file mirrors the phase plan in `docs/plan.md` as concrete checkpoints.
 
 - Validate benchmark generation and labels.
 - Regenerate detector evaluation, ablation, runtime red-team, latency, bootstrap, failure analysis, and tables.
-- Add or refresh AUROC/AUPRC, threshold sweep, and FPR@Recall outputs.
+- Add or refresh AUROC/AUPRC, threshold sweep, FPR@Recall, held-out-template, hard-negative, mutation, and label-leakage outputs.
 
 ## W8-W10 — Paper Consistency Pass
 

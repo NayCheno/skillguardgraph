@@ -29,6 +29,7 @@ This checklist is extracted from `README.md`, `docs/roadmap.md`, `docs/plan.md`,
 - [x] Run failure analysis and evidence path attribution.
 - [x] Update failure-case narrative after detector calibration so markdown does not describe stale failures.
 - [x] Add paired statistical comparison for fusion vs calibrated voting/learned baselines beyond current bootstrap summaries.
+- [x] Add held-out-template, hard-negative, mutation-robustness, and label-leakage stress checks.
 
 ## Runtime, Latency, and Usability
 
@@ -53,6 +54,7 @@ This checklist is extracted from `README.md`, `docs/roadmap.md`, `docs/plan.md`,
 - [x] Ensure all paper numbers match `experiments/results/` after regeneration.
 - [x] Update paper tables to include AUROC/AUPRC and threshold-sweep takeaways.
 - [x] Align paper claims with the safe synthetic/prototype boundary.
+- [x] Add paper discussion of generalization stress checks and remaining synthetic-validity boundary.
 - [x] Ensure figures referenced in LaTeX exist and render from source diagrams or checked-in PDFs.
 - [x] Ensure bibliography entries cover MCPTox, MCPShield, TRUSTDESC, VIPER-MCP, MCP-BiFlow, tool poisoning, prompt injection, and supply-chain security.
 
@@ -61,6 +63,7 @@ This checklist is extracted from `README.md`, `docs/roadmap.md`, `docs/plan.md`,
 - [x] Provide `Dockerfile`, `environment.yml`, `experiments/Makefile`, `artifact/README.md`, `artifact/EXPECTED_OUTPUTS.md`, and `artifact/SECURITY_ETHICS.md`.
 - [x] Provide CI workflow for tests and reproduction pipeline.
 - [x] Refresh artifact expected outputs after final result regeneration.
+- [x] Include `run_generalization_eval.py` in `eval-main` and generated paper tables.
 - [x] Run smoke, tests, main evaluation, ablation, runtime red-team, latency, bootstrap, failure analysis, tables, and available Docker/Conda checks before final delivery.
 - [x] Confirm no real secrets, credentials, or operational payloads are included.
 - [x] Confirm `git status --short` is clean and list commits.

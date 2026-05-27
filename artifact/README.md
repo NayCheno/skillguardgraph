@@ -68,7 +68,7 @@ pip install -e ".[dev]"
 make smoke
 ```
 
-Expected: the demo prints a JSON policy report to stdout, and all 73 unit
+Expected: the demo prints a JSON policy report to stdout, and all 79 unit
 tests pass.
 
 ### Alternative: Docker
@@ -100,11 +100,11 @@ make smoke
 
 What it does:
 1. Runs `run_demo.py` — scans a sample manifest and evaluates a sample trace.
-2. Runs all 73 unit tests (`pytest tests/ -q`).
+2. Runs all 79 unit tests (`pytest tests/ -q`).
 
 ### Mode 2: Main Reproduction (~30 minutes)
 
-Reproduces all primary paper results (Tables 1–5).
+Reproduces all primary paper results (Tables 1–6).
 
 ```bash
 make reproduce
@@ -113,7 +113,7 @@ make reproduce
 What it does:
 1. `make benchmark` — Builds 4010-sample benchmark (1000 benign, 3010 malicious across 7 attack classes, ~430 samples each).
 2. `make validate` — Validates label integrity and class balance.
-3. `make eval-main` — Runs detection evaluation (8 methods), ablation study (6 configs), and runtime red-team evaluation.
+3. `make eval-main` — Runs detection evaluation (8 methods), ablation study (6 configs), runtime red-team evaluation, bootstrap CI, and generalization stress checks.
 4. `make tables` — Generates formatted tables in plain text and LaTeX.
 
 ### Mode 3: Full Reproduction (~2+ hours)
@@ -143,8 +143,9 @@ What it does:
 | `runtime_redteam.json` | JSON, ~2 KB | ASR, usability, and per-class runtime defense metrics |
 | `failure_analysis.json` | JSON, ~1 KB | False-positive/false-negative counts and evidence path attribution |
 | `significance_tests.json` | JSON, ~1 KB | McNemar test and paired-bootstrap comparison for fusion vs weighted voting |
-| `tables.txt` | Text, ~4 KB | 5 formatted plain-text tables |
-| `tables.tex` | LaTeX, ~4 KB | 5 LaTeX tables with labels for paper inclusion |
+| `generalization_eval.json` | JSON, ~120 KB | Held-out-template, hard-negative, mutation-robustness, and label-leakage checks |
+| `tables.txt` | Text, ~5 KB | 6 formatted plain-text tables |
+| `tables.tex` | LaTeX, ~5 KB | 6 LaTeX tables with labels for paper inclusion |
 
 ### Ecosystem results (`results/ecosystem/`)
 
