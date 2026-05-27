@@ -1,0 +1,28 @@
+{
+  "total_samples": 431,
+  "sources": {
+    "github_mcp": 431
+  },
+  "risk_patterns": {
+    "scope_inflation": {
+      "count": 24,
+      "rate": 0.0557
+    },
+    "description_mismatch": {
+      "count": 13,
+      "rate": 0.0302
+    },
+    "untrusted_publisher": {
+      "count": 83,
+      "rate": 0.1926
+    },
+    "missing_signature": {
+      "count": 431,
+      "rate": 1.0
+    },
+    "open_world_network": {
+      "count": 83,
+      "rate": 0.1926
+    }
+  }
+}
