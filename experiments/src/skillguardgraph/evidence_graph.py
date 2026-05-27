@@ -21,11 +21,60 @@ from .models import (
 
 
 class EvidenceGraph:
-    """A lightweight typed evidence graph.
+    """A typed cross-layer evidence graph.
 
-    Accepts either Evidence items (which are converted to implicit nodes/edges)
-    or explicit GraphNode / GraphEdge objects.
+    Evidence items are automatically materialized as typed GraphNode and
+    GraphEdge objects, enabling graph-based path queries and reachability.
     """
+
+    _KIND_TO_NODE_TYPE: Dict[str, NodeType] = {
+        "metadata": NodeType.METADATA,
+        "static": NodeType.CODE_SLICE,
+        "sandbox": NodeType.RUNTIME_EVENT,
+        "runtime": NodeType.RUNTIME_EVENT,
+        "permission": NodeType.METADATA,
+        "governance": NodeType.METADATA,
+        "approval": NodeType.METADATA,
+    }
+
+    _PRED_TO_EDGE_TYPE: Dict[str, EdgeType] = {
+        "declares_capability": EdgeType.DECLARES,
+        "annotation_claims": EdgeType.DECLARES,
+        "requires_scope": EdgeType.REQUIRES_SCOPE,
+        "requires_high_risk_scope": EdgeType.REQUIRES_SCOPE,
+        "flows_to": EdgeType.FLOWS_TO,
+        "calls_tool": EdgeType.CALLS,
+        "has_source_label": EdgeType.HAS_SOURCE_LABEL,
+        "has_data_label": EdgeType.HAS_SENSITIVITY,
+        "post_approval_drift": EdgeType.UPDATED_FROM,
+        "high_risk_version_change": EdgeType.UPDATED_FROM,
+        "approval_text_lineage": EdgeType.APPROVED_BY,
+        "signed_by": EdgeType.SIGNED_BY,
+        "is_external_sink": EdgeType.TARGETS_SINK,
+        "is_high_privilege_call": EdgeType.CALLS,
+        "sandbox_observed_write": EdgeType.OBSERVES,
+        "sandbox_observed_network": EdgeType.OBSERVES,
+        "sandbox_observed_shell": EdgeType.OBSERVES,
+        "sandbox_observed_persistence": EdgeType.OBSERVES,
+        "source_identified": EdgeType.IMPLEMENTS,
+        "sink_identified": EdgeType.IMPLEMENTS,
+        "writes_persistent_store": EdgeType.FLOWS_TO,
+        "persists_to": EdgeType.FLOWS_TO,
+        "hidden_instruction": EdgeType.DECLARES,
+        "scope_inflation": EdgeType.DECLARES,
+        "task_context": EdgeType.DECLARES,
+    }
+
+    # Object values that are literal labels, not node references
+    _LITERAL_OBJECTS = frozenset({
+        "read", "write", "search", "query", "list", "summarize",
+        "confidential", "secret", "pii", "credential", "public",
+        "high", "low", "untrusted", "untrusted_context_only",
+        "execution_facts", "read_only_or_low_risk", "data_processing",
+        "network_send", "file_write", "shell_exec", "email_send",
+        "memory_write", "env_var", "file_read", "database_query",
+        "true", "false", "unknown", "none",
+    })
 
     def __init__(
         self,
@@ -40,7 +89,7 @@ class EvidenceGraph:
         self._adj_in: Dict[str, List[GraphEdge]] = defaultdict(list)
         self._edges_by_type: Dict[EdgeType, List[GraphEdge]] = defaultdict(list)
 
-        # --- evidence index (legacy + graph-sourced) ---
+        # --- evidence index ---
         self._evidence: List[Evidence] = list(evidence or [])
         self._pred_index: Dict[str, List[Evidence]] = defaultdict(list)
         self._subject_index: Dict[str, List[Evidence]] = defaultdict(list)
@@ -49,13 +98,49 @@ class EvidenceGraph:
             self._pred_index[ev.predicate].append(ev)
             self._subject_index[ev.subject].append(ev)
 
-        # --- ingest typed nodes ---
+        # --- ingest explicit typed nodes/edges ---
         for gn in (nodes or []):
             self._nodes[gn.id] = gn
-
-        # --- ingest typed edges ---
         for ge in (edges or []):
             self._add_edge(ge)
+
+        # --- materialize typed graph from evidence items ---
+        self._materialize_from_evidence()
+
+    # ------------------------------------------------------------------
+    # Evidence-to-typed-graph materialization
+    # ------------------------------------------------------------------
+
+    def _materialize_from_evidence(self) -> None:
+        """Convert Evidence items into typed GraphNode/GraphEdge objects."""
+        for ev in self._evidence:
+            self._ensure_node(ev.subject, ev.kind)
+            # Only create object node if it's a reference, not a literal value
+            if ev.object and ev.object.lower() not in self._LITERAL_OBJECTS:
+                # Check if it looks like a node ID (contains letters/special chars)
+                if any(c.isalpha() or c in ":_-/" for c in ev.object):
+                    self._ensure_node(ev.object, ev.kind)
+            # Create typed edge
+            edge_type = self._PRED_TO_EDGE_TYPE.get(ev.predicate)
+            if edge_type is not None:
+                target = ev.object if (ev.object and ev.object.lower() not in self._LITERAL_OBJECTS and any(c.isalpha() or c in ":_-/" for c in ev.object)) else ev.subject
+                self._add_edge(GraphEdge(
+                    source=ev.subject,
+                    target=target,
+                    edge_type=edge_type,
+                    properties={"confidence": ev.confidence},
+                ))
+
+    def _ensure_node(self, node_id: str, evidence_kind: str) -> None:
+        """Ensure a GraphNode exists for the given ID."""
+        if node_id not in self._nodes:
+            node_type = self._KIND_TO_NODE_TYPE.get(evidence_kind, NodeType.METADATA)
+            self._nodes[node_id] = GraphNode(
+                id=node_id,
+                node_type=node_type,
+                properties={"evidence_kind": evidence_kind},
+            )
+
 
     # ------------------------------------------------------------------
     # Edge ingestion
