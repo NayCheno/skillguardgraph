@@ -1,0 +1,20 @@
+# Human-readable policy sketch. The prototype uses equivalent built-in rules.
+rules:
+  - id: C1_DECLARED_READONLY_BUT_WRITE_SCOPE
+    description: Read-only declaration conflicts with write/export/admin scope.
+    action: hitl_or_deny
+  - id: C2_UNTRUSTED_TO_HIGH_PRIVILEGE
+    description: Untrusted source influences high-privilege tool call.
+    action: degrade_or_hitl
+  - id: C3_SENSITIVE_TO_EXTERNAL_SEQUENCE
+    description: Sensitive read flows to external write through a call sequence.
+    action: deny
+  - id: C4_POST_APPROVAL_DRIFT
+    description: Approved skill version drifts to high-risk behavior.
+    action: quarantine_or_reapprove
+  - id: C5_TAINTED_APPROVAL_TEXT
+    description: Approval dialog is derived from untrusted context.
+    action: regenerate_approval_from_execution_layer
+  - id: C6_UNTRUSTED_PERSISTENCE_WRITE
+    description: Untrusted source reaches memory/config/hook/policy store.
+    action: deny_or_isolate

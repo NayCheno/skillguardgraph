@@ -1,0 +1,21 @@
+flowchart LR
+  Attacker[Attacker] --> M1[Malicious Metadata]
+  Attacker --> M2[Untrusted Web / Mail / Document]
+  Attacker --> M3[Registry or Update Drift]
+  Attacker --> M4[Project Config / Hooks / Memory]
+  M1 --> R[Registration]
+  M2 --> C[Context Retrieval]
+  M3 --> U[Version Update]
+  M4 --> P[Persistence]
+  R --> Planner[Agent Planning and Tool Selection]
+  C --> Planner
+  U --> Planner
+  P --> Planner
+  Planner --> T[Skill Runtime]
+  T --> A1[Enterprise Data]
+  T --> A2[Local Files / Code]
+  T --> A3[External APIs / Messaging]
+  T --> A4[Long-term Memory / Future Sessions]
+  Guard[SkillGuardGraph Controls] -.-> R
+  Guard -.-> Planner
+  Guard -.-> T

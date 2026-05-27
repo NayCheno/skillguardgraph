@@ -1,0 +1,16 @@
+flowchart LR
+  A[Skill Registry / Connector Catalog] --> B[Metadata Analyzer]
+  A --> C[Implementation Analyzer]
+  A --> D[Sandbox Prober]
+  E[Agent Runtime] --> F[Runtime Provenance Monitor]
+  B --> G[Typed Evidence Graph]
+  C --> G
+  D --> G
+  F --> G
+  H[Version / Approval / Scope Records] --> G
+  G --> I[Constraint Evaluator]
+  I --> J{Policy Decision}
+  J -->|allow| K[Normal Execution]
+  J -->|degrade| L[Reduced Capability]
+  J -->|HITL| M[Execution-grounded Approval]
+  J -->|deny/quarantine| N[Block / Rollback]

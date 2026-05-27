@@ -1,0 +1,20 @@
+{
+  "trace_id": "trace_persistence_001",
+  "events": [
+    {
+      "id": "e1",
+      "type": "source",
+      "label": "untrusted",
+      "origin": "synthetic_web_page"
+    },
+    {
+      "id": "e2",
+      "type": "persistence_write",
+      "store": "agent_memory",
+      "note": "synthetic persistent write marker"
+    }
+  ],
+  "flows": [
+    {"from": "e1", "to": "e2", "confidence": 0.9}
+  ]
+}

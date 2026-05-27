@@ -1,0 +1,13 @@
+{
+  "name": "benign_pdf_summarizer",
+  "description": "Read-only PDF summarizer for synthetic documents. Produces a short summary.",
+  "scopes": ["read"],
+  "annotations": {
+    "readOnlyHint": true,
+    "destructiveHint": false,
+    "openWorldHint": false
+  },
+  "publisher": "example-lab",
+  "trusted_server": true,
+  "signature": "example-signature-placeholder"
+}

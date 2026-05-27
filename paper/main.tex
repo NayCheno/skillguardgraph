@@ -1,0 +1,54 @@
+\documentclass[10pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{url}
+\usepackage{booktabs}
+\usepackage{amsmath}
+\usepackage{hyperref}
+
+\title{SkillGuardGraph: Cross-Layer Evidence Fusion for Detecting and Containing Malicious Skills in LLM Agent Ecosystems}
+\author{Anonymous Authors}
+\date{}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+LLM agents increasingly rely on external skills, including tools, connectors, actions, MCP servers, blocks, and graph nodes. These skills connect agents to private data, APIs, files, and persistent execution environments. Existing defenses often operate at one layer: metadata scanning, prompt-injection filtering, source-code analysis, sandbox probing, human approval, or audit logging. This paper argues that malicious skills are compositional: damaging behavior often emerges from gaps between declared metadata, implemented capability, permission scope, runtime provenance, approval text, persistence, and post-approval updates. We propose SkillGuardGraph, a typed cross-layer evidence graph and constraint system for detecting and containing such attacks. The system fuses metadata, implementation summaries, sandbox observations, runtime traces, permission scopes, approvals, and version histories, then enforces source-aware, permission-aware, and version-aware constraints over tool-call chains. We outline a lifecycle-complete benchmark and ablation methodology comparing graph fusion against single-layer detectors and a naive detector union.
+\end{abstract}
+
+\section{Introduction}
+LLM agents are evolving from conversational systems into execution systems. They discover and invoke external skills to search documents, send messages, edit files, call APIs, and maintain persistent state. This capability expansion creates a new security problem: the security property often belongs not to one skill but to a cross-tool, cross-layer sequence.
+
+\paragraph{Thesis.} Malicious skills exploit cross-layer trust gaps that are invisible to single-layer defenses. Effective defense requires evidence fusion across declaration, implementation, permission, runtime provenance, approval integrity, persistence, and version drift.
+
+\section{Background and Threat Model}
+We treat a skill as a discoverable and reusable external capability unit outside the model's core reasoning loop. The threat model covers malicious metadata, implementation mismatch, runtime-output poisoning, over-permissioning, approval laundering, persistence writes, and post-approval update drift.
+
+\section{Compositional Malicious Skill Taxonomy}
+We study seven attack classes: capability laundering, cross-skill confused deputy, delayed rug-pull, consent laundering, persistence pivot, split exfiltration, and scope inflation.
+
+\section{SkillGuardGraph Design}
+SkillGuardGraph represents evidence as typed assertions over skill metadata, code summaries, sandbox observations, runtime events, data objects, trust labels, policy decisions, and version histories. Constraints are evaluated over graph paths and call sequences.
+
+\subsection{Core Constraints}
+\begin{itemize}
+  \item C1: declared read-only behavior conflicts with high-risk scope or implementation evidence.
+  \item C2: untrusted sources influence high-privilege tool calls.
+  \item C3: sensitive data reaches an external sink through a tool-call sequence.
+  \item C4: approved skill versions show high-risk post-approval drift.
+  \item C5: approval text is derived from untrusted or model-only context.
+  \item C6: untrusted sources reach persistent memory, configuration, or hooks.
+\end{itemize}
+
+\section{Benchmark and Evaluation Plan}
+The benchmark contains benign-paired cases across metadata poisoning, implementation mismatch, runtime-output poisoning, cross-skill chains, persistence attacks, and update drift. Baselines include metadata-only, implementation-only, sandbox-only, runtime-only, human-approval-only, and naive detector union.
+
+\section{Discussion}
+The main risk is overlap with existing MCP security work if the system is framed as a detector pipeline. The intended distinction is graph-level evidence fusion, lifecycle-wide constraints, and an explicit graph-fusion versus naive-union ablation.
+
+\section{Conclusion}
+SkillGuardGraph reframes malicious skill defense from per-skill classification to cross-layer execution governance.
+
+\bibliographystyle{plain}
+\bibliography{references}
+\end{document}

@@ -1,0 +1,48 @@
+# Python environments, caches, and build outputs
+.venv/
+venv/
+env/
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+build/
+dist/
+*.egg-info/
+
+# Local editor and OS metadata
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# LaTeX build artifacts
+*.aux
+*.bbl
+*.bcf
+*.blg
+*.fdb_latexmk
+*.fls
+*.log
+*.out
+*.run.xml
+*.synctex.gz
+*.toc
+
+# Local experiment data and generated results
+experiments/data/*
+!experiments/data/README.md
+experiments/results/*.csv
+experiments/results/*.json
+experiments/results/*.jsonl
+experiments/results/*.parquet
+experiments/results/*.pkl
+experiments/results/*.png
+experiments/results/*.svg
+experiments/results/*.html
