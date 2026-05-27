@@ -43,18 +43,18 @@ Use this as the final gate before marking the active goal complete.
 
 ## Paper
 
-- [ ] `paper/main.tex` sections are complete and internally consistent.
-- [ ] Paper tables/figures match regenerated results.
-- [ ] Related work and bibliography cover required MCP/tool-security baselines.
-- [ ] Limitations and ethics do not overclaim beyond synthetic evidence.
+- [x] `paper/main.tex` sections are complete and internally consistent.
+- [x] Paper tables/figures match regenerated results.
+- [x] Related work and bibliography cover required MCP/tool-security baselines.
+- [x] Limitations and ethics do not overclaim beyond synthetic evidence.
 
 ## Artifact Release
 
-- [ ] `make smoke` passes.
-- [ ] `make test` or `python -m pytest -q` passes.
-- [ ] Main reproduction scripts pass.
-- [ ] Tables regenerate.
-- [ ] Docker/Conda instructions are verified or limitations are recorded.
-- [ ] No secrets, credentials, real third-party payloads, or unsafe egress targets are present.
+- [x] `make smoke` passes.
+- [x] `make test` or `python -m pytest -q` passes.
+- [x] Main reproduction scripts pass.
+- [x] Tables regenerate.
+- [x] Docker/Conda instructions are verified or limitations are recorded (Docker build/run passed; `conda` command is unavailable on this workstation).
+- [x] No secrets, credentials, real third-party payloads, or unsafe egress targets are present.
 - [ ] `git status --short` is clean.
 - [ ] Final response lists commits, remaining risks, and unfinished items.
