@@ -68,7 +68,7 @@ pip install -e ".[dev]"
 make smoke
 ```
 
-Expected: the demo prints a JSON policy report to stdout, and all 89 unit
+Expected: the demo prints a JSON policy report to stdout, and all 94 unit
 tests pass.
 
 ### Alternative: Docker
@@ -100,7 +100,7 @@ make smoke
 
 What it does:
 1. Runs `run_demo.py` — scans a sample manifest and evaluates a sample trace.
-2. Runs all 89 unit tests (`pytest tests/ -q`).
+2. Runs all 94 unit tests (`pytest tests/ -q`).
 
 ### Mode 2: Main Reproduction (~30 minutes)
 
@@ -128,7 +128,7 @@ What it does:
 1. Everything in Mode 2.
 2. `make ecosystem` — Builds 1200-sample synthetic ecosystem corpus from 5 sources.
 3. `make triage` — Triages ecosystem findings, identifies risk patterns.
-4. `make real-ecosystem` — Collects a 1,000-artifact passive multi-source corpus (GitHub MCP repositories + npm MCP packages), writes a data card, and records real-finding triage inputs.
+4. `make real-ecosystem` — Collects a 1,000-artifact passive multi-source corpus (GitHub MCP repositories + npm MCP packages + Hugging Face Spaces), writes a data card, and records real-finding triage inputs.
 
 ---
 
@@ -175,8 +175,8 @@ What it does:
 | Runtime ASR | 0.000 |
 | Task success rate | 1.000 |
 | False block rate | 0.000 |
-| Ecosystem corpus size | 1200 synthetic + 1000 real public artifacts (750 GitHub + 250 npm) |
-| Unit tests | 89 (all pass) |
+| Ecosystem corpus size | 1200 synthetic + 1000 real public artifacts (600 GitHub + 250 npm + 150 Hugging Face Spaces) |
+| Unit tests | 94 (all pass) |
 
 See `EXPECTED_OUTPUTS.md` for complete output documentation with example
 snippets and field-level descriptions.

@@ -116,7 +116,7 @@ experiments/
 | `make eval-main` | Detection + ablation + runtime eval + runtime/sandbox harnesses + bootstrap + generalization | ~15 min |
 | `make tables` | Generate tables + failure analysis + significance | ~1 min |
 | `make ecosystem` | Crawl synthetic ecosystem corpus | ~10 min |
-| `make real-ecosystem` | Crawl passive real public GitHub + npm MCP corpus | network-bound |
+| `make real-ecosystem` | Crawl passive real public GitHub + npm + Hugging Face MCP corpus | network-bound |
 | `make triage` | Triage synthetic ecosystem findings | ~5 min |
 | `make reproduce` | benchmark + validate + eval-main + tables | ~30 min |
 | `make eval-all` | reproduce + ecosystem + triage + real-ecosystem | network-bound |
@@ -177,7 +177,7 @@ Key result numbers:
 | False block rate | 0.000 |
 | Latency p50 / p95 | 0.5ms / 0.6ms |
 | Sandbox harness recall / benign alert rate | 1.000 / 0.000 |
-| Real public corpus | 1,000 artifacts (750 GitHub + 250 npm) |
+| Real public corpus | 1,000 artifacts (600 GitHub + 250 npm + 150 Hugging Face Spaces) |
 | Real corpus high severity | 2 |
 | Real corpus confirmed vulnerabilities | 0 |
 

@@ -228,20 +228,21 @@ All generalization acceptance booleans in the JSON are `true`. These checks are 
 - `results/ecosystem/real_ecosystem_data_card.json`
 - `results/ecosystem/real_high_risk_triage.json`
 
-**Produced by:** `python scripts/crawl_real_ecosystem.py --target 1000 --pages-per-query 3 --source-budget 100` (defaults to `github_mcp,npm_mcp`)
+**Produced by:** `python scripts/crawl_real_ecosystem.py --target 1000 --pages-per-query 3 --source-budget 100` (defaults to `github_mcp,npm_mcp,hf_spaces_mcp`)
 
 | Metric | Value |
 |---|---:|
 | Total artifacts | 1,000 |
-| GitHub MCP repositories | 750 |
+| GitHub MCP repositories | 600 |
 | npm MCP packages | 250 |
+| Hugging Face Spaces | 150 |
 | Source-available samples | 23 |
 | Manifest-only samples | 977 |
 | High severity | 2 |
 | Medium severity | 15 |
 | Missing signatures | 750 (75.0%) |
-| Untrusted publishers | 205 (20.5%) |
-| Open-world network access | 8 (0.8%) |
+| Untrusted publishers | 356 (35.6%) |
+| Open-world network access | 9 (0.9%) |
 | Scope inflation | 7 (0.7%) |
 | Confirmed vulnerabilities | 0 |
 

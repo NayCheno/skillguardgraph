@@ -1,8 +1,9 @@
 {
   "total_samples": 1000,
   "sources": {
-    "github_mcp": 750,
-    "npm_mcp": 250
+    "github_mcp": 600,
+    "npm_mcp": 250,
+    "hf_spaces_mcp": 150
   },
   "code_availability": {
     "manifest_only": 977,
@@ -11,14 +12,14 @@
   "languages": {
     "python": 308,
     "shell": 5,
-    "typescript": 323,
-    "unknown": 265,
+    "typescript": 166,
+    "unknown": 277,
     "rust": 15,
     "html": 6,
     "go": 31,
     "jupyter notebook": 7,
     "c#": 5,
-    "javascript": 16,
+    "javascript": 15,
     "ocaml": 1,
     "php": 1,
     "swift": 4,
@@ -29,22 +30,26 @@
     "svg": 1,
     "lua": 1,
     "kotlin": 2,
-    "emacs lisp": 1
+    "emacs lisp": 1,
+    "gradio": 98,
+    "docker": 37,
+    "streamlit": 7,
+    "static": 4
   },
   "licenses": {
-    "Apache-2.0": 221,
-    "MIT": 474,
-    "NOASSERTION": 89,
-    "GPL-3.0": 18,
-    "unknown": 96,
+    "Apache-2.0": 192,
+    "MIT": 398,
+    "NOASSERTION": 69,
+    "GPL-3.0": 15,
+    "unknown": 236,
     "CC0-1.0": 11,
-    "AGPL-3.0": 40,
+    "AGPL-3.0": 31,
     "LGPL-2.1": 1,
     "BSD-2-Clause": 4,
-    "CC-BY-4.0": 3,
+    "CC-BY-4.0": 2,
     "Unlicense": 1,
-    "BSD-3-Clause": 4,
-    "CC-BY-SA-4.0": 3,
+    "BSD-3-Clause": 3,
+    "CC-BY-SA-4.0": 2,
     "ISC": 16,
     "SEE LICENSE IN LICENSE": 4,
     "Proprietary": 1,
@@ -66,16 +71,16 @@
       "rate": 0.75
     },
     "open_world_network": {
-      "count": 8,
-      "rate": 0.008
+      "count": 9,
+      "rate": 0.009
     },
     "scope_inflation": {
       "count": 7,
       "rate": 0.007
     },
     "untrusted_publisher": {
-      "count": 205,
-      "rate": 0.205
+      "count": 356,
+      "rate": 0.356
     }
   },
   "severity": {
@@ -85,8 +90,8 @@
   },
   "per_source_risk": {
     "github_mcp": {
-      "count": 750,
-      "mean_score": 0.107,
+      "count": 600,
+      "mean_score": 0.133,
       "max_score": 10.0,
       "high_risk_count": 2
     },
@@ -94,6 +99,12 @@
       "count": 250,
       "mean_score": 0.12,
       "max_score": 6.0,
+      "high_risk_count": 0
+    },
+    "hf_spaces_mcp": {
+      "count": 150,
+      "mean_score": 0.0,
+      "max_score": 0.0,
       "high_risk_count": 0
     }
   },

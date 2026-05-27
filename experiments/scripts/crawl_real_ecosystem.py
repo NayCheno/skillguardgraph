@@ -45,8 +45,9 @@ NPM_SEARCH_SIZE = 100
 SOURCE_LANGUAGES = {"python", "typescript", "javascript"}
 
 SOURCE_WEIGHTS: Dict[str, float] = {
-    "github_mcp": 0.75,
+    "github_mcp": 0.60,
     "npm_mcp": 0.25,
+    "hf_spaces_mcp": 0.15,
 }
 
 GITHUB_SOURCE_QUERIES: Dict[str, List[str]] = {
@@ -63,6 +64,7 @@ NPM_SEARCH_TERMS = [
     '"mcp server"',
     '"mcp tool"',
 ]
+HF_SEARCH_LIMIT = 200
 
 PY_TOOL_DECORATOR = re.compile(r'@(?:server|app|mcp)\s*\.\s*tool\s*\(\s*["\']([\w-]+)["\']', re.MULTILINE)
 TS_REGISTER_TOOL = re.compile(r'server\.tool\s*\(\s*["\']([\w-]+)["\']', re.MULTILINE)
@@ -130,6 +132,27 @@ def github_contents(owner: str, repo: str, branch: str, path: str = "") -> Any:
         url += f"/{encoded_path}"
     sep = "&" if "?" in url else "?"
     return github_request(f"{url}{sep}ref={urllib.parse.quote(branch)}")
+
+def hf_spaces_search(query: str, limit: int) -> List[Dict[str, Any]]:
+    encoded = urllib.parse.quote(query)
+    return _json_request(f"https://huggingface.co/api/spaces?search={encoded}&limit={limit}")
+
+
+def hf_space_metadata(space_id: str) -> Dict[str, Any]:
+    encoded = urllib.parse.quote(space_id, safe="/")
+    return _json_request(f"https://huggingface.co/api/spaces/{encoded}")
+
+
+def fetch_hf_space_file(space_id: str, path: str) -> Optional[str]:
+    encoded_id = urllib.parse.quote(space_id, safe="/")
+    encoded_path = urllib.parse.quote(path.strip("/"))
+    url = f"https://huggingface.co/spaces/{encoded_id}/resolve/main/{encoded_path}"
+    req = urllib.request.Request(url, headers={"User-Agent": "skillguardgraph-research-bot"})
+    try:
+        with urllib.request.urlopen(req, timeout=20) as resp:
+            return resp.read().decode("utf-8", errors="replace")
+    except Exception:
+        return None
 
 def npm_search(term: str, offset: int) -> Dict[str, Any]:
     query = urllib.parse.quote(term)
@@ -760,6 +783,148 @@ def crawl_npm_source(target: int, cache: Dict[str, Dict[str, Any]], source_budge
     save_cache(cache)
     return samples[:target], remaining_source_budget
 
+# ---------------------------------------------------------------------------
+# Hugging Face Spaces crawl
+# ---------------------------------------------------------------------------
+
+def hf_space_search_space(target: int) -> Dict[str, Dict[str, Any]]:
+    spaces: Dict[str, Dict[str, Any]] = {}
+    for query in ("mcp", "mcp-server", "model context protocol"):
+        print(f"Searching Hugging Face Spaces query={query!r} ...")
+        try:
+            items = hf_spaces_search(query, HF_SEARCH_LIMIT)
+        except Exception as exc:
+            print(f"  query failed: {exc}")
+            continue
+        print(f"  Got {len(items)} spaces")
+        for item in items:
+            space_id = item.get("id")
+            if not space_id:
+                continue
+            current = spaces.setdefault(space_id, item)
+            current.setdefault("_matched_terms", [])
+            if query not in current["_matched_terms"]:
+                current["_matched_terms"].append(query)
+            if len(spaces) >= target * 2:
+                return spaces
+    return spaces
+
+
+def build_hf_manifest(space_meta: Dict[str, Any], tools: List[Dict[str, Any]]) -> Dict[str, Any]:
+    all_scopes, has_network, has_file_write, has_shell = _aggregate_tool_flags(tools)
+    card = space_meta.get("cardData") or {}
+    tags = space_meta.get("tags") or []
+    description = card.get("title") or f"Hugging Face Space {space_meta.get('id')}"
+    return {
+        "name": str(space_meta.get("id") or "hf_space"),
+        "description": description,
+        "scopes": sorted(all_scopes)[:8] if all_scopes else ["read"],
+        "annotations": {
+            "readOnlyHint": not has_file_write and not has_shell,
+            "destructiveHint": has_shell,
+            "openWorldHint": has_network,
+        },
+        "publisher": space_meta.get("author") or "unknown",
+        "trusted_server": int(space_meta.get("likes", 0)) >= 50 or "verified" in tags,
+        "signature": None,
+        "tool_count": len(tools),
+        "stars": int(space_meta.get("likes", 0)),
+        "language": str(card.get("sdk") or "unknown"),
+        "source": "hf_spaces_mcp",
+        "sdk": card.get("sdk") or "unknown",
+        "host": space_meta.get("host"),
+    }
+
+
+def analyze_hf_space(space_entry: Dict[str, Any], attempt_source_fetch: bool) -> Dict[str, Any]:
+    space_id = str(space_entry["id"])
+    meta = hf_space_metadata(space_id)
+    source_files: List[Dict[str, str]] = []
+    if attempt_source_fetch:
+        card = meta.get("cardData") or {}
+        siblings = meta.get("siblings") or []
+        candidate_paths: List[str] = []
+        app_file = card.get("app_file")
+        if isinstance(app_file, str):
+            candidate_paths.append(app_file)
+        for sibling in siblings:
+            path = str(sibling.get("rfilename") or "")
+            if path.endswith((".py", ".ts", ".js", "README.md")) and any(token in path.lower() for token in ("app", "server", "index", "main", "mcp", "readme")):
+                candidate_paths.append(path)
+        seen: set[str] = set()
+        for path in candidate_paths:
+            if path in seen:
+                continue
+            seen.add(path)
+            content = fetch_hf_space_file(space_id, path)
+            if content and len(content) > 80:
+                source_files.append({"path": path, "content": content})
+                if len(source_files) >= 3:
+                    break
+
+    source_blobs = [item["content"] for item in source_files if item["path"].endswith((".py", ".ts", ".js"))]
+    if not source_blobs:
+        readmes = [item["content"] for item in source_files if item["path"].lower().endswith("readme.md")]
+        if readmes:
+            source_blobs = [readmes[0]]
+    fallback_language = str((meta.get("cardData") or {}).get("sdk") or "unknown").lower()
+    tools = summarize_tools_from_source(source_blobs, space_id, fallback_language)
+    manifest = build_hf_manifest(meta, tools)
+
+    return analyze_artifact(
+        artifact_id=space_id,
+        artifact_url=f"https://huggingface.co/spaces/{space_id}",
+        source_label="hf_spaces_mcp",
+        dedup_key=space_id,
+        manifest=manifest,
+        tools=tools,
+        source_files=source_files,
+        source_code="\n\n".join(source_blobs),
+        metadata={
+            "query_matches": sorted(space_entry.get("_matched_terms", [])),
+            "created_at": meta.get("createdAt"),
+            "updated_at": meta.get("lastModified"),
+            "pushed_at": meta.get("lastModified"),
+            "default_branch": "main",
+            "license": "unknown",
+            "stars": int(meta.get("likes", 0)),
+            "language": str((meta.get("cardData") or {}).get("sdk") or "unknown"),
+            "archived": bool(meta.get("disabled", False)),
+            "fork": False,
+            "sdk": (meta.get("cardData") or {}).get("sdk"),
+            "hf_host": meta.get("host"),
+        },
+    )
+
+
+def crawl_hf_spaces_source(target: int, cache: Dict[str, Dict[str, Any]], source_budget: int) -> Tuple[List[Dict[str, Any]], int]:
+    samples: List[Dict[str, Any]] = []
+    remaining_source_budget = source_budget
+    spaces = hf_space_search_space(target)
+    print(f"Search produced {len(spaces)} unique Hugging Face spaces")
+
+    for space_id, entry in spaces.items():
+        if len(samples) >= target:
+            break
+        cached = cached_sample(cache, "hf_spaces_mcp", space_id)
+        if cached is not None:
+            samples.append(cached)
+            continue
+        attempt_source_fetch = remaining_source_budget > 0
+        try:
+            sample = analyze_hf_space(entry, attempt_source_fetch=attempt_source_fetch)
+            samples.append(sample)
+            put_cached_sample(cache, "hf_spaces_mcp", space_id, sample)
+            if attempt_source_fetch and sample.get("code_availability") == "source_available":
+                remaining_source_budget -= 1
+            if len(samples) % 25 == 0:
+                print(f"  analyzed {len(samples)} Hugging Face spaces")
+                save_cache(cache)
+        except Exception as exc:
+            print(f"  skipping Hugging Face space {space_id}: {exc}")
+    save_cache(cache)
+    return samples[:target], remaining_source_budget
+
 
 # ---------------------------------------------------------------------------
 # Aggregation
@@ -885,25 +1050,30 @@ def build_data_card(
             "terms": NPM_SEARCH_TERMS,
             "search_page_size": NPM_SEARCH_SIZE,
         }
+    if "hf_spaces_mcp" in enabled_sources:
+        source_details["hf_spaces_mcp"] = {
+            "queries": ["mcp", "mcp-server", "model context protocol"],
+            "search_limit": HF_SEARCH_LIMIT,
+        }
     return {
-        "crawl_started_goal": "Passive real-public MCP/tool/package measurement",
+        "crawl_started_goal": "Passive real-public MCP/tool/package/space measurement",
         "crawl_completed_at": iso_now(),
         "target_samples": target,
         "actual_samples": len(samples),
         "enabled_sources": enabled_sources,
         "source_details": source_details,
         "source_budget": source_budget,
-        "dedup_rule": "Deduplicate by source-specific artifact identifier (GitHub full_name or npm package name); retain linked_repository when a package points to GitHub.",
-        "filter_rule": "Collect public GitHub MCP repositories and npm MCP-related packages; include metadata-only samples when bounded source probing finds no recognized entrypoint.",
-        "version_rule": "Record GitHub default_branch plus timestamps; record npm latest package version and package publication/update time.",
+        "dedup_rule": "Deduplicate by source-specific artifact identifier (GitHub full_name, npm package name, or Hugging Face space id); retain linked_repository when an upstream package points to GitHub.",
+        "filter_rule": "Collect public GitHub MCP repositories, npm MCP-related packages, and Hugging Face Spaces returned by MCP-related search terms; include metadata-only samples when bounded source probing finds no recognized entrypoint.",
+        "version_rule": "Record GitHub default_branch plus timestamps; record npm latest package version and package publication/update time; record Hugging Face Space sha and created/lastModified timestamps when exposed.",
         "license_rule": "Record SPDX identifier when the upstream API provides one; otherwise mark unknown.",
         "availability_rule": stats.get("code_availability", {}),
         "safety_boundary": "Passive metadata/source collection only; no third-party code execution, no destructive calls, no credential use.",
         "limitations": [
-            "GitHub and npm search coverage are query-biased and incomplete.",
-            "Repository-level and package-level signals do not prove deployable vulnerabilities.",
+            "GitHub, npm, and Hugging Face search coverage are query-biased and incomplete.",
+            "Repository-level, package-level, and space-level signals do not prove deployable vulnerabilities.",
             "Manifest-only samples retain metadata evidence but weak implementation coverage.",
-            "npm source coverage depends on linked public repositories when present.",
+            "npm and Hugging Face source coverage depends on linked public files when present.",
         ],
     }
 
@@ -919,12 +1089,12 @@ def write_samples_jsonl(samples: List[Dict[str, Any]]) -> None:
 # ---------------------------------------------------------------------------
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Crawl public MCP-related artifacts from GitHub and npm")
+    parser = argparse.ArgumentParser(description="Crawl public MCP-related artifacts from GitHub, npm, and Hugging Face Spaces")
     parser.add_argument("--target", type=int, default=1000, help="Number of artifacts to retain")
     parser.add_argument("--pages-per-query", type=int, default=3, help="GitHub search pages to request for each query")
     parser.add_argument("--source-budget", type=int, default=200, help="Maximum number of artifacts for which raw source entrypoints are fetched")
     parser.add_argument("--resume", action="store_true", help="Resume from cached per-artifact samples")
-    parser.add_argument("--sources", default="github_mcp,npm_mcp", help="Comma-separated source set")
+    parser.add_argument("--sources", default="github_mcp,npm_mcp,hf_spaces_mcp", help="Comma-separated source set")
     args = parser.parse_args()
 
     enabled_sources = [item.strip() for item in args.sources.split(",") if item.strip()]
@@ -954,9 +1124,33 @@ def main() -> None:
             source_samples, remaining_budget = crawl_github_source(source, quota, args.pages_per_query, cache, remaining_budget)
         elif source == "npm_mcp":
             source_samples, remaining_budget = crawl_npm_source(quota, cache, remaining_budget)
+        elif source == "hf_spaces_mcp":
+            source_samples, remaining_budget = crawl_hf_spaces_source(quota, cache, remaining_budget)
         else:
             raise SystemExit(f"Unsupported source: {source}")
         samples.extend(source_samples)
+
+    if len(samples) < args.target:
+        deficit = args.target - len(samples)
+        for fallback_source in ("github_mcp", "npm_mcp"):
+            if fallback_source not in enabled_sources or deficit <= 0:
+                continue
+            existing = {sample["dedup_key"] for sample in samples if sample["source"] == fallback_source}
+            refill_target = len(existing) + deficit
+            print(f"Topping up from {fallback_source} with deficit={deficit}")
+            if fallback_source == "github_mcp":
+                extra_samples, remaining_budget = crawl_github_source(
+                    fallback_source, refill_target, args.pages_per_query, cache, remaining_budget,
+                )
+            else:
+                extra_samples, remaining_budget = crawl_npm_source(refill_target, cache, remaining_budget)
+            for sample in extra_samples:
+                if sample["dedup_key"] not in existing:
+                    samples.append(sample)
+                    existing.add(sample["dedup_key"])
+                    deficit -= 1
+                    if deficit <= 0:
+                        break
 
     samples = samples[:args.target]
     print(f"Collected {len(samples)} samples")
@@ -970,7 +1164,6 @@ def main() -> None:
         samples=samples,
         stats=stats,
     )
-
     write_samples_jsonl(samples)
     RESULTS_FILE.write_text(json.dumps(stats, indent=2, ensure_ascii=False), encoding="utf-8")
     DATA_CARD_FILE.write_text(json.dumps(data_card, indent=2, ensure_ascii=False), encoding="utf-8")
