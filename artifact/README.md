@@ -162,7 +162,7 @@ What it does:
 | FPR reduction vs naive union | 100.0% |
 | Naive union F1 / FPR | 0.858 / 1.000 |
 | Weighted voting F1 / FPR | 0.936 / 0.208 |
-| Ablation: no_runtime ΔF1 | -0.548 |
+| Ablation: no_runtime ΔF1 | -0.639 |
 | Runtime ASR | 0.000 |
 | Task success rate | 1.000 |
 | False block rate | 0.000 |

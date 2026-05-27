@@ -151,8 +151,8 @@ Key result numbers:
 | Weighted Voting F1 | 0.936 |
 | Weighted Voting FPR | 0.208 |
 | Per-class fusion recall | 1.000 for all 7 classes |
-| Ablation: no_runtime F1 drop | -0.548 |
-| Ablation: no_metadata F1 drop | -0.111 |
+| Ablation: no_runtime F1 drop | -0.639 |
+| Ablation: no_metadata F1 drop | -0.077 |
 | Runtime ASR | 0.000 |
 | Task success rate | 1.000 |
 | False block rate | 0.000 |

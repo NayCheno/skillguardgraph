@@ -66,12 +66,12 @@ This document describes every output file produced by the experiment pipeline, i
 
 | Config | Precision | Recall | F1 | FPR | F1 Delta from Full |
 |---|---:|---:|---:|---:|---:|
-| full | 1.0000 | 0.8322 | 0.9084 | 0.0000 | +0.0000 |
-| no_metadata | 1.0000 | 0.6628 | 0.7972 | 0.0000 | -0.1112 |
-| no_static | 1.0000 | 0.8322 | 0.9084 | 0.0000 | +0.0000 |
-| no_sandbox | 1.0000 | 0.8322 | 0.9084 | 0.0000 | +0.0000 |
-| no_runtime | 1.0000 | 0.2199 | 0.3606 | 0.0000 | -0.5478 |
-| no_sequence | 1.0000 | 0.7455 | 0.8542 | 0.0000 | -0.0542 |
+| full | 1.0000 | 1.0000 | 1.0000 | 0.0000 | +0.0000 |
+| no_metadata | 1.0000 | 0.8571 | 0.9231 | 0.0000 | -0.0769 |
+| no_static | 1.0000 | 1.0000 | 1.0000 | 0.0000 | +0.0000 |
+| no_sandbox | 1.0000 | 1.0000 | 1.0000 | 0.0000 | +0.0000 |
+| no_runtime | 1.0000 | 0.2199 | 0.3606 | 0.0000 | -0.6394 |
+| no_sequence | 1.0000 | 0.7970 | 0.8870 | 0.0000 | -0.1130 |
 
 ### Per-attack-class recall (full fusion)
 

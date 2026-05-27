@@ -22,6 +22,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent  # experiments/
 DATA_PATH = ROOT / "data" / "benchmark_v0" / "samples.jsonl"
+
 OUT_PATH = ROOT / "results" / "main" / "ablation.json"
 
 sys.path.insert(0, str(ROOT / "src"))
@@ -38,7 +39,7 @@ from skillguardgraph.models import (  # noqa: E402
 from skillguardgraph.policy_engine import evaluate as policy_evaluate  # noqa: E402
 from skillguardgraph.runtime_monitor import trace_to_evidence  # noqa: E402
 from skillguardgraph.simulated_prober import probe_skill, observations_to_evidence  # noqa: E402
-from skillguardgraph.scoring import aggregate_score  # noqa: E402
+from skillguardgraph.fusion import fuse_from_evidence_list  # noqa: E402
 from skillguardgraph.static_analyzer import analyze_source  # noqa: E402
 
 
@@ -152,8 +153,17 @@ def fuse_with_filter(
     elif len(evidence_kinds) >= 2:
         cross_layer_bonus = _CROSS_LAYER_BONUS * 0.5
 
-    # Consistency bonus (abbreviated)
+    # Cross-layer consistency bonuses mirror the production fusion scorer.
     consistency_bonus = 0.0
+
+    has_runtime_write = any(
+        ev.predicate in (
+            "is_external_sink", "flows_to", "sandbox_observed_write",
+            "sandbox_observed_network", "sink_identified",
+            "writes_persistent_store", "persists_to",
+        )
+        for ev in evidence
+    )
     has_untrusted = any(
         ev.predicate == "has_source_label" and ev.object in (
             "untrusted", "external_web", "external_email", "external_api_response",
@@ -161,9 +171,34 @@ def fuse_with_filter(
         ) for ev in evidence
     )
     has_high_priv = any(ev.predicate == "is_high_privilege_call" for ev in evidence)
-    if has_untrusted and has_high_priv:
-        consistency_bonus += 3.0
+    has_version_drift = any(
+        ev.predicate in ("post_approval_drift", "high_risk_version_change")
+        for ev in evidence
+    )
+    has_tainted_approval = any(
+        ev.predicate == "approval_text_lineage" and ev.object == "untrusted_context_only"
+        for ev in evidence
+    )
+    has_explicit_readonly_claim = any(
+        ev.predicate == "declares_readonly_with_write_scope" for ev in evidence
+    )
+    has_external_network = any(
+        ev.predicate in ("is_external_sink", "sandbox_observed_network")
+        for ev in evidence
+    )
 
+    if exclude_constraints is None or "C1" not in exclude_constraints:
+        if has_explicit_readonly_claim and has_external_network:
+            consistency_bonus += 2.5
+    if exclude_constraints is None or "C2" not in exclude_constraints:
+        if has_untrusted and has_high_priv:
+            consistency_bonus += 3.0
+    if exclude_constraints is None or "C4" not in exclude_constraints:
+        if has_version_drift and has_runtime_write:
+            consistency_bonus += 2.5
+    if exclude_constraints is None or "C5" not in exclude_constraints:
+        if has_tainted_approval and has_runtime_write:
+            consistency_bonus += 2.0
     # Hybrid scoring
     wv_path = signal_score + cross_layer_bonus
     constraint_path = constraint_score + consistency_bonus
@@ -172,7 +207,7 @@ def fuse_with_filter(
     # Decision
     if total_score >= 9.0:
         risk, decision = Severity.CRITICAL, Decision.DENY
-    elif total_score >= 5.0:
+    elif total_score >= 4.5:
         risk, decision = Severity.HIGH, Decision.HITL
     elif total_score >= 3.0:
         risk, decision = Severity.MEDIUM, Decision.DEGRADE
@@ -232,7 +267,10 @@ def run_ablation(
     if ablation != "no_runtime" and trace is not None:
         evidence.extend(trace_to_evidence(trace))
 
-    # no_sequence: filter out C2, C3, C6 findings
+    if ablation == "full":
+        return fuse_from_evidence_list(evidence)
+
+    # no_sequence: filter out C2, C3, C6 findings and consistency bonuses.
     exclude = SEQUENCE_CONSTRAINTS if ablation == "no_sequence" else None
     return fuse_with_filter(evidence, exclude_constraints=exclude)
 

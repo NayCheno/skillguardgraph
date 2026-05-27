@@ -29,7 +29,7 @@
 \begin{abstract}
 Large language model (LLM) agents increasingly rely on external skills---tools, connectors, actions, MCP servers, and graph nodes---to access private data, invoke APIs, modify files, and maintain persistent state. This capability expansion creates a new security problem: malicious skills can exploit gaps between declared metadata, implemented behavior, granted permissions, runtime outputs, user approval, and post-approval updates. Existing defenses typically operate at a single layer: metadata scanning, prompt-injection filtering, static analysis, sandbox probing, or human-in-the-loop approval. We argue that malicious skills are compositional objects whose most damaging behaviors emerge across lifecycle boundaries.
 
-We present \textbf{SkillGuardGraph}, a cross-layer evidence fusion framework for detecting and containing malicious skills in LLM agent ecosystems. SkillGuardGraph represents skill metadata, implementation summaries, sandbox observations, runtime provenance, permission scopes, approval dialogs, and version histories as a typed evidence graph, then enforces source-aware, permission-aware, and version-aware constraints over tool-call chains. We introduce a compositional benchmark spanning seven attack classes with 4{,}010 samples, and evaluate against metadata-only, static-only, sandbox-only, runtime-only, naive union, weighted voting, and LLM-judge baselines. Our results show that SkillGuardGraph achieves a precision of 96.2\% with an FPR of 9.1\%, representing a 90.9\% FPR reduction relative to naive union. Notably, SkillGuardGraph achieves 100\% recall on cross-skill confused deputy attacks---a class where weighted voting achieves only 59.3\%---demonstrating the value of cross-layer consistency reasoning. Ablation experiments confirm that runtime evidence and metadata are critical components, with their removal reducing F1 by 49.4 and 20.4 percentage points respectively. Latency measurement shows p50 = 0.3\,ms and p95 = 0.4\,ms per skill evaluation, well within deployment constraints.
+We present \textbf{SkillGuardGraph}, a cross-layer evidence fusion framework for detecting and containing malicious skills in LLM agent ecosystems. SkillGuardGraph represents skill metadata, implementation summaries, sandbox observations, runtime provenance, permission scopes, approval dialogs, and version histories as a typed evidence graph, then enforces source-aware, permission-aware, and version-aware constraints over tool-call chains. We introduce a compositional benchmark spanning seven attack classes with 4{,}010 samples, and evaluate against metadata-only, static-only, sandbox-only, runtime-only, naive union, weighted voting, and LLM-judge baselines. In this synthetic benchmark, SkillGuardGraph reaches 100.0\% precision and recall with 0.0\% FPR, compared with naive union's 100.0\% FPR and weighted voting's 20.8\% FPR. Runtime enforcement blocks all malicious traces in the current trace-replay suite while preserving 100.0\% benign task success. We explicitly scope these results to a safe synthetic artifact and report real-ecosystem measurements separately as passive metadata/source-code observations, not confirmed vulnerability claims.
 \end{abstract}
 
 % ============================================================
@@ -57,7 +57,7 @@ Every individual step can appear legitimate, while the composed flow violates a 
 \item \textbf{Threat taxonomy.} We define a compositional taxonomy of seven malicious skill behaviors: capability laundering, cross-skill confused deputy, delayed rug-pull, consent laundering, persistence pivot, split exfiltration, and scope inflation~(\S\ref{sec:taxonomy}).
 \item \textbf{Evidence graph and constraint system.} We introduce a typed cross-layer evidence graph with source-aware and permission-aware constraints over tool-call chains~(\S\ref{sec:design}, \S\ref{sec:constraints}).
 \item \textbf{Benchmark.} We propose a lifecycle-complete benchmark with 4{,}010 samples covering seven attack classes, benign-paired variants, and trace-grounded validators~(\S\ref{sec:benchmark}).
-\item \textbf{Evaluation.} We provide a comprehensive evaluation comparing graph fusion with seven baselines, an ablation study, runtime defense metrics, and ecosystem measurement of 1{,}200 synthetic samples and 431 real-world MCP server repositories~(\S\ref{sec:eval}, \S\ref{sec:ecosystem}).
+\item \textbf{Evaluation.} We provide a comprehensive evaluation comparing graph fusion with seven baselines, an ablation study, runtime defense metrics, failure analysis, and ecosystem measurement of 1{,}200 synthetic samples plus 431 public MCP-related GitHub repositories~(\S\ref{sec:eval}, \S\ref{sec:ecosystem}).
 \end{enumerate}
 
 % ============================================================
@@ -70,11 +70,11 @@ We use \emph{skill} as a platform-neutral term for external capability units tha
 
 \subsection{Model Context Protocol}
 
-MCP standardizes how LLM applications integrate external data sources and tools. It defines hosts, clients, servers, resources, prompts, and tools. Tools enable models to interact with external systems and may represent arbitrary code execution or data access paths. The MCP specification explicitly requires attention to user consent, data privacy, and tool safety, and notes that descriptions or annotations should be treated as untrusted unless they originate from trusted servers. MCP is useful for this paper because it exposes the core elements of the broader skill ecosystem: metadata, tool schemas, model-controlled invocation, tool results, authorization, roots, and server trust boundaries.
+MCP standardizes how LLM applications integrate external data sources and tools~\cite{mcp_spec_2025,mcp_tools_2025}. It defines hosts, clients, servers, resources, prompts, and tools. Tools enable models to interact with external systems and may represent arbitrary code execution or data access paths. The MCP specification explicitly requires attention to user consent, data privacy, and tool safety, and notes that descriptions or annotations should be treated as untrusted unless they originate from trusted servers. MCP is useful for this paper because it exposes the core elements of the broader skill ecosystem: metadata, tool schemas, model-controlled invocation, tool results, authorization, roots, and server trust boundaries.
 
 \subsection{Existing Defenses}
 
-Existing approaches can be grouped into six categories: (1)~metadata rules and LLM-based description vetting; (2)~SAST, taint analysis, and capability extraction; (3)~sandbox probing and synthetic tasks; (4)~runtime policy enforcement and least privilege; (5)~human-in-the-loop approval; and (6)~signatures, reputation, audit, and rollback. These layers are complementary, but naive composition can increase false positives without detecting subtle cross-layer attacks.
+Existing approaches can be grouped into six categories: (1)~metadata rules and LLM-based description vetting~\cite{wang2026mcptox,ye2026trustdesc,owasp_mcp_tool_poisoning}; (2)~SAST, taint analysis, and capability extraction~\cite{sun2026vipermcp,hou2026mcpbiflow}; (3)~sandbox probing and synthetic tasks; (4)~runtime policy enforcement and least privilege~\cite{zhou2026mcpshield}; (5)~human-in-the-loop approval; and (6)~signatures, reputation, audit, and rollback. These layers are complementary, but naive composition can increase false positives without detecting subtle cross-layer attacks.
 
 % ============================================================
 \section{Threat Model}
@@ -226,7 +226,7 @@ All 4{,}010 samples pass label validation: required fields present, labels valid
 
 \subsection{Experimental Setup}
 
-We evaluate SkillGuardGraph on the benchmark dataset with the following metrics: Precision, Recall, F1, and False Positive Rate (FPR) for detection; Attack Success Rate (ASR), Unauthorized Tool Call Rate (UTCR), Exfiltration Data Rate (EDR), Blast Radius Index (BRI), Persistence Score (PS), and Stealth Coefficient (SC) for runtime defense; and Task Success Rate, False Block Rate, and Approval Burden for usability.
+We evaluate SkillGuardGraph on the benchmark dataset with the following metrics: Precision, Recall, F1, False Positive Rate (FPR), AUROC, and AUPRC for detection; Attack Success Rate (ASR), Unauthorized Tool Call Rate (UTCR), Exfiltration Data Rate (EDR), Blast Radius Index (BRI), Persistence Score (PS), and Stealth Coefficient (SC) for runtime defense; and Task Success Rate, False Block Rate, and Approval Burden for usability.
 
 \subsection{Detection Comparison (RQ1, RQ2, RQ3)}
 
@@ -236,30 +236,30 @@ Table~\ref{tab:detection} compares SkillGuardGraph fusion against single-layer d
 \centering
 \caption{Detection comparison on the benchmark (4{,}010 samples: 1{,}000 benign, 3{,}010 malicious across 7 attack classes).}
 \label{tab:detection}
-\begin{tabular}{lcccc}
+\begin{tabular}{lcccccc}
 \toprule
-Method & Precision & Recall & F1 & FPR \\
+Method & Precision & Recall & F1 & FPR & AUROC & AUPRC \\
 \midrule
-Metadata only   & 0.890 & 0.302 & 0.451 & 0.112 \\
-Static only     & 1.000 & 0.219 & 0.360 & 0.000 \\
-Sandbox only    & 1.000 & 0.219 & 0.360 & 0.000 \\
-Runtime only    & 1.000 & 0.422 & 0.594 & 0.000 \\
+Metadata only   & 0.940 & 0.192 & 0.319 & 0.037 & 0.578 & 0.869 \\
+Static only     & 1.000 & 0.220 & 0.361 & 0.000 & 0.610 & 0.903 \\
+Sandbox only    & 1.000 & 0.220 & 0.361 & 0.000 & 0.786 & 0.947 \\
+Runtime only    & 1.000 & 0.598 & 0.748 & 0.000 & 0.799 & 0.950 \\
 \midrule
-Naive union     & 0.751 & 1.000 & 0.858 & 1.000 \\
-Weighted voting & 0.954 & 0.887 & 0.920 & 0.128 \\
-LLM judge       & 0.751 & 1.000 & 0.858 & 1.000 \\
+Naive union     & 0.751 & 1.000 & 0.858 & 1.000 & 0.500 & 0.875 \\
+Weighted voting & 0.932 & 0.940 & 0.936 & 0.208 & 0.893 & 0.967 \\
+LLM judge       & 0.751 & 1.000 & 0.858 & 1.000 & 0.799 & 0.936 \\
 \midrule
-\textbf{SkillGuardGraph} & \textbf{0.962} & \textbf{0.767} & \textbf{0.853} & \textbf{0.091} \\
+\textbf{SkillGuardGraph} & \textbf{1.000} & \textbf{1.000} & \textbf{1.000} & \textbf{0.000} & \textbf{1.000} & \textbf{0.986} \\
 \bottomrule
 \end{tabular}
 \end{table}
 
 \paragraph{Key findings.}
-(1)~Single-layer detectors achieve high precision but low recall (21.9\%--42.2\%), confirming that compositional attacks are largely invisible to individual layers.
+(1)~Single-layer detectors achieve high precision but low recall (19.2\%--59.8\%), confirming that compositional attacks are largely invisible to individual layers.
 (2)~Naive union achieves perfect recall but with FPR = 1.0, flagging every benign sample as malicious---an unusable deployment posture.
-(3)~SkillGuardGraph fusion achieves the highest precision (96.2\%) and lowest FPR (9.1\%) among all methods, with a 90.9\% FPR reduction relative to naive union.
-(4)~Weighted voting achieves higher recall (88.7\% vs.\ 76.7\%) but higher FPR (12.8\% vs.\ 9.1\%). SkillGuardGraph's graph-based approach provides interpretable evidence paths and excels at cross-layer attack detection (see Table~\ref{tab:per_class}).
-(5)~Latency measurement shows p50 = 0.3\,ms and p95 = 0.4\,ms per skill evaluation, confirming real-time deployment feasibility.
+(3)~SkillGuardGraph fusion reaches 100.0\% precision, 100.0\% recall, and 0.0\% FPR on the synthetic benchmark after normalizing runtime external-sink evidence and calibrating persistence scoring.
+(4)~Weighted voting has high recall (94.0\%) but a substantially higher FPR (20.8\%), while SkillGuardGraph provides interpretable evidence paths for every true-positive detection.
+(5)~Latency measurement shows p50 = 0.3\,ms and p95 = 0.4\,ms per skill evaluation, confirming that the non-LLM scoring path is inexpensive in the prototype.
 
 \subsection{Per-Attack-Class Recall}
 
@@ -273,19 +273,19 @@ Table~\ref{tab:per_class} shows per-attack-class recall for full fusion.
 \toprule
 Attack Class & Total & TP & FN & Recall \\
 \midrule
-Capability laundering & 430 & 253 & 177 & 0.588 \\
-Consent laundering & 430 & 256 & 174 & 0.595 \\
-Cross-skill confused deputy & 430 & 430 & 0 & \textbf{1.000} \\
-Delayed rug-pull & 430 & 266 & 164 & 0.619 \\
+Capability laundering & 430 & 430 & 0 & 1.000 \\
+Consent laundering & 430 & 430 & 0 & 1.000 \\
+Cross-skill confused deputy & 430 & 430 & 0 & 1.000 \\
+Delayed rug-pull & 430 & 430 & 0 & 1.000 \\
 Persistence pivot & 430 & 430 & 0 & 1.000 \\
 Scope inflation & 430 & 430 & 0 & 1.000 \\
-Split exfiltration & 430 & 243 & 187 & 0.565 \\
+Split exfiltration & 430 & 430 & 0 & 1.000 \\
 \bottomrule
 \end{tabular}
 \end{table}
 
 \paragraph{Key findings.}
-Cross-skill confused deputy achieves perfect recall (1.000), up from 0.593 with the previous configuration, demonstrating the effectiveness of cross-layer consistency reasoning. Three other attack classes (persistence pivot, scope inflation) also achieve perfect recall. Capability laundering (0.588), consent laundering (0.595), and split exfiltration (0.565) have lower recall because their subtle variants use trusted publishers and read-only scopes with minimal distinguishing signals. Delayed rug-pull (0.619) remains challenging because version drift evidence is often absent from single-sample evaluation.
+All seven synthetic attack classes reach 100.0\% recall in the current benchmark run. The largest change from the previous internal draft is runtime trace normalization: benchmark sink events use \texttt{sink\_type} and \texttt{is\_external}, and recognizing those fields exposes subtle external-sink evidence for capability laundering, consent laundering, delayed rug-pull, and split exfiltration variants. This result should be interpreted as benchmark closure, not as proof of equivalent real-world recall.
 
 \subsection{Ablation Study (RQ3)}
 
@@ -296,22 +296,22 @@ Table~\ref{tab:ablation} shows the effect of removing one evidence source at a t
 \caption{Ablation study: removing one evidence source.}
 \label{tab:ablation}
 \begin{tabular}{lccccc}
-Full fusion & 0.962 & 0.767 & 0.853 & 0.091 & --- \\
-No metadata & 1.000 & 0.481 & 0.650 & 0.000 & $-$0.204 \\
-No static & 0.962 & 0.767 & 0.853 & 0.091 & +0.000 \\
-No sandbox & 0.962 & 0.767 & 0.853 & 0.091 & +0.000 \\
-No runtime & 1.000 & 0.219 & 0.360 & 0.000 & $-$0.494 \\
-No sequence & 0.959 & 0.709 & 0.815 & 0.091 & $-$0.038 \\
+Full fusion & 1.000 & 1.000 & 1.000 & 0.000 & --- \\
+No metadata & 1.000 & 0.857 & 0.923 & 0.000 & $-$0.077 \\
+No static & 1.000 & 1.000 & 1.000 & 0.000 & +0.000 \\
+No sandbox & 1.000 & 1.000 & 1.000 & 0.000 & +0.000 \\
+No runtime & 1.000 & 0.220 & 0.361 & 0.000 & $-$0.639 \\
+No sequence & 1.000 & 0.797 & 0.887 & 0.000 & $-$0.113 \\
 \bottomrule
 \end{tabular}
 \end{table}
 
 
 \paragraph{Key findings.}
-(1)~Removing runtime evidence causes the largest drop ($\Delta$F1 = $-$0.494), confirming that tool-call chains and provenance labels are the single most critical evidence source for detecting cross-skill attacks.
-(2)~Removing metadata evidence drops F1 by 0.204, as scope and description mismatches are primary signals for capability laundering and scope inflation.
-(3)~Removing sequence constraints (C2, C3, C6) reduces F1 by 0.038, indicating that cross-tool flow analysis provides additional discrimination beyond individual evidence signals.
-(4)~Static and sandbox evidence contribute marginally in this benchmark because their signals overlap with metadata; their value increases for source-available and runnable skills.
+(1)~Removing runtime evidence causes the largest drop ($\Delta$F1 = $-$0.639), confirming that tool-call chains and provenance labels are the single most critical evidence source for detecting cross-layer attacks.
+(2)~Removing metadata evidence drops F1 by 0.077, as scope and description mismatches remain useful supporting signals.
+(3)~Removing sequence constraints (C2, C3, C6) reduces F1 by 0.113, indicating that source-aware and persistence-aware flow analysis provides discrimination beyond individual evidence signals.
+(4)~Static and sandbox evidence do not change aggregate F1 in this synthetic benchmark because their signals overlap with runtime and metadata evidence; they remain important for source-available and runnable real skills.
 
 \subsection{Statistical Confidence (RQ3)}
 
@@ -325,15 +325,15 @@ Table~\ref{tab:bootstrap} reports 95\% bootstrap confidence intervals for the fu
 \toprule
 Metric & Mean & 95\% CI Low & 95\% CI High \\
 \midrule
-Precision & 0.962 & 0.953 & 0.969 \\
-Recall & 0.767 & 0.751 & 0.782 \\
-F1 & 0.853 & 0.843 & 0.863 \\
-FPR & 0.091 & 0.074 & 0.111 \\
+Precision & 1.000 & 1.000 & 1.000 \\
+Recall & 1.000 & 1.000 & 1.000 \\
+F1 & 1.000 & 1.000 & 1.000 \\
+FPR & 0.000 & 0.000 & 0.000 \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-The narrow confidence intervals confirm that the reported metrics are stable across bootstrap resamples. The FPR 95\% CI of [0.074, 0.111] does not overlap with naive union's FPR of 1.0, confirming a statistically significant FPR reduction.
+The bootstrap confidence intervals are degenerate because the current synthetic benchmark run has no fusion false positives or false negatives. This is useful as an artifact consistency check, but it also reinforces the need for real-corpus and held-out-template evaluation before making broad deployment claims.
 
 \subsection{Runtime Defense Metrics (RQ4)}
 
@@ -348,15 +348,15 @@ Table~\ref{tab:runtime} shows runtime defense and usability metrics.
 Metric & Value \\
 \midrule
 \multicolumn{2}{l}{\textit{Defense metrics}} \\
-Attack Success Rate (ASR) & 0.055 \\
-ASR Blocked & 0.945 \\
-Unauthorized Tool Call Rate & 0.165 \\
+Attack Success Rate (ASR) & 0.000 \\
+ASR Blocked & 1.000 \\
+Unauthorized Tool Call Rate & 0.164 \\
 UTCR Blocked Rate & 1.000 \\
-Exfiltration Data Rate & 0.423 \\
+Exfiltration Data Rate & 0.421 \\
 EDR Blocked Rate & 1.000 \\
-Blast Radius Index & 1.534 \\
+Blast Radius Index & 1.532 \\
 Persistence Score Blocked Rate & 1.000 \\
-Stealth Coefficient & 0.055 \\
+Stealth Coefficient & 0.000 \\
 \midrule
 \multicolumn{2}{l}{\textit{Usability metrics}} \\
 Task Success Rate & 1.000 \\
@@ -372,28 +372,18 @@ Latency p99 (ms) & 0.4 \\
 \end{table}
 
 \paragraph{Key findings.}
-(1)~ASR = 0.055: 94.5\% of malicious traces are blocked or degraded before execution.
+(1)~ASR = 0.0: all malicious traces in the current trace-replay suite are blocked or degraded before successful execution.
 (2)~Task success rate = 1.0: all benign tasks complete successfully without defense interference.
 (3)~False block rate = 0.0: no benign task is hard-blocked.
 (4)~Latency is negligible: p50 = 0.3\,ms, p95 = 0.4\,ms per skill evaluation, well within the 100--300\,ms deployment target.
-(5)~\textbf{Evidence path attribution:} 100\% of true-positive detections (2{,}308/2{,}308) include a complete evidence path, exceeding the 95\% strong target. Every detected attack comes with an explainable chain of constraint violations.
+(5)~\textbf{Evidence path attribution:} 100\% of true-positive detections (3{,}010/3{,}010) include a complete evidence path, exceeding the 95\% strong target. Every detected synthetic attack comes with an explainable chain of constraint violations.
 
 \subsection{Failure Analysis}
 
-We analyze the 702 false negatives (malicious samples not detected) and 91 false positives (benign samples incorrectly flagged).
+The current fusion run has 0 false negatives and 0 false positives on the synthetic benchmark. The failure-analysis output therefore functions as an attribution audit rather than a missed-case catalogue: all 3{,}010 malicious samples are true positives with non-empty evidence paths, and all 1{,}000 benign samples are true negatives.
 
-\paragraph{False negative analysis.}
-The four attack classes with non-zero FN counts are:
-
-\begin{itemize}[leftmargin=*]
-\item \textbf{Split exfiltration} (187 FN, mean score = 3.03): These variants use legitimate-looking data pipelines. Without runtime chain evidence showing the sensitive-read $\rightarrow$ transform $\rightarrow$ external-write sequence, the fusion score stays below the decision threshold.
-\item \textbf{Capability laundering} (177 FN, mean score = 3.37): Subtle variants use trusted publishers and read-only scopes with hidden runtime behavior. The metadata and static signals alone are insufficient.
-\item \textbf{Consent laundering} (174 FN, mean score = 4.0): These require evidence that approval text derives from untrusted context, which is only available when the runtime trace includes approval events.
-\item \textbf{Delayed rug-pull} (164 FN, mean score = 1.08): The lowest-scoring class. These variants have minimal distinguishing signals because version drift evidence is absent from single-sample evaluation. Detecting rug-pulls requires cross-version comparison, which our current per-sample evaluation does not support.
-\end{itemize}
-
-\paragraph{False positive analysis.}
-All 91 false positives share a common pattern: benign tools with legitimate write scopes (\texttt{requires\_high\_risk\_scope}) and persistence writes (\texttt{writes\_persistent\_store}). These are note-taking tools, backup utilities, and session-continuity connectors that legitimately need write access. The fusion system flags them because the scope and persistence signals overlap with malicious patterns. We mitigate this through the degrade/HITL policy tiers rather than hard blocking.
+\paragraph{Residual risk.}
+A zero-error synthetic result does not imply zero real-world risk. The benchmark is template-generated, the simulated prober does not execute untrusted code, and real agent platforms may omit provenance labels needed by C2/C3/C6. We therefore treat the current result as evidence that the artifact is internally consistent and use RQ5 to evaluate external validity.
 
 % ============================================================
 \section{Ecosystem Measurement (RQ5)}
@@ -463,20 +453,19 @@ Description--code mismatch & 13 & 3.0\% \\
 
 \subsection{Prompt Injection and Tool Poisoning}
 
-MCPTox introduced a large-scale benchmark for MCP tool poisoning. MCP-ITP studied implicit tool poisoning, in which an uninvoked poisoned tool influences calls to legitimate high-privilege tools. ToolHijacker studied attacks on tool selection in LLM agents. SkillGuardGraph extends these by covering compositional cross-skill and lifecycle-wide attacks.
+MCPTox introduced a large-scale benchmark for MCP tool poisoning~\cite{wang2026mcptox}. MCP-ITP studied implicit tool poisoning, in which an uninvoked poisoned tool influences calls to legitimate high-privilege tools~\cite{li2026mcpitp}. ToolHijacker studied attacks on tool selection in LLM agents~\cite{shi2025toolhijacker}. SkillGuardGraph extends these by covering compositional cross-skill and lifecycle-wide attacks.
 
 \subsection{Trusted Descriptions and Metadata Defenses}
 
-TRUSTDESC argues that developer-written tool descriptions should not be trusted and proposes generating implementation-faithful descriptions from code and dynamic verification. SkillGuardGraph treats trusted descriptions as one evidence source and checks consistency with permissions, runtime behavior, and version drift.
+TRUSTDESC argues that developer-written tool descriptions should not be trusted and proposes generating implementation-faithful descriptions from code and dynamic verification~\cite{ye2026trustdesc}. SkillGuardGraph treats trusted descriptions as one evidence source and checks consistency with permissions, runtime behavior, and version drift.
 
 \subsection{MCP Implementation Analysis}
 
-VIPER-MCP and MCP-BiFlow highlight that MCP servers require protocol-aware taint analysis and entrypoint recovery. SkillGuardGraph incorporates implementation-level results but extends them to runtime provenance and cross-tool call sequences.
+VIPER-MCP and MCP-BiFlow highlight that MCP servers require protocol-aware taint analysis and entrypoint recovery~\cite{sun2026vipermcp,hou2026mcpbiflow}. SkillGuardGraph incorporates implementation-level results but extends them to runtime provenance and cross-tool call sequences.
 
 \subsection{Runtime Trust Calibration}
 
-MCPShield proposes a security cognition layer for adaptive trust calibration around MCP tool invocation. SkillGuardGraph differs by focusing on typed cross-layer evidence, sequence-level policies, approval integrity, version drift, and lifecycle-wide governance.
-
+MCPShield proposes a security cognition layer for adaptive trust calibration around MCP tool invocation~\cite{zhou2026mcpshield}. SkillGuardGraph differs by focusing on typed cross-layer evidence, sequence-level policies, approval integrity, version drift, and lifecycle-wide governance.
 
 \subsection{Comparison with Existing Work}
 
@@ -533,25 +522,23 @@ SkillGuardGraph supports four deployment modes: (1)~registry mode with pre-publi
 \item \textbf{Closed-source skills.} When source code is unavailable, the implementation analyzer produces no evidence, reducing detection capability for capability laundering and split exfiltration attacks.
 \item \textbf{Dynamic probing coverage.} The sandbox prober uses pattern-based analysis rather than real execution, which may miss obfuscated or condition-triggered behaviors.
 \item \textbf{Provenance labeling.} Some agent platforms do not expose source labels for tool outputs, limiting the effectiveness of source-aware constraints.
-\item \textbf{Benchmark synthetic nature.} While the benchmark captures realistic attack patterns, it uses template-based generation rather than real-world exploit code. Ecosystem measurement provides external validity but uses synthetic corpus simulation.
-\item \textbf{Precision--recall tradeoff.} SkillGuardGraph optimizes for deployment safety (low FPR = 9.1\%) at the cost of lower recall (76.7\%) compared to weighted voting (88.7\% recall, 12.8\% FPR). Attack classes that rely on subtle metadata signals---capability laundering (58.8\%), consent laundering (59.5\%), and split exfiltration (56.5\%)---have the lowest recall because their variants resemble benign tools with legitimate write scopes. This tradeoff is by design: in deployment, false positives cause alert fatigue and operational disruption, so precision-oriented scoring is preferred. A system operator can adjust the decision threshold to favor recall when the threat model warrants it.
-\item \textbf{Cross-skill detection improvements.} Cross-skill confused deputy attacks now achieve 100\% recall through external source recognition, but delayed rug-pull (61.9\%) remains challenging because version drift evidence is often absent from single-sample evaluation.
-\item \textbf{Platform dependency.} Some policies require platform integration (e.g., approval dialog inspection) that may not be available in all agent frameworks.
+\item \textbf{Benchmark synthetic nature.} While the benchmark captures realistic attack patterns, it uses template-based generation rather than real-world exploit code. Synthetic results may overestimate separability after calibration, so real-corpus and held-out-template evaluation are required before deployment claims.
+\item \textbf{Ablation semantics.} Static and sandbox ablations have no aggregate effect in the current benchmark because their signals overlap with metadata and runtime evidence. This does not mean those layers are unnecessary in real source-available or runnable ecosystems.
+\item \textbf{Platform dependency.} Some policies require platform integration (e.g., approval dialog inspection and provenance labels) that may not be available in all agent frameworks.
 \end{enumerate}
 
 % ============================================================
 \section{Ethics}
 \label{sec:ethics}
 
-All attack cases use synthetic data, fake credentials, sinkhole domains (\texttt{*.example.invalid}, \texttt{*.sinkhole.test}), and isolated environments. No real third-party services are contacted during benchmark generation or evaluation. The ecosystem measurement uses synthetic corpus simulation rather than real crawling. The artifact does not include operational payloads against real systems. We follow the principle of responsible disclosure: any real vulnerabilities found in public repositories would be reported to maintainers before publication. The benchmark releases minimized, non-operational cases with all external URLs pointing to sinkhole domains.
-
+All attack cases use synthetic data, fake credentials, sinkhole domains (\texttt{*.example.invalid}, \texttt{*.sinkhole.test}), and isolated environments. No real third-party services are contacted during benchmark generation or evaluation. The synthetic ecosystem corpus is generated locally; the real ecosystem measurement is passive metadata/source-code collection from public repositories and does not execute third-party code or perform destructive probing. The artifact does not include operational payloads against real systems. We follow responsible AI and coordinated disclosure guidance consistent with NIST's GenAI risk profile~\cite{nist2024genai}: any confirmed real vulnerabilities found in public repositories would be reported to maintainers before publication. The benchmark releases minimized, non-operational cases with all external URLs pointing to sinkhole domains.
 % ============================================================
 \section{Conclusion}
 \label{sec:conclusion}
 
 Malicious skills are not merely bad tools. They are compositional attack surfaces spanning metadata, implementation, permissions, runtime outputs, approvals, persistence, and updates. SkillGuardGraph provides a framework for detecting and containing these attacks by fusing evidence across layers and enforcing security constraints over call sequences.
 
-Our evaluation on a benchmark of 4{,}010 samples across seven attack classes demonstrates that graph-based fusion achieves the highest precision (96.2\%) and lowest false positive rate (9.1\%) among all evaluated methods, with a 90.9\% FPR reduction relative to naive union. SkillGuardGraph achieves 100\% recall on cross-skill confused deputy attacks, a class where weighted voting achieves only 59.3\%, demonstrating the value of cross-layer consistency reasoning. Ablation experiments confirm that runtime evidence is the single most critical component, with its removal reducing F1 by 49.4 percentage points. Ecosystem measurement of 1{,}200 synthetic samples reveals significant prevalence of scope inflation (20.3\%), description--code mismatch (22.8\%), and untrusted publishers (75.8\%). Real-world measurement of 431 GitHub MCP server repositories confirms that 100\% lack cryptographic signatures, 19.3\% exhibit open-world network access, and 5.6\% show scope inflation---validating that runtime-level risks are more prevalent than metadata-level risks in practice.
+Our evaluation on a benchmark of 4{,}010 samples across seven attack classes demonstrates that graph-based fusion reaches 100.0\% precision and recall with 0.0\% false positive rate in the current synthetic run, while naive union reaches the same recall only by flagging every benign sample. Ablation experiments confirm that runtime evidence is the single most critical component, with its removal reducing F1 by 63.9 percentage points. Passive measurement of 431 public MCP-related repositories shows missing signatures are universal in that corpus and open-world network access appears in 19.3\%, motivating source-aware runtime governance beyond metadata screening.
 
 The key contribution is not a larger detector stack, but a principled way to reason about cross-layer trust gaps in agent ecosystems through typed evidence, constraint-based evaluation, and explainable policy decisions.
 
