@@ -79,6 +79,7 @@ experiments/
 │   ├── run_ablation.py      # Layer ablation study (6 configs)
 │   ├── run_runtime_redteam.py # Runtime defense + usability evaluation
 │   ├── make_tables.py       # Generate paper tables (txt + LaTeX)
+│   ├── run_runtime_harness.py # Local instrumented toy runtime harness
 │   ├── run_generalization_eval.py # Held-out, hard-negative, mutation, leakage checks
 │   ├── crawl_ecosystem.py   # Generate synthetic ecosystem corpus
 │   ├── crawl_real_ecosystem.py # Collect real public corpus metadata/source snapshots
@@ -91,10 +92,12 @@ experiments/
 │   └── run_ablation_stub.py # Minimal ablation for smoke tests
 ├── src/
 │   └── skillguardgraph/     # Core library
+│       └── runtime_harness.py # Safe local runtime task templates
 └── tests/
     ├── test_analyzers.py    # Tests for metadata, static, sandbox analyzers
     ├── test_policy_engine.py # Tests for cross-layer policy engine
-    └── test_evidence_graph.py # Tests for typed evidence graph materialization
+    ├── test_evidence_graph.py # Tests for typed evidence graph materialization
+    └── test_runtime_harness.py # Tests for local runtime harness instrumentation
 ```
 
 ---
@@ -107,7 +110,7 @@ experiments/
 | `make test` | Unit tests (verbose) | ~2 min |
 | `make benchmark` | Build benchmark (4010 samples) | ~5 min |
 | `make validate` | Validate benchmark labels | ~2 min |
-| `make eval-main` | Detection + ablation + runtime eval + bootstrap + generalization | ~15 min |
+| `make eval-main` | Detection + ablation + runtime eval + runtime harness + bootstrap + generalization | ~15 min |
 | `make tables` | Generate tables + failure analysis + significance | ~1 min |
 | `make ecosystem` | Crawl synthetic ecosystem corpus | ~10 min |
 | `make real-ecosystem` | Crawl passive real public GitHub MCP corpus | network-bound |
@@ -116,6 +119,7 @@ experiments/
 | `make eval-all` | reproduce + ecosystem + triage + real-ecosystem | network-bound |
 | `make scan` | Scan a sample manifest | ~5 sec |
 | `make trace` | Evaluate a sample trace | ~5 sec |
+| `make runtime-harness` | Run local instrumented runtime harness | ~1 min |
 | `make clean` | Remove all generated results and data | instant |
 
 ---
@@ -128,6 +132,7 @@ After `make reproduce`, the following files are generated:
 results/main/detector_eval.json   # Detection metrics, AUROC/AUPRC, threshold sweep
 results/main/ablation.json        # Ablation results for 6 configurations
 results/main/runtime_redteam.json  # Runtime defense + usability metrics
+results/main/runtime_harness.json # Local instrumented runtime harness metrics
 results/main/failure_analysis.json # FP/FN and evidence path attribution
 results/main/significance_tests.json # McNemar + paired-bootstrap baseline comparison
 results/main/tables.txt           # Formatted plain-text tables
@@ -192,6 +197,9 @@ PYTHONPATH=src python scripts/run_ablation.py
 # Runtime red-team evaluation
 PYTHONPATH=src python scripts/run_runtime_redteam.py
 
+
+# Local instrumented runtime harness
+PYTHONPATH=src python scripts/run_runtime_harness.py
 
 # Generalization stress checks
 PYTHONPATH=src python scripts/run_generalization_eval.py

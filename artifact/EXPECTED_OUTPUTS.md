@@ -73,7 +73,28 @@ All seven attack classes retain 1.0000 recall under full fusion in the current a
 
 ---
 
-## 4. Latency Measurement
+## 4. Local Runtime Harness
+
+**File:** `results/main/runtime_harness.json`
+**Format:** JSON
+**Produced by:** `python scripts/run_runtime_harness.py`
+
+| Metric | Value |
+|---|---:|
+| Benign tasks | 60 |
+| Attack tasks | 63 |
+| ASR | 0.0000 |
+| ASR reduction vs no defense | 1.0000 |
+| Task success rate | 1.0000 |
+| False block rate | 0.0000 |
+| Evidence path coverage | 1.0000 |
+| Policy p95 latency | 0.255 ms |
+
+The harness executes only deterministic local toy task templates and records provenance events; it does not execute third-party code.
+
+---
+
+## 5. Latency Measurement
 
 **File:** `results/main/latency.json`
 **Format:** JSON
@@ -81,16 +102,16 @@ All seven attack classes retain 1.0000 recall under full fusion in the current a
 
 | Component | p50 (ms) | p95 (ms) | p99 (ms) | max (ms) |
 |---|---:|---:|---:|---:|
-| Total pipeline | 0.408 | 0.496 | 0.512 | 0.585 |
-| metadata_ms | 0.012 | 0.014 | 0.017 | 0.029 |
-| static_ms | 0.286 | 0.352 | 0.362 | 0.409 |
-| sandbox_ms | 0.058 | 0.070 | 0.073 | 0.080 |
-| runtime_ms | 0.008 | 0.011 | 0.013 | 0.019 |
-| fusion_ms | 0.045 | 0.064 | 0.074 | 0.082 |
+| Total pipeline | 0.417 | 0.505 | 0.532 | 0.569 |
+| metadata_ms | 0.012 | 0.015 | 0.018 | 0.032 |
+| static_ms | 0.291 | 0.356 | 0.368 | 0.403 |
+| sandbox_ms | 0.058 | 0.070 | 0.072 | 0.085 |
+| runtime_ms | 0.008 | 0.012 | 0.015 | 0.019 |
+| fusion_ms | 0.047 | 0.066 | 0.077 | 0.087 |
 
 ---
 
-## 5. Bootstrap Confidence Intervals
+## 6. Bootstrap Confidence Intervals
 
 **File:** `results/main/bootstrap_ci.json`
 **Format:** JSON
@@ -105,7 +126,7 @@ All seven attack classes retain 1.0000 recall under full fusion in the current a
 
 ---
 
-## 6. Failure Analysis
+## 7. Failure Analysis
 
 **Files:** `results/main/failure_analysis.json`, `results/main/failure_cases.md`
 **Produced by:** `python scripts/run_failure_analysis.py`
@@ -118,7 +139,7 @@ All seven attack classes retain 1.0000 recall under full fusion in the current a
 
 ---
 
-## 7. Significance Tests
+## 8. Significance Tests
 
 **File:** `results/main/significance_tests.json`
 **Format:** JSON
@@ -136,7 +157,7 @@ All seven attack classes retain 1.0000 recall under full fusion in the current a
 
 ---
 
-## 8. Generalization Stress Checks
+## 9. Generalization Stress Checks
 
 **File:** `results/main/generalization_eval.json`
 **Format:** JSON
@@ -153,7 +174,7 @@ All generalization acceptance booleans in the JSON are `true`. These checks are 
 
 ---
 
-## 9. Paper Tables
+## 10. Paper Tables
 
 **Files:** `results/main/tables.txt`, `results/main/tables.tex`
 **Format:** Plain text / LaTeX
@@ -161,7 +182,7 @@ All generalization acceptance booleans in the JSON are `true`. These checks are 
 
 ---
 
-## 10. Synthetic Ecosystem Triage
+## 11. Synthetic Ecosystem Triage
 
 **Files:** `results/ecosystem/ecosystem_triage.json`, `results/ecosystem/risk_patterns.json`
 **Produced by:** `python scripts/crawl_ecosystem.py` and `python scripts/triage_findings.py`
@@ -177,7 +198,7 @@ All generalization acceptance booleans in the JSON are `true`. These checks are 
 
 ---
 
-## 11. Real Public Ecosystem Measurement
+## 12. Real Public Ecosystem Measurement
 
 **Files:**
 

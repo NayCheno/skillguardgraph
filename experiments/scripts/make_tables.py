@@ -23,6 +23,7 @@ DETECTOR_PATH = RESULTS / "detector_eval.json"
 ABLATION_PATH = RESULTS / "ablation.json"
 REDTEAM_PATH = RESULTS / "runtime_redteam.json"
 GENERALIZATION_PATH = RESULTS / "generalization_eval.json"
+RUNTIME_HARNESS_PATH = RESULTS / "runtime_harness.json"
 TXT_PATH = RESULTS / "tables.txt"
 TEX_PATH = RESULTS / "tables.tex"
 
@@ -237,6 +238,30 @@ def build_table6(generalization: dict) -> tuple[str, str]:
     return _txt_table(title, headers, rows_txt), _tex_table(title, "tab:generalization", headers, rows_tex)
 
 
+
+def build_table7(runtime_harness: dict) -> tuple[str, str]:
+    """Local instrumented runtime harness results."""
+    title = "Table 7: Local Runtime Harness"
+    headers = ["Metric", "Value"]
+    suite = runtime_harness["suite"]
+    defense = runtime_harness["defense"]
+    usability = runtime_harness["usability"]
+    latency = runtime_harness["latency_ms"]
+    pairs = [
+        ("Benign tasks", str(suite["benign_tasks"])),
+        ("Attack tasks", str(suite["attack_tasks"])),
+        ("ASR", f"{defense['ASR']:.4f}"),
+        ("ASR reduction", f"{defense['ASR_reduction_vs_no_defense']:.4f}"),
+        ("Task success rate", f"{usability['task_success_rate']:.4f}"),
+        ("False block rate", f"{usability['false_block_rate']:.4f}"),
+        ("Evidence path coverage", f"{defense['evidence_path_coverage']:.4f}"),
+        ("Policy p95 latency (ms)", f"{latency['p95']:.3f}"),
+    ]
+    rows_txt = [[k, v] for k, v in pairs]
+    rows_tex = [[k.replace("_", "\\_"), v] for k, v in pairs]
+    return _txt_table(title, headers, rows_txt), _tex_table(title, "tab:runtime_harness", headers, rows_tex, "lr")
+
+
 # ---------------------------------------------------------------------------
 # Main
 # ---------------------------------------------------------------------------
@@ -247,6 +272,7 @@ def main() -> None:
     ablation = load_json(ABLATION_PATH)
     redteam = load_json(REDTEAM_PATH)
     generalization = load_json(GENERALIZATION_PATH)
+    runtime_harness = load_json(RUNTIME_HARNESS_PATH)
 
     txt_parts: list[str] = ["=" * 72, "SkillGuardGraph Experiment Results", "=" * 72]
     tex_parts: list[str] = [
@@ -255,9 +281,9 @@ def main() -> None:
         "",
     ]
 
-    builders = [build_table1, build_table2, build_table3, build_table4, build_table5, build_table6]
-    # Table 1 & 2 need detector, 3 needs ablation, 4 & 5 need redteam, 6 needs generalization.
-    args = [detector, detector, ablation, redteam, redteam, generalization]
+    builders = [build_table1, build_table2, build_table3, build_table4, build_table5, build_table6, build_table7]
+    # Table 1 & 2 need detector, 3 needs ablation, 4 & 5 need redteam, 6 needs generalization, 7 needs runtime harness.
+    args = [detector, detector, ablation, redteam, redteam, generalization, runtime_harness]
 
     for builder, arg in zip(builders, args):
         txt, tex = builder(arg)

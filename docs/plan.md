@@ -248,6 +248,7 @@
 
 - 对每次 tool call 记录：source labels、arguments、selected skill、output、approval text、downstream call；
 - 计算 flow chain：untrusted source → LLM context → high privilege tool → external/persistent sink。
+- 维护一个本地 instrumented toy harness，用固定 benign/attack task templates 发出执行期 provenance events，但不执行第三方代码。
 
 ### 5.2 产出物
 
@@ -257,6 +258,7 @@
 | `static_analyzer.py` | 轻量实现分析 |
 | `simulated_prober.py` | 离线模拟沙箱探测（不执行 untrusted code） |
 | `runtime_monitor.py` | 运行时 trace 收集 |
+| `runtime_harness.py` | 本地 instrumented toy runtime harness |
 | `experiments/configs/sandbox.yaml` | 沙箱配置 |
 | `experiments/tests/test_analyzers.py` | 测试 |
 

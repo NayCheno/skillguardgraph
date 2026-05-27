@@ -17,8 +17,8 @@ This file mirrors the phase plan in `docs/plan.md` as concrete checkpoints.
 ## W4-W7 — Benchmark and Evaluation Closure
 
 - Validate benchmark generation and labels.
-- Regenerate detector evaluation, ablation, runtime red-team, latency, bootstrap, failure analysis, and tables.
-- Add or refresh AUROC/AUPRC, threshold sweep, FPR@Recall, held-out-template, hard-negative, mutation, and label-leakage outputs.
+- Regenerate detector evaluation, ablation, runtime red-team, local runtime harness, latency, bootstrap, failure analysis, and tables.
+- Add or refresh AUROC/AUPRC, threshold sweep, FPR@Recall, held-out-template, hard-negative, mutation, label-leakage, and runtime-harness outputs.
 
 ## W8-W10 — Paper Consistency Pass
 

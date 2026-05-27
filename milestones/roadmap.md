@@ -11,7 +11,7 @@ The canonical roadmap is `docs/roadmap.md`. This mirror exists because the proje
 | M2 — Evidence Graph v0 | Mostly complete | `docs/evidence_graph_spec.md`, `experiments/src/skillguardgraph/evidence_graph.py` |
 | M3 — Analyzer and sandbox v0 | Mostly complete for safe synthetic evaluation | `experiments/src/skillguardgraph/`, `experiments/tests/` |
 | M4 — Fusion engine v1 | Complete for synthetic benchmark; real-world calibration remains open | `experiments/src/skillguardgraph/fusion.py`, `experiments/results/main/detector_eval.json` |
-| M5 — Main evaluation | Mostly complete; held-out/hard-negative stress checks added, stronger real-world generalization remains open | `experiments/scripts/`, `experiments/results/main/` |
+| M5 — Main evaluation | Mostly complete; held-out/hard-negative and local runtime-harness stress checks added, stronger real-world generalization remains open | `experiments/scripts/`, `experiments/results/main/` |
 | M6 — Real ecosystem measurement | Partially complete; synthetic measurement exists, real corpus remains open | `experiments/scripts/crawl_real_ecosystem.py`, `docs/ecosystem_measurement.md` |
 | M7 — Paper and artifact freeze | In progress | `paper/`, `artifact/`, `docs/execution_checklist.md` |
 

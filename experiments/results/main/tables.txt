@@ -77,3 +77,17 @@ Table 6: Generalization Stress Checks
 | Mutated held-out    | 385     | 1.0000    | 1.0000 | 1.0000 | 0.0000 | 1.0000         |
 | Label-blinded audit | 475     | 1.0000    | 1.0000 | 1.0000 | 0.0000 | 0              |
 +---------------------+---------+-----------+--------+--------+--------+----------------+
+
+Table 7: Local Runtime Harness
++-------------------------+--------+
+| Metric                  | Value  |
++-------------------------+--------+
+| Benign tasks            | 60     |
+| Attack tasks            | 63     |
+| ASR                     | 0.0000 |
+| ASR reduction           | 1.0000 |
+| Task success rate       | 1.0000 |
+| False block rate        | 0.0000 |
+| Evidence path coverage  | 1.0000 |
+| Policy p95 latency (ms) | 0.255  |
++-------------------------+--------+

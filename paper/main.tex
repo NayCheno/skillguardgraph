@@ -451,9 +451,9 @@ False Block Rate & 0.000 \\
 Approval Burden & 0.000 \\
 \midrule
 \multicolumn{2}{l}{\textit{Performance metrics}} \\
-Latency p50 (ms) & 0.3 \\
-Latency p95 (ms) & 0.4 \\
-Latency p99 (ms) & 0.4 \\
+Latency p50 (ms) & 0.4 \\
+Latency p95 (ms) & 0.5 \\
+Latency p99 (ms) & 0.5 \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -462,9 +462,34 @@ Latency p99 (ms) & 0.4 \\
 (1)~ASR = 0.0: all malicious traces in the current trace-replay suite are blocked or degraded before successful execution.
 (2)~Task success rate = 1.0: all benign tasks complete successfully without defense interference.
 (3)~False block rate = 0.0: no benign task is hard-blocked.
-(4)~Latency is negligible: p50 = 0.3\,ms, p95 = 0.4\,ms per skill evaluation, well within the 100--300\,ms deployment target.
+(4)~Latency is negligible: p50 = 0.4\,ms, p95 = 0.5\,ms per skill evaluation, well within the 100--300\,ms deployment target.
 (5)~\textbf{Evidence path attribution:} 100\% of true-positive detections (3{,}010/3{,}010) include a complete evidence path, exceeding the 95\% strong target. Every detected synthetic attack comes with an explainable chain of constraint violations.
 
+
+\paragraph{Local instrumented harness.}
+To avoid treating trace replay as the only runtime evidence, we add a deterministic local toy harness that executes fixed benign and adversarial task templates and records provenance events at execution time. The harness does not execute third-party code; it exercises local templates for tool selection, arguments, approval lineage, persistence writes, version-update events, and sink attempts.
+
+\begin{table}[t]
+\centering
+\caption{Local instrumented runtime harness.}
+\label{tab:runtime_harness}
+\begin{tabular}{lr}
+\toprule
+Metric & Value \\
+\midrule
+Benign tasks & 60 \\
+Attack tasks & 63 \\
+ASR & 0.000 \\
+ASR reduction vs. no defense & 1.000 \\
+Task success rate & 1.000 \\
+False block rate & 0.000 \\
+Evidence path coverage & 1.000 \\
+Policy p95 latency (ms) & 0.255 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+All local harness acceptance gates pass: the suite has at least 50 benign and 50 attack tasks, ASR reduction is above 80\%, benign task success is above 85\%, false block rate is below 8\%, p95 policy latency is below 300\,ms, and evidence-path coverage is above 90\%. This is stronger than static trace replay because events are emitted by an instrumented executor, but it remains a local toy harness rather than deployment in a production agent runtime.
 \subsection{Failure Analysis}
 
 The current fusion run has 0 false negatives and 0 false positives on the synthetic benchmark. The failure-analysis output therefore functions as an attribution audit rather than a missed-case catalogue: all 3{,}010 malicious samples are true positives with non-empty evidence paths, and all 1{,}000 benign samples are true negatives.
@@ -611,6 +636,7 @@ SkillGuardGraph supports four deployment modes: (1)~registry mode with pre-publi
 \item \textbf{Provenance labeling.} Some agent platforms do not expose source labels for tool outputs, limiting the effectiveness of source-aware constraints.
 \item \textbf{Benchmark synthetic nature.} While the benchmark captures realistic attack patterns, it uses template-based generation rather than real-world exploit code. The current artifact includes held-out-template, mutation, hard-negative, and label-blinding stress checks, but these checks are still synthetic and cannot establish real-world separability or deployment recall.
 \item \textbf{Ablation semantics.} Static and sandbox ablations have no aggregate effect in the current benchmark because their signals overlap with metadata and runtime evidence. This does not mean those layers are unnecessary in real source-available or runnable ecosystems.
+\item \textbf{Runtime harness realism.} The local instrumented harness emits execution-time provenance from deterministic toy tasks, but it is not a production MCP server, LangChain deployment, or multi-user agent runtime.
 \item \textbf{Platform dependency.} Some policies require platform integration (e.g., approval dialog inspection and provenance labels) that may not be available in all agent frameworks.
 \end{enumerate}
 

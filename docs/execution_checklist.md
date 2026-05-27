@@ -36,6 +36,7 @@ This checklist is extracted from `README.md`, `docs/roadmap.md`, `docs/plan.md`,
 
 - [x] Run synthetic runtime red-team evaluation.
 - [x] Report ASR, UTCR, EDR, PS, SC, task success, false block rate, and approval burden.
+- [x] Add a local instrumented toy runtime harness with at least 50 benign and 50 attack tasks, provenance capture, acceptance gates, and no third-party code execution.
 - [x] Report latency p50/p95/p99 for core pipeline components.
 - [x] Deepen sandbox/runtime realism only within safety constraints: fake credentials, sinkhole DNS, no real egress.
 
@@ -65,6 +66,7 @@ This checklist is extracted from `README.md`, `docs/roadmap.md`, `docs/plan.md`,
 - [x] Provide CI workflow for tests and reproduction pipeline.
 - [x] Refresh artifact expected outputs after final result regeneration.
 - [x] Include `run_generalization_eval.py` in `eval-main` and generated paper tables.
+- [x] Include `run_runtime_harness.py` in `eval-main` and generated paper tables.
 - [x] Run smoke, tests, main evaluation, ablation, runtime red-team, latency, bootstrap, failure analysis, tables, and available Docker/Conda checks before final delivery.
 - [x] Confirm no real secrets, credentials, or operational payloads are included.
 - [x] Confirm `git status --short` is clean and list commits.
