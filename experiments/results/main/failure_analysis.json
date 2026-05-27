@@ -1,0 +1,1054 @@
+{
+  "total_samples": 4010,
+  "true_positives": 2308,
+  "true_negatives": 909,
+  "false_negatives_count": 702,
+  "false_positives_count": 91,
+  "evidence_path_attribution_rate": 1.0,
+  "evidence_path_attribution": "2308/2308",
+  "fn_by_class": {
+    "delayed_rug_pull": {
+      "count": 164,
+      "common_suspicious_predicates": {
+        "flows_to": 164
+      },
+      "fired_constraints": {},
+      "mean_score": 1.08
+    },
+    "capability_laundering": {
+      "count": 177,
+      "common_suspicious_predicates": {
+        "flows_to": 177,
+        "requires_high_risk_scope": 177
+      },
+      "fired_constraints": {
+        "C1_DECLARED_READONLY_BUT_WRITE_SCOPE": 59
+      },
+      "mean_score": 3.37
+    },
+    "split_exfiltration": {
+      "count": 187,
+      "common_suspicious_predicates": {
+        "flows_to": 187,
+        "requires_high_risk_scope": 187
+      },
+      "fired_constraints": {
+        "C1_DECLARED_READONLY_BUT_WRITE_SCOPE": 4
+      },
+      "mean_score": 3.03
+    },
+    "consent_laundering": {
+      "count": 174,
+      "common_suspicious_predicates": {
+        "flows_to": 174,
+        "requires_high_risk_scope": 174
+      },
+      "fired_constraints": {
+        "C1_DECLARED_READONLY_BUT_WRITE_SCOPE": 174
+      },
+      "mean_score": 4.0
+    }
+  },
+  "fp_top_patterns": {
+    "flows_to": 91,
+    "requires_high_risk_scope": 91,
+    "writes_persistent_store": 91
+  },
+  "sample_fn_cases": [
+    {
+      "case_id": "sgg-delayed-rug-pull-0253",
+      "label": "delayed_rug_pull",
+      "evidence_by_kind": {
+        "permission": 1,
+        "metadata": 1,
+        "governance": 2,
+        "sandbox": 1,
+        "runtime": 5
+      },
+      "suspicious_predicates": [
+        "flows_to"
+      ],
+      "suspicious_kinds": [
+        "runtime"
+      ],
+      "fired_constraints": [],
+      "fusion_score": 1.08,
+      "fusion_risk": "low",
+      "graph_nodes": 10,
+      "graph_edges": 6
+    },
+    {
+      "case_id": "sgg-delayed-rug-pull-0332",
+      "label": "delayed_rug_pull",
+      "evidence_by_kind": {
+        "permission": 1,
+        "metadata": 1,
+        "governance": 2,
+        "sandbox": 1,
+        "runtime": 5
+      },
+      "suspicious_predicates": [
+        "flows_to"
+      ],
+      "suspicious_kinds": [
+        "runtime"
+      ],
+      "fired_constraints": [],
+      "fusion_score": 1.08,
+      "fusion_risk": "low",
+      "graph_nodes": 10,
+      "graph_edges": 6
+    },
+    {
+      "case_id": "sgg-delayed-rug-pull-0323",
+      "label": "delayed_rug_pull",
+      "evidence_by_kind": {
+        "permission": 1,
+        "metadata": 1,
+        "governance": 2,
+        "sandbox": 1,
+        "runtime": 5
+      },
+      "suspicious_predicates": [
+        "flows_to"
+      ],
+      "suspicious_kinds": [
+        "runtime"
+      ],
+      "fired_constraints": [],
+      "fusion_score": 1.08,
+      "fusion_risk": "low",
+      "graph_nodes": 10,
+      "graph_edges": 6
+    },
+    {
+      "case_id": "sgg-capability-laundering-0407",
+      "label": "capability_laundering",
+      "evidence_by_kind": {
+        "permission": 4,
+        "governance": 2,
+        "sandbox": 1,
+        "runtime": 6
+      },
+      "suspicious_predicates": [
+        "flows_to",
+        "requires_high_risk_scope"
+      ],
+      "suspicious_kinds": [
+        "permission",
+        "runtime"
+      ],
+      "fired_constraints": [],
+      "fusion_score": 3.05,
+      "fusion_risk": "medium",
+      "graph_nodes": 12,
+      "graph_edges": 9
+    },
+    {
+      "case_id": "sgg-capability-laundering-0268",
+      "label": "capability_laundering",
+      "evidence_by_kind": {
+        "permission": 4,
+        "governance": 2,
+        "sandbox": 1,
+        "runtime": 6
+      },
+      "suspicious_predicates": [
+        "flows_to",
+        "requires_high_risk_scope"
+      ],
+      "suspicious_kinds": [
+        "permission",
+        "runtime"
+      ],
+      "fired_constraints": [],
+      "fusion_score": 3.05,
+      "fusion_risk": "medium",
+      "graph_nodes": 12,
+      "graph_edges": 9
+    },
+    {
+      "case_id": "sgg-split-exfiltration-0147",
+      "label": "split_exfiltration",
+      "evidence_by_kind": {
+        "permission": 4,
+        "governance": 2,
+        "sandbox": 1,
+        "runtime": 7
+      },
+      "suspicious_predicates": [
+        "flows_to",
+        "requires_high_risk_scope"
+      ],
+      "suspicious_kinds": [
+        "permission",
+        "runtime"
+      ],
+      "fired_constraints": [],
+      "fusion_score": 3.01,
+      "fusion_risk": "medium",
+      "graph_nodes": 11,
+      "graph_edges": 10
+    },
+    {
+      "case_id": "sgg-consent-laundering-0402",
+      "label": "consent_laundering",
+      "evidence_by_kind": {
+        "metadata": 1,
+        "permission": 4,
+        "governance": 2,
+        "sandbox": 1,
+        "runtime": 7
+      },
+      "suspicious_predicates": [
+        "flows_to",
+        "requires_high_risk_scope"
+      ],
+      "suspicious_kinds": [
+        "permission",
+        "runtime"
+      ],
+      "fired_constraints": [
+        "C1_DECLARED_READONLY_BUT_WRITE_SCOPE"
+      ],
+      "fusion_score": 4.0,
+      "fusion_risk": "medium",
+      "graph_nodes": 11,
+      "graph_edges": 11
+    },
+    {
+      "case_id": "sgg-delayed-rug-pull-0358",
+      "label": "delayed_rug_pull",
+      "evidence_by_kind": {
+        "permission": 1,
+        "metadata": 1,
+        "governance": 2,
+        "sandbox": 1,
+        "runtime": 5
+      },
+      "suspicious_predicates": [
+        "flows_to"
+      ],
+      "suspicious_kinds": [
+        "runtime"
+      ],
+      "fired_constraints": [],
+      "fusion_score": 1.08,
+      "fusion_risk": "low",
+      "graph_nodes": 10,
+      "graph_edges": 6
+    },
+    {
+      "case_id": "sgg-capability-laundering-0204",
+      "label": "capability_laundering",
+      "evidence_by_kind": {
+        "permission": 4,
+        "governance": 2,
+        "sandbox": 1,
+        "runtime": 6
+      },
+      "suspicious_predicates": [
+        "flows_to",
+        "requires_high_risk_scope"
+      ],
+      "suspicious_kinds": [
+        "permission",
+        "runtime"
+      ],
+      "fired_constraints": [],
+      "fusion_score": 3.05,
+      "fusion_risk": "medium",
+      "graph_nodes": 12,
+      "graph_edges": 9
+    },
+    {
+      "case_id": "sgg-delayed-rug-pull-0230",
+      "label": "delayed_rug_pull",
+      "evidence_by_kind": {
+        "permission": 1,
+        "metadata": 1,
+        "governance": 2,
+        "sandbox": 1,
+        "runtime": 5
+      },
+      "suspicious_predicates": [
+        "flows_to"
+      ],
+      "suspicious_kinds": [
+        "runtime"
+      ],
+      "fired_constraints": [],
+      "fusion_score": 1.08,
+      "fusion_risk": "low",
+      "graph_nodes": 10,
+      "graph_edges": 6
+    },
+    {
+      "case_id": "sgg-consent-laundering-0257",
+      "label": "consent_laundering",
+      "evidence_by_kind": {
+        "metadata": 1,
+        "permission": 4,
+        "governance": 2,
+        "sandbox": 1,
+        "runtime": 7
+      },
+      "suspicious_predicates": [
+        "flows_to",
+        "requires_high_risk_scope"
+      ],
+      "suspicious_kinds": [
+        "permission",
+        "runtime"
+      ],
+      "fired_constraints": [
+        "C1_DECLARED_READONLY_BUT_WRITE_SCOPE"
+      ],
+      "fusion_score": 4.0,
+      "fusion_risk": "medium",
+      "graph_nodes": 11,
+      "graph_edges": 11
+    },
+    {
+      "case_id": "sgg-capability-laundering-0363",
+      "label": "capability_laundering",
+      "evidence_by_kind": {
+        "permission": 4,
+        "governance": 2,
+        "sandbox": 1,
+        "runtime": 6
+      },
+      "suspicious_predicates": [
+        "flows_to",
+        "requires_high_risk_scope"
+      ],
+      "suspicious_kinds": [
+        "permission",
+        "runtime"
+      ],
+      "fired_constraints": [],
+      "fusion_score": 3.05,
+      "fusion_risk": "medium",
+      "graph_nodes": 12,
+      "graph_edges": 9
+    },
+    {
+      "case_id": "sgg-split-exfiltration-0265",
+      "label": "split_exfiltration",
+      "evidence_by_kind": {
+        "permission": 4,
+        "governance": 2,
+        "sandbox": 1,
+        "runtime": 7
+      },
+      "suspicious_predicates": [
+        "flows_to",
+        "requires_high_risk_scope"
+      ],
+      "suspicious_kinds": [
+        "permission",
+        "runtime"
+      ],
+      "fired_constraints": [],
+      "fusion_score": 3.01,
+      "fusion_risk": "medium",
+      "graph_nodes": 11,
+      "graph_edges": 10
+    },
+    {
+      "case_id": "sgg-consent-laundering-0247",
+      "label": "consent_laundering",
+      "evidence_by_kind": {
+        "metadata": 1,
+        "permission": 4,
+        "governance": 2,
+        "sandbox": 1,
+        "runtime": 7
+      },
+      "suspicious_predicates": [
+        "flows_to",
+        "requires_high_risk_scope"
+      ],
+      "suspicious_kinds": [
+        "permission",
+        "runtime"
+      ],
+      "fired_constraints": [
+        "C1_DECLARED_READONLY_BUT_WRITE_SCOPE"
+      ],
+      "fusion_score": 4.0,
+      "fusion_risk": "medium",
+      "graph_nodes": 11,
+      "graph_edges": 11
+    },
+    {
+      "case_id": "sgg-consent-laundering-0333",
+      "label": "consent_laundering",
+      "evidence_by_kind": {
+        "metadata": 1,
+        "permission": 4,
+        "governance": 2,
+        "sandbox": 1,
+        "runtime": 7
+      },
+      "suspicious_predicates": [
+        "flows_to",
+        "requires_high_risk_scope"
+      ],
+      "suspicious_kinds": [
+        "permission",
+        "runtime"
+      ],
+      "fired_constraints": [
+        "C1_DECLARED_READONLY_BUT_WRITE_SCOPE"
+      ],
+      "fusion_score": 4.0,
+      "fusion_risk": "medium",
+      "graph_nodes": 11,
+      "graph_edges": 11
+    },
+    {
+      "case_id": "sgg-delayed-rug-pull-0371",
+      "label": "delayed_rug_pull",
+      "evidence_by_kind": {
+        "metadata": 2,
+        "permission": 1,
+        "governance": 2,
+        "sandbox": 1,
+        "runtime": 5
+      },
+      "suspicious_predicates": [
+        "flows_to"
+      ],
+      "suspicious_kinds": [
+        "runtime"
+      ],
+      "fired_constraints": [],
+      "fusion_score": 1.08,
+      "fusion_risk": "low",
+      "graph_nodes": 10,
+      "graph_edges": 7
+    },
+    {
+      "case_id": "sgg-consent-laundering-0040",
+      "label": "consent_laundering",
+      "evidence_by_kind": {
+        "metadata": 1,
+        "permission": 4,
+        "governance": 2,
+        "sandbox": 1,
+        "runtime": 7
+      },
+      "suspicious_predicates": [
+        "flows_to",
+        "requires_high_risk_scope"
+      ],
+      "suspicious_kinds": [
+        "permission",
+        "runtime"
+      ],
+      "fired_constraints": [
+        "C1_DECLARED_READONLY_BUT_WRITE_SCOPE"
+      ],
+      "fusion_score": 4.0,
+      "fusion_risk": "medium",
+      "graph_nodes": 11,
+      "graph_edges": 11
+    },
+    {
+      "case_id": "sgg-consent-laundering-0276",
+      "label": "consent_laundering",
+      "evidence_by_kind": {
+        "metadata": 1,
+        "permission": 4,
+        "governance": 2,
+        "sandbox": 1,
+        "runtime": 7
+      },
+      "suspicious_predicates": [
+        "flows_to",
+        "requires_high_risk_scope"
+      ],
+      "suspicious_kinds": [
+        "permission",
+        "runtime"
+      ],
+      "fired_constraints": [
+        "C1_DECLARED_READONLY_BUT_WRITE_SCOPE"
+      ],
+      "fusion_score": 4.0,
+      "fusion_risk": "medium",
+      "graph_nodes": 11,
+      "graph_edges": 11
+    },
+    {
+      "case_id": "sgg-capability-laundering-0349",
+      "label": "capability_laundering",
+      "evidence_by_kind": {
+        "permission": 4,
+        "governance": 2,
+        "sandbox": 1,
+        "runtime": 6
+      },
+      "suspicious_predicates": [
+        "flows_to",
+        "requires_high_risk_scope"
+      ],
+      "suspicious_kinds": [
+        "permission",
+        "runtime"
+      ],
+      "fired_constraints": [],
+      "fusion_score": 3.05,
+      "fusion_risk": "medium",
+      "graph_nodes": 12,
+      "graph_edges": 9
+    },
+    {
+      "case_id": "sgg-delayed-rug-pull-0086",
+      "label": "delayed_rug_pull",
+      "evidence_by_kind": {
+        "permission": 1,
+        "metadata": 1,
+        "governance": 2,
+        "sandbox": 1,
+        "runtime": 5
+      },
+      "suspicious_predicates": [
+        "flows_to"
+      ],
+      "suspicious_kinds": [
+        "runtime"
+      ],
+      "fired_constraints": [],
+      "fusion_score": 1.08,
+      "fusion_risk": "low",
+      "graph_nodes": 10,
+      "graph_edges": 6
+    }
+  ],
+  "sample_fp_cases": [
+    {
+      "case_id": "sgg-benign-0636",
+      "label": "benign",
+      "evidence_by_kind": {
+        "metadata": 1,
+        "permission": 3,
+        "governance": 2,
+        "sandbox": 1,
+        "runtime": 5
+      },
+      "suspicious_predicates": [
+        "flows_to",
+        "requires_high_risk_scope",
+        "writes_persistent_store"
+      ],
+      "suspicious_kinds": [
+        "permission",
+        "runtime"
+      ],
+      "fired_constraints": [
+        "C1_DECLARED_READONLY_BUT_WRITE_SCOPE"
+      ],
+      "fusion_score": 5.97,
+      "fusion_risk": "high",
+      "graph_nodes": 10,
+      "graph_edges": 9
+    },
+    {
+      "case_id": "sgg-benign-0616",
+      "label": "benign",
+      "evidence_by_kind": {
+        "permission": 3,
+        "governance": 2,
+        "sandbox": 1,
+        "runtime": 5
+      },
+      "suspicious_predicates": [
+        "flows_to",
+        "requires_high_risk_scope",
+        "writes_persistent_store"
+      ],
+      "suspicious_kinds": [
+        "permission",
+        "runtime"
+      ],
+      "fired_constraints": [],
+      "fusion_score": 5.97,
+      "fusion_risk": "high",
+      "graph_nodes": 9,
+      "graph_edges": 8
+    },
+    {
+      "case_id": "sgg-benign-0130",
+      "label": "benign",
+      "evidence_by_kind": {
+        "metadata": 1,
+        "permission": 4,
+        "governance": 2,
+        "sandbox": 1,
+        "runtime": 5
+      },
+      "suspicious_predicates": [
+        "flows_to",
+        "requires_high_risk_scope",
+        "writes_persistent_store"
+      ],
+      "suspicious_kinds": [
+        "permission",
+        "runtime"
+      ],
+      "fired_constraints": [
+        "C1_DECLARED_READONLY_BUT_WRITE_SCOPE"
+      ],
+      "fusion_score": 5.97,
+      "fusion_risk": "high",
+      "graph_nodes": 9,
+      "graph_edges": 10
+    },
+    {
+      "case_id": "sgg-benign-0052",
+      "label": "benign",
+      "evidence_by_kind": {
+        "permission": 3,
+        "governance": 2,
+        "sandbox": 1,
+        "runtime": 5
+      },
+      "suspicious_predicates": [
+        "flows_to",
+        "requires_high_risk_scope",
+        "writes_persistent_store"
+      ],
+      "suspicious_kinds": [
+        "permission",
+        "runtime"
+      ],
+      "fired_constraints": [],
+      "fusion_score": 5.97,
+      "fusion_risk": "high",
+      "graph_nodes": 10,
+      "graph_edges": 8
+    },
+    {
+      "case_id": "sgg-benign-0622",
+      "label": "benign",
+      "evidence_by_kind": {
+        "permission": 3,
+        "governance": 2,
+        "sandbox": 1,
+        "runtime": 5
+      },
+      "suspicious_predicates": [
+        "flows_to",
+        "requires_high_risk_scope",
+        "writes_persistent_store"
+      ],
+      "suspicious_kinds": [
+        "permission",
+        "runtime"
+      ],
+      "fired_constraints": [],
+      "fusion_score": 5.97,
+      "fusion_risk": "high",
+      "graph_nodes": 9,
+      "graph_edges": 8
+    },
+    {
+      "case_id": "sgg-benign-0739",
+      "label": "benign",
+      "evidence_by_kind": {
+        "metadata": 1,
+        "permission": 4,
+        "governance": 2,
+        "sandbox": 1,
+        "runtime": 5
+      },
+      "suspicious_predicates": [
+        "flows_to",
+        "requires_high_risk_scope",
+        "writes_persistent_store"
+      ],
+      "suspicious_kinds": [
+        "permission",
+        "runtime"
+      ],
+      "fired_constraints": [
+        "C1_DECLARED_READONLY_BUT_WRITE_SCOPE"
+      ],
+      "fusion_score": 5.97,
+      "fusion_risk": "high",
+      "graph_nodes": 9,
+      "graph_edges": 10
+    },
+    {
+      "case_id": "sgg-benign-0569",
+      "label": "benign",
+      "evidence_by_kind": {
+        "metadata": 1,
+        "permission": 5,
+        "governance": 2,
+        "sandbox": 1,
+        "runtime": 5
+      },
+      "suspicious_predicates": [
+        "flows_to",
+        "requires_high_risk_scope",
+        "writes_persistent_store"
+      ],
+      "suspicious_kinds": [
+        "permission",
+        "runtime"
+      ],
+      "fired_constraints": [
+        "C1_DECLARED_READONLY_BUT_WRITE_SCOPE"
+      ],
+      "fusion_score": 5.97,
+      "fusion_risk": "high",
+      "graph_nodes": 11,
+      "graph_edges": 11
+    },
+    {
+      "case_id": "sgg-benign-0109",
+      "label": "benign",
+      "evidence_by_kind": {
+        "metadata": 1,
+        "permission": 5,
+        "governance": 2,
+        "sandbox": 1,
+        "runtime": 5
+      },
+      "suspicious_predicates": [
+        "flows_to",
+        "requires_high_risk_scope",
+        "writes_persistent_store"
+      ],
+      "suspicious_kinds": [
+        "permission",
+        "runtime"
+      ],
+      "fired_constraints": [
+        "C1_DECLARED_READONLY_BUT_WRITE_SCOPE"
+      ],
+      "fusion_score": 5.97,
+      "fusion_risk": "high",
+      "graph_nodes": 11,
+      "graph_edges": 11
+    },
+    {
+      "case_id": "sgg-benign-0814",
+      "label": "benign",
+      "evidence_by_kind": {
+        "permission": 3,
+        "governance": 2,
+        "sandbox": 1,
+        "runtime": 5
+      },
+      "suspicious_predicates": [
+        "flows_to",
+        "requires_high_risk_scope",
+        "writes_persistent_store"
+      ],
+      "suspicious_kinds": [
+        "permission",
+        "runtime"
+      ],
+      "fired_constraints": [],
+      "fusion_score": 5.97,
+      "fusion_risk": "high",
+      "graph_nodes": 9,
+      "graph_edges": 8
+    },
+    {
+      "case_id": "sgg-benign-0379",
+      "label": "benign",
+      "evidence_by_kind": {
+        "metadata": 1,
+        "permission": 4,
+        "governance": 2,
+        "sandbox": 1,
+        "runtime": 5
+      },
+      "suspicious_predicates": [
+        "flows_to",
+        "requires_high_risk_scope",
+        "writes_persistent_store"
+      ],
+      "suspicious_kinds": [
+        "permission",
+        "runtime"
+      ],
+      "fired_constraints": [
+        "C1_DECLARED_READONLY_BUT_WRITE_SCOPE"
+      ],
+      "fusion_score": 5.97,
+      "fusion_risk": "high",
+      "graph_nodes": 9,
+      "graph_edges": 10
+    },
+    {
+      "case_id": "sgg-benign-0372",
+      "label": "benign",
+      "evidence_by_kind": {
+        "metadata": 1,
+        "permission": 4,
+        "governance": 2,
+        "sandbox": 1,
+        "runtime": 5
+      },
+      "suspicious_predicates": [
+        "flows_to",
+        "requires_high_risk_scope",
+        "writes_persistent_store"
+      ],
+      "suspicious_kinds": [
+        "permission",
+        "runtime"
+      ],
+      "fired_constraints": [
+        "C1_DECLARED_READONLY_BUT_WRITE_SCOPE"
+      ],
+      "fusion_score": 5.97,
+      "fusion_risk": "high",
+      "graph_nodes": 9,
+      "graph_edges": 10
+    },
+    {
+      "case_id": "sgg-benign-0001",
+      "label": "benign",
+      "evidence_by_kind": {
+        "permission": 3,
+        "governance": 2,
+        "sandbox": 1,
+        "runtime": 5
+      },
+      "suspicious_predicates": [
+        "flows_to",
+        "requires_high_risk_scope",
+        "writes_persistent_store"
+      ],
+      "suspicious_kinds": [
+        "permission",
+        "runtime"
+      ],
+      "fired_constraints": [],
+      "fusion_score": 5.97,
+      "fusion_risk": "high",
+      "graph_nodes": 9,
+      "graph_edges": 8
+    },
+    {
+      "case_id": "sgg-benign-0051",
+      "label": "benign",
+      "evidence_by_kind": {
+        "metadata": 1,
+        "permission": 5,
+        "governance": 2,
+        "sandbox": 1,
+        "runtime": 5
+      },
+      "suspicious_predicates": [
+        "flows_to",
+        "requires_high_risk_scope",
+        "writes_persistent_store"
+      ],
+      "suspicious_kinds": [
+        "permission",
+        "runtime"
+      ],
+      "fired_constraints": [
+        "C1_DECLARED_READONLY_BUT_WRITE_SCOPE"
+      ],
+      "fusion_score": 5.97,
+      "fusion_risk": "high",
+      "graph_nodes": 11,
+      "graph_edges": 11
+    },
+    {
+      "case_id": "sgg-benign-0806",
+      "label": "benign",
+      "evidence_by_kind": {
+        "metadata": 1,
+        "permission": 4,
+        "governance": 2,
+        "sandbox": 1,
+        "runtime": 5
+      },
+      "suspicious_predicates": [
+        "flows_to",
+        "requires_high_risk_scope",
+        "writes_persistent_store"
+      ],
+      "suspicious_kinds": [
+        "permission",
+        "runtime"
+      ],
+      "fired_constraints": [
+        "C1_DECLARED_READONLY_BUT_WRITE_SCOPE"
+      ],
+      "fusion_score": 5.97,
+      "fusion_risk": "high",
+      "graph_nodes": 11,
+      "graph_edges": 10
+    },
+    {
+      "case_id": "sgg-benign-0452",
+      "label": "benign",
+      "evidence_by_kind": {
+        "metadata": 1,
+        "permission": 5,
+        "governance": 2,
+        "sandbox": 1,
+        "runtime": 5
+      },
+      "suspicious_predicates": [
+        "flows_to",
+        "requires_high_risk_scope",
+        "writes_persistent_store"
+      ],
+      "suspicious_kinds": [
+        "permission",
+        "runtime"
+      ],
+      "fired_constraints": [
+        "C1_DECLARED_READONLY_BUT_WRITE_SCOPE"
+      ],
+      "fusion_score": 5.97,
+      "fusion_risk": "high",
+      "graph_nodes": 11,
+      "graph_edges": 11
+    },
+    {
+      "case_id": "sgg-benign-0419",
+      "label": "benign",
+      "evidence_by_kind": {
+        "metadata": 1,
+        "permission": 4,
+        "governance": 2,
+        "sandbox": 1,
+        "runtime": 5
+      },
+      "suspicious_predicates": [
+        "flows_to",
+        "requires_high_risk_scope",
+        "writes_persistent_store"
+      ],
+      "suspicious_kinds": [
+        "permission",
+        "runtime"
+      ],
+      "fired_constraints": [
+        "C1_DECLARED_READONLY_BUT_WRITE_SCOPE"
+      ],
+      "fusion_score": 5.97,
+      "fusion_risk": "high",
+      "graph_nodes": 9,
+      "graph_edges": 10
+    },
+    {
+      "case_id": "sgg-benign-0469",
+      "label": "benign",
+      "evidence_by_kind": {
+        "permission": 4,
+        "governance": 2,
+        "sandbox": 1,
+        "runtime": 5
+      },
+      "suspicious_predicates": [
+        "flows_to",
+        "requires_high_risk_scope",
+        "writes_persistent_store"
+      ],
+      "suspicious_kinds": [
+        "permission",
+        "runtime"
+      ],
+      "fired_constraints": [],
+      "fusion_score": 5.97,
+      "fusion_risk": "high",
+      "graph_nodes": 11,
+      "graph_edges": 9
+    },
+    {
+      "case_id": "sgg-benign-0544",
+      "label": "benign",
+      "evidence_by_kind": {
+        "metadata": 1,
+        "permission": 5,
+        "governance": 2,
+        "sandbox": 1,
+        "runtime": 5
+      },
+      "suspicious_predicates": [
+        "flows_to",
+        "requires_high_risk_scope",
+        "writes_persistent_store"
+      ],
+      "suspicious_kinds": [
+        "permission",
+        "runtime"
+      ],
+      "fired_constraints": [
+        "C1_DECLARED_READONLY_BUT_WRITE_SCOPE"
+      ],
+      "fusion_score": 5.97,
+      "fusion_risk": "high",
+      "graph_nodes": 11,
+      "graph_edges": 11
+    },
+    {
+      "case_id": "sgg-benign-0974",
+      "label": "benign",
+      "evidence_by_kind": {
+        "metadata": 1,
+        "permission": 5,
+        "governance": 2,
+        "sandbox": 1,
+        "runtime": 5
+      },
+      "suspicious_predicates": [
+        "flows_to",
+        "requires_high_risk_scope",
+        "writes_persistent_store"
+      ],
+      "suspicious_kinds": [
+        "permission",
+        "runtime"
+      ],
+      "fired_constraints": [
+        "C1_DECLARED_READONLY_BUT_WRITE_SCOPE"
+      ],
+      "fusion_score": 5.97,
+      "fusion_risk": "high",
+      "graph_nodes": 11,
+      "graph_edges": 11
+    },
+    {
+      "case_id": "sgg-benign-0441",
+      "label": "benign",
+      "evidence_by_kind": {
+        "metadata": 1,
+        "permission": 5,
+        "governance": 2,
+        "sandbox": 1,
+        "runtime": 5
+      },
+      "suspicious_predicates": [
+        "flows_to",
+        "requires_high_risk_scope",
+        "writes_persistent_store"
+      ],
+      "suspicious_kinds": [
+        "permission",
+        "runtime"
+      ],
+      "fired_constraints": [
+        "C1_DECLARED_READONLY_BUT_WRITE_SCOPE"
+      ],
+      "fusion_score": 5.97,
+      "fusion_risk": "high",
+      "graph_nodes": 11,
+      "graph_edges": 11
+    }
+  ]
+}
