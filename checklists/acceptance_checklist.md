@@ -56,5 +56,5 @@ Use this as the final gate before marking the active goal complete.
 - [x] Tables regenerate.
 - [x] Docker/Conda instructions are verified or limitations are recorded (Docker build/run passed; `conda` command is unavailable on this workstation).
 - [x] No secrets, credentials, real third-party payloads, or unsafe egress targets are present.
-- [ ] `git status --short` is clean.
-- [ ] Final response lists commits, remaining risks, and unfinished items.
+- [x] `git status --short` is clean.
+- [x] Final response lists commits, remaining risks, and unfinished items.
