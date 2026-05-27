@@ -312,6 +312,28 @@ No sequence & 0.959 & 0.709 & 0.815 & 0.091 & $-$0.038 \\
 (3)~Removing sequence constraints (C2, C3, C6) reduces F1 by 0.038, indicating that cross-tool flow analysis provides additional discrimination beyond individual evidence signals.
 (4)~Static and sandbox evidence contribute marginally in this benchmark because their signals overlap with metadata; their value increases for source-available and runnable skills.
 
+\subsection{Statistical Confidence (RQ3)}
+
+Table~\ref{tab:bootstrap} reports 95\% bootstrap confidence intervals for the fusion system, computed over 1{,}000 bootstrap replicates of the full benchmark.
+
+\begin{table}[t]
+\centering
+\caption{Fusion 95\% bootstrap confidence intervals (1{,}000 replicates).}
+\label{tab:bootstrap}
+\begin{tabular}{lccc}
+\toprule
+Metric & Mean & 95\% CI Low & 95\% CI High \\
+\midrule
+Precision & 0.962 & 0.953 & 0.969 \\
+Recall & 0.767 & 0.751 & 0.782 \\
+F1 & 0.853 & 0.843 & 0.863 \\
+FPR & 0.091 & 0.074 & 0.111 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The narrow confidence intervals confirm that the reported metrics are stable across bootstrap resamples. The FPR 95\% CI of [0.074, 0.111] does not overlap with naive union's FPR of 1.0, confirming a statistically significant FPR reduction.
+
 \subsection{Runtime Defense Metrics (RQ4)}
 
 Table~\ref{tab:runtime} shows runtime defense and usability metrics.
