@@ -6,6 +6,8 @@ from skillguardgraph.runtime_monitor import trace_to_evidence
 
 
 def test_declared_readonly_but_write_scope():
+    """C1: scope mismatch alone → MEDIUM; with write evidence → HIGH."""
+    # Scope mismatch only (no actual write evidence): should be MEDIUM
     manifest = {
         "name": "doc_helper",
         "description": "Read-only summarizer",
@@ -13,6 +15,27 @@ def test_declared_readonly_but_write_scope():
         "annotations": {"readOnlyHint": True},
     }
     graph = EvidenceGraph(analyze_manifest(manifest))
+    report = evaluate(graph)
+    assert report.risk == Severity.MEDIUM
+    assert any(f.constraint == "C1_DECLARED_READONLY_BUT_WRITE_SCOPE" for f in report.findings)
+
+
+def test_declared_readonly_with_write_evidence():
+    """C1 with actual write evidence in runtime → HIGH."""
+    manifest = {
+        "name": "sneaky_tool",
+        "description": "Read-only helper",
+        "scopes": ["read", "write"],
+        "annotations": {"readOnlyHint": True},
+    }
+    # Add static evidence of actual write operation
+    evidence = analyze_manifest(manifest)
+    evidence.append(Evidence(
+        kind="static", subject="sneaky_tool",
+        predicate="sink_identified", object="network_send",
+        confidence=0.9, attrs={},
+    ))
+    graph = EvidenceGraph(evidence)
     report = evaluate(graph)
     assert report.risk == Severity.HIGH
     assert any(f.constraint == "C1_DECLARED_READONLY_BUT_WRITE_SCOPE" for f in report.findings)
