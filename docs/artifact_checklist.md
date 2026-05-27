@@ -12,13 +12,17 @@
 ## Reproducibility
 
 - [x] 提供 `experiments/README.md`。
-- [x] 提供 `experiments/Makefile`。
+- [x] 提供 `experiments/Makefile`（支持 Windows 和 Linux）。
 - [x] 提供 `scripts/run_demo.py`。
-- [x] 提供 pytest 单元测试。
-- [ ] 提供真实 corpus 获取脚本。
-- [ ] 提供 benchmark generation seed 与样本版本号。
-- [ ] 提供完整 ablation runner。
-- [ ] 提供结果聚合与图表生成脚本。
+- [x] 提供 pytest 单元测试（71 tests，覆盖 C1-C7 正负例）。
+- [x] 提供 benchmark generation seed（`seed=42`，在 `build_benchmark.py` 中硬编码）。
+- [x] 提供完整 ablation runner（`run_ablation.py`，6 种配置）。
+- [x] 提供结果聚合与图表生成脚本（`make_tables.py`）。
+- [x] 提供 latency 测量脚本（`run_latency.py`）。
+- [x] 提供 bootstrap CI 脚本（`run_bootstrap_ci.py`，1000 replicates）。
+- [x] 提供 label validation 脚本（`validate_labels.py`）。
+- [x] 提供 `Dockerfile` 和 `environment.yml`。
+- [ ] 提供真实 corpus 获取脚本。（当前只有 synthetic ecosystem crawl）
 
 ## Safety
 
@@ -26,12 +30,29 @@
 - [x] 外发目标只使用 sinkhole 标签。
 - [x] 不包含真实 token、真实账号或真实外联。
 - [x] 不包含可直接攻击真实系统的 payload。
-- [ ] 动态沙箱需要在后续实现中强制网络隔离与假凭证。
+- [x] sandbox prober 明确标注为 simulated（不执行 untrusted code）。
+- [x] `SECURITY_ETHICS.md` 完整。
 - [ ] 真实漏洞测量需要补充 responsible disclosure SOP。
 
 ## Review-readiness
 
 - [x] 有 naive union baseline 的明确对比位置。
-- [x] 有 metadata-only、code-only、sandbox-only、runtime-only ablation 计划。
+- [x] 有 weighted voting baseline。
+- [x] 有 metadata-only、static-only、sandbox-only、runtime-only ablation。
+- [x] 有 sequence constraint ablation。
 - [x] 有 CCF-A 风险评分。
-- [ ] 需要补齐真实数据规模、统计显著性检验、FPR 分析。
+- [x] 有统计显著性检验（bootstrap 95% CI）。
+- [x] 有 FPR 分析（FPR = 0.091，95% CI [0.074, 0.111]）。
+- [x] 有 latency 测量（p50 = 0.3ms，p95 = 0.4ms）。
+- [x] 有 per-attack-class recall 报告。
+- [x] 论文有相关工作对比表。
+- [ ] 需要补齐真实生态测量（当前只有 1200 synthetic samples）。
+- [ ] 需要补齐 failure case analysis（10+ 案例）。
+- [ ] 需要补齐 AUROC/AUPRC 指标。
+
+## CI
+
+- [x] GitHub Actions CI（`.github/workflows/ci.yml`）。
+- [x] 多 Python 版本测试（3.10-3.13）。
+- [x] reproduce pipeline 在 CI 中运行。
+- [x] 结果文件作为 artifact 上传。
