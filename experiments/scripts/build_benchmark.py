@@ -1202,8 +1202,8 @@ def gen_benign_manifest_noisy(name: str) -> Dict[str, Any]:
         scopes = RNG.choice([["read", "write", "export"], ["read", "export"], ["read", "search", "write", "export"]])
         annotations = {"readOnlyHint": False, "destructiveHint": False, "openWorldHint": RNG.random() < 0.3}
 
-    is_trusted = RNG.random() < 0.6
-    has_sig = RNG.random() < 0.7
+    is_trusted = RNG.random() < 0.7  # 70% trusted for hard negatives
+    has_sig = RNG.random() < 0.8  # 80% signed for hard negatives
     return {
         "name": name,
         "description": desc,
