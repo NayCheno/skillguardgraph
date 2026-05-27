@@ -9,8 +9,10 @@
 \usepackage{xcolor}
 \usepackage{enumitem}
 \usepackage{listings}
-\usepackage{multirow}
+ \usepackage{multirow}
+\usepackage{tikz}
 
+\usetikzlibrary{arrows.meta,positioning,shapes.geometric}
 \lstset{
   basicstyle=\ttfamily\small,
   breaklines=true,
@@ -29,7 +31,7 @@
 \begin{abstract}
 Large language model (LLM) agents increasingly rely on external skills---tools, connectors, actions, MCP servers, and graph nodes---to access private data, invoke APIs, modify files, and maintain persistent state. This capability expansion creates a new security problem: malicious skills can exploit gaps between declared metadata, implemented behavior, granted permissions, runtime outputs, user approval, and post-approval updates. Existing defenses typically operate at a single layer: metadata scanning, prompt-injection filtering, static analysis, sandbox probing, or human-in-the-loop approval. We argue that malicious skills are compositional objects whose most damaging behaviors emerge across lifecycle boundaries.
 
-We present \textbf{SkillGuardGraph}, a cross-layer evidence fusion framework for detecting and containing malicious skills in LLM agent ecosystems. SkillGuardGraph represents skill metadata, implementation summaries, sandbox observations, runtime provenance, permission scopes, approval dialogs, and version histories as a typed evidence graph, then enforces source-aware, permission-aware, and version-aware constraints over tool-call chains. We introduce a compositional benchmark spanning seven attack classes with 4{,}010 samples, and evaluate against metadata-only, static-only, sandbox-only, runtime-only, naive union, weighted voting, and LLM-judge baselines. In this synthetic benchmark, SkillGuardGraph reaches 100.0\% precision and recall with 0.0\% FPR, compared with naive union's 100.0\% FPR and weighted voting's 20.8\% FPR. Runtime enforcement blocks all malicious traces in the current trace-replay suite while preserving 100.0\% benign task success. We explicitly scope these results to a safe synthetic artifact and report real-ecosystem measurements separately as passive metadata/source-code observations, not confirmed vulnerability claims.
+We present \textbf{SkillGuardGraph}, a cross-layer evidence fusion framework for detecting and containing malicious skills in LLM agent ecosystems. SkillGuardGraph represents skill metadata, implementation summaries, sandbox observations, runtime provenance, permission scopes, approval dialogs, and version histories as a typed evidence graph, then enforces source-aware, permission-aware, and version-aware constraints over tool-call chains. We introduce a compositional benchmark spanning seven attack classes with 4{,}010 samples, and evaluate against metadata-only, static-only, sandbox-only, runtime-only, naive union, weighted voting, and LLM-judge baselines. In this synthetic benchmark, SkillGuardGraph reaches 100.0\% precision and recall with 0.0\% FPR, compared with naive union's 100.0\% FPR and weighted voting's 20.8\% FPR. Runtime enforcement blocks all malicious traces in the current trace-replay suite while preserving 100.0\% benign task success. We further report a passive real-world measurement over 1{,}000 public MCP-related repositories with data-carded provenance, manual triage of all HIGH-severity findings, and no confirmed vulnerabilities disclosed from passive evidence alone.
 \end{abstract}
 
 % ============================================================
@@ -57,7 +59,7 @@ Every individual step can appear legitimate, while the composed flow violates a 
 \item \textbf{Threat taxonomy.} We define a compositional taxonomy of seven malicious skill behaviors: capability laundering, cross-skill confused deputy, delayed rug-pull, consent laundering, persistence pivot, split exfiltration, and scope inflation~(\S\ref{sec:taxonomy}).
 \item \textbf{Evidence graph and constraint system.} We introduce a typed cross-layer evidence graph with source-aware and permission-aware constraints over tool-call chains~(\S\ref{sec:design}, \S\ref{sec:constraints}).
 \item \textbf{Benchmark.} We propose a lifecycle-complete benchmark with 4{,}010 samples covering seven attack classes, benign-paired variants, and trace-grounded validators~(\S\ref{sec:benchmark}).
-\item \textbf{Evaluation.} We provide a comprehensive evaluation comparing graph fusion with seven baselines, an ablation study, runtime defense metrics, failure analysis, and ecosystem measurement of 1{,}200 synthetic samples plus 431 public MCP-related GitHub repositories~(\S\ref{sec:eval}, \S\ref{sec:ecosystem}).
+\item \textbf{Evaluation.} We provide a comprehensive evaluation comparing graph fusion with seven baselines, an ablation study, runtime defense metrics, paired significance tests, failure analysis, and ecosystem measurement of 1{,}200 synthetic samples plus 1{,}000 public MCP-related GitHub repositories~(\S\ref{sec:eval}, \S\ref{sec:ecosystem}).
 \end{enumerate}
 
 % ============================================================
@@ -87,6 +89,13 @@ We consider the following assets: private files and repositories; enterprise doc
 \subsection{Attacker Capabilities}
 
 The attacker may: publish or operate a third-party skill; compromise a benign skill or its update chain; control external content that a skill reads; craft metadata, schema, or descriptions to manipulate tool selection; cause a skill to return untrusted or instruction-like output; request excessive permissions; influence approval dialogs or summaries; and introduce delayed behavior via version or dependency updates. The attacker does not need direct access to the model weights or system prompt.
+
+\begin{figure}[t]
+\centering
+\input{figures/threat_model.tex}
+\caption{Threat surfaces considered by SkillGuardGraph across registration, context retrieval, update, persistence, planning, and runtime.}
+\label{fig:threat_model}
+\end{figure}
 
 \subsection{Non-Goals}
 
@@ -127,6 +136,13 @@ The user task only requires low privilege, but the skill requests broad permissi
 
 SkillGuardGraph is composed of six modules: (1)~a metadata analyzer that scans manifest descriptions, schemas, and annotations; (2)~an implementation analyzer that extracts sources, sinks, and capability hints from source code; (3)~a sandbox prober that runs synthetic tasks with mock credentials and sinkhole domains; (4)~a runtime provenance monitor that records tool-call chains, source labels, and output flows; (5)~an evidence fusion graph that unifies all evidence into a typed graph; and (6)~a policy enforcer that evaluates constraints and issues decisions.
 
+\begin{figure}[t]
+\centering
+\input{figures/system_architecture.tex}
+\caption{SkillGuardGraph architecture: analyzers and provenance collectors materialize typed evidence, which is evaluated by graph constraints before policy enforcement.}
+\label{fig:system_architecture}
+\end{figure}
+
 \subsection{Evidence Model}
 
 An evidence item is a typed assertion:
@@ -143,6 +159,27 @@ The \textit{kind} field identifies the source layer: \texttt{metadata}, \texttt{
 
 \paragraph{Edge types:}
 \texttt{declares}, \texttt{implements}, \texttt{observes}, \texttt{flows\_to}, \texttt{calls}, \texttt{requires\_scope}, \texttt{signed\_by}, \texttt{updated\_from}, \texttt{approved\_by}.
+
+\subsection{Formal Model}
+
+We model a skill ecosystem snapshot as a typed multigraph
+$G = (V, E, \tau_V, \tau_E)$ where $V$ is the set of nodes,
+$E \subseteq V \times V$ is the set of directed edges,
+$\tau_V: V \rightarrow T_V$ maps nodes to types, and
+$\tau_E: E \rightarrow T_E$ maps edges to types.
+An evidence item instantiates either a node label, an edge, or both:
+\[
+(kind, s, p, o, c, a) \mapsto (\tau_V(s), \tau_E(p), \tau_V(o), c, a)
+\]
+where $c \in [0,1]$ is confidence and $a$ is auxiliary metadata.
+A policy constraint $C_i$ is a predicate over typed paths:
+\[
+C_i(G) : \exists \pi = (v_0, \dots, v_k) \text{ such that } \phi_i(\pi, G)
+\]
+where $\phi_i$ encodes conditions such as untrusted-source reachability,
+scope inconsistency, or persistence boundary violation.
+SkillGuardGraph reports both the violated constraint set and the supporting
+evidence path, so the decision is not just a scalar score.
 
 \subsection{Multi-Layer Agreement}
 
@@ -198,6 +235,19 @@ Any flow from untrusted sources to persistent stores is high risk unless explici
 \subsection{C7: Least-Privilege Scope Alignment}
 
 When the user task requires only read-level access but the skill requests write/delete/export/admin scopes, C7 flags a scope inflation finding. The task context is inferred from the tool description and user request, while the granted scope comes from the manifest.
+
+\subsection{Prototype Implementation}
+
+The prototype implementation lives in \texttt{experiments/src/skillguardgraph/}.
+\texttt{metadata\_analyzer.py}, \texttt{static\_analyzer.py},
+\texttt{simulated\_prober.py}, and \texttt{runtime\_monitor.py} emit
+normalized evidence; \texttt{evidence\_graph.py} materializes typed nodes and
+edges and now includes an explicit structural consistency validator used in
+unit tests; \texttt{policy\_engine.py} evaluates C1--C7; and
+\texttt{fusion.py} combines constraint findings with calibrated signal scoring.
+The real-ecosystem measurement collector remains passive: it records
+repository metadata, optional source snippets, licenses, timestamps, and
+deduplication provenance without executing third-party code.
 
 % ============================================================
 \section{Benchmark}
@@ -335,6 +385,19 @@ FPR & 0.000 & 0.000 & 0.000 \\
 
 The bootstrap confidence intervals are degenerate because the current synthetic benchmark run has no fusion false positives or false negatives. This is useful as an artifact consistency check, but it also reinforces the need for real-corpus and held-out-template evaluation before making broad deployment claims.
 
+\subsection{Paired Significance vs. Weighted Voting}
+
+To test whether the improvement over the strongest existing baseline is merely
+incidental, we compare SkillGuardGraph against weighted voting with an exact
+McNemar test and paired bootstrap over the same 4{,}010 benchmark samples.
+Fusion is correct on 389 samples where weighted voting is wrong, while the
+reverse never occurs; the exact McNemar $p$-value is $< 10^{-6}$.
+Paired bootstrap shows strictly positive deltas for precision, recall, and F1,
+and a strictly negative delta for FPR: $\Delta$precision = 0.0684
+[0.0592, 0.0775], $\Delta$recall = 0.0603 [0.0517, 0.0695],
+$\Delta$F1 = 0.0644 [0.0582, 0.0706], and
+$\Delta$FPR = -0.2081 [-0.2342, -0.1830].
+
 \subsection{Runtime Defense Metrics (RQ4)}
 
 Table~\ref{tab:runtime} shows runtime defense and usability metrics.
@@ -420,32 +483,32 @@ Instruction-like description & 68 & 5.7\% \\
 
 \subsection{Real-World Ecosystem Measurement}
 
-To validate the synthetic findings, we conducted a real-world measurement of the MCP server ecosystem. We queried the GitHub Search API for repositories related to MCP servers, tools, and the Model Context Protocol, collecting metadata from 431 unique repositories across Python and TypeScript implementations.
+To validate the synthetic findings, we conducted a real-world measurement of the MCP server ecosystem. We queried the GitHub Search API for repositories related to MCP servers, tools, and the Model Context Protocol, collecting metadata from 1{,}000 public repositories, of which 45 had bounded source-entrypoint coverage and 955 were retained as metadata-only samples.
 
 Table~\ref{tab:real_ecosystem} reports risk pattern prevalence in the real ecosystem.
 
 \begin{table}[t]
 \centering
-\caption{Real-world MCP ecosystem risk patterns (431 GitHub repositories).}
+\caption{Real-world MCP ecosystem risk patterns (1{,}000 GitHub repositories).}
 \label{tab:real_ecosystem}
 \begin{tabular}{lcc}
 \toprule
 Risk Pattern & Count & Rate \\
 \midrule
-Missing signature & 431 & 100.0\% \\
-Untrusted publisher & 83 & 19.3\% \\
-Open-world network access & 83 & 19.3\% \\
-Scope inflation & 24 & 5.6\% \\
-Description--code mismatch & 13 & 3.0\% \\
+Missing signature & 1000 & 100.0\% \\
+Untrusted publisher & 232 & 23.2\% \\
+Open-world network access & 19 & 1.9\% \\
+Scope inflation & 5 & 0.5\% \\
+Description--code mismatch & 0 & 0.0\% \\
 \bottomrule
 \end{tabular}
 \end{table}
 
 \paragraph{Key findings.}
-(1)~100\% of open-source MCP servers lack cryptographic signatures, confirming that signature-based trust is not yet viable in the current ecosystem.
-(2)~19.3\% of repositories exhibit open-world network access patterns, significantly higher than the synthetic estimate (5.5\%), suggesting that runtime-level risks are underestimated by metadata-only analysis.
-(3)~Scope inflation (5.6\%) and description--code mismatch (3.0\%) are less prevalent in real repositories than in the synthetic corpus (20.3\% and 22.8\%), indicating that the synthetic benchmark may overestimate metadata-level risks.
-(4)~The divergence between synthetic and real-world patterns validates our multi-layer approach: metadata-only analysis is insufficient, and runtime provenance is critical for catching the 19.3\% of repos with open-world network behavior that metadata alone cannot flag.
+(1)~100\% of measured public repositories lack cryptographic signatures, confirming that governance provenance is still weak in the current open MCP ecosystem.
+(2)~Only 2 of 1{,}000 repositories trigger HIGH passive findings, and manual triage classifies both as likely false positives or metadata inconsistencies rather than confirmed vulnerabilities.
+(3)~23.2\% of repositories come from untrusted publishers, but only 45/1{,}000 have bounded source-entrypoint coverage, so most real-corpus findings should be interpreted as catalog-level governance observations rather than code-complete security judgments.
+(4)~Compared with the synthetic stress corpus, the public GitHub corpus exhibits much lower prevalence of scope inflation and open-world access. This divergence is expected and reinforces that the synthetic benchmark is for stress-testing, not for prevalence estimation.
 
 % ============================================================
 \section{Related Work}
@@ -538,7 +601,7 @@ All attack cases use synthetic data, fake credentials, sinkhole domains (\texttt
 
 Malicious skills are not merely bad tools. They are compositional attack surfaces spanning metadata, implementation, permissions, runtime outputs, approvals, persistence, and updates. SkillGuardGraph provides a framework for detecting and containing these attacks by fusing evidence across layers and enforcing security constraints over call sequences.
 
-Our evaluation on a benchmark of 4{,}010 samples across seven attack classes demonstrates that graph-based fusion reaches 100.0\% precision and recall with 0.0\% false positive rate in the current synthetic run, while naive union reaches the same recall only by flagging every benign sample. Ablation experiments confirm that runtime evidence is the single most critical component, with its removal reducing F1 by 63.9 percentage points. Passive measurement of 431 public MCP-related repositories shows missing signatures are universal in that corpus and open-world network access appears in 19.3\%, motivating source-aware runtime governance beyond metadata screening.
+Our evaluation on a benchmark of 4{,}010 samples across seven attack classes demonstrates that graph-based fusion reaches 100.0\% precision and recall with 0.0\% false positive rate in the current synthetic run, while naive union reaches the same recall only by flagging every benign sample. Ablation experiments confirm that runtime evidence is the single most critical component, with its removal reducing F1 by 63.9 percentage points. Passive measurement of 1{,}000 public MCP-related repositories shows missing signatures are universal in that corpus and only 2 HIGH-severity passive findings remain after calibration; both were triaged as unconfirmed, so the paper treats them as suspicious governance mismatches rather than confirmed real-world vulnerabilities.
 
 The key contribution is not a larger detector stack, but a principled way to reason about cross-layer trust gaps in agent ecosystems through typed evidence, constraint-based evaluation, and explainable policy decisions.
 

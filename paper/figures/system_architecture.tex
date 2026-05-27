@@ -1,0 +1,37 @@
+\begin{tikzpicture}[
+  node distance=8mm and 8mm,
+  box/.style={draw, rounded corners, align=center, minimum width=28mm, minimum height=8mm, fill=blue!5},
+  decision/.style={draw, diamond, aspect=1.8, align=center, fill=orange!8},
+  arrow/.style={-Latex, thick}
+]
+\node[box] (registry) {Skill Registry\\Connector Catalog};
+\node[box, right=of registry] (meta) {Metadata\\Analyzer};
+\node[box, below=of meta] (impl) {Implementation\\Analyzer};
+\node[box, below=of impl] (sandbox) {Simulated\\Sandbox Prober};
+\node[box, below=of registry] (runtime) {Agent Runtime};
+\node[box, right=of runtime] (prov) {Runtime Provenance\\Monitor};
+\node[box, right=28mm of impl, minimum width=32mm] (graph) {Typed Evidence Graph};
+\node[box, above=of graph] (govern) {Version / Approval\\/ Scope Records};
+\node[box, right=of graph] (policy) {Constraint\\Evaluator};
+\node[decision, right=of policy, minimum width=20mm] (decision) {Policy\\Decision};
+\node[box, above right=of decision, minimum width=23mm] (allow) {Allow};
+\node[box, right=of decision, minimum width=23mm] (degrade) {Degrade};
+\node[box, below right=of decision, minimum width=23mm] (hitl) {Execution-grounded\\Approval};
+\node[box, below=of degrade, minimum width=23mm] (deny) {Block /\\Rollback};
+
+\draw[arrow] (registry) -- (meta);
+\draw[arrow] (registry) -- (impl);
+\draw[arrow] (registry) |- (sandbox);
+\draw[arrow] (runtime) -- (prov);
+\draw[arrow] (meta) -- (graph);
+\draw[arrow] (impl) -- (graph);
+\draw[arrow] (sandbox) -- (graph);
+\draw[arrow] (prov) -- (graph);
+\draw[arrow] (govern) -- (graph);
+\draw[arrow] (graph) -- (policy);
+\draw[arrow] (policy) -- (decision);
+\draw[arrow] (decision) -- (allow);
+\draw[arrow] (decision) -- (degrade);
+\draw[arrow] (decision) -- (hitl);
+\draw[arrow] (decision) -- (deny);
+\end{tikzpicture}

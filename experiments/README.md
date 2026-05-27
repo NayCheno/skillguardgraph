@@ -85,6 +85,7 @@ experiments/
 │   ├── run_failure_analysis.py # Analyze FP/FN and evidence path attribution
 │   ├── run_latency.py       # Measure pipeline latency
 │   ├── run_bootstrap_ci.py  # Bootstrap confidence intervals
+│   ├── run_significance_tests.py # Paired significance vs weighted voting
 │   ├── run_demo.py          # Quick demo of scanning + evaluation
 │   └── run_ablation_stub.py # Minimal ablation for smoke tests
 ├── src/
@@ -105,12 +106,13 @@ experiments/
 | `make test` | Unit tests (verbose) | ~2 min |
 | `make benchmark` | Build benchmark (4010 samples) | ~5 min |
 | `make validate` | Validate benchmark labels | ~2 min |
-| `make eval-main` | Detection + ablation + runtime eval | ~15 min |
-| `make tables` | Generate tables from results | ~1 min |
+| `make eval-main` | Detection + ablation + runtime eval + bootstrap | ~15 min |
+| `make tables` | Generate tables + failure analysis + significance | ~1 min |
 | `make ecosystem` | Crawl synthetic ecosystem corpus | ~10 min |
-| `make triage` | Triage ecosystem findings | ~5 min |
+| `make real-ecosystem` | Crawl passive real public GitHub MCP corpus | network-bound |
+| `make triage` | Triage synthetic ecosystem findings | ~5 min |
 | `make reproduce` | benchmark + validate + eval-main + tables | ~30 min |
-| `make eval-all` | reproduce + ecosystem + triage | ~2+ hours |
+| `make eval-all` | reproduce + ecosystem + triage + real-ecosystem | network-bound |
 | `make scan` | Scan a sample manifest | ~5 sec |
 | `make trace` | Evaluate a sample trace | ~5 sec |
 | `make clean` | Remove all generated results and data | instant |
@@ -124,8 +126,9 @@ After `make reproduce`, the following files are generated:
 ```
 results/main/detector_eval.json   # Detection metrics, AUROC/AUPRC, threshold sweep
 results/main/ablation.json        # Ablation results for 6 configurations
-results/main/runtime_redteam.json # Runtime defense + usability metrics
+results/main/runtime_redteam.json  # Runtime defense + usability metrics
 results/main/failure_analysis.json # FP/FN and evidence path attribution
+results/main/significance_tests.json # McNemar + paired-bootstrap baseline comparison
 results/main/tables.txt           # Formatted plain-text tables
 results/main/tables.tex           # LaTeX tables for paper inclusion
 ```
@@ -133,8 +136,12 @@ results/main/tables.tex           # LaTeX tables for paper inclusion
 After `make eval-all` (additional files):
 
 ```
-results/ecosystem/ecosystem_triage.json  # Full ecosystem triage (1200 samples)
-results/ecosystem/risk_patterns.json     # Aggregated risk pattern statistics
+results/ecosystem/ecosystem_triage.json      # Full synthetic ecosystem triage (1200 samples)
+results/ecosystem/risk_patterns.json         # Synthetic aggregated risk pattern statistics
+results/ecosystem/real_ecosystem_samples.jsonl   # Real public repository sample records
+results/ecosystem/real_ecosystem_results.json    # Real-corpus aggregated metrics
+results/ecosystem/real_ecosystem_data_card.json  # Source/date/version/license/dedup metadata
+results/ecosystem/real_high_risk_triage.json     # Manual triage for HIGH real findings
 ```
 
 Key result numbers:
@@ -157,8 +164,11 @@ Key result numbers:
 | Task success rate | 1.000 |
 | False block rate | 0.000 |
 | Latency p50 / p95 | 0.3ms / 0.4ms |
-See `../artifact/EXPECTED_OUTPUTS.md` for full output documentation.
+| Real public corpus | 1,000 repositories |
+| Real corpus high severity | 2 |
+| Real corpus confirmed vulnerabilities | 0 |
 
+See `../artifact/EXPECTED_OUTPUTS.md` for full output documentation.
 ---
 
 ## Individual Commands

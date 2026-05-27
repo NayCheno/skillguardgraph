@@ -46,7 +46,7 @@
 - [x] 有 latency 测量（total pipeline p50 = 0.3ms，p95 = 0.4ms）。
 - [x] 有 per-attack-class recall 报告。
 - [x] 论文有相关工作对比表。
-- [ ] 需要补齐真实生态测量运行结果（已有真实 corpus 入口脚本；当前报告仍主要是 synthetic measurement）。
+- [x] 需要补齐真实生态测量运行结果（`experiments/results/ecosystem/real_ecosystem_results.json`、`real_ecosystem_data_card.json`、`real_high_risk_triage.json`）。
 - [x] 需要补齐 failure case analysis（`experiments/scripts/run_failure_analysis.py`，`experiments/results/main/failure_analysis.json`）。
 - [x] 需要补齐 AUROC/AUPRC 指标（`experiments/results/main/detector_eval.json` 的 `score_metrics`）。
 

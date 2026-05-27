@@ -19,7 +19,7 @@ Use this as the final gate before marking the active goal complete.
 - [x] Benchmark covers seven compositional attack classes.
 - [x] Evidence graph and policy engine support C1-C7.
 - [x] Fusion returns risk score, decision, violated constraints, and evidence path.
-- [ ] Graph schema consistency validation is explicitly tested.
+- [x] Graph schema consistency validation is explicitly tested.
 
 ## Evaluation
 
@@ -30,7 +30,7 @@ Use this as the final gate before marking the active goal complete.
 - [x] Runtime red-team metrics are generated.
 - [x] Latency and bootstrap CI results are available.
 - [x] Failure-case markdown is current with latest detector outputs.
-- [ ] Fusion vs calibrated/learned baseline significance is documented.
+- [x] Fusion vs calibrated/learned baseline significance is documented.
 
 ## Ecosystem and Ethics
 
@@ -38,8 +38,8 @@ Use this as the final gate before marking the active goal complete.
 - [x] Real corpus crawler entry point exists.
 - [x] Responsible disclosure template exists.
 - [x] Safety and ethics constraints are documented.
-- [ ] Real corpus measurement has been run and data-carded.
-- [ ] Real high-risk findings, if any, have manual triage and disclosure log entries.
+- [x] Real corpus measurement has been run and data-carded.
+- [x] Real high-risk findings, if any, have manual triage and disclosure log entries.
 
 ## Paper
 

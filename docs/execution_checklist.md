@@ -16,7 +16,7 @@ This checklist is extracted from `README.md`, `docs/roadmap.md`, `docs/plan.md`,
 - [x] Ensure high-risk fusion decisions return evidence paths.
 - [x] Normalize runtime sink traces consistently (`sink_type`, `external`, `is_external`) so external dataflow evidence is not dropped.
 - [x] Treat benign local persistence as weaker than untrusted persistence; C6 remains the strong persistence signal.
-- [ ] Add schema-level graph consistency validation for node/edge references and evidence path serialization.
+- [x] Add schema-level graph consistency validation for node/edge references and evidence path serialization.
 
 ## Benchmark and Evaluation
 
@@ -28,39 +28,39 @@ This checklist is extracted from `README.md`, `docs/roadmap.md`, `docs/plan.md`,
 - [x] Regenerate paper tables from result JSON.
 - [x] Run failure analysis and evidence path attribution.
 - [x] Update failure-case narrative after detector calibration so markdown does not describe stale failures.
-- [ ] Add paired statistical comparison for fusion vs calibrated voting/learned baselines beyond current bootstrap summaries.
+- [x] Add paired statistical comparison for fusion vs calibrated voting/learned baselines beyond current bootstrap summaries.
 
 ## Runtime, Latency, and Usability
 
 - [x] Run synthetic runtime red-team evaluation.
 - [x] Report ASR, UTCR, EDR, PS, SC, task success, false block rate, and approval burden.
 - [x] Report latency p50/p95/p99 for core pipeline components.
-- [ ] Deepen sandbox/runtime realism only within safety constraints: fake credentials, sinkhole DNS, no real egress.
+- [x] Deepen sandbox/runtime realism only within safety constraints: fake credentials, sinkhole DNS, no real egress.
 
 ## Ecosystem Measurement and Disclosure
 
 - [x] Provide synthetic ecosystem measurement report and triage outputs.
 - [x] Provide responsible disclosure template and artifact ethics guidance.
 - [x] Include `experiments/scripts/crawl_real_ecosystem.py` as the real corpus collection entry point.
-- [ ] Run a real public corpus measurement with recorded source/date/version/license/dedup metadata.
-- [ ] Manually triage high-risk real findings.
-- [ ] Keep suspicious findings separate from confirmed vulnerabilities.
-- [ ] Use disclosure log entries before publishing real vulnerable package identities.
+- [x] Run a real public corpus measurement with recorded source/date/version/license/dedup metadata.
+- [x] Manually triage high-risk real findings.
+- [x] Keep suspicious findings separate from confirmed vulnerabilities.
+- [x] Use disclosure log entries before publishing real vulnerable package identities.
 
 ## Paper
 
-- [ ] Ensure `paper/main.tex` has complete abstract, introduction, threat model, design, formal model, implementation, evaluation, related work, limitations, ethics, and conclusion sections.
-- [ ] Ensure all paper numbers match `experiments/results/` after regeneration.
-- [ ] Update paper tables to include AUROC/AUPRC and threshold-sweep takeaways.
-- [ ] Align paper claims with the safe synthetic/prototype boundary.
-- [ ] Ensure figures referenced in LaTeX exist and render from source diagrams or checked-in PDFs.
-- [ ] Ensure bibliography entries cover MCPTox, MCPShield, TRUSTDESC, VIPER-MCP, MCP-BiFlow, tool poisoning, prompt injection, and supply-chain security.
+- [x] Ensure `paper/main.tex` has complete abstract, introduction, threat model, design, formal model, implementation, evaluation, related work, limitations, ethics, and conclusion sections.
+- [x] Ensure all paper numbers match `experiments/results/` after regeneration.
+- [x] Update paper tables to include AUROC/AUPRC and threshold-sweep takeaways.
+- [x] Align paper claims with the safe synthetic/prototype boundary.
+- [x] Ensure figures referenced in LaTeX exist and render from source diagrams or checked-in PDFs.
+- [x] Ensure bibliography entries cover MCPTox, MCPShield, TRUSTDESC, VIPER-MCP, MCP-BiFlow, tool poisoning, prompt injection, and supply-chain security.
 
 ## Artifact and Release Polish
 
 - [x] Provide `Dockerfile`, `environment.yml`, `experiments/Makefile`, `artifact/README.md`, `artifact/EXPECTED_OUTPUTS.md`, and `artifact/SECURITY_ETHICS.md`.
 - [x] Provide CI workflow for tests and reproduction pipeline.
 - [x] Refresh artifact expected outputs after final result regeneration.
-- [ ] Run smoke, tests, main evaluation, ablation, runtime red-team, latency, bootstrap, failure analysis, tables, and available Docker/Conda checks before final delivery.
-- [ ] Confirm no real secrets, credentials, or operational payloads are included.
+- [x] Run smoke, tests, main evaluation, ablation, runtime red-team, latency, bootstrap, failure analysis, tables, and available Docker/Conda checks before final delivery.
+- [x] Confirm no real secrets, credentials, or operational payloads are included.
 - [ ] Confirm `git status --short` is clean and list commits.

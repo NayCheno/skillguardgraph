@@ -13,7 +13,7 @@ needed to reproduce every result reported in the paper.
 | Component | Path | Description |
 |---|---|---|
 | Core library | `experiments/src/skillguardgraph/` | Evidence graph, analyzers, policy engine |
-| Experiment scripts | `experiments/scripts/` | 14 scripts for benchmark, evaluation, tables, ecosystem collection, and analysis |
+| Experiment scripts | `experiments/scripts/` | 15 scripts for benchmark, evaluation, significance, ecosystem collection, and analysis |
 | Unit tests | `experiments/tests/` | 73 tests for analyzers, graph, and policy engine |
 | Configuration | `experiments/configs/` | Policy rules and sandbox settings |
 | Example inputs | `experiments/examples/` | Sample manifests and runtime traces |
@@ -46,7 +46,7 @@ needed to reproduce every result reported in the paper.
 - **Docker** — a `Dockerfile` is provided for containerized smoke-test reproduction.
 - **Conda** — an `environment.yml` is provided for environment setup.
 
-No network access required.
+Network access is not required for smoke tests or synthetic reproduction. The real public ecosystem measurement step (`make real-ecosystem` or `make eval-all`) requires outbound access to GitHub's public APIs and raw content endpoints.
 
 ---
 
@@ -118,7 +118,7 @@ What it does:
 
 ### Mode 3: Full Reproduction (~2+ hours)
 
-Reproduces all paper results including ecosystem measurement.
+Reproduces all paper results including ecosystem measurement and real-corpus statistics.
 
 ```bash
 make eval-all
@@ -128,6 +128,7 @@ What it does:
 1. Everything in Mode 2.
 2. `make ecosystem` — Builds 1200-sample synthetic ecosystem corpus from 5 sources.
 3. `make triage` — Triages ecosystem findings, identifies risk patterns.
+4. `make real-ecosystem` — Collects a 1,000-repository passive GitHub MCP corpus, writes a data card, and records real-finding triage inputs.
 
 ---
 
@@ -141,6 +142,7 @@ What it does:
 | `ablation.json` | JSON, ~7 KB | Per-class recall and metrics for 6 ablation configs |
 | `runtime_redteam.json` | JSON, ~2 KB | ASR, usability, and per-class runtime defense metrics |
 | `failure_analysis.json` | JSON, ~1 KB | False-positive/false-negative counts and evidence path attribution |
+| `significance_tests.json` | JSON, ~1 KB | McNemar test and paired-bootstrap comparison for fusion vs weighted voting |
 | `tables.txt` | Text, ~4 KB | 5 formatted plain-text tables |
 | `tables.tex` | LaTeX, ~4 KB | 5 LaTeX tables with labels for paper inclusion |
 
@@ -148,8 +150,12 @@ What it does:
 
 | File | Format | Description |
 |---|---|---|
-| `ecosystem_triage.json` | JSON, ~1.7 MB | Full triage output for 1200 samples |
-| `risk_patterns.json` | JSON, ~1.5 KB | Aggregated risk pattern rates and severity |
+| `ecosystem_triage.json` | JSON, ~1.7 MB | Full synthetic triage output for 1200 samples |
+| `risk_patterns.json` | JSON, ~1.5 KB | Synthetic aggregated risk pattern rates and severity |
+| `real_ecosystem_samples.jsonl` | JSONL, variable | Passive real public MCP-related repository sample records |
+| `real_ecosystem_results.json` | JSON, ~3 KB | Real-corpus aggregated counts, severity distribution, and top passive findings |
+| `real_ecosystem_data_card.json` | JSON, ~2 KB | Source/date/version/license/dedup collection metadata |
+| `real_high_risk_triage.json` | JSON, ~3 KB | Manual triage notes for all HIGH-severity real findings |
 
 ### Key numbers to verify
 
@@ -166,7 +172,7 @@ What it does:
 | Runtime ASR | 0.000 |
 | Task success rate | 1.000 |
 | False block rate | 0.000 |
-| Ecosystem corpus size | 1200 synthetic samples |
+| Ecosystem corpus size | 1200 synthetic + 1000 real public repositories |
 | Unit tests | 73 (all pass) |
 
 See `EXPECTED_OUTPUTS.md` for complete output documentation with example

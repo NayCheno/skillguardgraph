@@ -1,0 +1,41 @@
+\begin{tikzpicture}[
+  node distance=8mm and 8mm,
+  box/.style={draw, rounded corners, align=center, minimum width=23mm, minimum height=8mm, fill=red!5},
+  guard/.style={draw, rounded corners, align=center, minimum width=28mm, minimum height=8mm, fill=green!8},
+  arrow/.style={-Latex, thick},
+  mitig/.style={Latex-, dashed, thick}
+]
+\node[box] (attacker) {Attacker};
+\node[box, right=of attacker] (meta) {Malicious\\Metadata};
+\node[box, below=of meta] (content) {Untrusted Web /\\Mail / Document};
+\node[box, below=of content] (update) {Registry or\\Update Drift};
+\node[box, below=of update] (persist) {Project Config /\\Hooks / Memory};
+
+\node[box, right=of meta] (reg) {Registration};
+\node[box, right=of content] (ctx) {Context\\Retrieval};
+\node[box, right=of update] (upd) {Version\\Update};
+\node[box, right=of persist] (mem) {Persistence};
+
+\node[box, right=22mm of ctx, minimum width=30mm] (planner) {Agent Planning\\and Tool Selection};
+\node[box, right=of planner, minimum width=24mm] (runtime) {Skill\\Runtime};
+\node[box, right=of runtime, minimum width=24mm] (assets) {Enterprise Data\\Local Files\\External APIs\\Future Sessions};
+\node[guard, above=18mm of planner] (guard) {SkillGuardGraph Controls};
+
+\draw[arrow] (attacker) -- (meta);
+\draw[arrow] (attacker) -- (content);
+\draw[arrow] (attacker) -- (update);
+\draw[arrow] (attacker) -- (persist);
+\draw[arrow] (meta) -- (reg);
+\draw[arrow] (content) -- (ctx);
+\draw[arrow] (update) -- (upd);
+\draw[arrow] (persist) -- (mem);
+\draw[arrow] (reg) -- (planner);
+\draw[arrow] (ctx) -- (planner);
+\draw[arrow] (upd) -- (planner);
+\draw[arrow] (mem) -- (planner);
+\draw[arrow] (planner) -- (runtime);
+\draw[arrow] (runtime) -- (assets);
+\draw[mitig] (guard) -- (reg);
+\draw[mitig] (guard) -- (planner);
+\draw[mitig] (guard) -- (runtime);
+\end{tikzpicture}

@@ -8,39 +8,15 @@ This document describes every output file produced by the experiment pipeline, i
 
 **File:** `results/main/detector_eval.json`
 **Format:** JSON
-**Size:** ~20 KB
-**Produced by:** `make eval-main` or `python scripts/run_detector_eval.py`
+**Produced by:** `python scripts/run_detector_eval.py`
 
-### Structure
+Key fields:
 
-```json
-{
-  "total_samples": 4010,
-  "methods": {
-    "<method_name>": {
-      "TP": 0,
-      "FP": 0,
-      "TN": 0,
-      "FN": 0,
-      "precision": 0.0,
-      "recall": 0.0,
-      "f1": 0.0,
-      "fpr": 0.0
-    }
-  },
-  "score_metrics": {
-    "<method_name>": {
-      "auroc": 0.0,
-      "auprc": 0.0,
-      "fpr_at_recall": {"85": 0.0, "90": 0.0, "95": 0.0},
-      "threshold_sweep": []
-    }
-  },
-  "per_attack_class_recall": {}
-}
-```
+- per-method confusion counts and precision/recall/F1/FPR;
+- `score_metrics` with AUROC, AUPRC, FPR@Recall, and threshold sweeps;
+- `per_attack_class_recall`.
 
-### Methods evaluated
+### Current method metrics
 
 | Method | Precision | Recall | F1 | FPR | AUROC | AUPRC |
 |---|---:|---:|---:|---:|---:|---:|
@@ -59,10 +35,7 @@ This document describes every output file produced by the experiment pipeline, i
 
 **File:** `results/main/ablation.json`
 **Format:** JSON
-**Size:** ~7 KB
-**Produced by:** `make eval-main` or `python scripts/run_ablation.py`
-
-### Ablation configurations
+**Produced by:** `python scripts/run_ablation.py`
 
 | Config | Precision | Recall | F1 | FPR | F1 Delta from Full |
 |---|---:|---:|---:|---:|---:|
@@ -73,17 +46,7 @@ This document describes every output file produced by the experiment pipeline, i
 | no_runtime | 1.0000 | 0.2199 | 0.3606 | 0.0000 | -0.6394 |
 | no_sequence | 1.0000 | 0.7970 | 0.8870 | 0.0000 | -0.1130 |
 
-### Per-attack-class recall (full fusion)
-
-| Class | Recall |
-|---|---:|
-| capability_laundering | 1.0000 |
-| consent_laundering | 1.0000 |
-| cross_skill_confused_deputy | 1.0000 |
-| delayed_rug_pull | 1.0000 |
-| persistence_pivot | 1.0000 |
-| scope_inflation | 1.0000 |
-| split_exfiltration | 1.0000 |
+All seven attack classes retain 1.0000 recall under full fusion in the current artifact state.
 
 ---
 
@@ -91,30 +54,22 @@ This document describes every output file produced by the experiment pipeline, i
 
 **File:** `results/main/runtime_redteam.json`
 **Format:** JSON
-**Size:** ~2 KB
-**Produced by:** `make eval-main` or `python scripts/run_runtime_redteam.py`
+**Produced by:** `python scripts/run_runtime_redteam.py`
 
-### Runtime defense metrics
-
-| Metric | Value | Description |
-|---|---:|---|
-| ASR | 0.0000 | Attack Success Rate |
-| ASR_blocked | 1.0000 | Fraction of attacks blocked |
-| UTCR | 0.1635 | Unauthorized Tool Call Rate before blocked effects |
-| UTCR_blocked_rate | 1.0000 | Block rate for tainted calls |
-| EDR | 0.4206 | Exfiltration Data Rate before blocked effects |
-| EDR_blocked_rate | 1.0000 | Block rate for exfiltration |
-| BRI | 1.5322 | Blast Radius Index before blocked effects |
-| PS_blocked_rate | 1.0000 | Persistence strategy block rate |
-| SC | 0.0000 | Stealth Coefficient |
-
-### Usability metrics
-
-| Metric | Value | Description |
-|---|---:|---|
-| Task success rate | 1.0000 | Benign tasks completed successfully |
-| False block rate | 0.0000 | Benign tasks incorrectly blocked |
-| Approval burden | 0.0000 | Unnecessary HITL prompts |
+| Metric | Value |
+|---|---:|
+| ASR | 0.0000 |
+| ASR_blocked | 1.0000 |
+| UTCR | 0.1635 |
+| UTCR_blocked_rate | 1.0000 |
+| EDR | 0.4206 |
+| EDR_blocked_rate | 1.0000 |
+| BRI | 1.5322 |
+| PS_blocked_rate | 1.0000 |
+| SC | 0.0000 |
+| Task success rate | 1.0000 |
+| False block rate | 0.0000 |
+| Approval burden | 0.0000 |
 
 ---
 
@@ -122,14 +77,11 @@ This document describes every output file produced by the experiment pipeline, i
 
 **File:** `results/main/latency.json`
 **Format:** JSON
-**Size:** ~1 KB
 **Produced by:** `python scripts/run_latency.py`
-
-### Latency results (500 samples)
 
 | Component | p50 (ms) | p95 (ms) | p99 (ms) | max (ms) |
 |---|---:|---:|---:|---:|
-| **Total pipeline** | **0.3** | **0.4** | **0.5** | **0.6** |
+| Total pipeline | 0.342 | 0.418 | 0.452 | 0.599 |
 | metadata_ms | 0.011 | 0.016 | 0.022 | 0.038 |
 | static_ms | 0.223 | 0.273 | 0.292 | 0.386 |
 | sandbox_ms | 0.058 | 0.070 | 0.077 | 0.101 |
@@ -142,10 +94,7 @@ This document describes every output file produced by the experiment pipeline, i
 
 **File:** `results/main/bootstrap_ci.json`
 **Format:** JSON
-**Size:** ~1 KB
 **Produced by:** `python scripts/run_bootstrap_ci.py`
-
-### Fusion 95% Bootstrap CIs (1,000 replicates)
 
 | Metric | Mean | 95% CI Low | 95% CI High |
 |---|---:|---:|---:|
@@ -169,37 +118,78 @@ This document describes every output file produced by the experiment pipeline, i
 
 ---
 
-## 7. Paper Tables
+## 7. Significance Tests
 
-**Files:** `results/main/tables.txt`, `results/main/tables.tex`
-**Format:** Plain text / LaTeX
-**Size:** ~4 KB each
-**Produced by:** `make tables` or `python scripts/make_tables.py`
+**File:** `results/main/significance_tests.json`
+**Format:** JSON
+**Produced by:** `python scripts/run_significance_tests.py`
+
+| Metric | Value |
+|---|---:|
+| Fusion-only correct samples | 389 |
+| Weighted-only correct samples | 0 |
+| McNemar exact p-value | < 1e-6 |
+| Paired bootstrap ΔPrecision | +0.0684 [0.0592, 0.0775] |
+| Paired bootstrap ΔRecall | +0.0603 [0.0517, 0.0695] |
+| Paired bootstrap ΔF1 | +0.0644 [0.0582, 0.0706] |
+| Paired bootstrap ΔFPR | -0.2081 [-0.2342, -0.1830] |
 
 ---
 
-## 8. Ecosystem Triage
+## 8. Paper Tables
 
-**File:** `results/ecosystem/ecosystem_triage.json`
-**Format:** JSON
-**Size:** ~1.7 MB
-**Produced by:** `make triage` (step: `triage_findings.py`)
+**Files:** `results/main/tables.txt`, `results/main/tables.tex`
+**Format:** Plain text / LaTeX
+**Produced by:** `python scripts/make_tables.py`
 
-### Key ecosystem numbers (synthetic, 1,200 samples)
+---
+
+## 9. Synthetic Ecosystem Triage
+
+**Files:** `results/ecosystem/ecosystem_triage.json`, `results/ecosystem/risk_patterns.json`
+**Produced by:** `python scripts/crawl_ecosystem.py` and `python scripts/triage_findings.py`
 
 | Metric | Value |
 |---|---:|
 | Total samples | 1,200 |
 | High severity | 95 (7.9%) |
+| Medium severity | 154 (12.8%) |
 | Scope inflation | 244 (20.3%) |
 | Description-code mismatch | 273 (22.8%) |
 | Untrusted publisher | 910 (75.8%) |
 
 ---
 
+## 10. Real Public Ecosystem Measurement
+
+**Files:**
+
+- `results/ecosystem/real_ecosystem_samples.jsonl`
+- `results/ecosystem/real_ecosystem_results.json`
+- `results/ecosystem/real_ecosystem_data_card.json`
+- `results/ecosystem/real_high_risk_triage.json`
+
+**Produced by:** `python scripts/crawl_real_ecosystem.py --target 1000 --pages-per-query 3 --source-budget 100`
+
+| Metric | Value |
+|---|---:|
+| Total repositories | 1,000 |
+| Source-available samples | 45 |
+| Manifest-only samples | 955 |
+| High severity | 2 |
+| Medium severity | 19 |
+| Missing signatures | 1,000 (100.0%) |
+| Untrusted publishers | 232 (23.2%) |
+| Open-world network access | 19 (1.9%) |
+| Scope inflation | 5 (0.5%) |
+| Confirmed vulnerabilities | 0 |
+
+---
+
 ## Notes
 
-- All random generation uses `seed=42` where generation is randomized.
-- All network destinations point to sinkhole domains.
+- All synthetic generation uses `seed=42` where randomness is involved.
+- All synthetic network destinations point to sinkhole or reserved domains.
 - No real credentials, tokens, or API keys appear in the artifact.
-- All external URLs use `*.example.invalid`, `*.sinkhole.test`, or `127.0.0.1`.
+- Smoke tests and synthetic reproduction do not require network access.
+- Real public ecosystem measurement requires outbound access to GitHub's public APIs and raw content endpoints.

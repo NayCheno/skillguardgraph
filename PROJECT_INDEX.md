@@ -27,4 +27,4 @@ This index is the stable entry point for reviewers and maintainers.
 
 ## Current Claim Boundary
 
-SkillGuardGraph is a reproducible research prototype and synthetic benchmark for studying cross-layer malicious skill behavior. It supports claims about typed evidence fusion, graph constraints, and safe trace-replay evaluation on synthetic benchmark data. Real-world deployment claims remain out of scope until real corpus measurement and disclosure-backed case studies are complete.
+SkillGuardGraph is a reproducible research prototype and synthetic benchmark for studying cross-layer malicious skill behavior. It supports claims about typed evidence fusion, graph constraints, safe trace-replay evaluation on synthetic benchmark data, and passive public-repository measurement with explicit claim boundaries. Real-world deployment claims remain out of scope until runtime-confirmed and disclosure-backed case studies are complete.
