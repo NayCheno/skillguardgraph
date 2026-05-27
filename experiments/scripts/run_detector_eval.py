@@ -169,10 +169,10 @@ def main() -> None:
             sandbox_obs = probe_skill(skill_name, manifest, source_code)
 
         fusion_report = fuse_and_evaluate(
-            manifest=manifest,
-            source_code=source_code,
-            runtime_trace=trace,
-            sandbox_observations=sandbox_obs,
+            manifest=manifest or {},
+            source_code=source_code or "",
+            trace=trace,
+            skill_name=skill_name,
         )
         pred_mal = predicted_malicious(fusion_report)
         if mal and pred_mal:

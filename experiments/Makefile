@@ -1,6 +1,11 @@
-.PHONY: demo test smoke eval-main eval-all tables validate benchmark ecosystem triage reproduce clean scan trace
+.PHONY: demo test smoke eval-main eval-all tables validate benchmark ecosystem triage reproduce clean scan trace latency
 
-PYTHONPATH_OPT = PYTHONPATH=src
+# Cross-platform PYTHONPATH setup
+ifeq ($(OS),Windows_NT)
+  PYTHONPATH_OPT = set "PYTHONPATH=src" &&
+else
+  PYTHONPATH_OPT = PYTHONPATH=src
+endif
 
 smoke:
 	$(PYTHONPATH_OPT) python scripts/run_demo.py
@@ -19,6 +24,7 @@ eval-main:
 	$(PYTHONPATH_OPT) python scripts/run_detector_eval.py
 	$(PYTHONPATH_OPT) python scripts/run_ablation.py
 	$(PYTHONPATH_OPT) python scripts/run_runtime_redteam.py
+	$(PYTHONPATH_OPT) python scripts/run_latency.py
 
 tables:
 	$(PYTHONPATH_OPT) python scripts/make_tables.py
@@ -29,12 +35,23 @@ ecosystem:
 triage:
 	$(PYTHONPATH_OPT) python scripts/triage_findings.py
 
+latency:
+	$(PYTHONPATH_OPT) python scripts/run_latency.py
+
 eval-all: benchmark validate eval-main tables ecosystem triage
 
 reproduce: benchmark validate eval-main tables
 
 clean:
+ifeq ($(OS),Windows_NT)
+	if exist results\main\*.json del /q results\main\*.json
+	if exist results\main\tables.* del /q results\main\tables.*
+	if exist results\ecosystem\*.json del /q results\ecosystem\*.json
+	if exist data\benchmark_v0 rmdir /s /q data\benchmark_v0
+	if exist data\ecosystem rmdir /s /q data\ecosystem
+else
 	rm -rf results/main/*.json results/main/tables.* results/ecosystem/*.json data/benchmark_v0 data/ecosystem
+endif
 
 demo:
 	$(PYTHONPATH_OPT) python scripts/run_demo.py

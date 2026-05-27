@@ -86,84 +86,118 @@ def fuse_with_filter(
     evidence: list[Evidence],
     exclude_constraints: set[str] | None = None,
 ) -> RiskReport:
-    """Fuse evidence with optional constraint filtering, matching fusion.py logic."""
+    """Fuse evidence with optional constraint filtering.
+
+    Uses the new hybrid fusion logic from fusion.py for the full config.
+    For ablated configs, re-evaluates constraints with exclusions applied.
+    """
+    from skillguardgraph.fusion import (
+        _CONSTRAINT_WEIGHTS,
+        _CROSS_LAYER_BONUS,
+        _PREDICATE_WEIGHTS,
+    )
+
     if not evidence:
         return RiskReport(
-            risk=Severity.LOW,
-            decision=Decision.ALLOW,
-            findings=[],
-            score=0.0,
-            evidence_path=[],
+            risk=Severity.LOW, decision=Decision.ALLOW,
+            findings=[], score=0.0, evidence_path=[],
         )
+
     graph = EvidenceGraph(evidence=evidence)
     report = policy_evaluate(graph)
 
+    # Filter constraints for ablation
     if exclude_constraints:
         report.findings = [
             f for f in report.findings
             if _constraint_id(f) not in exclude_constraints
         ]
-        report.score = aggregate_score(report.findings)
-        if report.score >= 7.0:
-            report.risk = Severity.CRITICAL
-            report.decision = Decision.DENY
-        elif report.score >= 4.0:
-            report.risk = Severity.HIGH
-            report.decision = Decision.HITL
-        elif report.score >= 1.0:
-            report.risk = Severity.MEDIUM
-            report.decision = Decision.DEGRADE
-        else:
-            report.risk = Severity.LOW
-            report.decision = Decision.ALLOW
 
-    # If policy already found HIGH/CRITICAL, collect evidence paths
-    if report.risk in (Severity.HIGH, Severity.CRITICAL):
-        seen: set[int] = set()
-        report.evidence_path = []
-        for finding in report.findings:
-            if finding.severity in (Severity.HIGH, Severity.CRITICAL):
-                for ev in finding.evidence:
-                    ev_id = id(ev)
-                    if ev_id not in seen:
-                        seen.add(ev_id)
-                        report.evidence_path.append(ev)
-        return report
+    # Constraint score (respecting exclusions)
+    constraint_score = 0.0
+    high_findings = []
+    for finding in report.findings:
+        w = _CONSTRAINT_WEIGHTS.get(finding.constraint, 2.0)
+        if finding.severity == Severity.CRITICAL:
+            constraint_score += w * 1.5
+        elif finding.severity == Severity.HIGH:
+            constraint_score += w
+        elif finding.severity == Severity.MEDIUM:
+            constraint_score += w * 0.5
+        if finding.severity in (Severity.HIGH, Severity.CRITICAL):
+            high_findings.append(finding)
 
-    # Multi-layer agreement fallback
-    _SUSPICIOUS = {
-        "declares_readonly_with_write_scope", "scope_inflation",
-        "hidden_instruction", "has_source_label", "requires_high_risk_scope",
-        "source_identified", "sink_identified", "is_external_sink",
-        "is_credential_access", "is_pii_access", "sandbox_observed_write",
-        "sandbox_observed_network", "sandbox_observed_shell",
-        "sandbox_observed_persistence", "flows_to", "persists_to",
-        "high_privilege_tool", "external_sink",
-    }
-    suspicious_kinds: set[str] = set()
-    suspicious_evidence: list[Evidence] = []
+    # Signal score (deduplicated)
+    predicate_max: dict[str, float] = {}
+    evidence_kinds: set[str] = set()
+    seen_ps: set[tuple] = set()
+    strong_signals = []
     for ev in evidence:
-        if ev.predicate in _SUSPICIOUS:
-            suspicious_kinds.add(ev.kind)
-            suspicious_evidence.append(ev)
+        w = _PREDICATE_WEIGHTS.get(ev.predicate, 0.0)
+        if w > 0:
+            key = (ev.predicate, ev.subject)
+            if key not in seen_ps:
+                seen_ps.add(key)
+                c = w * ev.confidence
+                predicate_max[ev.predicate] = max(predicate_max.get(ev.predicate, 0.0), c)
+                evidence_kinds.add(ev.kind)
+                if w >= 2.0:
+                    strong_signals.append(ev)
+    signal_score = min(sum(predicate_max.values()), 8.0)
 
-    if len(suspicious_kinds) >= 2 and suspicious_evidence:
-        report.risk = Severity.HIGH
-        report.decision = Decision.HITL
-        report.score = max(report.score, 6.0)
-        report.evidence_path = suspicious_evidence[:20]
-        return report
+    # Cross-layer bonus
+    cross_layer_bonus = 0.0
+    if len(evidence_kinds) >= 3:
+        cross_layer_bonus = _CROSS_LAYER_BONUS
+    elif len(evidence_kinds) >= 2:
+        cross_layer_bonus = _CROSS_LAYER_BONUS * 0.5
 
-    if suspicious_evidence:
-        report.risk = Severity.MEDIUM
-        report.decision = Decision.DEGRADE
-        report.score = max(report.score, 3.0)
-        report.evidence_path = suspicious_evidence[:20]
-        return report
+    # Consistency bonus (abbreviated)
+    consistency_bonus = 0.0
+    has_untrusted = any(
+        ev.predicate == "has_source_label" and ev.object in (
+            "untrusted", "external_web", "external_email", "external_api_response",
+            "synthetic_web_page", "synthetic_email", "synthetic_chat", "external",
+        ) for ev in evidence
+    )
+    has_high_priv = any(ev.predicate == "is_high_privilege_call" for ev in evidence)
+    if has_untrusted and has_high_priv:
+        consistency_bonus += 3.0
 
-    report.evidence_path = []
-    return report
+    # Hybrid scoring
+    wv_path = signal_score + cross_layer_bonus
+    constraint_path = constraint_score + consistency_bonus
+    total_score = max(wv_path, constraint_path)
 
+    # Decision
+    if total_score >= 9.0:
+        risk, decision = Severity.CRITICAL, Decision.DENY
+    elif total_score >= 5.0:
+        risk, decision = Severity.HIGH, Decision.HITL
+    elif total_score >= 3.0:
+        risk, decision = Severity.MEDIUM, Decision.DEGRADE
+    else:
+        risk, decision = Severity.LOW, Decision.ALLOW
+
+    # Evidence path
+    evidence_path = []
+    seen_ids = set()
+    for f in high_findings:
+        for ev in f.evidence:
+            if id(ev) not in seen_ids:
+                seen_ids.add(id(ev))
+                evidence_path.append(ev)
+    for ev in strong_signals:
+        if id(ev) not in seen_ids:
+            seen_ids.add(id(ev))
+            evidence_path.append(ev)
+
+    return RiskReport(
+        risk=risk, decision=decision,
+        findings=report.findings,
+        score=round(total_score, 2),
+        evidence_path=evidence_path[:30],
+    )
 
 # ---------------------------------------------------------------------------
 # Ablation definitions

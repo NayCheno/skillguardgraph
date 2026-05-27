@@ -72,34 +72,34 @@
       "fpr": 1.0
     },
     "fusion": {
-      "TP": 2671,
-      "FP": 194,
-      "TN": 806,
-      "FN": 339,
-      "precision": 0.9323,
-      "recall": 0.8874,
-      "f1": 0.9093,
-      "fpr": 0.194
+      "TP": 2308,
+      "FP": 91,
+      "TN": 909,
+      "FN": 702,
+      "precision": 0.9621,
+      "recall": 0.7668,
+      "f1": 0.8534,
+      "fpr": 0.091
     }
   },
   "per_attack_class_recall": {
     "capability_laundering": {
-      "TP": 430,
-      "FN": 0,
+      "TP": 253,
+      "FN": 177,
       "total": 430,
-      "recall": 1.0
+      "recall": 0.5884
     },
     "consent_laundering": {
+      "TP": 256,
+      "FN": 174,
+      "total": 430,
+      "recall": 0.5953
+    },
+    "cross_skill_confused_deputy": {
       "TP": 430,
       "FN": 0,
       "total": 430,
       "recall": 1.0
-    },
-    "cross_skill_confused_deputy": {
-      "TP": 255,
-      "FN": 175,
-      "total": 430,
-      "recall": 0.593
     },
     "delayed_rug_pull": {
       "TP": 266,
@@ -120,10 +120,10 @@
       "recall": 1.0
     },
     "split_exfiltration": {
-      "TP": 430,
-      "FN": 0,
+      "TP": 243,
+      "FN": 187,
       "total": 430,
-      "recall": 1.0
+      "recall": 0.5651
     }
   }
 }

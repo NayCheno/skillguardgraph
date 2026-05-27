@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
-"""Measure per-sample latency for the SkillGuardGraph fusion pipeline.
+"""Measure per-sample inference latency of SkillGuardGraph fusion pipeline.
 
-Reports:
-- Mean, median, p95, p99 latency per sample
-- Per-layer breakdown (metadata, static, sandbox, fusion)
-- Total throughput
+Reports p50, p95, p99, max, and mean latency in milliseconds.
+Also reports per-module breakdown (metadata, static, sandbox, runtime, fusion).
+
+Usage:
+    PYTHONPATH=src python scripts/run_latency.py
 """
 from __future__ import annotations
 
@@ -20,145 +21,143 @@ OUT_PATH = ROOT / "results" / "main" / "latency.json"
 
 sys.path.insert(0, str(ROOT / "src"))
 
-from skillguardgraph.fusion import fuse_and_evaluate  # noqa: E402
+from skillguardgraph.evidence_graph import EvidenceGraph  # noqa: E402
+from skillguardgraph.fusion import fuse_from_evidence_list  # noqa: E402
 from skillguardgraph.metadata_analyzer import analyze_manifest  # noqa: E402
+from skillguardgraph.models import Evidence  # noqa: E402
+from skillguardgraph.runtime_monitor import trace_to_evidence  # noqa: E402
 from skillguardgraph.sandbox_prober import probe_skill, observations_to_evidence  # noqa: E402
 from skillguardgraph.static_analyzer import analyze_source  # noqa: E402
-from skillguardgraph.runtime_monitor import trace_to_evidence  # noqa: E402
 
 
-def load_samples(path: Path) -> list[dict]:
+def load_samples(path: Path, limit: int = 500) -> list[dict]:
+    """Load a subset of samples for latency measurement."""
     samples = []
-    with path.open("r", encoding="utf-8") as fh:
-        for line in fh:
+    with open(path, encoding="utf-8") as f:
+        for i, line in enumerate(f):
+            if i >= limit:
+                break
             line = line.strip()
             if line:
                 samples.append(json.loads(line))
     return samples
 
 
-def percentile(data: list[float], p: float) -> float:
-    """Compute the p-th percentile."""
-    if not data:
-        return 0.0
-    sorted_data = sorted(data)
-    idx = int(len(sorted_data) * p / 100)
-    idx = min(idx, len(sorted_data) - 1)
-    return sorted_data[idx]
-
-
-def main() -> None:
-    print(f"Loading samples from {DATA_PATH} ...")
-    samples = load_samples(DATA_PATH)
-    total = len(samples)
-    print(f"  {total} samples loaded.")
-
-    # Limit to 500 samples for latency measurement
-    sample_size = min(500, total)
-    import random
-    rng = random.Random(42)
-    sampled = rng.sample(samples, sample_size)
-
+def measure_latency(samples: list[dict]) -> dict:
+    """Measure per-sample and per-module latency."""
+    total_latencies: list[float] = []
     metadata_latencies: list[float] = []
     static_latencies: list[float] = []
     sandbox_latencies: list[float] = []
     runtime_latencies: list[float] = []
     fusion_latencies: list[float] = []
-    total_latencies: list[float] = []
 
-    for i, sample in enumerate(sampled):
-        if (i + 1) % 100 == 0:
-            print(f"  Processing sample {i + 1}/{sample_size} ...")
+    for sample in samples:
+        manifest = sample.get("manifest", {})
+        source_code = sample.get("source_code", "")
+        trace = sample.get("runtime_trace", {})
 
-        manifest = sample.get("manifest")
-        source_code = sample.get("source_code")
-        trace = sample.get("runtime_trace")
+        evidence: list[Evidence] = []
 
-        t_total_start = time.perf_counter()
-
-        # Metadata
-        if manifest:
-            t0 = time.perf_counter()
-            analyze_manifest(manifest)
-            metadata_latencies.append((time.perf_counter() - t0) * 1000)
-
-        # Static
-        if source_code:
-            t0 = time.perf_counter()
-            skill_name = str(manifest.get("name", "unknown")) if manifest else "unknown"
-            analyze_source(skill_name, source_code)
-            static_latencies.append((time.perf_counter() - t0) * 1000)
-
-        # Sandbox
-        if manifest:
-            t0 = time.perf_counter()
-            skill_name = str(manifest.get("name", "unknown"))
-            obs = probe_skill(skill_name, manifest, source_code)
-            observations_to_evidence(obs)
-            sandbox_latencies.append((time.perf_counter() - t0) * 1000)
-
-        # Runtime
-        if trace:
-            t0 = time.perf_counter()
-            trace_to_evidence(trace)
-            runtime_latencies.append((time.perf_counter() - t0) * 1000)
-
-        # Full fusion
+        # Metadata analyzer
         t0 = time.perf_counter()
-        sandbox_obs = None
-        if manifest:
-            skill_name = str(manifest.get("name", "unknown"))
-            sandbox_obs = probe_skill(skill_name, manifest, source_code)
-        fuse_and_evaluate(
-            manifest=manifest,
-            source_code=source_code,
-            runtime_trace=trace,
-            sandbox_observations=sandbox_obs,
-        )
+        evidence.extend(analyze_manifest(manifest))
+        metadata_latencies.append((time.perf_counter() - t0) * 1000)
+
+        # Static analyzer
+
+        sid = sample.get("case_id", "unknown")
+        t0 = time.perf_counter()
+        evidence.extend(analyze_source(sid, source_code))
+        static_latencies.append((time.perf_counter() - t0) * 1000)
+
+        # Sandbox prober
+        t0 = time.perf_counter()
+        observations = probe_skill(sid, manifest, source_code)
+        evidence.extend(observations_to_evidence(observations))
+        sandbox_latencies.append((time.perf_counter() - t0) * 1000)
+
+        # Runtime monitor
+        t0 = time.perf_counter()
+        evidence.extend(trace_to_evidence(trace))
+        runtime_latencies.append((time.perf_counter() - t0) * 1000)
+
+        # Fusion (includes graph construction + policy evaluation)
+        t0 = time.perf_counter()
+        fuse_from_evidence_list(evidence)
         fusion_latencies.append((time.perf_counter() - t0) * 1000)
 
-        total_latencies.append((time.perf_counter() - t_total_start) * 1000)
+        total_latencies.append(
+            metadata_latencies[-1]
+            + static_latencies[-1]
+            + sandbox_latencies[-1]
+            + runtime_latencies[-1]
+            + fusion_latencies[-1]
+        )
 
-    def stats(latencies: list[float]) -> dict:
-        if not latencies:
-            return {"mean": 0, "median": 0, "p95": 0, "p99": 0, "min": 0, "max": 0, "count": 0}
+    def percentile(data: list[float], p: float) -> float:
+        if not data:
+            return 0.0
+        sorted_data = sorted(data)
+        k = (len(sorted_data) - 1) * p / 100.0
+        f = int(k)
+        c = f + 1
+        if c >= len(sorted_data):
+            return sorted_data[-1]
+        return sorted_data[f] + (k - f) * (sorted_data[c] - sorted_data[f])
+
+    def summarize(data: list[float]) -> dict:
+        if not data:
+            return {"mean": 0, "p50": 0, "p95": 0, "p99": 0, "max": 0}
         return {
-            "mean": round(statistics.mean(latencies), 3),
-            "median": round(statistics.median(latencies), 3),
-            "p95": round(percentile(latencies, 95), 3),
-            "p99": round(percentile(latencies, 99), 3),
-            "min": round(min(latencies), 3),
-            "max": round(max(latencies), 3),
-            "count": len(latencies),
+            "mean": round(statistics.mean(data), 3),
+            "p50": round(percentile(data, 50), 3),
+            "p95": round(percentile(data, 95), 3),
+            "p99": round(percentile(data, 99), 3),
+            "max": round(max(data), 3),
         }
 
-    result = {
-        "sample_size": sample_size,
-        "total_samples": total,
-        "per_layer_ms": {
-            "metadata": stats(metadata_latencies),
-            "static": stats(static_latencies),
-            "sandbox": stats(sandbox_latencies),
-            "runtime": stats(runtime_latencies),
+    return {
+        "n_samples": len(samples),
+        "total_ms": summarize(total_latencies),
+        "per_module": {
+            "metadata_ms": summarize(metadata_latencies),
+            "static_ms": summarize(static_latencies),
+            "sandbox_ms": summarize(sandbox_latencies),
+            "runtime_ms": summarize(runtime_latencies),
+            "fusion_ms": summarize(fusion_latencies),
         },
-        "fusion_ms": stats(fusion_latencies),
-        "total_per_sample_ms": stats(total_latencies),
-        "throughput_samples_per_sec": round(sample_size / (sum(total_latencies) / 1000), 1) if total_latencies else 0,
     }
 
-    OUT_PATH.parent.mkdir(parents=True, exist_ok=True)
-    with OUT_PATH.open("w", encoding="utf-8") as fh:
-        json.dump(result, fh, indent=2, ensure_ascii=False)
 
-    print(f"\nResults written to {OUT_PATH}")
-    print(f"\nLatency (ms) per sample:")
-    for layer, s in result["per_layer_ms"].items():
-        print(f"  {layer:12s}: mean={s['mean']:.3f}  median={s['median']:.3f}  p95={s['p95']:.3f}")
-    fs = result["fusion_ms"]
-    print(f"  {'fusion':12s}: mean={fs['mean']:.3f}  median={fs['median']:.3f}  p95={fs['p95']:.3f}")
-    ts = result["total_per_sample_ms"]
-    print(f"  {'total':12s}: mean={ts['mean']:.3f}  median={ts['median']:.3f}  p95={ts['p95']:.3f}")
-    print(f"\nThroughput: {result['throughput_samples_per_sec']} samples/sec")
+def main() -> None:
+    if not DATA_PATH.exists():
+        print(f"ERROR: Benchmark data not found at {DATA_PATH}")
+        print("Run 'make benchmark' first.")
+        sys.exit(1)
+
+    print(f"Loading samples from {DATA_PATH} ...")
+    samples = load_samples(DATA_PATH, limit=500)
+    print(f"Loaded {len(samples)} samples for latency measurement.")
+
+    print("Measuring latency ...")
+    results = measure_latency(samples)
+
+    # Write results
+    OUT_PATH.parent.mkdir(parents=True, exist_ok=True)
+    with open(OUT_PATH, "w", encoding="utf-8") as f:
+        json.dump(results, f, indent=2)
+    print(f"Results written to {OUT_PATH}")
+
+    # Print summary
+    print(f"\n{'='*60}")
+    print("Latency Results (ms)")
+    print(f"{'='*60}")
+    print(f"Samples measured: {results['n_samples']}")
+    t = results["total_ms"]
+    print(f"Total pipeline:   p50={t['p50']:.1f}  p95={t['p95']:.1f}  p99={t['p99']:.1f}  max={t['max']:.1f}  mean={t['mean']:.1f}")
+    for name, m in results["per_module"].items():
+        print(f"  {name:16s}: p50={m['p50']:.3f}  p95={m['p95']:.3f}  p99={m['p99']:.3f}  max={m['max']:.3f}  mean={m['mean']:.3f}")
 
 
 if __name__ == "__main__":
