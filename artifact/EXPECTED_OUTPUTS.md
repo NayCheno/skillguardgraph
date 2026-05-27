@@ -207,19 +207,21 @@ All generalization acceptance booleans in the JSON are `true`. These checks are 
 - `results/ecosystem/real_ecosystem_data_card.json`
 - `results/ecosystem/real_high_risk_triage.json`
 
-**Produced by:** `python scripts/crawl_real_ecosystem.py --target 1000 --pages-per-query 3 --source-budget 100`
+**Produced by:** `python scripts/crawl_real_ecosystem.py --target 1000 --pages-per-query 3 --source-budget 100` (defaults to `github_mcp,npm_mcp`)
 
 | Metric | Value |
 |---|---:|
-| Total repositories | 1,000 |
-| Source-available samples | 45 |
-| Manifest-only samples | 955 |
-| High severity | 2 |
-| Medium severity | 19 |
-| Missing signatures | 1,000 (100.0%) |
-| Untrusted publishers | 232 (23.2%) |
-| Open-world network access | 19 (1.9%) |
-| Scope inflation | 5 (0.5%) |
+| Total artifacts | 1,000 |
+| GitHub MCP repositories | 750 |
+| npm MCP packages | 250 |
+| Source-available samples | 34 |
+| Manifest-only samples | 966 |
+| High severity | 3 |
+| Medium severity | 26 |
+| Missing signatures | 750 (75.0%) |
+| Untrusted publishers | 188 (18.8%) |
+| Open-world network access | 10 (1.0%) |
+| Scope inflation | 9 (0.9%) |
 | Confirmed vulnerabilities | 0 |
 
 ---
@@ -230,4 +232,4 @@ All generalization acceptance booleans in the JSON are `true`. These checks are 
 - All synthetic network destinations point to sinkhole or reserved domains.
 - No real credentials, tokens, or API keys appear in the artifact.
 - Smoke tests and synthetic reproduction do not require network access.
-- Real public ecosystem measurement requires outbound access to GitHub's public APIs and raw content endpoints.
+- Real public ecosystem measurement requires outbound access to GitHub's public APIs/raw content endpoints and npm registry APIs.

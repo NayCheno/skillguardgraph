@@ -246,9 +246,7 @@ edges and now includes an explicit structural consistency validator used in
 unit tests; \texttt{policy\_engine.py} evaluates C1--C7; and
 \texttt{fusion.py} combines constraint findings with calibrated signal scoring.
 The static analyzer combines regex capability extraction with a lightweight Python AST pass that resolves common import aliases and emits source--sink summaries only as policy-strength flow evidence when the source is sensitive or the sink is high privilege. This keeps legitimate local write/export patterns as capability hints rather than automatic blocking evidence.
-The real-ecosystem measurement collector remains passive: it records
-repository metadata, optional source snippets, licenses, timestamps, and
-deduplication provenance without executing third-party code.
+The real-ecosystem measurement collector remains passive: it records repository/package metadata, optional source snippets, licenses, timestamps, and deduplication provenance without executing third-party code.
 
 % ============================================================
 \section{Benchmark}
@@ -532,33 +530,33 @@ Instruction-like description & 68 & 5.7\% \\
 
 \subsection{Real-World Ecosystem Measurement}
 
-To validate the synthetic findings, we conducted a real-world measurement of the MCP server ecosystem. We queried the GitHub Search API for repositories related to MCP servers, tools, and the Model Context Protocol, collecting metadata from 1{,}000 public repositories, of which 45 had bounded source-entrypoint coverage and 955 were retained as metadata-only samples.
+To validate the synthetic findings, we conducted a real-world passive measurement across two public ecosystems: GitHub MCP repositories and npm MCP packages. The current batch contains 1{,}000 public artifacts (750 GitHub repositories and 250 npm packages), of which 34 had bounded source-entrypoint coverage and 966 were retained as metadata-only samples.
 
 Table~\ref{tab:real_ecosystem} reports risk pattern prevalence in the real ecosystem.
 
 \begin{table}[t]
 \centering
-\caption{Real-world MCP ecosystem risk patterns (1{,}000 GitHub repositories).}
+\caption{Real-world MCP ecosystem risk patterns (1{,}000 public artifacts across GitHub and npm).}
 \label{tab:real_ecosystem}
 \begin{tabular}{lcc}
 \toprule
 Risk Pattern & Count & Rate \\
 \midrule
-Missing signature & 1000 & 100.0\% \\
-Untrusted publisher & 232 & 23.2\% \\
-Open-world network access & 19 & 1.9\% \\
-Scope inflation & 5 & 0.5\% \\
+Missing signature & 750 & 75.0\% \\
+Untrusted publisher & 188 & 18.8\% \\
+Open-world network access & 10 & 1.0\% \\
+Scope inflation & 9 & 0.9\% \\
 Description--code mismatch & 0 & 0.0\% \\
 \bottomrule
 \end{tabular}
 \end{table}
 
 \paragraph{Key findings.}
-(1)~100\% of measured public repositories lack cryptographic signatures, confirming that governance provenance is still weak in the current open MCP ecosystem.
-(2)~Only 2 of 1{,}000 repositories trigger HIGH passive findings, and manual triage classifies both as likely false positives or metadata inconsistencies rather than confirmed vulnerabilities.
-(3)~23.2\% of repositories come from untrusted publishers, but only 45/1{,}000 have bounded source-entrypoint coverage, so most real-corpus findings should be interpreted as catalog-level governance observations rather than code-complete security judgments.
-(4)~Compared with the synthetic stress corpus, the public GitHub corpus exhibits much lower prevalence of scope inflation and open-world access. This divergence is expected and reinforces that the synthetic benchmark is for stress-testing, not for prevalence estimation.
-
+(1)~75.0\% of measured public artifacts lack signatures, confirming that governance provenance is still weak even after including npm package attestations and signatures.
+(2)~Only 3 of 1{,}000 artifacts trigger HIGH passive findings, and manual triage classifies all 3 as likely false positives or metadata-capability mismatches rather than confirmed vulnerabilities.
+(3)~18.8\% of artifacts come from untrusted publishers, but only 34/1{,}000 have bounded source-entrypoint coverage, so most real-corpus findings should be interpreted as catalog-level governance observations rather than code-complete security judgments.
+(4)~The npm slice lowers the missing-signature rate relative to the earlier GitHub-only snapshot, but multi-source passive coverage is still incomplete because the current batch excludes PyPI, hosted marketplaces, and private catalogs.
+(5)~Compared with the synthetic stress corpus, the public corpus exhibits much lower prevalence of scope inflation and open-world access. This divergence is expected and reinforces that the synthetic benchmark is for stress-testing, not for prevalence estimation.
 % ============================================================
 \section{Related Work}
 \label{sec:related}
@@ -651,7 +649,7 @@ All attack cases use synthetic data, fake credentials, sinkhole domains (\texttt
 
 Malicious skills are not merely bad tools. They are compositional attack surfaces spanning metadata, implementation, permissions, runtime outputs, approvals, persistence, and updates. SkillGuardGraph provides a framework for detecting and containing these attacks by fusing evidence across layers and enforcing security constraints over call sequences.
 
-Our evaluation on a benchmark of 4{,}010 samples across seven attack classes demonstrates that graph-based fusion reaches 100.0\% precision and recall with 0.0\% false positive rate in the current synthetic run, while naive union reaches the same recall only by flagging every benign sample. Held-out-template, hard-negative, mutation, and label-blinding stress checks pass in the artifact and reduce obvious leakage concerns, but they remain synthetic. Ablation experiments confirm that runtime evidence is the single most critical component, with its removal reducing F1 by 63.9 percentage points. Passive measurement of 1{,}000 public MCP-related repositories shows missing signatures are universal in that corpus and only 2 HIGH-severity passive findings remain after calibration; both were triaged as unconfirmed, so the paper treats them as suspicious governance mismatches rather than confirmed real-world vulnerabilities.
+Our evaluation on a benchmark of 4{,}010 samples across seven attack classes demonstrates that graph-based fusion reaches 100.0\% precision and recall with 0.0\% false positive rate in the current synthetic run, while naive union reaches the same recall only by flagging every benign sample. Held-out-template, hard-negative, mutation, and label-blinding stress checks pass in the artifact and reduce obvious leakage concerns, but they remain synthetic. Ablation experiments confirm that runtime evidence is the single most critical component, with its removal reducing F1 by 63.9 percentage points. Passive measurement of 1{,}000 public MCP artifacts across GitHub and npm shows that signatures remain absent for 75.0\% of the corpus and that only 3 HIGH-severity passive findings remain after calibration; all were triaged as unconfirmed, so the paper treats them as suspicious governance mismatches rather than confirmed real-world vulnerabilities.
 
 The key contribution is not a larger detector stack, but a principled way to reason about cross-layer trust gaps in agent ecosystems through typed evidence, constraint-based evaluation, and explainable policy decisions.
 

@@ -1,33 +1,46 @@
 {
-  "crawl_started_goal": "Passive real-public MCP/tool repository measurement",
-  "crawl_completed_at": "2026-05-27T19:46:05Z",
+  "crawl_started_goal": "Passive real-public MCP/tool/package measurement",
+  "crawl_completed_at": "2026-05-27T21:49:40Z",
   "target_samples": 1000,
   "actual_samples": 1000,
-  "queries": [
-    "\"model context protocol\" server",
-    "\"model context protocol\" tool",
-    "mcp server language:python",
-    "mcp server language:typescript",
-    "mcp tool server",
-    "mcp-server in:name",
-    "modelcontextprotocol server",
-    "model context protocol client tool"
+  "enabled_sources": [
+    "github_mcp",
+    "npm_mcp"
   ],
-  "pages_per_query": 3,
-  "search_per_page": 100,
+  "source_details": {
+    "github_mcp": {
+      "queries": [
+        "\"model context protocol\" mcp in:name,description,readme",
+        "mcp server language:python in:name,description,readme",
+        "mcp server language:typescript in:name,description,readme",
+        "\"@modelcontextprotocol/sdk\" in:file language:typescript"
+      ],
+      "pages_per_query": 3,
+      "search_per_page": 100
+    },
+    "npm_mcp": {
+      "terms": [
+        "modelcontextprotocol",
+        "\"mcp server\"",
+        "\"mcp tool\""
+      ],
+      "search_page_size": 100
+    }
+  },
   "source_budget": 100,
-  "dedup_rule": "Deduplicate by repository full_name; merge matched queries into query_matches.",
-  "filter_rule": "Public GitHub repositories returned by MCP-related search queries; include metadata-only samples when source entrypoints are not recognized or source budget is exhausted.",
-  "version_rule": "Record default_branch together with created_at/updated_at/pushed_at from GitHub Search API metadata.",
-  "license_rule": "Record SPDX identifier when GitHub provides it; otherwise mark unknown.",
+  "dedup_rule": "Deduplicate by source-specific artifact identifier (GitHub full_name or npm package name); retain linked_repository when a package points to GitHub.",
+  "filter_rule": "Collect public GitHub MCP repositories and npm MCP-related packages; include metadata-only samples when bounded source probing finds no recognized entrypoint.",
+  "version_rule": "Record GitHub default_branch plus timestamps; record npm latest package version and package publication/update time.",
+  "license_rule": "Record SPDX identifier when the upstream API provides one; otherwise mark unknown.",
   "availability_rule": {
-    "manifest_only": 955,
-    "source_available": 45
+    "manifest_only": 966,
+    "source_available": 34
   },
   "safety_boundary": "Passive metadata/source collection only; no third-party code execution, no destructive calls, no credential use.",
   "limitations": [
-    "GitHub Search API coverage is incomplete and query-biased.",
-    "Repository-level signals do not prove deployable vulnerabilities.",
-    "Manifest-only samples retain metadata evidence but weak implementation coverage."
+    "GitHub and npm search coverage are query-biased and incomplete.",
+    "Repository-level and package-level signals do not prove deployable vulnerabilities.",
+    "Manifest-only samples retain metadata evidence but weak implementation coverage.",
+    "npm source coverage depends on linked public repositories when present."
   ]
 }
