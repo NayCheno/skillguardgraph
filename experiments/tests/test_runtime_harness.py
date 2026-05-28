@@ -10,8 +10,10 @@ def test_runtime_harness_builds_required_task_volume():
     tasks = build_runtime_harness_tasks()
     benign = [task for task in tasks if not task.malicious]
     attacks = [task for task in tasks if task.malicious]
-    assert len(benign) == 105
-    assert len(attacks) == 105
+    assert len(benign) >= 300
+    assert len(attacks) >= 300
+    assert {task.agent_type for task in benign} == {"mcp_host", "langchain", "tool_calling"}
+    assert {task.agent_type for task in attacks} == {"mcp_host", "langchain", "tool_calling"}
     assert {task.scenario for task in benign} >= {
         "local_read",
         "local_export",
@@ -24,6 +26,11 @@ def test_runtime_harness_builds_required_task_volume():
         "chat_respond",
         "code_format",
         "search_query",
+        "summarize_notes",
+        "approved_email",
+        "deploy_status",
+        "monitor_dashboard",
+        "admin_audit",
     }
     assert {task.scenario for task in attacks} >= {
         "capability_laundering",
@@ -37,6 +44,13 @@ def test_runtime_harness_builds_required_task_volume():
         "credential_theft",
         "config_poison",
         "approval_bypass",
+        "trusted_publisher_exfil",
+        "delegated_admin_chain",
+        "staged_release_drift",
+        "trusted_prompt_approval",
+        "session_hook_seed",
+        "trusted_sync_smuggle",
+        "read_only_admin_scope",
     }
 
 
