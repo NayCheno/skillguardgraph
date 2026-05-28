@@ -1,0 +1,158 @@
+{
+  "total_samples": 5000,
+  "sources": {
+    "github_mcp": 2600,
+    "npm_mcp": 2000,
+    "pypi_mcp": 20,
+    "hf_spaces_mcp": 380
+  },
+  "code_availability": {
+    "manifest_only": 4979,
+    "source_available": 21
+  },
+  "languages": {
+    "python": 1704,
+    "go": 54,
+    "typescript": 744,
+    "c#": 12,
+    "javascript": 54,
+    "swift": 8,
+    "dart": 4,
+    "rust": 27,
+    "unknown": 1939,
+    "shell": 11,
+    "makefile": 1,
+    "kotlin": 6,
+    "html": 11,
+    "jupyter notebook": 14,
+    "jetbrains mps": 1,
+    "java": 10,
+    "c++": 5,
+    "less": 1,
+    "php": 4,
+    "markdown": 1,
+    "astro": 1,
+    "lua": 4,
+    "ruby": 3,
+    "elixir": 1,
+    "svg": 1,
+    "zig": 1,
+    "emacs lisp": 2,
+    "c": 1,
+    "nix": 1,
+    "ocaml": 1,
+    "bikeshed": 1,
+    "gradio": 290,
+    "static": 5,
+    "docker": 70,
+    "streamlit": 7
+  },
+  "licenses": {
+    "MIT": 2544,
+    "AGPL-3.0": 91,
+    "unknown": 1009,
+    "Apache-2.0": 761,
+    "GPL-3.0": 55,
+    "NOASSERTION": 234,
+    "BSD-3-Clause": 18,
+    "CC-BY-SA-4.0": 4,
+    "MPL-2.0": 13,
+    "CC-BY-4.0": 3,
+    "CC0-1.0": 19,
+    "GPL-2.0": 3,
+    "MIT-0": 10,
+    "BSD-2-Clause": 5,
+    "ISC": 149,
+    "Unlicense": 3,
+    "0BSD": 1,
+    "AFL-3.0": 1,
+    "UPL-1.0": 1,
+    "LGPL-2.1": 1,
+    "LGPL-3.0": 1,
+    "UNLICENSED": 12,
+    "SEE LICENSE IN LICENSE": 12,
+    "Apache-2": 1,
+    "MIT OR Apache-2.0": 3,
+    "Sustainable Use License (fair-code)": 1,
+    "AGPL-3.0-only": 5,
+    "BUSL-1.1": 3,
+    "AGPLv3": 1,
+    "GPL-2.0-only": 1,
+    "DIB": 1,
+    "PolyForm-Shield-1.0.0": 1,
+    "SEE LICENSE IN LICENSE.md": 3,
+    "SEE LICENSE IN ../LICENSE": 2,
+    "Proprietary to Kira4I Artificial Intelligence": 1,
+    "FSL-1.1-MIT": 3,
+    "MIT License": 9,
+    "Apache-2.0 OR MIT": 2,
+    "Proprietary": 1,
+    "EPL-2.0 OR GPL-2.0-only WITH Classpath-exception-2.0": 2,
+    "AGPL-3.0-or-later": 1,
+    "BSL-1.1": 1,
+    "GPLV3": 1,
+    "CC BY-NC": 1,
+    "GPL-3.0-or-later": 2,
+    "GPL-3.0-only": 1,
+    "SEE LICENSE IN README.md": 1,
+    "KJ-1.0": 1,
+    "Apache 2.0": 1
+  },
+  "risk_patterns": {
+    "description_mismatch": {
+      "count": 1,
+      "rate": 0.0002
+    },
+    "instruction_like": {
+      "count": 3,
+      "rate": 0.0006
+    },
+    "missing_signature": {
+      "count": 3000,
+      "rate": 0.6
+    },
+    "open_world_network": {
+      "count": 18,
+      "rate": 0.0036
+    },
+    "scope_inflation": {
+      "count": 24,
+      "rate": 0.0048
+    },
+    "untrusted_publisher": {
+      "count": 2592,
+      "rate": 0.5184
+    }
+  },
+  "severity": {
+    "low": 4941,
+    "medium": 59
+  },
+  "per_source_risk": {
+    "github_mcp": {
+      "count": 2600,
+      "mean_score": 0.03,
+      "max_score": 6.0,
+      "high_risk_count": 0
+    },
+    "npm_mcp": {
+      "count": 2000,
+      "mean_score": 0.132,
+      "max_score": 6.0,
+      "high_risk_count": 0
+    },
+    "pypi_mcp": {
+      "count": 20,
+      "mean_score": 0.6,
+      "max_score": 6.0,
+      "high_risk_count": 0
+    },
+    "hf_spaces_mcp": {
+      "count": 380,
+      "mean_score": 0.0,
+      "max_score": 0.0,
+      "high_risk_count": 0
+    }
+  },
+  "top_high_risk": []
+}

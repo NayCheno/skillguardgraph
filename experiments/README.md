@@ -120,6 +120,7 @@ experiments/
 | `make triage` | Triage synthetic ecosystem findings | ~5 min |
 | `make real-ecosystem-large` | Crawl supplementary 2,000-artifact public corpus (GitHub + npm + Hugging Face, resume-aware) | network-bound |
 | `make real-ecosystem-xl` | Crawl supplementary 3,000-artifact public corpus (4-source, resume-aware) | network-bound |
+| `make real-ecosystem-5k` | Crawl supplementary 5,000-artifact public corpus (quota-tuned, resume-aware) | network-bound |
 | `make reproduce` | benchmark + validate + eval-main + tables | ~30 min |
 | `make eval-all` | reproduce + ecosystem + triage + real-ecosystem | network-bound |
 | `make scan` | Scan a sample manifest | ~5 sec |
@@ -149,7 +150,6 @@ results/main/tables.tex           # LaTeX tables for paper inclusion
 
 After `make eval-all` (additional files):
 
-```
 results/ecosystem/ecosystem_triage.json      # Full synthetic ecosystem triage (1200 samples)
 results/ecosystem/risk_patterns.json         # Synthetic aggregated risk pattern statistics
 results/ecosystem/real_ecosystem_samples.jsonl   # Real public artifact sample records
@@ -160,7 +160,8 @@ results/ecosystem/real_ecosystem_large_results.json # Supplementary scaled real-
 results/ecosystem/real_ecosystem_large_data_card.json # Supplementary scaled data card
 results/ecosystem/real_ecosystem_xl_results.json # Supplementary 3,000-artifact real-corpus metrics
 results/ecosystem/real_ecosystem_xl_data_card.json # Supplementary 3,000-artifact data card
-```
+results/ecosystem/real_ecosystem_5k_results.json # Supplementary 5,000-artifact real-corpus metrics
+results/ecosystem/real_ecosystem_5k_data_card.json # Supplementary 5,000-artifact data card
 
 Key result numbers:
 
@@ -188,7 +189,7 @@ Key result numbers:
 | Real corpus confirmed vulnerabilities | 0 |
 | Supplementary scaled corpus | 2,000 artifacts (1200 GitHub + 500 npm + 300 Hugging Face Spaces) |
 | Supplementary XL corpus | 3,000 artifacts (1999 GitHub + 600 npm + 20 PyPI + 381 Hugging Face Spaces) |
-
+| Supplementary 5k corpus | 5,000 artifacts (2600 GitHub + 2000 npm + 20 PyPI + 380 Hugging Face Spaces) |
 See `../artifact/EXPECTED_OUTPUTS.md` for full output documentation.
 ---
 
@@ -215,15 +216,13 @@ PYTHONPATH=src python scripts/run_runtime_redteam.py
 # Supplementary larger public corpus
 PYTHONPATH=src python scripts/crawl_real_ecosystem.py --target 2000 --pages-per-query 3 --source-budget 25 --sources github_mcp,npm_mcp,hf_spaces_mcp --output-prefix real_ecosystem_large --resume
 
-If available, export `GITHUB_TOKEN` and `HF_TOKEN` before large crawls. Broad PyPI discovery uses the public simple index and JSON endpoints and does not currently use a private token.
-
 # Supplementary XL public corpus
-PYTHONPATH=src python scripts/crawl_real_ecosystem.py --target 3000 --pages-per-query 3 --source-budget 25 --output-prefix real_ecosystem_xl --resume
+PYTHONPATH=src python scripts/crawl_real_ecosystem.py --target 3000 --pages-per-query 3 --output-prefix real_ecosystem_xl --resume
+
+# Supplementary 5k public corpus
+PYTHONPATH=src python scripts/crawl_real_ecosystem.py --target 5000 --pages-per-query 6 --source-budget 25 --sources github_mcp,npm_mcp,pypi_mcp,hf_spaces_mcp --source-quotas github_mcp=2600,npm_mcp=2000,pypi_mcp=20,hf_spaces_mcp=380 --output-prefix real_ecosystem_5k --resume
 
 If available, export `GITHUB_TOKEN` and `HF_TOKEN` before large crawls. Broad PyPI discovery uses the public simple index and JSON endpoints and does not currently use a private token.
-
-# Local instrumented runtime harness
-PYTHONPATH=src python scripts/run_runtime_harness.py
 
 # Generalization stress checks
 PYTHONPATH=src python scripts/run_generalization_eval.py

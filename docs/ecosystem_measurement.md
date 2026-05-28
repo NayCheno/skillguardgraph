@@ -100,6 +100,15 @@ A larger four-source batch is also checked in as:
 
 This run uses `--target 3000 --pages-per-query 3 --source-budget 25 --output-prefix real_ecosystem_xl --resume` and reaches 3,000 artifacts (1,999 GitHub, 600 npm, 20 curated PyPI, 381 Hugging Face). It produces 0 HIGH and 14 MEDIUM findings, but only 2 source-available samples. We treat it as a scale-out catalog measurement that improves ecosystem breadth, not as stronger code-level validation.
 
+
+### 2.8 Supplementary 5k batch
+
+A 5,000-artifact quota-tuned batch is also checked in as:
+
+- `experiments/results/ecosystem/real_ecosystem_5k_results.json`
+- `experiments/results/ecosystem/real_ecosystem_5k_data_card.json`
+
+This run uses `--target 5000 --pages-per-query 6 --source-budget 25 --sources github_mcp,npm_mcp,pypi_mcp,hf_spaces_mcp --source-quotas github_mcp=2600,npm_mcp=2000,pypi_mcp=20,hf_spaces_mcp=380 --output-prefix real_ecosystem_5k --resume` and reaches 5,000 artifacts. It produces 0 HIGH and 59 MEDIUM findings, but only 21 source-available samples. We treat it as a scale-out catalog measurement that reaches the roadmap's minimum real-corpus scale target without upgrading any exploit or deployment claims.
 ## 3. Manual triage and disclosure status
 
 All HIGH-severity real findings were manually reviewed in `experiments/results/ecosystem/real_high_risk_triage.json`.

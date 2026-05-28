@@ -299,6 +299,32 @@ All generalization acceptance booleans in the JSON are `true`. These checks are 
 
 ---
 
+## 16. Supplementary 5k Public Ecosystem Measurement
+
+**Files:**
+
+- `results/ecosystem/real_ecosystem_5k_samples.jsonl`
+- `results/ecosystem/real_ecosystem_5k_results.json`
+- `results/ecosystem/real_ecosystem_5k_data_card.json`
+
+**Produced by:** `python scripts/crawl_real_ecosystem.py --target 5000 --pages-per-query 6 --source-budget 25 --sources github_mcp,npm_mcp,pypi_mcp,hf_spaces_mcp --source-quotas github_mcp=2600,npm_mcp=2000,pypi_mcp=20,hf_spaces_mcp=380 --output-prefix real_ecosystem_5k --resume`
+
+| Metric | Value |
+|---|---:|
+| Total artifacts | 5,000 |
+| GitHub MCP repositories | 2,600 |
+| npm MCP packages | 2,000 |
+| PyPI MCP packages | 20 |
+| Hugging Face Spaces | 380 |
+| Source-available samples | 21 |
+| Manifest-only samples | 4,979 |
+| High severity | 0 |
+| Medium severity | 59 |
+| Missing signatures | 3,000 (60.0%) |
+| Untrusted publishers | 2,592 (51.84%) |
+
+---
+
 ## Notes
 
 - All synthetic generation uses `seed=42` where randomness is involved.
