@@ -1,6 +1,8 @@
-# SkillGuardGraph
+SkillGuardGraph - Cross-Layer Evidence Fusion for Malicious Skill Defense in LLM Agent Ecosystems
 
 面向 CCF-A 安全系统论文的研究包：**跨层证据融合检测与约束执行，用于大模型 Agent 生态中的恶意 Skill 防御**。
+
+> **Claim boundary:** See [`docs/claim_boundary.md`](docs/claim_boundary.md) for the precise boundary between what the artifact can and cannot claim. The primary evaluation is on a synthetic benchmark; real-ecosystem evidence is passive catalog-level measurement only.
 
 本包已按论文研发流程重新整理为三个主目录：
 
@@ -20,6 +22,7 @@ skillguardgraph/
 5. `experiments/README.md`
 6. `docs/experiment_plan_zh.md`
 7. `docs/ccf_a_scorecard_zh.md`
+8. `docs/claim_boundary.md`
 
 ## 快速运行
 
@@ -40,26 +43,29 @@ PYTHONPATH=src python scripts/run_demo.py
 PYTHONPATH=src python -m pytest -q
 ```
 
-## 研究定位
+## Research Thesis
 
-核心主张不是“把若干 detector 串起来”，而是：
+The core claim is NOT "stack detectors together," but:
 
-> 恶意 skill 的关键风险通常发生在跨 metadata、implementation、permission、runtime provenance、approval、persistence 与 version update 的组合链路中。防御应将这些证据统一到 typed evidence graph，并在图上执行来源感知、权限感知、版本感知的约束。
+> Malicious skills exploit cross-layer trust gaps across metadata, implementation, permission, runtime provenance, approval, persistence, and version update. Defense must unify evidence into a typed evidence graph and enforce source-aware, permission-aware, version-aware constraints.
 
-## 安全边界
+**Current claim boundary:** SkillGuardGraph demonstrates typed evidence fusion with cross-layer constraints on a synthetic benchmark (4,010 samples, 7 attack classes) and passive public MCP ecosystem measurement (1,000 artifacts, 6 sources). Real-world deployment validation and confirmed vulnerability claims remain future work. See [`docs/claim_boundary.md`](docs/claim_boundary.md).
 
-实验代码只处理合成 manifest 与合成 runtime trace：
+## Safety and Ethics
 
-- 不访问真实外部网络；
-- 不处理真实凭证；
-- 不生成可操作攻击 payload；
-- 动态沙箱模块是 placeholder；
-- 所有示例均使用 synthetic data 与 sinkhole 标签。
+Experiment code operates under strict safety constraints:
 
-## 输出目标
+- Synthetic benchmark data uses fake credentials and sinkhole domains (`*.example.invalid`, `*.sinkhole.test`);
+- Real ecosystem measurement is passive metadata/source collection only;
+- No real credentials are used; no operational payloads are generated;
+- Runtime and sandbox harnesses execute only repository-controlled toy cases, curated public-code fixtures, or bounded source-available package/repo cases under isolation;
+- See [`artifact/SECURITY_ETHICS.md`](artifact/SECURITY_ETHICS.md) for full ethics guidance.
 
-该包可作为三类后续工作的起点：
+## Current Status
 
-- 论文：将 `paper/` 扩展为 CCS / S&P / USENIX Security / NDSS 风格系统安全论文；
-- 实验：将 `experiments/` 扩展为真实 MCP/tool corpus 测量与 ablation；
-- Artifact：将 `docs/artifact_checklist.md` 与 `experiments/Makefile` 扩展为可复现实验包。
+- **Prototype:** Fully functional with typed evidence graph, C1-C7 constraints, fusion engine, and policy enforcer.
+- **Synthetic benchmark:** 4,010 samples (1,000 benign + 3,010 malicious across 7 attack classes).
+- **Evaluation:** Detection comparison (8 methods), ablation (6 variants), runtime red-team, local harness (105+105 tasks), sandbox harness, third-party/corpus/GitHub/TypeScript sandbox suites, significance tests, generalization stress checks, independent benchmark, latency, bootstrap CI, failure analysis.
+- **Ecosystem measurement:** 1,000 main batch + 2k/3k/5k/10k supplementary batches across 6 public sources.
+- **Paper:** Complete draft in `paper/main.tex` with all sections.
+- **Claim boundary:** See [`docs/claim_boundary.md`](docs/claim_boundary.md).

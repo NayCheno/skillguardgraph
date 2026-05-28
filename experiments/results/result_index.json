@@ -1,0 +1,153 @@
+{
+  "version": "1.0.0",
+  "description": "Result source index for SkillGuardGraph. Tags every result table with its evidence source, generation command, and claim boundary.",
+  "results": {
+    "detection_eval": {
+      "file": "experiments/results/main/detector_eval.json",
+      "evidence_source": "synthetic",
+      "generation_command": "python scripts/run_detector_eval.py",
+      "claim_boundary": "Artifact-consistency evidence only. Cannot be cited as proof of real-world detection.",
+      "paper_section": "Table 1 (Detection comparison)"
+    },
+    "ablation": {
+      "file": "experiments/results/main/ablation.json",
+      "evidence_source": "synthetic",
+      "generation_command": "python scripts/run_ablation.py",
+      "claim_boundary": "Shows relative importance of evidence layers on synthetic data. Static/sandbox showing no drop reflects signal overlap in synthetic data, not real-world independence.",
+      "paper_section": "Table 2 (Ablation study)"
+    },
+    "per_class_recall": {
+      "file": "experiments/results/main/detector_eval.json (per_attack_class_recall field)",
+      "evidence_source": "synthetic",
+      "generation_command": "python scripts/run_detector_eval.py",
+      "claim_boundary": "All seven synthetic attack classes reach 100% recall. This is benchmark closure, not real-world recall proof.",
+      "paper_section": "Table 3 (Per-attack-class recall)"
+    },
+    "runtime_redteam": {
+      "file": "experiments/results/main/runtime_redteam.json",
+      "evidence_source": "synthetic",
+      "generation_command": "python scripts/run_runtime_redteam.py",
+      "claim_boundary": "Synthetic trace-replay evaluation. Does not constitute production runtime evidence.",
+      "paper_section": "Table 6 (Runtime defense metrics)"
+    },
+    "runtime_harness": {
+      "file": "experiments/results/main/runtime_harness.json",
+      "evidence_source": "local-harness",
+      "generation_command": "python scripts/run_runtime_harness.py",
+      "claim_boundary": "Local instrumented toy harness with 105+105 tasks. Stronger than trace replay but not production runtime.",
+      "paper_section": "Table 7 (Local runtime harness)"
+    },
+    "sandbox_harness": {
+      "file": "experiments/results/main/sandbox_harness.json",
+      "evidence_source": "local-sandbox",
+      "generation_command": "python scripts/run_sandbox_harness.py",
+      "claim_boundary": "Subprocess-isolated toy sandbox. Does not constitute arbitrary third-party skill sandboxing.",
+      "paper_section": "Table 8 (Local sandbox harness)"
+    },
+    "third_party_sandbox": {
+      "file": "experiments/results/main/third_party_sandbox.json",
+      "evidence_source": "third-party-fixture",
+      "generation_command": "python scripts/run_third_party_sandbox.py",
+      "claim_boundary": "3 curated public-code fixtures. Not arbitrary marketplace execution.",
+      "paper_section": "Table 9 (Third-party sandbox)"
+    },
+    "corpus_package_sandbox": {
+      "file": "experiments/results/main/corpus_package_sandbox.json",
+      "evidence_source": "corpus-package",
+      "generation_command": "python scripts/run_corpus_package_sandbox.py",
+      "claim_boundary": "3 bounded PyPI package cases from the real corpus. Not arbitrary package execution.",
+      "paper_section": "Table 10 (Corpus package sandbox)"
+    },
+    "github_repo_sandbox": {
+      "file": "experiments/results/main/github_repo_sandbox.json",
+      "evidence_source": "github-repo",
+      "generation_command": "python scripts/run_github_repo_sandbox.py",
+      "claim_boundary": "2 source-available GitHub entrypoints. Not arbitrary repository execution.",
+      "paper_section": "Table 11 (GitHub repo sandbox)"
+    },
+    "typescript_repo_sandbox": {
+      "file": "experiments/results/main/typescript_repo_sandbox.json",
+      "evidence_source": "typescript-repo",
+      "generation_command": "python scripts/run_typescript_repo_sandbox.py",
+      "claim_boundary": "2 source-available TS/JS entrypoints. Not arbitrary repository execution.",
+      "paper_section": "Table 12 (TypeScript repo sandbox)"
+    },
+    "remote_endpoint_audit": {
+      "file": "experiments/results/main/remote_endpoint_audit.json",
+      "evidence_source": "remote-endpoint",
+      "generation_command": "python scripts/run_remote_endpoint_audit.py",
+      "claim_boundary": "4 unauthenticated public endpoint probes. Not authenticated or task-level runtime.",
+      "paper_section": "Table 13 (Remote endpoint audit)"
+    },
+    "remote_task_audit": {
+      "file": "experiments/results/main/remote_task_audit.json",
+      "evidence_source": "remote-task",
+      "generation_command": "python scripts/run_remote_task_audit.py",
+      "claim_boundary": "2 harmless read-only tool calls on public endpoints. Not production integration.",
+      "paper_section": "Table 14 (Remote task audit)"
+    },
+    "significance_tests": {
+      "file": "experiments/results/main/significance_tests.json",
+      "evidence_source": "synthetic",
+      "generation_command": "python scripts/run_significance_tests.py",
+      "claim_boundary": "McNemar + paired bootstrap on synthetic benchmark. Significant but synthetic.",
+      "paper_section": "Section 4.5 (Paired significance)"
+    },
+    "generalization_eval": {
+      "file": "experiments/results/main/generalization_eval.json",
+      "evidence_source": "synthetic-stress",
+      "generation_command": "python scripts/run_generalization_eval.py",
+      "claim_boundary": "Stress checks reduce leakage risk but remain within the same generator family.",
+      "paper_section": "Table 4 (Generalization stress checks)"
+    },
+    "independent_benchmark": {
+      "file": "experiments/results/main/independent_eval.json",
+      "evidence_source": "independent-synthetic",
+      "generation_command": "python scripts/build_independent_benchmark.py",
+      "claim_boundary": "Different vocabulary and code patterns but same generator architecture.",
+      "paper_section": "Table 5 (Independent benchmark)"
+    },
+    "bootstrap_ci": {
+      "file": "experiments/results/main/bootstrap_ci.json",
+      "evidence_source": "synthetic",
+      "generation_command": "python scripts/run_bootstrap_ci.py",
+      "claim_boundary": "Degenerate CI because synthetic benchmark has zero errors.",
+      "paper_section": "Table 5a (Bootstrap CI)"
+    },
+    "latency": {
+      "file": "experiments/results/main/latency.json",
+      "evidence_source": "synthetic",
+      "generation_command": "python scripts/run_latency.py",
+      "claim_boundary": "Prototype latency on synthetic data. Real deployment overhead may differ.",
+      "paper_section": "Table 15 (Latency)"
+    },
+    "failure_analysis": {
+      "file": "experiments/results/main/failure_analysis.json",
+      "evidence_source": "synthetic",
+      "generation_command": "python scripts/run_failure_analysis.py",
+      "claim_boundary": "Zero errors on synthetic benchmark is artifact-consistency evidence.",
+      "paper_section": "Section 4.8 (Failure analysis)"
+    },
+    "real_ecosystem": {
+      "file": "experiments/results/ecosystem/real_ecosystem_results.json",
+      "evidence_source": "real-passive",
+      "generation_command": "python scripts/crawl_real_ecosystem.py --target 1000",
+      "claim_boundary": "Passive catalog-level measurement. Not code-complete security audit.",
+      "paper_section": "Table 16 (Real ecosystem)"
+    },
+    "public_advisory_audit": {
+      "file": "experiments/results/ecosystem/public_advisory_audit.json",
+      "evidence_source": "real-passive",
+      "generation_command": "python scripts/run_public_advisory_audit.py",
+      "claim_boundary": "Cross-check against known MCP advisories. 4 of 5 tracked families present in corpus, all patched.",
+      "paper_section": "Table 16a (Advisory cross-check)"
+    },
+    "synthetic_ecosystem": {
+      "file": "experiments/results/ecosystem/risk_patterns.json",
+      "evidence_source": "synthetic",
+      "generation_command": "python scripts/crawl_ecosystem.py",
+      "claim_boundary": "Synthetic stress-test data, not real-world prevalence estimates.",
+      "paper_section": "Table 17 (Synthetic ecosystem)"
+    }
+  }
+}
