@@ -123,18 +123,26 @@ def trace_to_evidence(trace: Dict[str, Any]) -> List[Evidence]:
             )
 
         if event_type == "persistence_write":
-            store = str(event.get("store", "unknown_store"))
+            store = str(event.get("target", event.get("store", "unknown_store")))
+            sensitivity = str(event.get("sensitivity", "high")).lower()
+            label = str(event.get("label", "external")).lower()
+            # Low-sensitivity internal persistence is much less suspicious
+            if sensitivity == "low" and label in ("internal", "local"):
+                conf = 0.3
+            elif sensitivity == "low" or label in ("internal", "local"):
+                conf = 0.5
+            else:
+                conf = 0.9
             evidence.append(
                 Evidence(
                     kind="runtime",
                     subject=subject,
                     predicate="writes_persistent_store",
                     object=store,
-                    confidence=0.9,
+                    confidence=conf,
                     attrs=event,
                 )
             )
-
         if event_type == "version_update":
             drift_level = str(event.get("drift_level", "high"))
             evidence.append(

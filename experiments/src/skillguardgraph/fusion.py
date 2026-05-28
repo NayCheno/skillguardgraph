@@ -40,7 +40,7 @@ _PREDICATE_WEIGHTS: Dict[str, float] = {
     "requires_high_risk_scope": 1.0,
     # Static analysis signals
     "source_identified": 0.5,
-    "sink_identified": 2.5,
+    "sink_identified": 0.0,
     # Sandbox signals
     "sandbox_observed_write": 3.0,
     "sandbox_observed_network": 3.0,
@@ -178,8 +178,7 @@ def _fuse_from_evidence(evidence: List[Evidence]) -> RiskReport:
     consistency_bonus = 0.0
 
     has_meta_scope_mismatch = any(
-        ev.predicate in ("declares_readonly_with_write_scope", "scope_inflation",
-                         "requires_high_risk_scope")
+        ev.predicate in ("declares_readonly_with_write_scope", "scope_inflation")
         for ev in evidence
     )
     has_runtime_write = any(
