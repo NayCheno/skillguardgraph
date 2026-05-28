@@ -30,14 +30,15 @@ The real measurement does **not** execute third-party code, perform destructive 
 | Metric | Value |
 |---|---:|
 | Total public artifacts | 1,000 |
-| GitHub MCP repositories | 600 |
-| npm MCP packages | 250 |
+| GitHub MCP repositories | 630 |
+| npm MCP packages | 200 |
+| PyPI MCP packages | 20 |
 | Hugging Face Spaces | 150 |
-| Source-available samples | 15 |
-| Manifest-only samples | 985 |
+| Source-available samples | 22 |
+| Manifest-only samples | 978 |
 | High severity | 2 |
-| Medium severity | 12 |
-| Low severity | 983 |
+| Medium severity | 16 |
+| Low severity | 982 |
 
 ### 2.3 Language and license mix
 
@@ -45,9 +46,9 @@ Top language counts in the measured corpus:
 
 | Language | Count |
 |---|---:|
-| Python | 308 |
-| Unknown | 277 |
-| TypeScript | 166 |
+| Python | 328 |
+| Unknown | 233 |
+| TypeScript | 190 |
 | Gradio | 98 |
 | Go | 31 |
 
@@ -55,30 +56,30 @@ Top license counts:
 
 | License | Count |
 |---|---:|
-| MIT | 398 |
-| Unknown | 236 |
-| Apache-2.0 | 192 |
-| NOASSERTION | 69 |
-| AGPL-3.0 | 31 |
+| MIT | 393 |
+| Unknown | 232 |
+| Apache-2.0 | 197 |
+| NOASSERTION | 72 |
+| AGPL-3.0 | 33 |
 
 ### 2.4 Risk-pattern prevalence
 
 | Pattern | Count | Rate |
 |---|---:|---:|
-| Missing signature | 1000 | 100.0% |
-| Untrusted publisher | 357 | 35.7% |
-| Open-world network access | 7 | 0.7% |
-| Scope inflation | 6 | 0.6% |
+| Missing signature | 800 | 80.0% |
+| Untrusted publisher | 328 | 32.8% |
+| Open-world network access | 8 | 0.8% |
+| Scope inflation | 7 | 0.7% |
 | Instruction-like descriptions | 0 | 0.0% |
 | Description-code mismatch | 0 | 0.0% |
 
 ### 2.5 Interpretation
 
-1. **Governance provenance remains weak across all three public sources.** Missing signatures are still universal in the current 1,000-artifact batch because the sampled GitHub repositories, npm packages, and Hugging Face Spaces do not expose strong signing metadata to the passive collector.
-2. **Only a very small fraction of artifacts trigger high-severity passive findings.** After the refined multi-source passive crawl, the real corpus produces 2 HIGH findings and 12 MEDIUM findings, and both HIGH findings remain unconfirmed after manual review.
-3. **Metadata-only coverage still dominates.** 985/1,000 artifacts remain manifest-only because the collector intentionally bounds source probing and does not recurse through full repositories, package tarballs, or hosted space bundles. This is acceptable for catalog-level measurement but not for code-complete vulnerability confirmation.
-4. **Source discovery is slightly richer but still bounded.** The collector now consults GitHub contents listings, package.json-derived entrypoints, and Hugging Face `app_file`/sibling metadata before bounded source fetch, but the full 1,000-artifact batch still remains overwhelmingly metadata-only.
-5. **Multi-source coverage is better than the prior GitHub-only snapshot, but still incomplete.** The current batch spans GitHub MCP repositories, npm MCP packages, and Hugging Face Spaces; it still does not cover PyPI, hosted enterprise marketplaces, or private catalogs.
+1. **Governance provenance remains weak even after adding a curated PyPI slice.** Missing signatures still appear on 800/1,000 artifacts (80.0%) because GitHub repositories, many PyPI projects, and Hugging Face Spaces do not expose strong signing metadata through the passive collector.
+2. **Only a very small fraction of artifacts trigger high-severity passive findings.** After the refined four-source passive crawl, the real corpus produces 2 HIGH findings and 16 MEDIUM findings, and both HIGH findings remain unconfirmed after manual review.
+3. **Metadata-only coverage still dominates.** 978/1,000 artifacts remain manifest-only because the collector intentionally bounds source probing and does not recurse through full repositories, package tarballs, or hosted space bundles. This is acceptable for catalog-level measurement but not for code-complete vulnerability confirmation.
+4. **Source discovery is slightly richer but still bounded.** The collector now consults GitHub contents listings, package.json-derived entrypoints, curated PyPI project links, and Hugging Face `app_file`/sibling metadata before bounded source fetch, but the full 1,000-artifact batch still remains overwhelmingly metadata-only.
+5. **Multi-source coverage is better than the prior GitHub-only snapshot, but still incomplete.** The current batch spans GitHub MCP repositories, npm MCP packages, curated PyPI MCP packages, and Hugging Face Spaces; it still does not cover broader PyPI search, hosted enterprise marketplaces, or private catalogs.
 6. **Real-world prevalence is much lower than synthetic stress prevalence.** This is expected: the synthetic corpus is designed to exercise suspicious patterns, while the public corpus is used as a conservative external-validity check.
 
 ### 2.6 Supplementary scaled batch
@@ -88,7 +89,7 @@ A supplementary large-batch run is checked in as:
 - `experiments/results/ecosystem/real_ecosystem_large_results.json`
 - `experiments/results/ecosystem/real_ecosystem_large_data_card.json`
 
-This run uses the same passive collector with `--target 2000 --pages-per-query 3 --source-budget 25 --output-prefix real_ecosystem_large` and reaches 2,000 artifacts (1,200 GitHub, 500 npm, 300 Hugging Face). It produces 0 HIGH and 9 MEDIUM findings, but only 5 source-available samples. We therefore treat it as a scale-out catalog measurement, not as stronger code-level validation.
+This run uses the passive collector with `--target 2000 --pages-per-query 3 --source-budget 25 --sources github_mcp,npm_mcp,hf_spaces_mcp --output-prefix real_ecosystem_large --resume` and reaches 2,000 artifacts (1,200 GitHub, 500 npm, 300 Hugging Face). It produces 0 HIGH and 9 MEDIUM findings, but only 5 source-available samples. We therefore treat it as a scale-out catalog measurement, not as stronger code-level validation.
 
 ## 3. Manual triage and disclosure status
 
@@ -120,7 +121,7 @@ The paper should treat these synthetic results as stress-test evidence, not as r
 
 ## 5. Limitations
 
-1. **Query and registry bias.** The real corpus now spans GitHub, npm, and Hugging Face Spaces, but it still excludes PyPI, hosted enterprise marketplaces, and private enterprise catalogs.
+1. **Query and registry bias.** The real corpus now spans GitHub, npm, a curated PyPI seed list, and Hugging Face Spaces, but it still excludes broad PyPI discovery, hosted enterprise marketplaces, and private enterprise catalogs.
 2. **Manifest-only dominance.** Most real samples are metadata-only because the collector intentionally bounds raw source fetching for safety and runtime reasons.
 3. **No runtime validation.** The real measurement does not execute third-party code, so it cannot confirm dynamic exfiltration, persistence, or approval-laundering behaviors.
 4. **No confirmed-vulnerability claims.** The measurement is appropriate for prevalence and governance observations, not for naming exploitable packages without follow-up validation.

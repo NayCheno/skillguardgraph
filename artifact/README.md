@@ -46,7 +46,7 @@ needed to reproduce every result reported in the paper.
 - **Docker** — a `Dockerfile` is provided for containerized smoke-test reproduction.
 - **Conda** — an `environment.yml` is provided for environment setup.
 
-Network access is not required for smoke tests or synthetic reproduction. The real public ecosystem measurement step (`make real-ecosystem`, `make real-ecosystem-large`, or `make eval-all`) requires outbound access to GitHub's public APIs/raw content endpoints, npm registry APIs, and Hugging Face Space metadata/file endpoints. If available, set `GITHUB_TOKEN` and `HF_TOKEN` to reduce rate-limit failures during larger crawls.
+Network access is not required for smoke tests or synthetic reproduction. The real public ecosystem measurement step (`make real-ecosystem`, `make real-ecosystem-large`, or `make eval-all`) requires outbound access to GitHub's public APIs/raw content endpoints, npm registry APIs, PyPI JSON endpoints, and Hugging Face Space metadata/file endpoints. If available, set `GITHUB_TOKEN` and `HF_TOKEN` to reduce rate-limit failures during larger crawls.
 
 ---
 
@@ -68,7 +68,7 @@ pip install -e ".[dev]"
 make smoke
 ```
 
-Expected: the demo prints a JSON policy report to stdout, and all 94 unit
+Expected: the demo prints a JSON policy report to stdout, and all 98 unit
 tests pass.
 
 ### Alternative: Docker
@@ -100,7 +100,7 @@ make smoke
 
 What it does:
 1. Runs `run_demo.py` — scans a sample manifest and evaluates a sample trace.
-2. Runs all 94 unit tests (`pytest tests/ -q`).
+2. Runs all 98 unit tests (`pytest tests/ -q`).
 
 ### Mode 2: Main Reproduction (~30 minutes)
 
@@ -128,7 +128,7 @@ What it does:
 1. Everything in Mode 2.
 2. `make ecosystem` — Builds 1200-sample synthetic ecosystem corpus from 5 sources.
 3. `make triage` — Triages ecosystem findings, identifies risk patterns.
-4. `make real-ecosystem` — Collects a 1,000-artifact passive multi-source corpus (GitHub MCP repositories + npm MCP packages + Hugging Face Spaces), writes a data card, and records real-finding triage inputs.
+4. `make real-ecosystem` — Collects a 1,000-artifact passive multi-source corpus (GitHub MCP repositories + npm MCP packages + curated PyPI MCP packages + Hugging Face Spaces), writes a data card, and records real-finding triage inputs.
 
 A supplementary large-batch command is also available: `make real-ecosystem-large` collects a 2,000-artifact passive corpus into `real_ecosystem_large_*` outputs without replacing the reviewer-friendly 1,000-artifact batch. The target uses `--resume` so partially warmed caches can survive upstream rate limits.
 ---
@@ -156,7 +156,7 @@ A supplementary large-batch command is also available: `make real-ecosystem-larg
 |---|---|---|
 | `ecosystem_triage.json` | JSON, ~1.7 MB | Full synthetic triage output for 1200 samples |
 | `risk_patterns.json` | JSON, ~1.5 KB | Synthetic aggregated risk pattern rates and severity |
-| `real_ecosystem_samples.jsonl` | JSONL, variable | Passive real public MCP repository/package sample records |
+| `real_ecosystem_samples.jsonl` | JSONL, variable | Passive real public MCP artifact sample records |
 | `real_ecosystem_results.json` | JSON, ~3 KB | Real-corpus aggregated counts, per-source severity distribution, and top passive findings |
 | `real_ecosystem_data_card.json` | JSON, ~2 KB | Source/date/version/license/dedup collection metadata |
 | `real_high_risk_triage.json` | JSON, ~3 KB | Manual triage notes for all HIGH-severity real findings |
@@ -178,8 +178,8 @@ A supplementary large-batch command is also available: `make real-ecosystem-larg
 | Runtime ASR | 0.000 |
 | Task success rate | 1.000 |
 | False block rate | 0.000 |
-| Ecosystem corpus size | 1200 synthetic + 1000 real public artifacts (600 GitHub + 250 npm + 150 Hugging Face Spaces) |
-| Unit tests | 94 (all pass) |
+| Ecosystem corpus size | 1200 synthetic + 1000 real public artifacts (630 GitHub + 200 npm + 20 PyPI + 150 Hugging Face Spaces) |
+| Unit tests | 98 (all pass) |
 | Supplementary scaled corpus | 2000 real public artifacts (1200 GitHub + 500 npm + 300 Hugging Face Spaces) |
 
 See `EXPECTED_OUTPUTS.md` for complete output documentation with example

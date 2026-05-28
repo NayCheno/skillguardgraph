@@ -39,10 +39,10 @@ ecosystem:
 	$(PYTHONPATH_OPT) python scripts/crawl_ecosystem.py
 
 real-ecosystem:
-	$(PYTHONPATH_OPT) python scripts/crawl_real_ecosystem.py --target 1000 --pages-per-query 3 --source-budget 100
+	$(PYTHONPATH_OPT) python scripts/crawl_real_ecosystem.py --target 1000 --pages-per-query 3 --source-budget 100 --resume
 
 real-ecosystem-large:
-	$(PYTHONPATH_OPT) python scripts/crawl_real_ecosystem.py --target 2000 --pages-per-query 3 --source-budget 25 --output-prefix real_ecosystem_large --resume
+	$(PYTHONPATH_OPT) python scripts/crawl_real_ecosystem.py --target 2000 --pages-per-query 3 --source-budget 25 --sources github_mcp,npm_mcp,hf_spaces_mcp --output-prefix real_ecosystem_large --resume
 
 triage:
 	$(PYTHONPATH_OPT) python scripts/triage_findings.py

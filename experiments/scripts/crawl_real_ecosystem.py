@@ -56,9 +56,10 @@ NPM_SEARCH_SIZE = 100
 SOURCE_LANGUAGES = {"python", "typescript", "javascript"}
 
 SOURCE_WEIGHTS: Dict[str, float] = {
-    "github_mcp": 0.60,
-    "npm_mcp": 0.25,
+    "github_mcp": 0.50,
+    "npm_mcp": 0.20,
     "hf_spaces_mcp": 0.15,
+    "pypi_mcp": 0.15,
 }
 
 GITHUB_SOURCE_QUERIES: Dict[str, List[str]] = {
@@ -82,6 +83,28 @@ NPM_SEARCH_TERMS = [
     '"mcp tool"',
 ]
 HF_SEARCH_LIMIT = 200
+PYPI_PACKAGE_SEEDS = [
+    "mcp",
+    "fastmcp",
+    "zeromcp",
+    "mcp-server",
+    "mcp-servers",
+    "python-mcp-server",
+    "mcp-server-framework",
+    "linux-mcp-server",
+    "search-mcp-server",
+    "cve-mcp-server",
+    "ms-fabric-mcp-server",
+    "iflow-mcp_loonghao-pypi-query-mcp-server",
+    "modelcontextprotocol",
+    "modelcontextprotocol-client",
+    "flask-mcp-server",
+    "chuk-mcp-server",
+    "pypi-query-mcp-server",
+    "mcp-server-creator",
+    "autodoc-mcp",
+    "mcp-clipboard",
+]
 
 PY_TOOL_DECORATOR = re.compile(r'@(?:server|app|mcp)\s*\.\s*tool\s*\(\s*["\']([\w-]+)["\']', re.MULTILINE)
 TS_REGISTER_TOOL = re.compile(r'server\.tool\s*\(\s*["\']([\w-]+)["\']', re.MULTILINE)
@@ -158,6 +181,14 @@ def github_search(query: str, page: int) -> Dict[str, Any]:
 
 def github_repo(owner: str, repo: str) -> Dict[str, Any]:
     return github_request(f"https://api.github.com/repos/{owner}/{repo}")
+
+def pypi_package_metadata(name: str) -> Dict[str, Any]:
+    encoded = urllib.parse.quote(name, safe="")
+    return _json_request(
+        f"https://pypi.org/pypi/{encoded}/json",
+        headers=_request_headers("pypi"),
+        service="pypi",
+    )
 
 
 def fetch_raw(owner: str, repo: str, path: str, branch: str) -> Optional[str]:
@@ -322,6 +353,16 @@ def license_id(repo: Dict[str, Any]) -> str:
     if isinstance(lic, dict):
         return lic.get("spdx_id") or lic.get("key") or "unknown"
     return str(lic) if lic else "unknown"
+
+def extract_repository_url_from_project_urls(project_urls: Any) -> Optional[str]:
+    if not isinstance(project_urls, dict):
+        return None
+    for key in ("Repository", "Source", "Homepage", "Home"):
+        value = project_urls.get(key)
+        normalized = normalize_repo_url(value if isinstance(value, str) else None)
+        if normalized:
+            return normalized
+    return None
 
 
 def entrypoint_candidates() -> Iterable[str]:
@@ -934,6 +975,127 @@ def crawl_npm_source(target: int, cache: Dict[str, Dict[str, Any]], source_budge
     return samples[:target], remaining_source_budget
 
 # ---------------------------------------------------------------------------
+# PyPI crawl
+# ---------------------------------------------------------------------------
+
+def build_pypi_manifest(package_name: str, metadata: Dict[str, Any], linked_repo: Optional[Dict[str, Any]], tools: List[Dict[str, Any]]) -> Dict[str, Any]:
+    info = metadata.get("info") or {}
+    all_scopes, has_network, has_file_write, has_shell = _aggregate_tool_flags(tools)
+    linked_stars = int(linked_repo.get("stargazers_count", 0)) if linked_repo else 0
+    repository_url = extract_repository_url_from_project_urls(info.get("project_urls"))
+    return {
+        "name": package_name,
+        "description": info.get("summary") or info.get("description") or f"PyPI package {package_name}",
+        "scopes": sorted(all_scopes)[:8] if all_scopes else ["read"],
+        "annotations": {
+            "readOnlyHint": not has_file_write and not has_shell,
+            "destructiveHint": has_shell,
+            "openWorldHint": has_network,
+        },
+        "publisher": info.get("author") or info.get("maintainer") or "unknown",
+        "trusted_server": linked_stars >= 100,
+        "signature": None,
+        "tool_count": len(tools),
+        "stars": linked_stars,
+        "language": (linked_repo or {}).get("language") or tools[0].get("language") or "python",
+        "source": "pypi_mcp",
+        "version": info.get("version"),
+        "license": info.get("license") or "unknown",
+        "repository": repository_url,
+    }
+
+
+def analyze_pypi_package(package_name: str, attempt_source_fetch: bool) -> Dict[str, Any]:
+    metadata = pypi_package_metadata(package_name)
+    info = metadata.get("info") or {}
+    repository_url = extract_repository_url_from_project_urls(info.get("project_urls"))
+    linked_repo: Optional[Dict[str, Any]] = None
+    source_files: List[Dict[str, str]] = []
+
+    if attempt_source_fetch and repository_url:
+        owner_repo = extract_github_repo_ref(repository_url)
+        if owner_repo:
+            owner, repo_name = owner_repo
+            try:
+                linked_repo = github_repo(owner, repo_name)
+            except Exception:
+                linked_repo = None
+        if linked_repo is not None:
+            default_branch = linked_repo.get("default_branch") or "main"
+            for path in discover_source_paths(owner_repo[0], owner_repo[1], default_branch):
+                content = fetch_raw(owner_repo[0], owner_repo[1], path, default_branch)
+                if content and len(content) > 100:
+                    source_files.append({"path": path, "content": content})
+                    if len(source_files) >= 3:
+                        break
+
+    source_blobs = [item["content"] for item in source_files]
+    if not source_blobs and info.get("summary"):
+        source_blobs = [str(info.get("summary"))]
+    fallback_language = str((linked_repo or {}).get("language") or "python").lower()
+    tools = summarize_tools_from_source(source_blobs, package_name, fallback_language)
+    manifest = build_pypi_manifest(package_name, metadata, linked_repo, tools)
+
+    return analyze_artifact(
+        artifact_id=package_name,
+        artifact_url=info.get("package_url") or f"https://pypi.org/project/{package_name}/",
+        source_label="pypi_mcp",
+        dedup_key=package_name,
+        manifest=manifest,
+        tools=tools,
+        source_files=source_files,
+        source_code="\n\n".join(source_blobs if source_files else []),
+        metadata={
+            "query_matches": ["pypi_seed"],
+            "created_at": None,
+            "updated_at": None,
+            "pushed_at": None,
+            "default_branch": (linked_repo or {}).get("default_branch"),
+            "license": info.get("license") or "unknown",
+            "stars": int((linked_repo or {}).get("stargazers_count", 0)),
+            "language": (linked_repo or {}).get("language") or fallback_language or "python",
+            "archived": bool((linked_repo or {}).get("archived", False)),
+            "fork": bool((linked_repo or {}).get("fork", False)),
+            "package_version": info.get("version"),
+            "linked_repository": repository_url,
+        },
+    )
+
+
+def crawl_pypi_source(target: int, cache: Dict[str, Dict[str, Any]], source_budget: int) -> Tuple[List[Dict[str, Any]], int]:
+    cached_items = cached_source_samples(cache, "pypi_mcp")
+    if len(cached_items) >= target:
+        print(f"Using {target} cached PyPI samples")
+        return cached_items[:target], source_budget
+
+    samples: List[Dict[str, Any]] = list(cached_items)
+    remaining_source_budget = source_budget
+    seeds = PYPI_PACKAGE_SEEDS[: max(target, len(PYPI_PACKAGE_SEEDS))]
+    print(f"Using {len(seeds)} curated PyPI seeds")
+
+    for package_name in seeds:
+        if len(samples) >= target:
+            break
+        if any(sample.get("dedup_key") == package_name for sample in samples):
+            continue
+        attempt_source_fetch = remaining_source_budget > 0
+        try:
+            sample = analyze_pypi_package(package_name, attempt_source_fetch=attempt_source_fetch)
+            samples.append(sample)
+            put_cached_sample(cache, "pypi_mcp", package_name, sample)
+            if attempt_source_fetch and sample.get("code_availability") == "source_available":
+                remaining_source_budget -= 1
+        except Exception as exc:
+            print(f"  skipping PyPI package {package_name}: {exc}")
+    save_cache(cache)
+    return samples[:target], remaining_source_budget
+
+
+# ---------------------------------------------------------------------------
+# Hugging Face Spaces crawl
+# ---------------------------------------------------------------------------
+
+# ---------------------------------------------------------------------------
 # Hugging Face Spaces crawl
 # ---------------------------------------------------------------------------
 
@@ -1203,6 +1365,11 @@ def build_data_card(
             "terms": NPM_SEARCH_TERMS,
             "search_page_size": NPM_SEARCH_SIZE,
         }
+    if "pypi_mcp" in enabled_sources:
+        source_details["pypi_mcp"] = {
+            "seed_packages": PYPI_PACKAGE_SEEDS,
+            "metadata_api": "https://pypi.org/pypi/<name>/json",
+        }
     if "hf_spaces_mcp" in enabled_sources:
         source_details["hf_spaces_mcp"] = {
             "queries": ["mcp", "mcp-server", "model context protocol"],
@@ -1216,17 +1383,17 @@ def build_data_card(
         "enabled_sources": enabled_sources,
         "source_details": source_details,
         "source_budget": source_budget,
-        "dedup_rule": "Deduplicate by source-specific artifact identifier (GitHub full_name, npm package name, or Hugging Face space id); retain linked_repository when an upstream package points to GitHub.",
-        "filter_rule": "Collect public GitHub MCP repositories, npm MCP-related packages, and Hugging Face Spaces returned by MCP-related search terms; include metadata-only samples when bounded source probing finds no recognized entrypoint.",
-        "version_rule": "Record GitHub default_branch plus timestamps; record npm latest package version and package publication/update time; record Hugging Face Space sha and created/lastModified timestamps when exposed.",
+        "dedup_rule": "Deduplicate by source-specific artifact identifier (GitHub full_name, npm package name, PyPI package name, or Hugging Face space id); retain linked_repository when an upstream package points to GitHub.",
+        "filter_rule": "Collect public GitHub MCP repositories, npm MCP-related packages, curated PyPI MCP packages, and Hugging Face Spaces returned by MCP-related search terms; include metadata-only samples when bounded source probing finds no recognized entrypoint.",
+        "version_rule": "Record GitHub default_branch plus timestamps; record npm/PyPI package version metadata; record Hugging Face Space sha and created/lastModified timestamps when exposed.",
         "license_rule": "Record SPDX identifier when the upstream API provides one; otherwise mark unknown.",
         "availability_rule": stats.get("code_availability", {}),
         "safety_boundary": "Passive metadata/source collection only; no third-party code execution, no destructive calls, no credential use.",
         "limitations": [
-            "GitHub, npm, and Hugging Face search coverage are query-biased and incomplete.",
+            "GitHub, npm, PyPI, and Hugging Face coverage are query- or seed-biased and incomplete.",
             "Repository-level, package-level, and space-level signals do not prove deployable vulnerabilities.",
             "Manifest-only samples retain metadata evidence but weak implementation coverage.",
-            "npm and Hugging Face source coverage depends on linked public files when present.",
+            "npm, PyPI, and Hugging Face source coverage depends on linked public files when present.",
         ],
     }
 
@@ -1242,12 +1409,12 @@ def write_samples_jsonl(samples: List[Dict[str, Any]]) -> None:
 # ---------------------------------------------------------------------------
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Crawl public MCP-related artifacts from GitHub, npm, and Hugging Face Spaces")
+    parser = argparse.ArgumentParser(description="Crawl public MCP-related artifacts from GitHub, npm, PyPI, and Hugging Face Spaces")
     parser.add_argument("--target", type=int, default=1000, help="Number of artifacts to retain")
     parser.add_argument("--pages-per-query", type=int, default=3, help="GitHub search pages to request for each query")
     parser.add_argument("--source-budget", type=int, default=200, help="Maximum number of artifacts for which raw source entrypoints are fetched")
     parser.add_argument("--resume", action="store_true", help="Resume from cached per-artifact samples")
-    parser.add_argument("--sources", default="github_mcp,npm_mcp,hf_spaces_mcp", help="Comma-separated source set")
+    parser.add_argument("--sources", default="github_mcp,npm_mcp,pypi_mcp,hf_spaces_mcp", help="Comma-separated source set")
     parser.add_argument("--output-prefix", default="real_ecosystem", help="Output file prefix under results/ecosystem/")
     args = parser.parse_args()
 
@@ -1281,6 +1448,8 @@ def main() -> None:
             source_samples, remaining_budget = crawl_github_source(source, quota, args.pages_per_query, cache, remaining_budget)
         elif source == "npm_mcp":
             source_samples, remaining_budget = crawl_npm_source(quota, cache, remaining_budget)
+        elif source == "pypi_mcp":
+            source_samples, remaining_budget = crawl_pypi_source(quota, cache, remaining_budget)
         elif source == "hf_spaces_mcp":
             source_samples, remaining_budget = crawl_hf_spaces_source(quota, cache, remaining_budget)
         else:
@@ -1289,7 +1458,7 @@ def main() -> None:
 
     if len(samples) < args.target:
         deficit = args.target - len(samples)
-        for fallback_source in ("github_mcp", "npm_mcp"):
+        for fallback_source in ("github_mcp", "npm_mcp", "pypi_mcp"):
             if fallback_source not in enabled_sources or deficit <= 0:
                 continue
             existing = {sample["dedup_key"] for sample in samples if sample["source"] == fallback_source}
@@ -1299,8 +1468,10 @@ def main() -> None:
                 extra_samples, remaining_budget = crawl_github_source(
                     fallback_source, refill_target, args.pages_per_query, cache, remaining_budget,
                 )
-            else:
+            elif fallback_source == "npm_mcp":
                 extra_samples, remaining_budget = crawl_npm_source(refill_target, cache, remaining_budget)
+            else:
+                extra_samples, remaining_budget = crawl_pypi_source(refill_target, cache, remaining_budget)
             for sample in extra_samples:
                 if sample["dedup_key"] not in existing:
                     samples.append(sample)

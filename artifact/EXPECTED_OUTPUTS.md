@@ -228,22 +228,23 @@ All generalization acceptance booleans in the JSON are `true`. These checks are 
 - `results/ecosystem/real_ecosystem_data_card.json`
 - `results/ecosystem/real_high_risk_triage.json`
 
-**Produced by:** `python scripts/crawl_real_ecosystem.py --target 1000 --pages-per-query 3 --source-budget 100` (defaults to `github_mcp,npm_mcp,hf_spaces_mcp`)
+**Produced by:** `python scripts/crawl_real_ecosystem.py --target 1000 --pages-per-query 3 --source-budget 100 --resume` (defaults to `github_mcp,npm_mcp,pypi_mcp,hf_spaces_mcp`)
 
 | Metric | Value |
 |---|---:|
 | Total artifacts | 1,000 |
-| GitHub MCP repositories | 600 |
-| npm MCP packages | 250 |
+| GitHub MCP repositories | 630 |
+| npm MCP packages | 200 |
+| PyPI MCP packages | 20 |
 | Hugging Face Spaces | 150 |
-| Source-available samples | 15 |
-| Manifest-only samples | 985 |
+| Source-available samples | 22 |
+| Manifest-only samples | 978 |
 | High severity | 2 |
-| Medium severity | 12 |
-| Missing signatures | 1000 (100.0%) |
-| Untrusted publishers | 357 (35.7%) |
-| Open-world network access | 7 (0.7%) |
-| Scope inflation | 6 (0.6%) |
+| Medium severity | 16 |
+| Missing signatures | 800 (80.0%) |
+| Untrusted publishers | 328 (32.8%) |
+| Open-world network access | 8 (0.8%) |
+| Scope inflation | 7 (0.7%) |
 | Confirmed vulnerabilities | 0 |
 
 ---
@@ -256,7 +257,7 @@ All generalization acceptance booleans in the JSON are `true`. These checks are 
 - `results/ecosystem/real_ecosystem_large_results.json`
 - `results/ecosystem/real_ecosystem_large_data_card.json`
 
-**Produced by:** `python scripts/crawl_real_ecosystem.py --target 2000 --pages-per-query 3 --source-budget 25 --output-prefix real_ecosystem_large`
+**Produced by:** `python scripts/crawl_real_ecosystem.py --target 2000 --pages-per-query 3 --source-budget 25 --sources github_mcp,npm_mcp,hf_spaces_mcp --output-prefix real_ecosystem_large --resume`
 
 | Metric | Value |
 |---|---:|

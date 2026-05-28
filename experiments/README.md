@@ -116,9 +116,9 @@ experiments/
 | `make eval-main` | Detection + ablation + runtime eval + runtime/sandbox harnesses + bootstrap + generalization | ~15 min |
 | `make tables` | Generate tables + failure analysis + significance | ~1 min |
 | `make ecosystem` | Crawl synthetic ecosystem corpus | ~10 min |
-| `make real-ecosystem` | Crawl passive real public GitHub + npm + Hugging Face MCP corpus | network-bound |
+| `make real-ecosystem` | Crawl passive real public GitHub + npm + PyPI + Hugging Face MCP corpus | network-bound |
 | `make triage` | Triage synthetic ecosystem findings | ~5 min |
-| `make real-ecosystem-large` | Crawl supplementary 2,000-artifact public corpus (resume-aware) | network-bound |
+| `make real-ecosystem-large` | Crawl supplementary 2,000-artifact public corpus (GitHub + npm + Hugging Face, resume-aware) | network-bound |
 | `make reproduce` | benchmark + validate + eval-main + tables | ~30 min |
 | `make eval-all` | reproduce + ecosystem + triage + real-ecosystem | network-bound |
 | `make scan` | Scan a sample manifest | ~5 sec |
@@ -151,11 +151,11 @@ After `make eval-all` (additional files):
 ```
 results/ecosystem/ecosystem_triage.json      # Full synthetic ecosystem triage (1200 samples)
 results/ecosystem/risk_patterns.json         # Synthetic aggregated risk pattern statistics
-results/ecosystem/real_ecosystem_samples.jsonl   # Real public repository sample records
+results/ecosystem/real_ecosystem_samples.jsonl   # Real public artifact sample records
 results/ecosystem/real_ecosystem_results.json    # Real-corpus aggregated metrics
 results/ecosystem/real_ecosystem_data_card.json  # Source/date/version/license/dedup metadata
-results/ecosystem/real_ecosystem_large_results.json # Supplementary scaled real-corpus metrics
 results/ecosystem/real_high_risk_triage.json     # Manual triage for HIGH real findings
+results/ecosystem/real_ecosystem_large_results.json # Supplementary scaled real-corpus metrics
 results/ecosystem/real_ecosystem_large_data_card.json # Supplementary scaled data card
 ```
 
@@ -180,7 +180,7 @@ Key result numbers:
 | False block rate | 0.000 |
 | Latency p50 / p95 | 0.5ms / 0.6ms |
 | Sandbox harness recall / benign alert rate | 1.000 / 0.000 |
-| Real public corpus | 1,000 artifacts (600 GitHub + 250 npm + 150 Hugging Face Spaces) |
+| Real public corpus | 1,000 artifacts (630 GitHub + 200 npm + 20 PyPI + 150 Hugging Face Spaces) |
 | Real corpus high severity | 2 |
 | Real corpus confirmed vulnerabilities | 0 |
 | Supplementary scaled corpus | 2,000 artifacts (1200 GitHub + 500 npm + 300 Hugging Face Spaces) |
@@ -209,8 +209,7 @@ PYTHONPATH=src python scripts/run_runtime_redteam.py
 
 
 # Supplementary larger public corpus
-# Supplementary larger public corpus
-PYTHONPATH=src python scripts/crawl_real_ecosystem.py --target 2000 --pages-per-query 3 --source-budget 25 --output-prefix real_ecosystem_large --resume
+PYTHONPATH=src python scripts/crawl_real_ecosystem.py --target 2000 --pages-per-query 3 --source-budget 25 --sources github_mcp,npm_mcp,hf_spaces_mcp --output-prefix real_ecosystem_large --resume
 
 If available, export `GITHUB_TOKEN` and `HF_TOKEN` before large crawls to reduce upstream rate-limit failures.
 
