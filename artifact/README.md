@@ -130,7 +130,7 @@ What it does:
 3. `make triage` — Triages ecosystem findings, identifies risk patterns.
 4. `make real-ecosystem` — Collects a 1,000-artifact passive multi-source corpus (GitHub MCP repositories + npm MCP packages + curated PyPI MCP packages + Hugging Face Spaces), writes a data card, and records real-finding triage inputs.
 
-A supplementary large-batch command is also available: `make real-ecosystem-large` collects a 2,000-artifact passive corpus into `real_ecosystem_large_*` outputs without replacing the reviewer-friendly 1,000-artifact batch. The target uses `--resume` so partially warmed caches can survive upstream rate limits.
+A supplementary large-batch command is also available: `make real-ecosystem-large` collects a 2,000-artifact passive corpus into `real_ecosystem_large_*` outputs without replacing the reviewer-friendly 1,000-artifact batch. An additional `make real-ecosystem-xl` target collects a 3,000-artifact four-source corpus into `real_ecosystem_xl_*` outputs. Both targets use `--resume` so partially warmed caches can survive upstream rate limits.
 ---
 
 ## Expected Outputs
@@ -162,6 +162,8 @@ A supplementary large-batch command is also available: `make real-ecosystem-larg
 | `real_high_risk_triage.json` | JSON, ~3 KB | Manual triage notes for all HIGH-severity real findings |
 | `real_ecosystem_large_results.json` | JSON, ~4 KB | Supplementary 2,000-artifact aggregate counts and per-source severity distribution |
 | `real_ecosystem_large_data_card.json` | JSON, ~2 KB | Supplementary 2,000-artifact source/date/version/license/dedup metadata |
+| `real_ecosystem_xl_results.json` | JSON, ~5 KB | Supplementary 3,000-artifact aggregate counts and per-source severity distribution |
+| `real_ecosystem_xl_data_card.json` | JSON, ~2 KB | Supplementary 3,000-artifact source/date/version/license/dedup metadata |
 
 ### Key numbers to verify
 
@@ -181,6 +183,7 @@ A supplementary large-batch command is also available: `make real-ecosystem-larg
 | Ecosystem corpus size | 1200 synthetic + 1000 real public artifacts (630 GitHub + 200 npm + 20 PyPI + 150 Hugging Face Spaces) |
 | Unit tests | 98 (all pass) |
 | Supplementary scaled corpus | 2000 real public artifacts (1200 GitHub + 500 npm + 300 Hugging Face Spaces) |
+| Supplementary XL corpus | 3000 real public artifacts (1999 GitHub + 600 npm + 20 PyPI + 381 Hugging Face Spaces) |
 
 See `EXPECTED_OUTPUTS.md` for complete output documentation with example
 snippets and field-level descriptions.

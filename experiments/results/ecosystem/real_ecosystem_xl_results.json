@@ -1,0 +1,135 @@
+{
+  "total_samples": 3000,
+  "sources": {
+    "github_mcp": 1999,
+    "npm_mcp": 600,
+    "pypi_mcp": 20,
+    "hf_spaces_mcp": 381
+  },
+  "code_availability": {
+    "manifest_only": 2998,
+    "source_available": 2
+  },
+  "languages": {
+    "python": 1167,
+    "go": 35,
+    "typescript": 553,
+    "c#": 7,
+    "unknown": 739,
+    "javascript": 34,
+    "rust": 23,
+    "swift": 4,
+    "shell": 10,
+    "dart": 1,
+    "jupyter notebook": 13,
+    "kotlin": 3,
+    "java": 7,
+    "tex": 1,
+    "html": 15,
+    "c++": 2,
+    "less": 1,
+    "powershell": 1,
+    "php": 3,
+    "svg": 1,
+    "emacs lisp": 1,
+    "starlark": 1,
+    "dockerfile": 2,
+    "lua": 1,
+    "gradio": 291,
+    "static": 5,
+    "docker": 70,
+    "streamlit": 7,
+    "ocaml": 1,
+    "ruby": 1
+  },
+  "licenses": {
+    "MIT": 1279,
+    "Apache-2.0": 506,
+    "AGPL-3.0": 74,
+    "unknown": 758,
+    "GPL-3.0": 38,
+    "NOASSERTION": 192,
+    "Unlicense": 6,
+    "BSD-3-Clause": 11,
+    "CC0-1.0": 45,
+    "CC-BY-SA-4.0": 5,
+    "CC-BY-4.0": 4,
+    "GPL-2.0": 2,
+    "MIT-0": 3,
+    "BSD-2-Clause": 5,
+    "0BSD": 1,
+    "MPL-2.0": 5,
+    "UNLICENSED": 4,
+    "ISC": 33,
+    "Apache-2": 1,
+    "BUSL-1.1": 2,
+    "SEE LICENSE IN LICENSE": 5,
+    "SEE LICENSE IN LICENSE.md": 2,
+    "SEE LICENSE IN ../LICENSE": 2,
+    "Proprietary to Kira4I Artificial Intelligence": 1,
+    "FSL-1.1-MIT": 3,
+    "AGPL-3.0-only": 1,
+    "Apache-2.0 OR MIT": 2,
+    "Proprietary": 1,
+    "EPL-2.0 OR GPL-2.0-only WITH Classpath-exception-2.0": 2,
+    "AGPL-3.0-or-later": 1,
+    "GPLV3": 1,
+    "GPL-3.0-or-later": 2,
+    "MIT License": 1,
+    "Apache 2.0": 1,
+    "LGPL-2.1": 1
+  },
+  "risk_patterns": {
+    "instruction_like": {
+      "count": 2,
+      "rate": 0.0007
+    },
+    "missing_signature": {
+      "count": 2400,
+      "rate": 0.8
+    },
+    "open_world_network": {
+      "count": 6,
+      "rate": 0.002
+    },
+    "scope_inflation": {
+      "count": 11,
+      "rate": 0.0037
+    },
+    "untrusted_publisher": {
+      "count": 1294,
+      "rate": 0.4313
+    }
+  },
+  "severity": {
+    "low": 2986,
+    "medium": 14
+  },
+  "per_source_risk": {
+    "github_mcp": {
+      "count": 1999,
+      "mean_score": 0.003,
+      "max_score": 6.0,
+      "high_risk_count": 0
+    },
+    "npm_mcp": {
+      "count": 600,
+      "mean_score": 0.11,
+      "max_score": 6.0,
+      "high_risk_count": 0
+    },
+    "pypi_mcp": {
+      "count": 20,
+      "mean_score": 0.6,
+      "max_score": 6.0,
+      "high_risk_count": 0
+    },
+    "hf_spaces_mcp": {
+      "count": 381,
+      "mean_score": 0.0,
+      "max_score": 0.0,
+      "high_risk_count": 0
+    }
+  },
+  "top_high_risk": []
+}

@@ -1,0 +1,87 @@
+{
+  "crawl_started_goal": "Passive real-public MCP/tool/package/space measurement",
+  "crawl_completed_at": "2026-05-28T03:47:01Z",
+  "target_samples": 3000,
+  "actual_samples": 3000,
+  "enabled_sources": [
+    "github_mcp",
+    "npm_mcp",
+    "pypi_mcp",
+    "hf_spaces_mcp"
+  ],
+  "source_details": {
+    "github_mcp": {
+      "queries": [
+        "\"model context protocol\" mcp in:name,description,readme",
+        "mcp server language:python in:name,description,readme",
+        "mcp server language:typescript in:name,description,readme",
+        "\"@modelcontextprotocol/sdk\" in:file language:typescript",
+        "langchain tool language:python in:name,description,readme",
+        "langgraph tool language:python in:name,description,readme",
+        "crewai_tools language:python in:name,description,readme",
+        "autogpt plugin in:name,description,readme",
+        "agent tool language:typescript in:name,description,readme",
+        "agent action language:python in:name,description,readme"
+      ],
+      "pages_per_query": 3,
+      "search_per_page": 100
+    },
+    "npm_mcp": {
+      "terms": [
+        "modelcontextprotocol",
+        "\"mcp server\"",
+        "\"mcp tool\""
+      ],
+      "search_page_size": 100
+    },
+    "pypi_mcp": {
+      "seed_packages": [
+        "mcp",
+        "fastmcp",
+        "zeromcp",
+        "mcp-server",
+        "mcp-servers",
+        "python-mcp-server",
+        "mcp-server-framework",
+        "linux-mcp-server",
+        "search-mcp-server",
+        "cve-mcp-server",
+        "ms-fabric-mcp-server",
+        "iflow-mcp_loonghao-pypi-query-mcp-server",
+        "modelcontextprotocol",
+        "modelcontextprotocol-client",
+        "flask-mcp-server",
+        "chuk-mcp-server",
+        "pypi-query-mcp-server",
+        "mcp-server-creator",
+        "autodoc-mcp",
+        "mcp-clipboard"
+      ],
+      "metadata_api": "https://pypi.org/pypi/<name>/json"
+    },
+    "hf_spaces_mcp": {
+      "queries": [
+        "mcp",
+        "mcp-server",
+        "model context protocol"
+      ],
+      "search_limit": 200
+    }
+  },
+  "source_budget": 25,
+  "dedup_rule": "Deduplicate by source-specific artifact identifier (GitHub full_name, npm package name, PyPI package name, or Hugging Face space id); retain linked_repository when an upstream package points to GitHub.",
+  "filter_rule": "Collect public GitHub MCP repositories, npm MCP-related packages, curated PyPI MCP packages, and Hugging Face Spaces returned by MCP-related search terms; include metadata-only samples when bounded source probing finds no recognized entrypoint.",
+  "version_rule": "Record GitHub default_branch plus timestamps; record npm/PyPI package version metadata; record Hugging Face Space sha and created/lastModified timestamps when exposed.",
+  "license_rule": "Record SPDX identifier when the upstream API provides one; otherwise mark unknown.",
+  "availability_rule": {
+    "manifest_only": 2998,
+    "source_available": 2
+  },
+  "safety_boundary": "Passive metadata/source collection only; no third-party code execution, no destructive calls, no credential use.",
+  "limitations": [
+    "GitHub, npm, PyPI, and Hugging Face coverage are query- or seed-biased and incomplete.",
+    "Repository-level, package-level, and space-level signals do not prove deployable vulnerabilities.",
+    "Manifest-only samples retain metadata evidence but weak implementation coverage.",
+    "npm, PyPI, and Hugging Face source coverage depends on linked public files when present."
+  ]
+}

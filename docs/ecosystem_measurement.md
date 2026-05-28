@@ -91,6 +91,15 @@ A supplementary large-batch run is checked in as:
 
 This run uses the passive collector with `--target 2000 --pages-per-query 3 --source-budget 25 --sources github_mcp,npm_mcp,hf_spaces_mcp --output-prefix real_ecosystem_large --resume` and reaches 2,000 artifacts (1,200 GitHub, 500 npm, 300 Hugging Face). It produces 0 HIGH and 9 MEDIUM findings, but only 5 source-available samples. We therefore treat it as a scale-out catalog measurement, not as stronger code-level validation.
 
+### 2.7 Supplementary XL batch
+
+A larger four-source batch is also checked in as:
+
+- `experiments/results/ecosystem/real_ecosystem_xl_results.json`
+- `experiments/results/ecosystem/real_ecosystem_xl_data_card.json`
+
+This run uses `--target 3000 --pages-per-query 3 --source-budget 25 --output-prefix real_ecosystem_xl --resume` and reaches 3,000 artifacts (1,999 GitHub, 600 npm, 20 curated PyPI, 381 Hugging Face). It produces 0 HIGH and 14 MEDIUM findings, but only 2 source-available samples. We treat it as a scale-out catalog measurement that improves ecosystem breadth, not as stronger code-level validation.
+
 ## 3. Manual triage and disclosure status
 
 All HIGH-severity real findings were manually reviewed in `experiments/results/ecosystem/real_high_risk_triage.json`.

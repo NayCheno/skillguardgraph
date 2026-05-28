@@ -119,6 +119,7 @@ experiments/
 | `make real-ecosystem` | Crawl passive real public GitHub + npm + PyPI + Hugging Face MCP corpus | network-bound |
 | `make triage` | Triage synthetic ecosystem findings | ~5 min |
 | `make real-ecosystem-large` | Crawl supplementary 2,000-artifact public corpus (GitHub + npm + Hugging Face, resume-aware) | network-bound |
+| `make real-ecosystem-xl` | Crawl supplementary 3,000-artifact public corpus (4-source, resume-aware) | network-bound |
 | `make reproduce` | benchmark + validate + eval-main + tables | ~30 min |
 | `make eval-all` | reproduce + ecosystem + triage + real-ecosystem | network-bound |
 | `make scan` | Scan a sample manifest | ~5 sec |
@@ -157,6 +158,8 @@ results/ecosystem/real_ecosystem_data_card.json  # Source/date/version/license/d
 results/ecosystem/real_high_risk_triage.json     # Manual triage for HIGH real findings
 results/ecosystem/real_ecosystem_large_results.json # Supplementary scaled real-corpus metrics
 results/ecosystem/real_ecosystem_large_data_card.json # Supplementary scaled data card
+results/ecosystem/real_ecosystem_xl_results.json # Supplementary 3,000-artifact real-corpus metrics
+results/ecosystem/real_ecosystem_xl_data_card.json # Supplementary 3,000-artifact data card
 ```
 
 Key result numbers:
@@ -184,6 +187,7 @@ Key result numbers:
 | Real corpus high severity | 2 |
 | Real corpus confirmed vulnerabilities | 0 |
 | Supplementary scaled corpus | 2,000 artifacts (1200 GitHub + 500 npm + 300 Hugging Face Spaces) |
+| Supplementary XL corpus | 3,000 artifacts (1999 GitHub + 600 npm + 20 PyPI + 381 Hugging Face Spaces) |
 
 See `../artifact/EXPECTED_OUTPUTS.md` for full output documentation.
 ---
@@ -210,6 +214,11 @@ PYTHONPATH=src python scripts/run_runtime_redteam.py
 
 # Supplementary larger public corpus
 PYTHONPATH=src python scripts/crawl_real_ecosystem.py --target 2000 --pages-per-query 3 --source-budget 25 --sources github_mcp,npm_mcp,hf_spaces_mcp --output-prefix real_ecosystem_large --resume
+
+If available, export `GITHUB_TOKEN` and `HF_TOKEN` before large crawls to reduce upstream rate-limit failures.
+
+# Supplementary XL public corpus
+PYTHONPATH=src python scripts/crawl_real_ecosystem.py --target 3000 --pages-per-query 3 --source-budget 25 --output-prefix real_ecosystem_xl --resume
 
 If available, export `GITHUB_TOKEN` and `HF_TOKEN` before large crawls to reduce upstream rate-limit failures.
 
