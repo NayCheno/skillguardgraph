@@ -233,18 +233,18 @@ All generalization acceptance booleans in the JSON are `true`. These checks are 
 | Metric | Value |
 |---|---:|
 | Total artifacts | 1,000 |
-| GitHub MCP repositories | 630 |
+| GitHub MCP repositories | 500 |
 | npm MCP packages | 200 |
-| PyPI MCP packages | 20 |
+| PyPI MCP packages | 150 |
 | Hugging Face Spaces | 150 |
-| Source-available samples | 22 |
-| Manifest-only samples | 978 |
+| Source-available samples | 20 |
+| Manifest-only samples | 980 |
 | High severity | 2 |
 | Medium severity | 16 |
 | Missing signatures | 800 (80.0%) |
-| Untrusted publishers | 328 (32.8%) |
-| Open-world network access | 8 (0.8%) |
-| Scope inflation | 7 (0.7%) |
+| Untrusted publishers | 458 (45.8%) |
+| Open-world network access | 9 (0.9%) |
+| Scope inflation | 6 (0.6%) |
 | Confirmed vulnerabilities | 0 |
 
 ---

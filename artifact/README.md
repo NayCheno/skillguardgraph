@@ -180,7 +180,7 @@ A supplementary large-batch command is also available: `make real-ecosystem-larg
 | Runtime ASR | 0.000 |
 | Task success rate | 1.000 |
 | False block rate | 0.000 |
-| Ecosystem corpus size | 1200 synthetic + 1000 real public artifacts (630 GitHub + 200 npm + 20 PyPI + 150 Hugging Face Spaces) |
+| Ecosystem corpus size | 1200 synthetic + 1000 real public artifacts (500 GitHub + 200 npm + 150 discovered PyPI + 150 Hugging Face Spaces) |
 | Unit tests | 98 (all pass) |
 | Supplementary scaled corpus | 2000 real public artifacts (1200 GitHub + 500 npm + 300 Hugging Face Spaces) |
 | Supplementary XL corpus | 3000 real public artifacts (1999 GitHub + 600 npm + 20 PyPI + 381 Hugging Face Spaces) |

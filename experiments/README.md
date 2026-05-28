@@ -183,7 +183,7 @@ Key result numbers:
 | False block rate | 0.000 |
 | Latency p50 / p95 | 0.5ms / 0.6ms |
 | Sandbox harness recall / benign alert rate | 1.000 / 0.000 |
-| Real public corpus | 1,000 artifacts (630 GitHub + 200 npm + 20 PyPI + 150 Hugging Face Spaces) |
+| Real public corpus | 1,000 artifacts (500 GitHub + 200 npm + 150 PyPI + 150 Hugging Face Spaces) |
 | Real corpus high severity | 2 |
 | Real corpus confirmed vulnerabilities | 0 |
 | Supplementary scaled corpus | 2,000 artifacts (1200 GitHub + 500 npm + 300 Hugging Face Spaces) |
@@ -215,12 +215,12 @@ PYTHONPATH=src python scripts/run_runtime_redteam.py
 # Supplementary larger public corpus
 PYTHONPATH=src python scripts/crawl_real_ecosystem.py --target 2000 --pages-per-query 3 --source-budget 25 --sources github_mcp,npm_mcp,hf_spaces_mcp --output-prefix real_ecosystem_large --resume
 
-If available, export `GITHUB_TOKEN` and `HF_TOKEN` before large crawls to reduce upstream rate-limit failures.
+If available, export `GITHUB_TOKEN` and `HF_TOKEN` before large crawls. Broad PyPI discovery uses the public simple index and JSON endpoints and does not currently use a private token.
 
 # Supplementary XL public corpus
 PYTHONPATH=src python scripts/crawl_real_ecosystem.py --target 3000 --pages-per-query 3 --source-budget 25 --output-prefix real_ecosystem_xl --resume
 
-If available, export `GITHUB_TOKEN` and `HF_TOKEN` before large crawls to reduce upstream rate-limit failures.
+If available, export `GITHUB_TOKEN` and `HF_TOKEN` before large crawls. Broad PyPI discovery uses the public simple index and JSON endpoints and does not currently use a private token.
 
 # Local instrumented runtime harness
 PYTHONPATH=src python scripts/run_runtime_harness.py

@@ -1,6 +1,6 @@
 {
   "crawl_started_goal": "Passive real-public MCP/tool/package/space measurement",
-  "crawl_completed_at": "2026-05-28T02:53:56Z",
+  "crawl_completed_at": "2026-05-28T04:57:44Z",
   "target_samples": 1000,
   "actual_samples": 1000,
   "enabled_sources": [
@@ -74,8 +74,8 @@
   "version_rule": "Record GitHub default_branch plus timestamps; record npm/PyPI package version metadata; record Hugging Face Space sha and created/lastModified timestamps when exposed.",
   "license_rule": "Record SPDX identifier when the upstream API provides one; otherwise mark unknown.",
   "availability_rule": {
-    "manifest_only": 978,
-    "source_available": 22
+    "manifest_only": 980,
+    "source_available": 20
   },
   "safety_boundary": "Passive metadata/source collection only; no third-party code execution, no destructive calls, no credential use.",
   "limitations": [

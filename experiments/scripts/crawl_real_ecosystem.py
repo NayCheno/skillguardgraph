@@ -105,6 +105,7 @@ PYPI_PACKAGE_SEEDS = [
     "autodoc-mcp",
     "mcp-clipboard",
 ]
+PYPI_SIMPLE_NAME = re.compile(r">([^<]*mcp[^<]*)<", re.IGNORECASE)
 
 PY_TOOL_DECORATOR = re.compile(r'@(?:server|app|mcp)\s*\.\s*tool\s*\(\s*["\']([\w-]+)["\']', re.MULTILINE)
 TS_REGISTER_TOOL = re.compile(r'server\.tool\s*\(\s*["\']([\w-]+)["\']', re.MULTILINE)
@@ -189,6 +190,31 @@ def pypi_package_metadata(name: str) -> Dict[str, Any]:
         headers=_request_headers("pypi"),
         service="pypi",
     )
+
+def pypi_simple_candidates(limit: int) -> List[str]:
+    req = urllib.request.Request("https://pypi.org/simple/", headers=_request_headers("pypi"))
+    names: List[str] = []
+    seen: set[str] = set()
+    try:
+        with urllib.request.urlopen(req, timeout=120) as resp:
+            for raw in resp:
+                line = raw.decode("utf-8", errors="ignore")
+                match = PYPI_SIMPLE_NAME.search(line)
+                if not match:
+                    continue
+                name = match.group(1).strip()
+                lowered = name.lower()
+                if "mcp" not in lowered or lowered in seen:
+                    continue
+                seen.add(lowered)
+                names.append(name)
+                if len(names) >= limit:
+                    break
+    except urllib.error.HTTPError as exc:
+        if exc.code == 403:
+            raise RuntimeError(_rate_limit_hint("pypi")) from exc
+        raise
+    return names
 
 
 def fetch_raw(owner: str, repo: str, path: str, branch: str) -> Optional[str]:
@@ -1005,7 +1031,7 @@ def build_pypi_manifest(package_name: str, metadata: Dict[str, Any], linked_repo
     }
 
 
-def analyze_pypi_package(package_name: str, attempt_source_fetch: bool) -> Dict[str, Any]:
+def analyze_pypi_package(package_name: str, attempt_source_fetch: bool, query_tag: str) -> Dict[str, Any]:
     metadata = pypi_package_metadata(package_name)
     info = metadata.get("info") or {}
     repository_url = extract_repository_url_from_project_urls(info.get("project_urls"))
@@ -1046,7 +1072,7 @@ def analyze_pypi_package(package_name: str, attempt_source_fetch: bool) -> Dict[
         source_files=source_files,
         source_code="\n\n".join(source_blobs if source_files else []),
         metadata={
-            "query_matches": ["pypi_seed"],
+            "query_matches": [query_tag],
             "created_at": None,
             "updated_at": None,
             "pushed_at": None,
@@ -1070,17 +1096,26 @@ def crawl_pypi_source(target: int, cache: Dict[str, Dict[str, Any]], source_budg
 
     samples: List[Dict[str, Any]] = list(cached_items)
     remaining_source_budget = source_budget
-    seeds = PYPI_PACKAGE_SEEDS[: max(target, len(PYPI_PACKAGE_SEEDS))]
-    print(f"Using {len(seeds)} curated PyPI seeds")
 
-    for package_name in seeds:
+    candidates: List[Tuple[str, str]] = [(name, "pypi_seed") for name in PYPI_PACKAGE_SEEDS]
+    discovered = pypi_simple_candidates(max(target * 2, len(PYPI_PACKAGE_SEEDS)))
+    for name in discovered:
+        if all(existing_name.lower() != name.lower() for existing_name, _ in candidates):
+            candidates.append((name, "pypi_simple"))
+
+    print(
+        f"Using {len(candidates)} PyPI candidates "
+        f"({len(PYPI_PACKAGE_SEEDS)} curated seeds + {max(0, len(candidates) - len(PYPI_PACKAGE_SEEDS))} simple-index discoveries)"
+    )
+
+    for package_name, query_tag in candidates:
         if len(samples) >= target:
             break
-        if any(sample.get("dedup_key") == package_name for sample in samples):
+        if any(str(sample.get("dedup_key", "")).lower() == package_name.lower() for sample in samples):
             continue
         attempt_source_fetch = remaining_source_budget > 0
         try:
-            sample = analyze_pypi_package(package_name, attempt_source_fetch=attempt_source_fetch)
+            sample = analyze_pypi_package(package_name, attempt_source_fetch=attempt_source_fetch, query_tag=query_tag)
             samples.append(sample)
             put_cached_sample(cache, "pypi_mcp", package_name, sample)
             if attempt_source_fetch and sample.get("code_availability") == "source_available":
@@ -1090,10 +1125,6 @@ def crawl_pypi_source(target: int, cache: Dict[str, Dict[str, Any]], source_budg
     save_cache(cache)
     return samples[:target], remaining_source_budget
 
-
-# ---------------------------------------------------------------------------
-# Hugging Face Spaces crawl
-# ---------------------------------------------------------------------------
 
 # ---------------------------------------------------------------------------
 # Hugging Face Spaces crawl
