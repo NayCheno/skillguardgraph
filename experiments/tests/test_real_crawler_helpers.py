@@ -13,6 +13,7 @@ from crawl_real_ecosystem import (  # noqa: E402
     extract_github_repo_ref,
     npm_entrypoint_candidates,
     normalize_repo_url,
+    cached_source_samples,
 )
 
 
@@ -63,3 +64,12 @@ def test_build_hf_manifest_marks_liked_spaces_as_trusted():
     assert manifest["trusted_server"] is True
     assert manifest["source"] == "hf_spaces_mcp"
     assert manifest["tool_count"] == 1
+
+def test_cached_source_samples_filter_and_sort_by_source():
+    cache = {
+        "github_mcp:b": {"source": "github_mcp", "dedup_key": "b"},
+        "github_mcp:a": {"source": "github_mcp", "dedup_key": "a"},
+        "npm_mcp:x": {"source": "npm_mcp", "dedup_key": "x"},
+    }
+    samples = cached_source_samples(cache, "github_mcp")
+    assert [sample["dedup_key"] for sample in samples] == ["a", "b"]

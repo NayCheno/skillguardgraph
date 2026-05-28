@@ -498,6 +498,15 @@ def put_cached_sample(cache: Dict[str, Dict[str, Any]], source: str, dedup_key: 
     cache[f"{source}:{dedup_key}"] = sample
 
 
+def cached_source_samples(cache: Dict[str, Dict[str, Any]], source: str) -> List[Dict[str, Any]]:
+    samples = [
+        sample
+        for key, sample in cache.items()
+        if key.startswith(f"{source}:")
+    ]
+    samples.sort(key=lambda sample: str(sample.get("dedup_key") or sample.get("repo") or ""))
+    return samples
+
 # ---------------------------------------------------------------------------
 # Analysis core
 # ---------------------------------------------------------------------------
@@ -628,7 +637,12 @@ def analyze_github_repo(repo: Dict[str, Any], source_label: str, attempt_source_
 
 
 def crawl_github_source(source: str, target: int, pages_per_query: int, cache: Dict[str, Dict[str, Any]], source_budget: int) -> Tuple[List[Dict[str, Any]], int]:
-    samples: List[Dict[str, Any]] = []
+    cached_items = cached_source_samples(cache, source)
+    if len(cached_items) >= target:
+        print(f"Using {target} cached GitHub samples for {source}")
+        return cached_items[:target], source_budget
+
+    samples: List[Dict[str, Any]] = list(cached_items)
     remaining_source_budget = source_budget
     repos = github_search_space(source, target, pages_per_query)
     print(f"Search produced {len(repos)} unique GitHub candidates for {source}")
@@ -636,9 +650,7 @@ def crawl_github_source(source: str, target: int, pages_per_query: int, cache: D
     for full_name, repo in repos.items():
         if len(samples) >= target:
             break
-        cached = cached_sample(cache, source, full_name)
-        if cached is not None:
-            samples.append(cached)
+        if any(sample.get("dedup_key") == full_name for sample in samples):
             continue
         language = str(repo.get("language") or "").lower()
         attempt_source_fetch = remaining_source_budget > 0 and language in SOURCE_LANGUAGES
@@ -756,7 +768,12 @@ def analyze_npm_package(entry: Dict[str, Any], attempt_source_fetch: bool) -> Di
 
 
 def crawl_npm_source(target: int, cache: Dict[str, Dict[str, Any]], source_budget: int) -> Tuple[List[Dict[str, Any]], int]:
-    samples: List[Dict[str, Any]] = []
+    cached_items = cached_source_samples(cache, "npm_mcp")
+    if len(cached_items) >= target:
+        print(f"Using {target} cached npm samples")
+        return cached_items[:target], source_budget
+
+    samples: List[Dict[str, Any]] = list(cached_items)
     remaining_source_budget = source_budget
     packages = npm_search_space(target)
     print(f"Search produced {len(packages)} unique npm candidates")
@@ -764,9 +781,7 @@ def crawl_npm_source(target: int, cache: Dict[str, Dict[str, Any]], source_budge
     for package_name, entry in packages.items():
         if len(samples) >= target:
             break
-        cached = cached_sample(cache, "npm_mcp", package_name)
-        if cached is not None:
-            samples.append(cached)
+        if any(sample.get("dedup_key") == package_name for sample in samples):
             continue
         attempt_source_fetch = remaining_source_budget > 0
         try:
@@ -898,7 +913,12 @@ def analyze_hf_space(space_entry: Dict[str, Any], attempt_source_fetch: bool) ->
 
 
 def crawl_hf_spaces_source(target: int, cache: Dict[str, Dict[str, Any]], source_budget: int) -> Tuple[List[Dict[str, Any]], int]:
-    samples: List[Dict[str, Any]] = []
+    cached_items = cached_source_samples(cache, "hf_spaces_mcp")
+    if len(cached_items) >= target:
+        print(f"Using {target} cached Hugging Face spaces")
+        return cached_items[:target], source_budget
+
+    samples: List[Dict[str, Any]] = list(cached_items)
     remaining_source_budget = source_budget
     spaces = hf_space_search_space(target)
     print(f"Search produced {len(spaces)} unique Hugging Face spaces")
@@ -906,9 +926,7 @@ def crawl_hf_spaces_source(target: int, cache: Dict[str, Dict[str, Any]], source
     for space_id, entry in spaces.items():
         if len(samples) >= target:
             break
-        cached = cached_sample(cache, "hf_spaces_mcp", space_id)
-        if cached is not None:
-            samples.append(cached)
+        if any(sample.get("dedup_key") == space_id for sample in samples):
             continue
         attempt_source_fetch = remaining_source_budget > 0
         try:
