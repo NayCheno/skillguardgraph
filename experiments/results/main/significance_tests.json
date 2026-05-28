@@ -13,24 +13,24 @@
   },
   "weighted_voting": {
     "TP": 2829,
-    "FP": 208,
-    "TN": 792,
+    "FP": 1000,
+    "TN": 0,
     "FN": 181,
-    "precision": 0.9315,
+    "precision": 0.7388,
     "recall": 0.9399,
-    "f1": 0.9357,
-    "fpr": 0.208
+    "f1": 0.8273,
+    "fpr": 1.0
   },
   "mcnemar_exact": {
-    "fusion_only_correct": 389,
+    "fusion_only_correct": 1181,
     "weighted_only_correct": 0,
     "p_value": 0.0
   },
   "paired_bootstrap_delta": {
     "precision": {
-      "mean_delta": 0.0684,
-      "ci_low": 0.0592,
-      "ci_high": 0.0775
+      "mean_delta": 0.2609,
+      "ci_low": 0.2475,
+      "ci_high": 0.2746
     },
     "recall": {
       "mean_delta": 0.0603,
@@ -38,14 +38,14 @@
       "ci_high": 0.0695
     },
     "f1": {
-      "mean_delta": 0.0644,
-      "ci_low": 0.0582,
-      "ci_high": 0.0706
+      "mean_delta": 0.1726,
+      "ci_low": 0.1628,
+      "ci_high": 0.182
     },
     "fpr": {
-      "mean_delta": -0.2081,
-      "ci_low": -0.2342,
-      "ci_high": -0.183
+      "mean_delta": -1.0,
+      "ci_low": -1.0,
+      "ci_high": -1.0
     }
   }
 }

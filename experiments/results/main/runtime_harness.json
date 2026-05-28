@@ -1,8 +1,8 @@
 {
   "suite": {
-    "total_tasks": 123,
-    "benign_tasks": 60,
-    "attack_tasks": 63,
+    "total_tasks": 210,
+    "benign_tasks": 105,
+    "attack_tasks": 105,
     "execution_model": "local_instrumented_toy_harness_no_third_party_code"
   },
   "defense": {
@@ -17,65 +17,120 @@
     "approval_burden": 0.0
   },
   "latency_ms": {
-    "p50": 0.206,
-    "p95": 0.265,
-    "p99": 0.297,
-    "max": 0.301
+    "p50": 0.267,
+    "p95": 0.407,
+    "p99": 0.536,
+    "max": 0.904
   },
   "per_scenario": {
     "local_read": {
-      "total": 15,
+      "total": 10,
       "intervened": 0,
-      "allowed": 15
+      "allowed": 10
     },
     "local_export": {
-      "total": 15,
-      "intervened": 0,
-      "allowed": 15
+      "total": 10,
+      "intervened": 10,
+      "allowed": 0
     },
     "trusted_sync": {
-      "total": 15,
-      "intervened": 15,
-      "allowed": 0
+      "total": 10,
+      "intervened": 0,
+      "allowed": 10
     },
     "preference_save": {
-      "total": 15,
-      "intervened": 15,
+      "total": 10,
+      "intervened": 10,
       "allowed": 0
     },
-    "capability_laundering": {
+    "data_export": {
+      "total": 10,
+      "intervened": 10,
+      "allowed": 0
+    },
+    "web_scrape": {
+      "total": 10,
+      "intervened": 0,
+      "allowed": 10
+    },
+    "file_sync": {
       "total": 9,
       "intervened": 9,
+      "allowed": 0
+    },
+    "calendar_read": {
+      "total": 9,
+      "intervened": 0,
+      "allowed": 9
+    },
+    "chat_respond": {
+      "total": 9,
+      "intervened": 0,
+      "allowed": 9
+    },
+    "code_format": {
+      "total": 9,
+      "intervened": 9,
+      "allowed": 0
+    },
+    "search_query": {
+      "total": 9,
+      "intervened": 0,
+      "allowed": 9
+    },
+    "capability_laundering": {
+      "total": 8,
+      "intervened": 8,
+      "allowed": 0
+    },
+    "credential_theft": {
+      "total": 7,
+      "intervened": 7,
       "allowed": 0
     },
     "cross_skill_confused_deputy": {
-      "total": 9,
-      "intervened": 9,
+      "total": 15,
+      "intervened": 15,
       "allowed": 0
     },
     "delayed_rug_pull": {
-      "total": 9,
-      "intervened": 9,
+      "total": 15,
+      "intervened": 15,
       "allowed": 0
     },
     "consent_laundering": {
-      "total": 9,
-      "intervened": 9,
+      "total": 8,
+      "intervened": 8,
+      "allowed": 0
+    },
+    "approval_bypass": {
+      "total": 7,
+      "intervened": 7,
       "allowed": 0
     },
     "persistence_pivot": {
-      "total": 9,
-      "intervened": 9,
+      "total": 8,
+      "intervened": 8,
+      "allowed": 0
+    },
+    "config_poison": {
+      "total": 7,
+      "intervened": 7,
       "allowed": 0
     },
     "split_exfiltration": {
-      "total": 9,
-      "intervened": 9,
+      "total": 8,
+      "intervened": 8,
+      "allowed": 0
+    },
+    "obfuscated_exfil": {
+      "total": 7,
+      "intervened": 7,
       "allowed": 0
     },
     "scope_inflation": {
-      "total": 9,
-      "intervened": 9,
+      "total": 15,
+      "intervened": 15,
       "allowed": 0
     }
   },

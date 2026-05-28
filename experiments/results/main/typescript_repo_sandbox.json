@@ -8,9 +8,9 @@
   "tool_registry_total": 4,
   "cli_calls": 1,
   "latency_ms": {
-    "p50": 57.411,
-    "p95": 67.707,
-    "max": 67.707
+    "p50": 55.828,
+    "p95": 58.303,
+    "max": 58.303
   },
   "acceptance": {
     "all_cases_executed": true,
@@ -26,7 +26,7 @@
       "raw_url": "https://raw.githubusercontent.com/21st-dev/magic-mcp/main/src/index.ts",
       "source_path": "src/index.ts",
       "description": "TypeScript MCP server entrypoint registering four tools and connecting a stdio transport.",
-      "duration_ms": 57.411,
+      "duration_ms": 58.303,
       "events": [
         {
           "kind": "console_configured"
@@ -70,7 +70,7 @@
         "connected": true,
         "consoleConfigured": true
       },
-      "stdout": "Starting server v0.0.46 (PID: 55820)\nServer started (PID: 55820)\nReceived beforeExit (PID: 55820)\nShutting down server (PID: 55820)...\nServer closed (PID: 55820)\n",
+      "stdout": "Starting server v0.0.46 (PID: 32516)\nServer started (PID: 32516)\nReceived beforeExit (PID: 32516)\nShutting down server (PID: 32516)...\nServer closed (PID: 32516)\n",
       "stderr": ""
     },
     {
@@ -80,7 +80,7 @@
       "raw_url": "https://raw.githubusercontent.com/Done-0/fuck-u-code/main/src/index.ts",
       "source_path": "src/index.ts",
       "description": "TypeScript CLI wrapper that delegates to runCLI with translated fatal-error handling.",
-      "duration_ms": 67.707,
+      "duration_ms": 55.828,
       "events": [
         {
           "kind": "run_cli"

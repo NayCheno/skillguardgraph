@@ -12,12 +12,12 @@
 \textbf{Method} & \textbf{Precision} & \textbf{Recall} & \textbf{F1} & \textbf{FPR} & \textbf{AUROC} & \textbf{AUPRC} \\
 \midrule
 metadata\_only & 0.9398 & 0.1920 & 0.3189 & 0.0370 & 0.5775 & 0.8691 \\
-static\_only & 1.0000 & 0.2199 & 0.3606 & 0.0000 & 0.6099 & 0.9027 \\
+static\_only & 0.8632 & 0.3628 & 0.5109 & 0.1730 & 0.5949 & 0.8521 \\
 sandbox\_only & 1.0000 & 0.2199 & 0.3606 & 0.0000 & 0.7857 & 0.9466 \\
 runtime\_only & 1.0000 & 0.5980 & 0.7484 & 0.0000 & 0.7990 & 0.9499 \\
 naive\_union & 0.7506 & 1.0000 & 0.8575 & 1.0000 & 0.5000 & 0.8753 \\
-weighted\_voting & 0.9315 & 0.9399 & 0.9357 & 0.2080 & 0.8925 & 0.9670 \\
-llm\_judge & 0.7506 & 1.0000 & 0.8575 & 1.0000 & 0.7988 & 0.9363 \\
+weighted\_voting & 0.7388 & 0.9399 & 0.8273 & 1.0000 & 0.6691 & 0.9139 \\
+llm\_judge & 0.7506 & 1.0000 & 0.8575 & 1.0000 & 0.4028 & 0.8298 \\
 fusion & 1.0000 & 1.0000 & 1.0000 & 0.0000 & 1.0000 & 0.9855 \\
 \bottomrule
 \end{tabular}
@@ -55,10 +55,10 @@ split\_exfiltration & 430 & 430 & 0 & 1.0000 \\
 \textbf{Ablation} & \textbf{Precision} & \textbf{Recall} & \textbf{F1} & \textbf{FPR} & \textbf{F1 Delta} \\
 \midrule
 full & 1.0000 & 1.0000 & 1.0000 & 0.0000 & +0.0000 \\
-no\_metadata & 1.0000 & 0.8571 & 0.9231 & 0.0000 & -0.0769 \\
+no\_metadata & 1.0000 & 1.0000 & 1.0000 & 0.0000 & +0.0000 \\
 no\_static & 1.0000 & 1.0000 & 1.0000 & 0.0000 & +0.0000 \\
 no\_sandbox & 1.0000 & 1.0000 & 1.0000 & 0.0000 & +0.0000 \\
-no\_runtime & 1.0000 & 0.2199 & 0.3606 & 0.0000 & -0.6394 \\
+no\_runtime & 1.0000 & 0.1641 & 0.2820 & 0.0000 & -0.7180 \\
 no\_sequence & 1.0000 & 0.7970 & 0.8870 & 0.0000 & -0.1130 \\
 \bottomrule
 \end{tabular}
@@ -97,10 +97,10 @@ SC (Stealth Coefficient) & 0.0000 \\
 \toprule
 \textbf{Metric} & \textbf{Value} \\
 \midrule
-Task Success Rate & 1.0000 \\
+Task Success Rate & 0.9630 \\
 False Block Rate & 0.0000 \\
 Approval Burden & 0.0000 \\
-Task Success Count & 1000 \\
+Task Success Count & 963 \\
 False Block Count & 0 \\
 HITL Count & 0 \\
 \bottomrule
@@ -135,14 +135,14 @@ Label-blinded audit & 475 & 1.0000 & 1.0000 & 1.0000 & 0.0000 & 0 \\
 \toprule
 \textbf{Metric} & \textbf{Value} \\
 \midrule
-Benign tasks & 60 \\
-Attack tasks & 63 \\
+Benign tasks & 105 \\
+Attack tasks & 105 \\
 ASR & 0.0000 \\
 ASR reduction & 1.0000 \\
 Task success rate & 1.0000 \\
 False block rate & 0.0000 \\
 Evidence path coverage & 1.0000 \\
-Policy p95 latency (ms) & 0.265 \\
+Policy p95 latency (ms) & 0.407 \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -164,7 +164,7 @@ Blocked shell attempts & 8 \\
 Malicious detection recall & 1.0000 \\
 Benign alert rate & 0.0000 \\
 Unsafe egress events & 0 \\
-Sandbox p95 latency (ms) & 41.681 \\
+Sandbox p95 latency (ms) & 53.622 \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -183,7 +183,7 @@ Fixtures executed & 3 \\
 Archive fixtures resolved & 3 \\
 Subprocess attempts observed & 1 \\
 No unsafe egress & true \\
-Fixture p95 latency (ms) & 91.206 \\
+Fixture p95 latency (ms) & 92.487 \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -204,7 +204,7 @@ Client tool calls observed & 2 \\
 Subprocess attempts observed & 1 \\
 Registered tools observed & 2 \\
 No unsafe egress & true \\
-Case p95 latency (ms) & 91.746 \\
+Case p95 latency (ms) & 106.193 \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -223,7 +223,7 @@ Cases executed & 2 \\
 Blender delegate calls & 1 \\
 Registered tools observed & 18 \\
 No unsafe egress & true \\
-Case p95 latency (ms) & 106.825 \\
+Case p95 latency (ms) & 103.332 \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -242,7 +242,7 @@ Cases executed & 2 \\
 Registered tools observed & 4 \\
 CLI delegate calls & 1 \\
 No unsafe egress & true \\
-Case p95 latency (ms) & 67.707 \\
+Case p95 latency (ms) & 58.303 \\
 \bottomrule
 \end{tabular}
 \end{table}

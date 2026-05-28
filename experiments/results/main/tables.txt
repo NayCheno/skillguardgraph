@@ -7,12 +7,12 @@ Table 1: Detection Comparison
 | Method          | Precision | Recall | F1     | FPR    | AUROC  | AUPRC  |
 +-----------------+-----------+--------+--------+--------+--------+--------+
 | metadata_only   | 0.9398    | 0.1920 | 0.3189 | 0.0370 | 0.5775 | 0.8691 |
-| static_only     | 1.0000    | 0.2199 | 0.3606 | 0.0000 | 0.6099 | 0.9027 |
+| static_only     | 0.8632    | 0.3628 | 0.5109 | 0.1730 | 0.5949 | 0.8521 |
 | sandbox_only    | 1.0000    | 0.2199 | 0.3606 | 0.0000 | 0.7857 | 0.9466 |
 | runtime_only    | 1.0000    | 0.5980 | 0.7484 | 0.0000 | 0.7990 | 0.9499 |
 | naive_union     | 0.7506    | 1.0000 | 0.8575 | 1.0000 | 0.5000 | 0.8753 |
-| weighted_voting | 0.9315    | 0.9399 | 0.9357 | 0.2080 | 0.8925 | 0.9670 |
-| llm_judge       | 0.7506    | 1.0000 | 0.8575 | 1.0000 | 0.7988 | 0.9363 |
+| weighted_voting | 0.7388    | 0.9399 | 0.8273 | 1.0000 | 0.6691 | 0.9139 |
+| llm_judge       | 0.7506    | 1.0000 | 0.8575 | 1.0000 | 0.4028 | 0.8298 |
 | fusion          | 1.0000    | 1.0000 | 1.0000 | 0.0000 | 1.0000 | 0.9855 |
 +-----------------+-----------+--------+--------+--------+--------+--------+
 
@@ -34,10 +34,10 @@ Table 3: Ablation Results
 | Ablation    | Precision | Recall | F1     | FPR    | F1 Delta |
 +-------------+-----------+--------+--------+--------+----------+
 | full        | 1.0000    | 1.0000 | 1.0000 | 0.0000 | +0.0000  |
-| no_metadata | 1.0000    | 0.8571 | 0.9231 | 0.0000 | -0.0769  |
+| no_metadata | 1.0000    | 1.0000 | 1.0000 | 0.0000 | +0.0000  |
 | no_static   | 1.0000    | 1.0000 | 1.0000 | 0.0000 | +0.0000  |
 | no_sandbox  | 1.0000    | 1.0000 | 1.0000 | 0.0000 | +0.0000  |
-| no_runtime  | 1.0000    | 0.2199 | 0.3606 | 0.0000 | -0.6394  |
+| no_runtime  | 1.0000    | 0.1641 | 0.2820 | 0.0000 | -0.7180  |
 | no_sequence | 1.0000    | 0.7970 | 0.8870 | 0.0000 | -0.1130  |
 +-------------+-----------+--------+--------+--------+----------+
 
@@ -60,10 +60,10 @@ Table 5: Usability Metrics
 +--------------------+--------+
 | Metric             | Value  |
 +--------------------+--------+
-| Task Success Rate  | 1.0000 |
+| Task Success Rate  | 0.9630 |
 | False Block Rate   | 0.0000 |
 | Approval Burden    | 0.0000 |
-| Task Success Count | 1000   |
+| Task Success Count | 963    |
 | False Block Count  | 0      |
 | HITL Count         | 0      |
 +--------------------+--------+
@@ -82,14 +82,14 @@ Table 7: Local Runtime Harness
 +-------------------------+--------+
 | Metric                  | Value  |
 +-------------------------+--------+
-| Benign tasks            | 60     |
-| Attack tasks            | 63     |
+| Benign tasks            | 105    |
+| Attack tasks            | 105    |
 | ASR                     | 0.0000 |
 | ASR reduction           | 1.0000 |
 | Task success rate       | 1.0000 |
 | False block rate        | 0.0000 |
 | Evidence path coverage  | 1.0000 |
-| Policy p95 latency (ms) | 0.265  |
+| Policy p95 latency (ms) | 0.407  |
 +-------------------------+--------+
 
 Table 8: Local Sandbox Harness
@@ -103,7 +103,7 @@ Table 8: Local Sandbox Harness
 | Malicious detection recall | 1.0000 |
 | Benign alert rate          | 0.0000 |
 | Unsafe egress events       | 0      |
-| Sandbox p95 latency (ms)   | 41.681 |
+| Sandbox p95 latency (ms)   | 53.622 |
 +----------------------------+--------+
 
 Table 9: Third-Party Public-Code Sandbox
@@ -114,21 +114,21 @@ Table 9: Third-Party Public-Code Sandbox
 | Archive fixtures resolved    | 3      |
 | Subprocess attempts observed | 1      |
 | No unsafe egress             | true   |
-| Fixture p95 latency (ms)     | 91.206 |
+| Fixture p95 latency (ms)     | 92.487 |
 +------------------------------+--------+
 
 Table 10: Corpus-Derived Package Sandbox
-+------------------------------+--------+
-| Metric                       | Value  |
-+------------------------------+--------+
-| Cases executed               | 3      |
-| Archive cases resolved       | 3      |
-| Client tool calls observed   | 2      |
-| Subprocess attempts observed | 1      |
-| Registered tools observed    | 2      |
-| No unsafe egress             | true   |
-| Case p95 latency (ms)        | 91.746 |
-+------------------------------+--------+
++------------------------------+---------+
+| Metric                       | Value   |
++------------------------------+---------+
+| Cases executed               | 3       |
+| Archive cases resolved       | 3       |
+| Client tool calls observed   | 2       |
+| Subprocess attempts observed | 1       |
+| Registered tools observed    | 2       |
+| No unsafe egress             | true    |
+| Case p95 latency (ms)        | 106.193 |
++------------------------------+---------+
 
 Table 11: GitHub Repo Sandbox
 +---------------------------+---------+
@@ -138,7 +138,7 @@ Table 11: GitHub Repo Sandbox
 | Blender delegate calls    | 1       |
 | Registered tools observed | 18      |
 | No unsafe egress          | true    |
-| Case p95 latency (ms)     | 106.825 |
+| Case p95 latency (ms)     | 103.332 |
 +---------------------------+---------+
 
 Table 12: TypeScript Repo Sandbox
@@ -149,5 +149,5 @@ Table 12: TypeScript Repo Sandbox
 | Registered tools observed | 4      |
 | CLI delegate calls        | 1      |
 | No unsafe egress          | true   |
-| Case p95 latency (ms)     | 67.707 |
+| Case p95 latency (ms)     | 58.303 |
 +---------------------------+--------+
