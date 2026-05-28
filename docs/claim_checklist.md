@@ -15,12 +15,13 @@ This file is the paper-facing audit map for SkillGuardGraph's current claim boun
 | The artifact includes an archive-backed third-party public-code sandbox fixture suite | `experiments/results/main/third_party_sandbox.json`, `experiments/src/skillguardgraph/third_party_sandbox.py`, `experiments/scripts/run_third_party_sandbox.py` | Supported |
 | The artifact includes a bounded corpus-derived third-party package sandbox over source-available PyPI cases | `experiments/results/main/corpus_package_sandbox.json`, `experiments/src/skillguardgraph/corpus_package_sandbox.py`, `experiments/scripts/run_corpus_package_sandbox.py` | Supported |
 | Passive multi-source public measurement is implemented and documented, including supplementary 2k/3k/5k/10k batches | `experiments/results/ecosystem/real_ecosystem_results.json`, `experiments/results/ecosystem/real_ecosystem_large_results.json`, `experiments/results/ecosystem/real_ecosystem_xl_results.json`, `experiments/results/ecosystem/real_ecosystem_5k_results.json`, `experiments/results/ecosystem/real_ecosystem_10k_results.json`, `docs/ecosystem_measurement.md` | Supported |
+| The artifact includes a public-advisory cross-check over the main real public corpus | `experiments/results/ecosystem/public_advisory_audit.json`, `experiments/scripts/run_public_advisory_audit.py` | Supported |
 
 ## Claims that must remain explicitly limited
 
 | Claim area | Current evidence | Required wording |
 |---|---|---|
-| Real-world exploit confirmation | Passive repo/package/space metadata + bounded source only | Do not claim confirmed vulnerabilities or exploit paths |
+| Real-world exploit confirmation | Passive repo/package/space metadata + bounded source, plus advisory cross-checking for known public MCP cases | Do not claim newly confirmed vulnerabilities or exploit paths from this artifact alone |
 | Dynamic sandboxing | Local toy sandbox harness plus archive-backed curated third-party public-code fixtures and bounded source-available PyPI package cases only; no arbitrary third-party skill execution | Do not claim production sandbox coverage |
 | Production runtime deployment | Local toy runtime harness only | Do not claim deployed agent-runtime efficacy |
 | Ecosystem prevalence | 1k main batch including a public hosted-registry slice + 2k/3k/5k/10k supplementary catalog measurements | Frame as passive catalog evidence, not exhaustive market coverage |

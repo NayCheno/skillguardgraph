@@ -1,0 +1,61 @@
+{
+  "advisories_total": 2,
+  "advisories_present_in_corpus": 1,
+  "currently_vulnerable_matches": 0,
+  "patched_or_unaffected_matches": 1,
+  "cases": [
+    {
+      "advisory_id": "GHSA-345p-7cg4-v4c7",
+      "cve_id": "CVE-2026-25536",
+      "ecosystem": "npm",
+      "package_name": "@modelcontextprotocol/sdk",
+      "repository_url": "https://github.com/modelcontextprotocol/typescript-sdk",
+      "summary": "Cross-client data leak via shared server/transport instance reuse in the official TypeScript SDK.",
+      "severity": "moderate",
+      "published_at": "2026-02-04",
+      "affected_gte": "1.10.0",
+      "affected_lt": "1.26.0",
+      "fixed_version": "1.26.0",
+      "source_urls": [
+        "https://github.com/advisories/GHSA-345p-7cg4-v4c7",
+        "https://nvd.nist.gov/vuln/detail/CVE-2026-25536"
+      ],
+      "status": "present_patched",
+      "matches": [
+        {
+          "repo": "@modelcontextprotocol/sdk",
+          "url": "https://www.npmjs.com/package/@modelcontextprotocol/sdk",
+          "source": "npm_mcp",
+          "package_version": "1.29.0",
+          "linked_repository": "https://github.com/modelcontextprotocol/typescript-sdk",
+          "policy_risk": "low",
+          "code_availability": "manifest_only"
+        }
+      ]
+    },
+    {
+      "advisory_id": "GHSA-vjqx-cfc4-9h6v",
+      "cve_id": "CVE-2026-27735",
+      "ecosystem": "github",
+      "package_name": "@modelcontextprotocol/server-git",
+      "repository_url": "https://github.com/modelcontextprotocol/servers",
+      "summary": "Path traversal in git_add allows staging files outside repository boundaries in the official git reference server.",
+      "severity": "moderate",
+      "published_at": "2026-02-25",
+      "affected_gte": null,
+      "affected_lt": "2026.1.14",
+      "fixed_version": "2026.1.14",
+      "source_urls": [
+        "https://github.com/advisories/GHSA-vjqx-cfc4-9h6v",
+        "https://nvd.nist.gov/vuln/detail/CVE-2026-27735"
+      ],
+      "status": "not_in_corpus",
+      "matches": []
+    }
+  ],
+  "notes": [
+    "This audit matches checked-in public-corpus artifacts against known public MCP advisories.",
+    "A match does not imply the current measured version is vulnerable; status is version-aware when package metadata is present.",
+    "This audit does not replace disclosure-backed validation of new findings from the passive crawl."
+  ]
+}

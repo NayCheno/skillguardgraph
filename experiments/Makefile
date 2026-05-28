@@ -1,4 +1,4 @@
-.PHONY: demo test smoke eval-main eval-all tables validate benchmark ecosystem triage reproduce clean scan trace latency real-ecosystem real-ecosystem-large real-ecosystem-xl real-ecosystem-5k real-ecosystem-10k significance generalization runtime-harness sandbox-harness third-party-sandbox corpus-package-sandbox completion-audit
+.PHONY: demo test smoke eval-main eval-all tables validate benchmark ecosystem triage reproduce clean scan trace latency real-ecosystem real-ecosystem-large real-ecosystem-xl real-ecosystem-5k real-ecosystem-10k significance generalization runtime-harness sandbox-harness third-party-sandbox corpus-package-sandbox advisory-audit completion-audit
 
 # Cross-platform PYTHONPATH setup
 ifeq ($(OS),Windows_NT)
@@ -29,6 +29,7 @@ eval-main:
 	$(PYTHONPATH_OPT) python scripts/run_sandbox_harness.py
 	$(PYTHONPATH_OPT) python scripts/run_third_party_sandbox.py
 	$(PYTHONPATH_OPT) python scripts/run_corpus_package_sandbox.py
+	$(PYTHONPATH_OPT) python scripts/run_public_advisory_audit.py
 	$(PYTHONPATH_OPT) python scripts/run_bootstrap_ci.py
 	$(PYTHONPATH_OPT) python scripts/run_generalization_eval.py
 
@@ -72,6 +73,9 @@ third-party-sandbox:
 
 corpus-package-sandbox:
 	$(PYTHONPATH_OPT) python scripts/run_corpus_package_sandbox.py
+
+advisory-audit:
+	$(PYTHONPATH_OPT) python scripts/run_public_advisory_audit.py
 
 sandbox-harness:
 	$(PYTHONPATH_OPT) python scripts/run_sandbox_harness.py

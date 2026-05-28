@@ -37,6 +37,7 @@ Use this as the final gate before marking the active goal complete.
 - [x] Fusion vs calibrated/learned baseline significance is documented.
 - [x] Held-out-template, hard-negative, mutation-robustness, and label-leakage stress checks are generated.
 
+- [x] Public advisory cross-check output is generated.
 ## Ecosystem and Ethics
 
 - [x] Synthetic ecosystem measurement exists.
@@ -64,6 +65,7 @@ Use this as the final gate before marking the active goal complete.
 - [x] Curated third-party public-code sandbox acceptance checks pass.
 - [x] Bounded corpus-derived third-party package sandbox acceptance checks pass.
 - [x] Tables regenerate.
+- [x] Public advisory cross-check runs against the checked-in main real corpus.
 - [x] Current completion audit can be generated on demand.
 - [x] Docker/Conda instructions are verified or limitations are recorded (Docker build/run passed; `conda` command is unavailable on this workstation).
 - [x] No secrets, credentials, real third-party payloads, or unsafe egress targets are present.

@@ -51,6 +51,7 @@ RESULT_FILES = [
     RESULTS_ECO / "real_high_risk_triage.json",
     RESULTS_ECO / "real_ecosystem_5k_results.json",
     RESULTS_ECO / "real_ecosystem_10k_results.json",
+    RESULTS_ECO / "public_advisory_audit.json",
 ]
 
 
@@ -82,6 +83,7 @@ def main() -> None:
     third_party = read_json(RESULTS_MAIN / "third_party_sandbox.json")
     corpus_package_sandbox = read_json(RESULTS_MAIN / "corpus_package_sandbox.json")
     generalization = read_json(RESULTS_MAIN / "generalization_eval.json")
+    public_advisory = read_json(RESULTS_ECO / "public_advisory_audit.json")
 
     supported = {
         "docs_present": all(docs_present.values()),
@@ -92,6 +94,7 @@ def main() -> None:
         "third_party_fixture_acceptance": all(third_party["acceptance"].values()),
         "generalization_acceptance": all(generalization["acceptance"].values()),
         "corpus_package_acceptance": all(corpus_package_sandbox["acceptance"].values()),
+        "public_advisory_audit_present": int(public_advisory.get("advisories_total", 0)) >= 1,
         "public_corpus_reaches_5k": int(batch_5k.get("total_samples", 0)) >= 5000,
         "public_corpus_reaches_10k": int(batch_10k.get("total_samples", 0)) >= 10000,
     }
@@ -99,12 +102,14 @@ def main() -> None:
     unresolved = {
         "confirmed_real_cases": int(triage["summary"].get("confirmed_vulnerabilities", 0)) == 0,
         "disclosures_sent": int(triage["summary"].get("disclosures_sent", 0)) == 0,
+        "advisory_backed_cases_in_corpus": int(public_advisory.get("advisories_present_in_corpus", 0)),
+        "currently_vulnerable_advisory_matches": int(public_advisory.get("currently_vulnerable_matches", 0)),
         "main_batch_source_available": int(main_eco.get("code_availability", {}).get("source_available", 0)),
         "main_batch_total": int(main_eco.get("total_samples", 0)),
         "tenk_batch_source_available": int(batch_10k.get("code_availability", {}).get("source_available", 0)),
         "tenk_batch_total": int(batch_10k.get("total_samples", 0)),
         "strong_submission_blockers": [
-            "No confirmed real vulnerabilities or disclosure-backed cases.",
+            "No currently vulnerable or disclosure-backed real cases in the measured snapshot.",
             "No arbitrary third-party dynamic sandbox execution beyond bounded source-available PyPI cases.",
             "No production-like runtime deployment evidence.",
             "No private enterprise catalog coverage.",
@@ -120,6 +125,11 @@ def main() -> None:
         },
         "triage_summary": triage["summary"],
         "unresolved": unresolved,
+        "public_advisory_summary": {
+            "advisories_total": public_advisory.get("advisories_total", 0),
+            "advisories_present_in_corpus": public_advisory.get("advisories_present_in_corpus", 0),
+            "currently_vulnerable_matches": public_advisory.get("currently_vulnerable_matches", 0),
+        },
     }
 
     OUT_JSON.write_text(json.dumps(summary, indent=2, ensure_ascii=False), encoding="utf-8")
@@ -137,6 +147,7 @@ def main() -> None:
         "## Current real-corpus state",
         "",
         f"- main batch: {main_eco.get('total_samples', 0)} artifacts, source_available={main_eco.get('code_availability', {}).get('source_available', 0)}",
+        f"- advisory-backed cases in corpus: {public_advisory.get('advisories_present_in_corpus', 0)} (currently vulnerable={public_advisory.get('currently_vulnerable_matches', 0)})",
         f"- corpus-derived package sandbox: {corpus_package_sandbox.get('cases_executed', 0)} cases, archive_resolved={corpus_package_sandbox.get('archive_cases_resolved', 0)}",
         f"- 5k batch: {batch_5k.get('total_samples', 0)} artifacts",
         f"- 10k batch: {batch_10k.get('total_samples', 0)} artifacts, source_available={batch_10k.get('code_availability', {}).get('source_available', 0)}",

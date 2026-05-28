@@ -16,7 +16,7 @@ SkillGuardGraph is a strong artifact-oriented research prototype with a coherent
 
 ## Weaknesses
 
-1. Real-world evidence remains passive and metadata-heavy.
+1. Real-world evidence remains passive and metadata-heavy, even though the artifact now includes a small official-advisory cross-check over the main public corpus.
 2. No confirmed real vulnerabilities or disclosure-backed case studies.
 3. Local runtime/sandbox harnesses now include archive-backed public-code fixtures and bounded source-available PyPI package execution, but they are still not arbitrary third-party execution environments.
 4. Source-available coverage in real batches remains too low for strong exploit or implementation claims, even after adding a public hosted-registry slice.

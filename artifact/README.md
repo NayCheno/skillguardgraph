@@ -68,7 +68,7 @@ pip install -e ".[dev]"
 make smoke
 ```
 
-Expected: the demo prints a JSON policy report to stdout, and all 106 unit
+Expected: the demo prints a JSON policy report to stdout, and all 109 unit
 tests pass.
 
 ### Alternative: Docker
@@ -100,7 +100,7 @@ make smoke
 
 What it does:
 1. Runs `run_demo.py` — scans a sample manifest and evaluates a sample trace.
-2. Runs all 106 unit tests (`pytest tests/ -q`).
+2. Runs all 109 unit tests (`pytest tests/ -q`).
 
 ### Mode 2: Main Reproduction (~30 minutes)
 
@@ -113,7 +113,7 @@ make reproduce
 What it does:
 1. `make benchmark` — Builds 4010-sample benchmark (1000 benign, 3010 malicious across 7 attack classes, ~430 samples each).
 2. `make validate` — Validates label integrity and class balance.
-3. `make eval-main` — Runs detection evaluation (8 methods), ablation study (6 configs), runtime red-team evaluation, local runtime harness, local sandbox harness, third-party public-code sandbox fixtures, bounded corpus-derived package sandbox cases, bootstrap CI, and generalization stress checks.
+3. `make eval-main` — Runs detection evaluation (8 methods), ablation study (6 configs), runtime red-team evaluation, local runtime harness, local sandbox harness, third-party public-code sandbox fixtures, bounded corpus-derived package sandbox cases, public-advisory cross-checking, bootstrap CI, and generalization stress checks.
 4. `make tables` — Generates formatted tables in plain text and LaTeX.
 
 ### Mode 3: Full Reproduction (~2+ hours)
@@ -147,6 +147,7 @@ A supplementary large-batch command is also available: `make real-ecosystem-larg
 | `sandbox_harness.json` | JSON, ~2 KB | Local isolated sandbox harness metrics |
 | `third_party_sandbox.json` | JSON, ~3 KB | Archive-backed third-party public-code sandbox fixture metrics |
 | `corpus_package_sandbox.json` | JSON, ~4 KB | Bounded corpus-derived third-party package sandbox metrics |
+| `public_advisory_audit.json` | JSON, ~2 KB | Public-advisory cross-check for the main real public corpus |
 | `significance_tests.json` | JSON, ~1 KB | McNemar test and paired-bootstrap comparison for fusion vs weighted voting |
 | `generalization_eval.json` | JSON, ~120 KB | Held-out-template, hard-negative, mutation-robustness, and label-leakage checks |
 | `tables.txt` | Text, ~9 KB | 10 formatted plain-text tables |
@@ -190,7 +191,8 @@ A supplementary large-batch command is also available: `make real-ecosystem-larg
 | False block rate | 0.000 |
 | Third-party fixture sandbox | 3 fixtures, 3 archive resolutions, 1 blocked subprocess, 0 unsafe egress |
 | Corpus-derived package sandbox | 3 PyPI cases, 3 archive resolutions, 2 client tool calls, 1 blocked subprocess, 0 unsafe egress |
-| Unit tests | 106 (all pass) |
+| Unit tests | 109 (all pass) |
+| Public advisory audit | 2 advisories tracked, 1 corpus match, 0 currently vulnerable matches |
 | Completion audit | generated on demand |
 | Ecosystem corpus size | 1200 synthetic + 1000 real public artifacts (400 GitHub + 200 npm + 150 discovered PyPI + 150 Hugging Face Spaces + 100 Smithery hosted-registry entries) |
 | Supplementary scaled corpus | 2000 real public artifacts (1200 GitHub + 500 npm + 300 Hugging Face Spaces) |

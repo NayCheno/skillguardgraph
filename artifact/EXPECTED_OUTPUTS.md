@@ -270,6 +270,8 @@ This sandbox executes bounded source-available third-party PyPI package cases dr
 | Scope inflation | 31 (3.1%) |
 | Confirmed vulnerabilities | 0 |
 
+Additional cross-check: `results/ecosystem/public_advisory_audit.json` records known public MCP advisories matched against the checked-in 1,000-artifact corpus. The current snapshot tracks 2 official advisories, finds 1 corpus match (`@modelcontextprotocol/sdk`), and finds 0 currently vulnerable versions in the measured main batch.
+
 ---
 
 ## 16. Supplementary Large Public Ecosystem Measurement

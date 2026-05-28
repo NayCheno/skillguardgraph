@@ -82,6 +82,9 @@ Top license counts:
 5. **Multi-source coverage is stronger than the prior GitHub-only snapshot, but still incomplete.** The current batch spans GitHub MCP repositories, npm MCP packages, 150 discovered PyPI MCP packages, 150 Hugging Face Spaces, and 100 Smithery hosted-registry entries; it still does not cover private enterprise catalogs.
 6. **Real-world prevalence is much lower than synthetic stress prevalence.** This is expected: the synthetic corpus is designed to exercise suspicious patterns, while the public corpus is used as a conservative external-validity check.
 
+### 2.5.1 Public advisory cross-check
+
+We additionally cross-check the main 1,000-artifact public corpus against a small curated set of official MCP advisories recorded in `experiments/results/ecosystem/public_advisory_audit.json`. The current audit tracks two official advisories (`GHSA-345p-7cg4-v4c7` / `CVE-2026-25536` for `@modelcontextprotocol/sdk`, and `GHSA-vjqx-cfc4-9h6v` / `CVE-2026-27735` for the reference git server family). One advisory-backed package family is present in the checked-in corpus, but the observed package version is patched, so the cross-check yields 0 currently vulnerable matches in the measured snapshot. We treat this as external grounding for real ecosystem risk, not as a replacement for disclosure-backed validation of newly surfaced findings.
 ### 2.6 Supplementary scaled batch
 
 A supplementary large-batch run is checked in as:

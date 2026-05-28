@@ -51,6 +51,7 @@ This checklist is extracted from `README.md`, `docs/roadmap.md`, `docs/plan.md`,
 - [x] Run a real public corpus measurement with recorded source/date/version/license/dedup metadata.
 - [x] Manually triage high-risk real findings.
 - [x] Keep suspicious findings separate from confirmed vulnerabilities.
+- [x] Cross-check the main real public corpus against known official MCP advisories.
 - [x] Use disclosure log entries before publishing real vulnerable package identities.
 
 ## Paper
@@ -74,6 +75,7 @@ This checklist is extracted from `README.md`, `docs/roadmap.md`, `docs/plan.md`,
 - [x] Include `run_third_party_sandbox.py` in `eval-main`.
 - [x] Include `run_corpus_package_sandbox.py` in `eval-main`.
 - [x] Provide a scriptable completion audit for the current checkout.
+- [x] Include `run_public_advisory_audit.py` in `eval-main`.
 - [x] Run smoke, tests, main evaluation, ablation, runtime red-team, latency, bootstrap, failure analysis, tables, and available Docker/Conda checks before final delivery.
 - [x] Confirm no real secrets, credentials, or operational payloads are included.
 - [x] Confirm `git status --short` is clean and list commits.

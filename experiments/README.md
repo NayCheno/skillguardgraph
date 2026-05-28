@@ -130,6 +130,7 @@ experiments/
 | `make sandbox-harness` | Run local isolated sandbox harness | ~1 min |
 | `make third-party-sandbox` | Run archive-backed third-party public-code sandbox fixtures | ~1 min |
 | `make corpus-package-sandbox` | Run bounded corpus-derived third-party package sandbox cases | ~1 min |
+| `make advisory-audit` | Cross-check the real public corpus against known public MCP advisories | ~5 sec |
 | `make completion-audit` | Generate current completion audit report | ~5 sec |
 | `make clean` | Remove all generated results and data | instant |
 
@@ -152,6 +153,7 @@ results/main/generalization_eval.json # Held-out/hard-negative/mutation/leakage 
 results/main/tables.tex           # LaTeX tables for paper inclusion
 results/main/third_party_sandbox.json # Archive-backed third-party public-code sandbox metrics
 results/main/corpus_package_sandbox.json # Bounded corpus-derived package sandbox metrics
+results/ecosystem/public_advisory_audit.json # Known public-advisory cross-check against the main real corpus
 ```
 
 After `make eval-all` (additional files):
@@ -211,6 +213,7 @@ Key result numbers:
 | Supplementary 10k corpus | 10,000 artifacts (4000 GitHub + 4000 npm + 1620 PyPI + 380 Hugging Face Spaces) |
 | Third-party fixture sandbox | 3 public-code fixtures, 1 blocked subprocess, 0 unsafe egress |
 | Corpus-derived package sandbox | 3 PyPI cases, 2 client tool calls, 1 blocked subprocess, 0 unsafe egress |
+| Public advisory audit | 2 advisories tracked, 1 corpus match, 0 currently vulnerable matches |
 
 See `../artifact/EXPECTED_OUTPUTS.md` for full output documentation.
 ---
@@ -246,6 +249,9 @@ PYTHONPATH=src python scripts/run_corpus_package_sandbox.py
 
 # Supplementary XL public corpus
 PYTHONPATH=src python scripts/crawl_real_ecosystem.py --target 3000 --pages-per-query 3 --output-prefix real_ecosystem_xl --resume
+
+# Public advisory cross-check for the main real corpus
+PYTHONPATH=src python scripts/run_public_advisory_audit.py
 
 # Supplementary 5k public corpus
 PYTHONPATH=src python scripts/crawl_real_ecosystem.py --target 5000 --pages-per-query 6 --source-budget 25 --sources github_mcp,npm_mcp,pypi_mcp,hf_spaces_mcp --source-quotas github_mcp=2600,npm_mcp=2000,pypi_mcp=20,hf_spaces_mcp=380 --output-prefix real_ecosystem_5k --resume
