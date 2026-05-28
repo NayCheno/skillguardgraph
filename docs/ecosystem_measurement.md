@@ -38,9 +38,9 @@ The real measurement does **not** execute third-party code, perform destructive 
 | Official MCP Registry entries | 100 |
 | Source-available samples | 15 |
 | Manifest-only samples | 985 |
-| High severity | 1 |
+| High severity | 2 |
 | Medium severity | 35 |
-| Low severity | 964 |
+| Low severity | 963 |
 ### 2.3 Language and license mix
 
 Top language counts in the measured corpus:
@@ -77,7 +77,7 @@ Top license counts:
 ### 2.5 Interpretation
 
 1. **Governance provenance remains weak even after adding both hosted and official registry slices.** Missing signatures still appear on 800/1,000 artifacts (80.0%) because GitHub repositories, many PyPI projects, Hugging Face Spaces, and public registries do not expose strong signing metadata through the passive collector.
-2. **Only a very small fraction of artifacts trigger high-severity passive findings.** After the refined six-source passive crawl, the real corpus produces 1 HIGH finding and 35 MEDIUM findings, and the remaining HIGH finding remains unconfirmed after manual review.
+2. **Only a very small fraction of artifacts trigger high-severity passive findings.** After the refined six-source passive crawl, the real corpus produces 2 HIGH findings and 35 MEDIUM findings, and both HIGH findings remain unconfirmed after manual review as likely false positives or insufficient exploit evidence.
 3. **Metadata-only coverage still dominates.** 985/1,000 artifacts remain manifest-only because the collector intentionally bounds source probing and does not recurse through full repositories, package tarballs, or hosted services. This is acceptable for catalog-level measurement but not for code-complete vulnerability confirmation.
 4. **Source discovery is broader but still bounded.** The collector now combines GitHub contents listings, package.json-derived entrypoints, broad PyPI simple-index discovery, Hugging Face `app_file`/sibling metadata, Smithery hosted-registry metadata, and the official MCP Registry list API before bounded source fetch, but the full 1,000-artifact batch still remains overwhelmingly metadata-only.
 5. **Multi-source coverage is stronger than the prior GitHub-only snapshot, but still incomplete.** The current batch spans GitHub MCP repositories, npm MCP packages, 150 discovered PyPI MCP packages, 150 Hugging Face Spaces, 100 Smithery hosted-registry entries, and 100 official MCP Registry entries; it still does not cover private enterprise catalogs.
