@@ -1,0 +1,3080 @@
+[
+  {
+    "artifact": "21st-dev/magic-mcp",
+    "url": "https://github.com/21st-dev/magic-mcp",
+    "source": "github_mcp",
+    "code_availability": "source_available",
+    "language": "TypeScript",
+    "automated_analysis": {
+      "evidence_count": 7,
+      "risk": "low",
+      "decision": "allow",
+      "score": 0.0,
+      "findings": [],
+      "evidence_summary": [
+        {
+          "kind": "permission",
+          "predicate": "requires_scope",
+          "object": "run"
+        },
+        {
+          "kind": "permission",
+          "predicate": "requires_scope",
+          "object": "search"
+        },
+        {
+          "kind": "governance",
+          "predicate": "has_trust_label",
+          "object": "trusted_server"
+        },
+        {
+          "kind": "metadata",
+          "predicate": "annotation_claims",
+          "object": "read_only"
+        },
+        {
+          "kind": "governance",
+          "predicate": "published_by",
+          "object": "21st-dev"
+        },
+        {
+          "kind": "governance",
+          "predicate": "signed",
+          "object": "false"
+        },
+        {
+          "kind": "sandbox",
+          "predicate": "observes_behavior",
+          "object": "no_suspicious_behavior"
+        }
+      ]
+    },
+    "reviewer_1": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": "```json\n{\n  \"classification\": \"L1\",\n  \"confidence\": \"medium\",\n  \"reasoning\": \"The artifact shows a metadata inconsistency between the declared 'run' scope and the annotation claiming 'read_only'. Whil"
+    },
+    "reviewer_2": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    },
+    "consensus_classification": "L1",
+    "reviewer_agreement": true
+  },
+  {
+    "artifact": "BeehiveInnovations/pal-mcp-server",
+    "url": "https://github.com/BeehiveInnovations/pal-mcp-server",
+    "source": "github_mcp",
+    "code_availability": "source_available",
+    "language": "Python",
+    "automated_analysis": {
+      "evidence_count": 11,
+      "risk": "low",
+      "decision": "allow",
+      "score": 0.0,
+      "findings": [],
+      "evidence_summary": [
+        {
+          "kind": "permission",
+          "predicate": "requires_scope",
+          "object": "run"
+        },
+        {
+          "kind": "permission",
+          "predicate": "requires_scope",
+          "object": "write"
+        },
+        {
+          "kind": "permission",
+          "predicate": "requires_scope",
+          "object": "execute"
+        },
+        {
+          "kind": "permission",
+          "predicate": "requires_scope",
+          "object": "read"
+        },
+        {
+          "kind": "permission",
+          "predicate": "requires_scope",
+          "object": "list"
+        },
+        {
+          "kind": "permission",
+          "predicate": "requires_scope",
+          "object": "send"
+        },
+        {
+          "kind": "permission",
+          "predicate": "requires_high_risk_scope",
+          "object": "send,write"
+        },
+        {
+          "kind": "governance",
+          "predicate": "has_trust_label",
+          "object": "trusted_server"
+        },
+        {
+          "kind": "governance",
+          "predicate": "published_by",
+          "object": "BeehiveInnovations"
+        },
+        {
+          "kind": "governance",
+          "predicate": "signed",
+          "object": "false"
+        },
+        {
+          "kind": "sandbox",
+          "predicate": "observes_behavior",
+          "object": "destructive_annotation_present"
+        }
+      ]
+    },
+    "reviewer_1": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    },
+    "reviewer_2": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    },
+    "consensus_classification": "L1",
+    "reviewer_agreement": true
+  },
+  {
+    "artifact": "ChromeDevTools/chrome-devtools-mcp",
+    "url": "https://github.com/ChromeDevTools/chrome-devtools-mcp",
+    "source": "github_mcp",
+    "code_availability": "source_available",
+    "language": "TypeScript",
+    "automated_analysis": {
+      "evidence_count": 11,
+      "risk": "low",
+      "decision": "allow",
+      "score": 0.0,
+      "findings": [],
+      "evidence_summary": [
+        {
+          "kind": "permission",
+          "predicate": "requires_scope",
+          "object": "run"
+        },
+        {
+          "kind": "permission",
+          "predicate": "requires_scope",
+          "object": "write"
+        },
+        {
+          "kind": "permission",
+          "predicate": "requires_scope",
+          "object": "export"
+        },
+        {
+          "kind": "permission",
+          "predicate": "requires_scope",
+          "object": "modify"
+        },
+        {
+          "kind": "permission",
+          "predicate": "requires_scope",
+          "object": "list"
+        },
+        {
+          "kind": "permission",
+          "predicate": "requires_scope",
+          "object": "send"
+        },
+        {
+          "kind": "permission",
+          "predicate": "requires_high_risk_scope",
+          "object": "export,modify,send,write"
+        },
+        {
+          "kind": "governance",
+          "predicate": "has_trust_label",
+          "object": "trusted_server"
+        },
+        {
+          "kind": "governance",
+          "predicate": "published_by",
+          "object": "ChromeDevTools"
+        },
+        {
+          "kind": "governance",
+          "predicate": "signed",
+          "object": "false"
+        },
+        {
+          "kind": "sandbox",
+          "predicate": "observes_behavior",
+          "object": "no_suspicious_behavior"
+        }
+      ]
+    },
+    "reviewer_1": {
+      "classification": "L1",
+      "confidence": "medium",
+      "reasoning": "The artifact is published by a trusted source (ChromeDevTools) and shows no suspicious runtime behavior. The high-risk scopes (export, modify, send, write) appear to be intentional functional requirements for a DevTools integration server, not a mismatch. The lack of signature is a supply chain concern but does not alone indicate vulnerability.",
+      "key_evidence": [
+        "governance: has_trust_label -> trusted_server",
+        "governance: published_by -> ChromeDevTools",
+        "permission: requires_high_risk_scope -> export,modify,send,write",
+        "sandbox: observes_behavior -> no_suspicious_behavior"
+      ],
+      "recommended_action": "monitor"
+    },
+    "reviewer_2": {
+      "classification": "L1",
+      "confidence": "medium",
+      "reasoning": "The tool requires high-risk scopes (export, modify, send, write), but this appears intentional for its core function of providing Chrome DevTools capabilities to coding agents. The publisher is the official ChromeDevTools organization, and the automated analysis found no suspicious behavior or policy violations. The missing signature is a minor supply chain concern but not evidence of malicious intent.",
+      "key_evidence": [
+        "governance: published_by -> ChromeDevTools",
+        "sandbox: observes_behavior -> no_suspicious_behavior",
+        "governance: has_trust_label -> trusted_server"
+      ],
+      "recommended_action": "monitor"
+    },
+    "consensus_classification": "L1",
+    "reviewer_agreement": true
+  },
+  {
+    "artifact": "Done-0/fuck-u-code",
+    "url": "https://github.com/Done-0/fuck-u-code",
+    "source": "github_mcp",
+    "code_availability": "source_available",
+    "language": "TypeScript",
+    "automated_analysis": {
+      "evidence_count": 6,
+      "risk": "low",
+      "decision": "allow",
+      "score": 0.0,
+      "findings": [],
+      "evidence_summary": [
+        {
+          "kind": "permission",
+          "predicate": "requires_scope",
+          "object": "run"
+        },
+        {
+          "kind": "governance",
+          "predicate": "has_trust_label",
+          "object": "trusted_server"
+        },
+        {
+          "kind": "metadata",
+          "predicate": "annotation_claims",
+          "object": "read_only"
+        },
+        {
+          "kind": "governance",
+          "predicate": "published_by",
+          "object": "Done-0"
+        },
+        {
+          "kind": "governance",
+          "predicate": "signed",
+          "object": "false"
+        },
+        {
+          "kind": "sandbox",
+          "predicate": "observes_behavior",
+          "object": "no_suspicious_behavior"
+        }
+      ]
+    },
+    "reviewer_1": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": "```json\n{\n  \"classification\": \"L1\",\n  \"confidence\": \"high\",\n  \"reasoning\": \"The artifact is a code analysis tool that requires the 'run' scope to execute its analysis function"
+    },
+    "reviewer_2": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": "```json\n{\n  \"classification\": \"L1\",\n  \"confidence\": \"medium\",\n  \"reasoning\": \"The tool declares 'run' scope but annotates as 'read_only', suggesting a potential metadata inconsistency. However, the au"
+    },
+    "consensus_classification": "L1",
+    "reviewer_agreement": true
+  },
+  {
+    "artifact": "GLips/Figma-Context-MCP",
+    "url": "https://github.com/GLips/Figma-Context-MCP",
+    "source": "github_mcp",
+    "code_availability": "source_available",
+    "language": "TypeScript",
+    "automated_analysis": {
+      "evidence_count": 14,
+      "risk": "medium",
+      "decision": "degrade",
+      "score": 6.0,
+      "findings": [
+        {
+          "constraint": "C1_DECLARED_READONLY_BUT_WRITE_SCOPE",
+          "severity": "medium",
+          "message": "Skill declares read-only or low-risk behavior but requests write/export/admin-like scope."
+        },
+        {
+          "constraint": "C7_LEAST_PRIVILEGE_SCOPE",
+          "severity": "medium",
+          "message": "Task context indicates read-only need but skill requests elevated scope."
+        }
+      ],
+      "evidence_summary": [
+        {
+          "kind": "permission",
+          "predicate": "requires_scope",
+          "object": "run"
+        },
+        {
+          "kind": "permission",
+          "predicate": "requires_scope",
+          "object": "write"
+        },
+        {
+          "kind": "permission",
+          "predicate": "requires_scope",
+          "object": "read"
+        },
+        {
+          "kind": "permission",
+          "predicate": "requires_scope",
+          "object": "export"
+        },
+        {
+          "kind": "permission",
+          "predicate": "requires_scope",
+          "object": "list"
+        },
+        {
+          "kind": "permission",
+          "predicate": "requires_scope",
+          "object": "delete"
+        },
+        {
+          "kind": "permission",
+          "predicate": "requires_scope",
+          "object": "send"
+        },
+        {
+          "kind": "permission",
+          "predicate": "requires_high_risk_scope",
+          "object": "delete,export,send,write"
+        },
+        {
+          "kind": "governance",
+          "predicate": "has_trust_label",
+          "object": "trusted_server"
+        },
+        {
+          "kind": "metadata",
+          "predicate": "declares_external_access",
+          "object": "open_world"
+        },
+        {
+          "kind": "metadata",
+          "predicate": "annotation_claims",
+          "object": "read_only"
+        },
+        {
+          "kind": "governance",
+          "predicate": "published_by",
+          "object": "GLips"
+        },
+        {
+          "kind": "governance",
+          "predicate": "signed",
+          "object": "false"
+        },
+        {
+          "kind": "sandbox",
+          "predicate": "observes_behavior",
+          "object": "no_suspicious_behavior"
+        }
+      ]
+    },
+    "reviewer_1": {
+      "classification": "L2",
+      "confidence": "medium",
+      "reasoning": "The artifact presents a clear metadata inconsistency: it declares 'read_only' annotation but requests write/export/delete scopes, creating an explainable cross-layer path. However, no runtime confirmation of malicious behavior exists. The scope mismatch appears functionally plausible for a Figma context server (exporting/sending data may be core functionality), and the publisher is trusted with no suspicious runtime behavior observed. This fits L2 as the unsafe chain exists but isn't confirmed as exploitable.",
+      "key_evidence": [
+        "annotation_claims -> read_only",
+        "requires_high_risk_scope -> delete,export,send,write",
+        "no_suspicious_behavior",
+        "published_by -> GLips",
+        "metadata: declares_external_access -> open_world"
+      ],
+      "recommended_action": "investigate"
+    },
+    "reviewer_2": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": "{\n  \"classification\": \"L2\",\n  \"confidence\": \"medium\",\n  \"reasoning\": \"There is an explainable cross-layer inconsistency: the tool's annotation claims 'read_only' but it requests high-risk scopes ('wri"
+    },
+    "consensus_classification": "L2",
+    "reviewer_agreement": false
+  },
+  {
+    "artifact": "Portkey-AI/gateway",
+    "url": "https://github.com/Portkey-AI/gateway",
+    "source": "github_mcp",
+    "code_availability": "source_available",
+    "language": "TypeScript",
+    "automated_analysis": {
+      "evidence_count": 15,
+      "risk": "medium",
+      "decision": "degrade",
+      "score": 6.0,
+      "findings": [
+        {
+          "constraint": "C1_DECLARED_READONLY_BUT_WRITE_SCOPE",
+          "severity": "medium",
+          "message": "Skill declares read-only or low-risk behavior but requests write/export/admin-like scope."
+        },
+        {
+          "constraint": "C7_LEAST_PRIVILEGE_SCOPE",
+          "severity": "medium",
+          "message": "Task context indicates read-only need but skill requests elevated scope."
+        }
+      ],
+      "evidence_summary": [
+        {
+          "kind": "permission",
+          "predicate": "requires_scope",
+          "object": "run"
+        },
+        {
+          "kind": "permission",
+          "predicate": "requires_scope",
+          "object": "write"
+        },
+        {
+          "kind": "permission",
+          "predicate": "requires_scope",
+          "object": "read"
+        },
+        {
+          "kind": "permission",
+          "predicate": "requires_scope",
+          "object": "export"
+        },
+        {
+          "kind": "permission",
+          "predicate": "requires_scope",
+          "object": "list"
+        },
+        {
+          "kind": "permission",
+          "predicate": "requires_scope",
+          "object": "delete"
+        },
+        {
+          "kind": "permission",
+          "predicate": "requires_scope",
+          "object": "send"
+        },
+        {
+          "kind": "permission",
+          "predicate": "requires_scope",
+          "object": "admin"
+        },
+        {
+          "kind": "permission",
+          "predicate": "requires_high_risk_scope",
+          "object": "admin,delete,export,send,write"
+        },
+        {
+          "kind": "governance",
+          "predicate": "has_trust_label",
+          "object": "trusted_server"
+        },
+        {
+          "kind": "metadata",
+          "predicate": "declares_external_access",
+          "object": "open_world"
+        },
+        {
+          "kind": "metadata",
+          "predicate": "annotation_claims",
+          "object": "read_only"
+        },
+        {
+          "kind": "governance",
+          "predicate": "published_by",
+          "object": "Portkey-AI"
+        },
+        {
+          "kind": "governance",
+          "predicate": "signed",
+          "object": "false"
+        },
+        {
+          "kind": "sandbox",
+          "predicate": "observes_behavior",
+          "object": "no_suspicious_behavior"
+        }
+      ]
+    },
+    "reviewer_1": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": "```json\n{\n  \"classification\": \"L2\",\n  \"confidence\": \"medium\",\n  \"reasoning\": \"The artifact has a clear scope mismatch: it declares read-only behavior (annotation_claims -> read_only) but requests high"
+    },
+    "reviewer_2": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    },
+    "consensus_classification": "L1",
+    "reviewer_agreement": true
+  },
+  {
+    "artifact": "YishenTu/claudian",
+    "url": "https://github.com/YishenTu/claudian",
+    "source": "github_mcp",
+    "code_availability": "source_available",
+    "language": "TypeScript",
+    "automated_analysis": {
+      "evidence_count": 10,
+      "risk": "low",
+      "decision": "allow",
+      "score": 0.0,
+      "findings": [],
+      "evidence_summary": [
+        {
+          "kind": "permission",
+          "predicate": "requires_scope",
+          "object": "run"
+        },
+        {
+          "kind": "permission",
+          "predicate": "requires_scope",
+          "object": "read"
+        },
+        {
+          "kind": "permission",
+          "predicate": "requires_scope",
+          "object": "export"
+        },
+        {
+          "kind": "permission",
+          "predicate": "requires_scope",
+          "object": "list"
+        },
+        {
+          "kind": "permission",
+          "predicate": "requires_scope",
+          "object": "delete"
+        },
+        {
+          "kind": "permission",
+          "predicate": "requires_high_risk_scope",
+          "object": "delete,export"
+        },
+        {
+          "kind": "governance",
+          "predicate": "has_trust_label",
+          "object": "trusted_server"
+        },
+        {
+          "kind": "governance",
+          "predicate": "published_by",
+          "object": "YishenTu"
+        },
+        {
+          "kind": "governance",
+          "predicate": "signed",
+          "object": "false"
+        },
+        {
+          "kind": "sandbox",
+          "predicate": "observes_behavior",
+          "object": "destructive_annotation_present"
+        }
+      ]
+    },
+    "reviewer_1": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": "```json\n{\n  \"classification\": \"L2\",\n  \"confidence\": \"medium\",\n  \"reasoning\": \"The plugin declares high-risk scopes ('delete', 'export') which appear consistent with its stated purpose as an Obsidian n"
+    },
+    "reviewer_2": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    },
+    "consensus_classification": "L1",
+    "reviewer_agreement": true
+  },
+  {
+    "artifact": "ahujasid/blender-mcp",
+    "url": "https://github.com/ahujasid/blender-mcp",
+    "source": "github_mcp",
+    "code_availability": "source_available",
+    "language": "Python",
+    "automated_analysis": {
+      "evidence_count": 6,
+      "risk": "low",
+      "decision": "allow",
+      "score": 0.0,
+      "findings": [],
+      "evidence_summary": [
+        {
+          "kind": "permission",
+          "predicate": "requires_scope",
+          "object": "read"
+        },
+        {
+          "kind": "governance",
+          "predicate": "has_trust_label",
+          "object": "trusted_server"
+        },
+        {
+          "kind": "metadata",
+          "predicate": "annotation_claims",
+          "object": "read_only"
+        },
+        {
+          "kind": "governance",
+          "predicate": "published_by",
+          "object": "ahujasid"
+        },
+        {
+          "kind": "governance",
+          "predicate": "signed",
+          "object": "false"
+        },
+        {
+          "kind": "sandbox",
+          "predicate": "observes_behavior",
+          "object": "no_suspicious_behavior"
+        }
+      ]
+    },
+    "reviewer_1": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": "```json\n{\n  \"classification\": \"L1\",\n  \"confidence\": \"medium\",\n  \"reasoning\": \"该工具声明为'read-only'，其Python代码确实通过Blender的Python API实现对3D场景数据的读取"
+    },
+    "reviewer_2": {
+      "classification": "L1",
+      "confidence": "medium",
+      "reasoning": "The artifact shows consistent metadata and declared scope. The 'read' scope aligns with a Blender MCP server's expected functionality (e.g., querying scene data, object properties). No policy findings, trusted server label, and observed behavior with no suspicious activity support a low-risk classification. The unsigned status is common for open-source tools and doesn't alone elevate risk without other red flags.",
+      "key_evidence": [
+        "read_only",
+        "trusted_server",
+        "no_suspicious_behavior"
+      ],
+      "recommended_action": "monitor"
+    },
+    "consensus_classification": "L1",
+    "reviewer_agreement": true
+  },
+  {
+    "artifact": "builderz-labs/mission-control",
+    "url": "https://github.com/builderz-labs/mission-control",
+    "source": "github_mcp",
+    "code_availability": "source_available",
+    "language": "TypeScript",
+    "automated_analysis": {
+      "evidence_count": 15,
+      "risk": "medium",
+      "decision": "degrade",
+      "score": 6.0,
+      "findings": [
+        {
+          "constraint": "C1_DECLARED_READONLY_BUT_WRITE_SCOPE",
+          "severity": "medium",
+          "message": "Skill declares read-only or low-risk behavior but requests write/export/admin-like scope."
+        },
+        {
+          "constraint": "C7_LEAST_PRIVILEGE_SCOPE",
+          "severity": "medium",
+          "message": "Task context indicates read-only need but skill requests elevated scope."
+        }
+      ],
+      "evidence_summary": [
+        {
+          "kind": "permission",
+          "predicate": "requires_scope",
+          "object": "run"
+        },
+        {
+          "kind": "permission",
+          "predicate": "requires_scope",
+          "object": "search"
+        },
+        {
+          "kind": "permission",
+          "predicate": "requires_scope",
+          "object": "write"
+        },
+        {
+          "kind": "permission",
+          "predicate": "requires_scope",
+          "object": "read"
+        },
+        {
+          "kind": "permission",
+          "predicate": "requires_scope",
+          "object": "export"
+        },
+        {
+          "kind": "permission",
+          "predicate": "requires_scope",
+          "object": "delete"
+        },
+        {
+          "kind": "permission",
+          "predicate": "requires_scope",
+          "object": "send"
+        },
+        {
+          "kind": "permission",
+          "predicate": "requires_scope",
+          "object": "admin"
+        },
+        {
+          "kind": "permission",
+          "predicate": "requires_high_risk_scope",
+          "object": "admin,delete,export,send,write"
+        },
+        {
+          "kind": "governance",
+          "predicate": "has_trust_label",
+          "object": "trusted_server"
+        },
+        {
+          "kind": "metadata",
+          "predicate": "declares_external_access",
+          "object": "open_world"
+        },
+        {
+          "kind": "metadata",
+          "predicate": "annotation_claims",
+          "object": "read_only"
+        },
+        {
+          "kind": "governance",
+          "predicate": "published_by",
+          "object": "builderz-labs"
+        },
+        {
+          "kind": "governance",
+          "predicate": "signed",
+          "object": "false"
+        },
+        {
+          "kind": "sandbox",
+          "predicate": "observes_behavior",
+          "object": "no_suspicious_behavior"
+        }
+      ]
+    },
+    "reviewer_1": {
+      "classification": "L2",
+      "confidence": "medium",
+      "reasoning": "The artifact shows a clear mismatch between its annotation (read_only) and its declared functional scopes (including admin, delete, write). This constitutes an explainable cross-layer path. However, the automated analysis found no suspicious runtime behavior, and the publisher (builderz-labs) appears to be a known entity. The high-risk scopes could be a legitimate requirement for an orchestration platform, but the lack of a signature and the 'open_world' access flag introduce supply chain risk. Without runtime confirmation of malicious intent, it remains at the unsafe chain level.",
+      "key_evidence": [
+        "metadata: annotation_claims -> read_only",
+        "permission: requires_high_risk_scope -> admin,delete,export,send,write",
+        "governance: signed -> false",
+        "metadata: declares_external_access -> open_world",
+        "sandbox: observes_behavior -> no_suspicious_behavior"
+      ],
+      "recommended_action": "investigate"
+    },
+    "reviewer_2": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": "```json\n{\n  \"classification\": \"L2\",\n  \"confidence\": \"medium\",\n  \"reasoning\": \"The artifact declares 'read_only' annotation but requests high-risk scopes (admin, delete, write, export, send) that contr"
+    },
+    "consensus_classification": "L2",
+    "reviewer_agreement": false
+  },
+  {
+    "artifact": "czlonkowski/n8n-mcp",
+    "url": "https://github.com/czlonkowski/n8n-mcp",
+    "source": "github_mcp",
+    "code_availability": "source_available",
+    "language": "TypeScript",
+    "automated_analysis": {
+      "evidence_count": 8,
+      "risk": "medium",
+      "decision": "degrade",
+      "score": 6.0,
+      "findings": [
+        {
+          "constraint": "C1_DECLARED_READONLY_BUT_WRITE_SCOPE",
+          "severity": "medium",
+          "message": "Skill declares read-only or low-risk behavior but requests write/export/admin-like scope."
+        },
+        {
+          "constraint": "C7_LEAST_PRIVILEGE_SCOPE",
+          "severity": "medium",
+          "message": "Task context indicates read-only need but skill requests elevated scope."
+        }
+      ],
+      "evidence_summary": [
+        {
+          "kind": "permission",
+          "predicate": "requires_scope",
+          "object": "export"
+        },
+        {
+          "kind": "permission",
+          "predicate": "requires_scope",
+          "object": "list"
+        },
+        {
+          "kind": "permission",
+          "predicate": "requires_high_risk_scope",
+          "object": "export"
+        },
+        {
+          "kind": "governance",
+          "predicate": "has_trust_label",
+          "object": "trusted_server"
+        },
+        {
+          "kind": "metadata",
+          "predicate": "annotation_claims",
+          "object": "read_only"
+        },
+        {
+          "kind": "governance",
+          "predicate": "published_by",
+          "object": "czlonkowski"
+        },
+        {
+          "kind": "governance",
+          "predicate": "signed",
+          "object": "false"
+        },
+        {
+          "kind": "sandbox",
+          "predicate": "observes_behavior",
+          "object": "no_suspicious_behavior"
+        }
+      ]
+    },
+    "reviewer_1": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    },
+    "reviewer_2": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": "{\n  \"classification\": \"L1\",\n  \"confidence\": \"medium\",\n  \"reasoning\": \"The policy findings indicate a mismatch between the tool's declared annotation 'read_only' and its required 'export' scope. Howeve"
+    },
+    "consensus_classification": "L1",
+    "reviewer_agreement": true
+  },
+  {
+    "artifact": "firebase/firebase-tools",
+    "url": "https://github.com/firebase/firebase-tools",
+    "source": "github_mcp",
+    "code_availability": "source_available",
+    "language": "TypeScript",
+    "automated_analysis": {
+      "evidence_count": 10,
+      "risk": "medium",
+      "decision": "degrade",
+      "score": 6.0,
+      "findings": [
+        {
+          "constraint": "C1_DECLARED_READONLY_BUT_WRITE_SCOPE",
+          "severity": "medium",
+          "message": "Skill declares read-only or low-risk behavior but requests write/export/admin-like scope."
+        },
+        {
+          "constraint": "C7_LEAST_PRIVILEGE_SCOPE",
+          "severity": "medium",
+          "message": "Task context indicates read-only need but skill requests elevated scope."
+        }
+      ],
+      "evidence_summary": [
+        {
+          "kind": "permission",
+          "predicate": "requires_scope",
+          "object": "export"
+        },
+        {
+          "kind": "permission",
+          "predicate": "requires_scope",
+          "object": "list"
+        },
+        {
+          "kind": "permission",
+          "predicate": "requires_scope",
+          "object": "delete"
+        },
+        {
+          "kind": "permission",
+          "predicate": "requires_scope",
+          "object": "run"
+        },
+        {
+          "kind": "permission",
+          "predicate": "requires_high_risk_scope",
+          "object": "delete,export"
+        },
+        {
+          "kind": "governance",
+          "predicate": "has_trust_label",
+          "object": "trusted_server"
+        },
+        {
+          "kind": "metadata",
+          "predicate": "annotation_claims",
+          "object": "read_only"
+        },
+        {
+          "kind": "governance",
+          "predicate": "published_by",
+          "object": "firebase"
+        },
+        {
+          "kind": "governance",
+          "predicate": "signed",
+          "object": "false"
+        },
+        {
+          "kind": "sandbox",
+          "predicate": "observes_behavior",
+          "object": "no_suspicious_behavior"
+        }
+      ]
+    },
+    "reviewer_1": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": "```json\n{\n  \"classification\": \"L1\",\n  \"confidence\": \"medium\",\n  \"reasoning\": \"The scope mismatch appears to be an intentional functional requirement rather than malicious. Firebase CLI tools legitimat"
+    },
+    "reviewer_2": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": "```json\n{\n  \"classification\": \"L1\",\n  \"confidence\": \"medium\",\n  \"reasoning\": \"The metadata inconsistency (claims 'read_only' while requesting write scopes) is explainable as a functional requirement r"
+    },
+    "consensus_classification": "L1",
+    "reviewer_agreement": true
+  },
+  {
+    "artifact": "firecrawl/firecrawl-mcp-server",
+    "url": "https://github.com/firecrawl/firecrawl-mcp-server",
+    "source": "github_mcp",
+    "code_availability": "source_available",
+    "language": "JavaScript",
+    "automated_analysis": {
+      "evidence_count": 15,
+      "risk": "medium",
+      "decision": "degrade",
+      "score": 6.0,
+      "findings": [
+        {
+          "constraint": "C1_DECLARED_READONLY_BUT_WRITE_SCOPE",
+          "severity": "medium",
+          "message": "Skill declares read-only or low-risk behavior but requests write/export/admin-like scope."
+        },
+        {
+          "constraint": "C7_LEAST_PRIVILEGE_SCOPE",
+          "severity": "medium",
+          "message": "Task context indicates read-only need but skill requests elevated scope."
+        }
+      ],
+      "evidence_summary": [
+        {
+          "kind": "metadata",
+          "predicate": "declares_capability",
+          "object": "read_only_or_low_risk"
+        },
+        {
+          "kind": "permission",
+          "predicate": "requires_scope",
+          "object": "run"
+        },
+        {
+          "kind": "permission",
+          "predicate": "requires_scope",
+          "object": "search"
+        },
+        {
+          "kind": "permission",
+          "predicate": "requires_scope",
+          "object": "query"
+        },
+        {
+          "kind": "permission",
+          "predicate": "requires_scope",
+          "object": "execute"
+        },
+        {
+          "kind": "permission",
+          "predicate": "requires_scope",
+          "object": "read"
+        },
+        {
+          "kind": "permission",
+          "predicate": "requires_scope",
+          "object": "list"
+        },
+        {
+          "kind": "permission",
+          "predicate": "requires_scope",
+          "object": "delete"
+        },
+        {
+          "kind": "permission",
+          "predicate": "requires_scope",
+          "object": "send"
+        },
+        {
+          "kind": "permission",
+          "predicate": "requires_high_risk_scope",
+          "object": "delete,send"
+        },
+        {
+          "kind": "governance",
+          "predicate": "has_trust_label",
+          "object": "trusted_server"
+        },
+        {
+          "kind": "metadata",
+          "predicate": "declares_external_access",
+          "object": "open_world"
+        },
+        {
+          "kind": "governance",
+          "predicate": "published_by",
+          "object": "firecrawl"
+        },
+        {
+          "kind": "governance",
+          "predicate": "signed",
+          "object": "false"
+        },
+        {
+          "kind": "sandbox",
+          "predicate": "observes_behavior",
+          "object": "destructive_annotation_present"
+        }
+      ]
+    },
+    "reviewer_1": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    },
+    "reviewer_2": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    },
+    "consensus_classification": "L1",
+    "reviewer_agreement": true
+  },
+  {
+    "artifact": "autodoc-mcp",
+    "url": "https://pypi.org/project/autodoc-mcp/",
+    "source": "pypi_mcp",
+    "code_availability": "source_available",
+    "language": "Python",
+    "automated_analysis": {
+      "evidence_count": 5,
+      "risk": "low",
+      "decision": "allow",
+      "score": 0.0,
+      "findings": [],
+      "evidence_summary": [
+        {
+          "kind": "permission",
+          "predicate": "requires_scope",
+          "object": "read"
+        },
+        {
+          "kind": "metadata",
+          "predicate": "annotation_claims",
+          "object": "read_only"
+        },
+        {
+          "kind": "governance",
+          "predicate": "published_by",
+          "object": "unknown"
+        },
+        {
+          "kind": "governance",
+          "predicate": "signed",
+          "object": "false"
+        },
+        {
+          "kind": "sandbox",
+          "predicate": "observes_behavior",
+          "object": "no_suspicious_behavior"
+        }
+      ]
+    },
+    "reviewer_1": {
+      "classification": "L1",
+      "confidence": "medium",
+      "reasoning": "The artifact declares read-only scope with consistent runtime behavior. The primary concerns are governance-related (unknown publisher, no signature) rather than functional scope violations. While the code could theoretically contain hidden malicious patterns, there's no evidence of cross-layer attack paths or confirmed unsafe behavior. The tool's functionality (automatic documentation) logically aligns with read-only access.",
+      "key_evidence": [
+        "permission: requires_scope -> read",
+        "metadata: annotation_claims -> read_only",
+        "sandbox: observes_behavior -> no_suspicious_behavior",
+        "governance: published_by -> unknown",
+        "governance: signed -> false"
+      ],
+      "recommended_action": "monitor"
+    },
+    "reviewer_2": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": "```json\n{\n  \"classification\": \"L1\",\n  \"confidence\": \"high\",\n  \"reasoning\": \"No cross-layer attack path exists. The artifact declares 'read' scope, metadata confirms read-only behavior, and sandbox ana"
+    },
+    "consensus_classification": "L1",
+    "reviewer_agreement": true
+  },
+  {
+    "artifact": "mcp-server-creator",
+    "url": "https://pypi.org/project/mcp-server-creator/",
+    "source": "pypi_mcp",
+    "code_availability": "source_available",
+    "language": "Python",
+    "automated_analysis": {
+      "evidence_count": 8,
+      "risk": "low",
+      "decision": "allow",
+      "score": 0.0,
+      "findings": [],
+      "evidence_summary": [
+        {
+          "kind": "permission",
+          "predicate": "requires_scope",
+          "object": "run"
+        },
+        {
+          "kind": "permission",
+          "predicate": "requires_scope",
+          "object": "list"
+        },
+        {
+          "kind": "permission",
+          "predicate": "requires_scope",
+          "object": "modify"
+        },
+        {
+          "kind": "permission",
+          "predicate": "requires_scope",
+          "object": "read"
+        },
+        {
+          "kind": "permission",
+          "predicate": "requires_high_risk_scope",
+          "object": "modify"
+        },
+        {
+          "kind": "governance",
+          "predicate": "published_by",
+          "object": "unknown"
+        },
+        {
+          "kind": "governance",
+          "predicate": "signed",
+          "object": "false"
+        },
+        {
+          "kind": "sandbox",
+          "predicate": "observes_behavior",
+          "object": "destructive_annotation_present"
+        }
+      ]
+    },
+    "reviewer_1": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    },
+    "reviewer_2": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": "```json"
+    },
+    "consensus_classification": "L1",
+    "reviewer_agreement": true
+  },
+  {
+    "artifact": "search-mcp-server",
+    "url": "https://pypi.org/project/search-mcp-server/",
+    "source": "pypi_mcp",
+    "code_availability": "source_available",
+    "language": "Python",
+    "automated_analysis": {
+      "evidence_count": 9,
+      "risk": "low",
+      "decision": "allow",
+      "score": 0.0,
+      "findings": [],
+      "evidence_summary": [
+        {
+          "kind": "metadata",
+          "predicate": "declares_capability",
+          "object": "read_only_or_low_risk"
+        },
+        {
+          "kind": "permission",
+          "predicate": "requires_scope",
+          "object": "run"
+        },
+        {
+          "kind": "permission",
+          "predicate": "requires_scope",
+          "object": "search"
+        },
+        {
+          "kind": "permission",
+          "predicate": "requires_scope",
+          "object": "query"
+        },
+        {
+          "kind": "permission",
+          "predicate": "requires_scope",
+          "object": "read"
+        },
+        {
+          "kind": "permission",
+          "predicate": "requires_scope",
+          "object": "list"
+        },
+        {
+          "kind": "governance",
+          "predicate": "published_by",
+          "object": "unknown"
+        },
+        {
+          "kind": "governance",
+          "predicate": "signed",
+          "object": "false"
+        },
+        {
+          "kind": "sandbox",
+          "predicate": "observes_behavior",
+          "object": "destructive_annotation_present"
+        }
+      ]
+    },
+    "reviewer_1": {
+      "classification": "L2",
+      "confidence": "medium",
+      "reasoning": "The artifact presents an unsafe chain pattern: metadata claims 'read_only_or_low_risk', but it requires 'run' scope which contradicts this claim. Additionally, the 'destructive_annotation_present' in sandbox behavior suggests potentially unsafe code patterns, though not yet confirmed through runtime replay. The unknown publisher and lack of signature add supply chain risk but don't confirm exploitation.",
+      "key_evidence": [
+        "metadata: declares_capability -> read_only_or_low_risk",
+        "permission: requires_scope -> run",
+        "sandbox: observes_behavior -> destructive_annotation_present"
+      ],
+      "recommended_action": "investigate"
+    },
+    "reviewer_2": {
+      "classification": "L2",
+      "confidence": "medium",
+      "reasoning": "The artifact presents an explainable cross-layer inconsistency: it declares read-only scopes (list, query, read, search) but the automated analysis flags a 'destructive_annotation_present' behavior, suggesting code may perform actions beyond declared permissions (e.g., file writes, network calls). This mismatch could be an intentional functional requirement for a search server that needs to cache or log, but without runtime confirmation, it remains a potential unsafe chain. Supply chain risks (unknown publisher, unsigned) compound the concern.",
+      "key_evidence": [
+        "metadata: declares_capability -> read_only_or_low_risk (but code shows destructive behavior)",
+        "sandbox: observes_behavior -> destructive_annotation_present",
+        "governance: published_by -> unknown and signed -> false"
+      ],
+      "recommended_action": "investigate"
+    },
+    "consensus_classification": "L2",
+    "reviewer_agreement": true
+  },
+  {
+    "artifact": "@iflow-mcp/garethcott-enhanced-postgres-mcp-server",
+    "url": "https://www.npmjs.com/package/@iflow-mcp/garethcott-enhanced-postgres-mcp-server",
+    "source": "npm_mcp",
+    "code_availability": "manifest_only",
+    "language": "unknown",
+    "automated_analysis": {
+      "evidence_count": 7,
+      "risk": "medium",
+      "decision": "degrade",
+      "score": 6.0,
+      "findings": [
+        {
+          "constraint": "C1_DECLARED_READONLY_BUT_WRITE_SCOPE",
+          "severity": "medium",
+          "message": "Skill declares read-only or low-risk behavior but requests write/export/admin-like scope."
+        },
+        {
+          "constraint": "C7_LEAST_PRIVILEGE_SCOPE",
+          "severity": "medium",
+          "message": "Task context indicates read-only need but skill requests elevated scope."
+        }
+      ],
+      "evidence_summary": [
+        {
+          "kind": "permission",
+          "predicate": "requires_scope",
+          "object": "write"
+        },
+        {
+          "kind": "permission",
+          "predicate": "requires_scope",
+          "object": "read"
+        },
+        {
+          "kind": "permission",
+          "predicate": "requires_high_risk_scope",
+          "object": "write"
+        },
+        {
+          "kind": "metadata",
+          "predicate": "annotation_claims",
+          "object": "read_only"
+        },
+        {
+          "kind": "governance",
+          "predicate": "published_by",
+          "object": "chatflowdev"
+        },
+        {
+          "kind": "governance",
+          "predicate": "signed",
+          "object": "true"
+        },
+        {
+          "kind": "sandbox",
+          "predicate": "observes_behavior",
+          "object": "no_suspicious_behavior"
+        }
+      ]
+    },
+    "reviewer_1": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    },
+    "reviewer_2": {
+      "classification": "L2",
+      "confidence": "medium",
+      "reasoning": "The artifact declares a 'read_only' annotation but requests both 'read' and 'write' scopes, creating a metadata/scope inconsistency. While the write capability may be functionally legitimate for an 'enhanced' PostgreSQL server, the mismatch meets L2 criteria: an explainable cross-layer path (declared read-only annotation vs. actual write scope requirement) that is not confirmed as malicious by runtime evidence. No explicit vulnerability or malicious behavior is observed, but the inconsistency warrants investigation.",
+      "key_evidence": [
+        "metadata: annotation_claims -> read_only",
+        "permission: requires_scope -> write",
+        "permission: requires_high_risk_scope -> write",
+        "sandbox: observes_behavior -> no_suspicious_behavior"
+      ],
+      "recommended_action": "investigate"
+    },
+    "consensus_classification": "L2",
+    "reviewer_agreement": false
+  },
+  {
+    "artifact": "@iflow-mcp/garethcott_enhanced-postgres-mcp-server",
+    "url": "https://www.npmjs.com/package/@iflow-mcp/garethcott_enhanced-postgres-mcp-server",
+    "source": "npm_mcp",
+    "code_availability": "manifest_only",
+    "language": "unknown",
+    "automated_analysis": {
+      "evidence_count": 7,
+      "risk": "medium",
+      "decision": "degrade",
+      "score": 6.0,
+      "findings": [
+        {
+          "constraint": "C1_DECLARED_READONLY_BUT_WRITE_SCOPE",
+          "severity": "medium",
+          "message": "Skill declares read-only or low-risk behavior but requests write/export/admin-like scope."
+        },
+        {
+          "constraint": "C7_LEAST_PRIVILEGE_SCOPE",
+          "severity": "medium",
+          "message": "Task context indicates read-only need but skill requests elevated scope."
+        }
+      ],
+      "evidence_summary": [
+        {
+          "kind": "permission",
+          "predicate": "requires_scope",
+          "object": "write"
+        },
+        {
+          "kind": "permission",
+          "predicate": "requires_scope",
+          "object": "read"
+        },
+        {
+          "kind": "permission",
+          "predicate": "requires_high_risk_scope",
+          "object": "write"
+        },
+        {
+          "kind": "metadata",
+          "predicate": "annotation_claims",
+          "object": "read_only"
+        },
+        {
+          "kind": "governance",
+          "predicate": "published_by",
+          "object": "chatflowdev"
+        },
+        {
+          "kind": "governance",
+          "predicate": "signed",
+          "object": "true"
+        },
+        {
+          "kind": "sandbox",
+          "predicate": "observes_behavior",
+          "object": "no_suspicious_behavior"
+        }
+      ]
+    },
+    "reviewer_1": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": "```json\n{\n  \"classification\": \"L1\",\n  \"confidence\": \"medium\",\n  \"reasoning\": \"The scope mismatch appears to be a labeling inconsistency rather than malicious intent. The artifact explicitly declares b"
+    },
+    "reviewer_2": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": "```json\n{\n  \"classification\": \"L1\",\n  \"confidence\": \"medium\",\n  \"reasoning\": \"虽然工具声明为只读但请求写作用域，存在元数据与声明的不一致性，但这更像是功能需求而非安全漏洞。工具基于Anthropic官方server-postgres构建"
+    },
+    "consensus_classification": "L1",
+    "reviewer_agreement": true
+  },
+  {
+    "artifact": "@solvapay/mcp",
+    "url": "https://www.npmjs.com/package/@solvapay/mcp",
+    "source": "npm_mcp",
+    "code_availability": "manifest_only",
+    "language": "unknown",
+    "automated_analysis": {
+      "evidence_count": 7,
+      "risk": "medium",
+      "decision": "degrade",
+      "score": 6.0,
+      "findings": [
+        {
+          "constraint": "C1_DECLARED_READONLY_BUT_WRITE_SCOPE",
+          "severity": "medium",
+          "message": "Skill declares read-only or low-risk behavior but requests write/export/admin-like scope."
+        },
+        {
+          "constraint": "C7_LEAST_PRIVILEGE_SCOPE",
+          "severity": "medium",
+          "message": "Task context indicates read-only need but skill requests elevated scope."
+        }
+      ],
+      "evidence_summary": [
+        {
+          "kind": "permission",
+          "predicate": "requires_scope",
+          "object": "export"
+        },
+        {
+          "kind": "permission",
+          "predicate": "requires_scope",
+          "object": "run"
+        },
+        {
+          "kind": "permission",
+          "predicate": "requires_high_risk_scope",
+          "object": "export"
+        },
+        {
+          "kind": "metadata",
+          "predicate": "annotation_claims",
+          "object": "read_only"
+        },
+        {
+          "kind": "governance",
+          "predicate": "published_by",
+          "object": "tommy-solvapay"
+        },
+        {
+          "kind": "governance",
+          "predicate": "signed",
+          "object": "true"
+        },
+        {
+          "kind": "sandbox",
+          "predicate": "observes_behavior",
+          "object": "no_suspicious_behavior"
+        }
+      ]
+    },
+    "reviewer_1": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": "```json\n{\n  \"classification\": \"L1\",\n  \"confidence\": \"medium\",\n  \"reasoning\": \"The artifact shows a metadata/source inconsistency (declared read_only annotation but requires export/run scopes), which c"
+    },
+    "reviewer_2": {
+      "classification": "L2",
+      "confidence": "medium",
+      "reasoning": "The artifact declares read-only behavior (annotation_clares -> read_only) but requests 'export' and 'run' scopes which are write/execution-capable. This creates an explainable cross-layer inconsistency (C1_DECLARED_READONLY_BUT_WRITE_SCOPE). However, the tool's description indicates it's a payment toolbox with specific functionality (SolvaPay MCP toolbox, OAuth bridges) where 'export' and 'run' scopes may be functionally necessary for legitimate operations like creating servers and registering tools. The publisher is signed and no suspicious behavior was observed in sandbox, but the scope mismatch requires investigation.",
+      "key_evidence": [
+        "metadata: annotation_claims -> read_only",
+        "permission: requires_scope -> export",
+        "permission: requires_scope -> run",
+        "description indicates payment processing functionality"
+      ],
+      "recommended_action": "investigate"
+    },
+    "consensus_classification": "L2",
+    "reviewer_agreement": false
+  },
+  {
+    "artifact": "enhanced-postgres-mcp-server",
+    "url": "https://www.npmjs.com/package/enhanced-postgres-mcp-server",
+    "source": "npm_mcp",
+    "code_availability": "manifest_only",
+    "language": "unknown",
+    "automated_analysis": {
+      "evidence_count": 7,
+      "risk": "medium",
+      "decision": "degrade",
+      "score": 6.0,
+      "findings": [
+        {
+          "constraint": "C1_DECLARED_READONLY_BUT_WRITE_SCOPE",
+          "severity": "medium",
+          "message": "Skill declares read-only or low-risk behavior but requests write/export/admin-like scope."
+        },
+        {
+          "constraint": "C7_LEAST_PRIVILEGE_SCOPE",
+          "severity": "medium",
+          "message": "Task context indicates read-only need but skill requests elevated scope."
+        }
+      ],
+      "evidence_summary": [
+        {
+          "kind": "permission",
+          "predicate": "requires_scope",
+          "object": "write"
+        },
+        {
+          "kind": "permission",
+          "predicate": "requires_scope",
+          "object": "read"
+        },
+        {
+          "kind": "permission",
+          "predicate": "requires_high_risk_scope",
+          "object": "write"
+        },
+        {
+          "kind": "metadata",
+          "predicate": "annotation_claims",
+          "object": "read_only"
+        },
+        {
+          "kind": "governance",
+          "predicate": "published_by",
+          "object": "jlzan1314"
+        },
+        {
+          "kind": "governance",
+          "predicate": "signed",
+          "object": "true"
+        },
+        {
+          "kind": "sandbox",
+          "predicate": "observes_behavior",
+          "object": "no_suspicious_behavior"
+        }
+      ]
+    },
+    "reviewer_1": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    },
+    "reviewer_2": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": "```json\n{\n  \"classification\": \"L2\",\n  \"confidence\": \"medium\",\n  \"reasoning\": \"The artifact demonstrates an explainable cross-layer inconsistency: metadata claims '"
+    },
+    "consensus_classification": "L1",
+    "reviewer_agreement": true
+  },
+  {
+    "artifact": "aas-mcp",
+    "url": "https://pypi.org/project/aas-mcp/",
+    "source": "pypi_mcp",
+    "code_availability": "manifest_only",
+    "language": "python",
+    "automated_analysis": {
+      "evidence_count": 6,
+      "risk": "medium",
+      "decision": "degrade",
+      "score": 6.0,
+      "findings": [
+        {
+          "constraint": "C1_DECLARED_READONLY_BUT_WRITE_SCOPE",
+          "severity": "medium",
+          "message": "Skill declares read-only or low-risk behavior but requests write/export/admin-like scope."
+        },
+        {
+          "constraint": "C7_LEAST_PRIVILEGE_SCOPE",
+          "severity": "medium",
+          "message": "Task context indicates read-only need but skill requests elevated scope."
+        }
+      ],
+      "evidence_summary": [
+        {
+          "kind": "permission",
+          "predicate": "requires_scope",
+          "object": "admin"
+        },
+        {
+          "kind": "permission",
+          "predicate": "requires_high_risk_scope",
+          "object": "admin"
+        },
+        {
+          "kind": "metadata",
+          "predicate": "annotation_claims",
+          "object": "read_only"
+        },
+        {
+          "kind": "governance",
+          "predicate": "published_by",
+          "object": "unknown"
+        },
+        {
+          "kind": "governance",
+          "predicate": "signed",
+          "object": "false"
+        },
+        {
+          "kind": "sandbox",
+          "predicate": "observes_behavior",
+          "object": "no_suspicious_behavior"
+        }
+      ]
+    },
+    "reviewer_1": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    },
+    "reviewer_2": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    },
+    "consensus_classification": "L1",
+    "reviewer_agreement": true
+  },
+  {
+    "artifact": "adaptive-agent-mcp",
+    "url": "https://pypi.org/project/adaptive-agent-mcp/",
+    "source": "pypi_mcp",
+    "code_availability": "manifest_only",
+    "language": "python",
+    "automated_analysis": {
+      "evidence_count": 6,
+      "risk": "medium",
+      "decision": "degrade",
+      "score": 6.0,
+      "findings": [
+        {
+          "constraint": "C1_DECLARED_READONLY_BUT_WRITE_SCOPE",
+          "severity": "medium",
+          "message": "Skill declares read-only or low-risk behavior but requests write/export/admin-like scope."
+        },
+        {
+          "constraint": "C7_LEAST_PRIVILEGE_SCOPE",
+          "severity": "medium",
+          "message": "Task context indicates read-only need but skill requests elevated scope."
+        }
+      ],
+      "evidence_summary": [
+        {
+          "kind": "permission",
+          "predicate": "requires_scope",
+          "object": "write"
+        },
+        {
+          "kind": "permission",
+          "predicate": "requires_high_risk_scope",
+          "object": "write"
+        },
+        {
+          "kind": "metadata",
+          "predicate": "annotation_claims",
+          "object": "read_only"
+        },
+        {
+          "kind": "governance",
+          "predicate": "published_by",
+          "object": "justforever17"
+        },
+        {
+          "kind": "governance",
+          "predicate": "signed",
+          "object": "false"
+        },
+        {
+          "kind": "sandbox",
+          "predicate": "observes_behavior",
+          "object": "no_suspicious_behavior"
+        }
+      ]
+    },
+    "reviewer_1": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    },
+    "reviewer_2": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    },
+    "consensus_classification": "L1",
+    "reviewer_agreement": true
+  },
+  {
+    "artifact": "linux-mcp-server",
+    "url": "https://pypi.org/project/linux-mcp-server/",
+    "source": "pypi_mcp",
+    "code_availability": "manifest_only",
+    "language": "python",
+    "automated_analysis": {
+      "evidence_count": 8,
+      "risk": "medium",
+      "decision": "degrade",
+      "score": 6.0,
+      "findings": [
+        {
+          "constraint": "C1_DECLARED_READONLY_BUT_WRITE_SCOPE",
+          "severity": "medium",
+          "message": "Skill declares read-only or low-risk behavior but requests write/export/admin-like scope."
+        },
+        {
+          "constraint": "C7_LEAST_PRIVILEGE_SCOPE",
+          "severity": "medium",
+          "message": "Task context indicates read-only need but skill requests elevated scope."
+        }
+      ],
+      "evidence_summary": [
+        {
+          "kind": "metadata",
+          "predicate": "declares_capability",
+          "object": "read_only_or_low_risk"
+        },
+        {
+          "kind": "permission",
+          "predicate": "requires_scope",
+          "object": "admin"
+        },
+        {
+          "kind": "permission",
+          "predicate": "requires_scope",
+          "object": "read"
+        },
+        {
+          "kind": "permission",
+          "predicate": "requires_high_risk_scope",
+          "object": "admin"
+        },
+        {
+          "kind": "metadata",
+          "predicate": "annotation_claims",
+          "object": "read_only"
+        },
+        {
+          "kind": "governance",
+          "predicate": "published_by",
+          "object": "RHEL Lightspeed"
+        },
+        {
+          "kind": "governance",
+          "predicate": "signed",
+          "object": "false"
+        },
+        {
+          "kind": "sandbox",
+          "predicate": "observes_behavior",
+          "object": "no_suspicious_behavior"
+        }
+      ]
+    },
+    "reviewer_1": {
+      "classification": "L2",
+      "confidence": "medium",
+      "reasoning": "The artifact declares read-only behavior but requests 'admin' scope, creating an explainable cross-layer inconsistency (L2 criteria). While the observed behavior shows no suspicious activity, the scope mismatch combined with an unsigned package from an unverified publisher raises concern. No confirmed exploitation or replay evidence exists yet, but the mismatch warrants investigation into whether the 'admin' scope is a functional requirement or a potential privilege escalation vector.",
+      "key_evidence": [
+        "metadata: declares_capability -> read_only_or_low_risk",
+        "permission: requires_high_risk_scope -> admin",
+        "governance: published_by -> RHEL Lightspeed",
+        "governance: signed -> false"
+      ],
+      "recommended_action": "investigate"
+    },
+    "reviewer_2": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": "```json\n{\n  \"classification\": \"L1\",\n  \"confidence\": \"medium\",\n  \"reasoning\": \"The artifact exhibits metadata/source inconsistency (L1) by declaring read-only behavior while requesting admin scope. How"
+    },
+    "consensus_classification": "L2",
+    "reviewer_agreement": false
+  },
+  {
+    "artifact": "mcp-clipboard",
+    "url": "https://pypi.org/project/mcp-clipboard/",
+    "source": "pypi_mcp",
+    "code_availability": "manifest_only",
+    "language": "Python",
+    "automated_analysis": {
+      "evidence_count": 7,
+      "risk": "medium",
+      "decision": "degrade",
+      "score": 6.0,
+      "findings": [
+        {
+          "constraint": "C1_DECLARED_READONLY_BUT_WRITE_SCOPE",
+          "severity": "medium",
+          "message": "Skill declares read-only or low-risk behavior but requests write/export/admin-like scope."
+        },
+        {
+          "constraint": "C7_LEAST_PRIVILEGE_SCOPE",
+          "severity": "medium",
+          "message": "Task context indicates read-only need but skill requests elevated scope."
+        }
+      ],
+      "evidence_summary": [
+        {
+          "kind": "permission",
+          "predicate": "requires_scope",
+          "object": "write"
+        },
+        {
+          "kind": "permission",
+          "predicate": "requires_scope",
+          "object": "read"
+        },
+        {
+          "kind": "permission",
+          "predicate": "requires_high_risk_scope",
+          "object": "write"
+        },
+        {
+          "kind": "metadata",
+          "predicate": "annotation_claims",
+          "object": "read_only"
+        },
+        {
+          "kind": "governance",
+          "predicate": "published_by",
+          "object": "unknown"
+        },
+        {
+          "kind": "governance",
+          "predicate": "signed",
+          "object": "false"
+        },
+        {
+          "kind": "sandbox",
+          "predicate": "observes_behavior",
+          "object": "no_suspicious_behavior"
+        }
+      ]
+    },
+    "reviewer_1": {
+      "classification": "L1",
+      "confidence": "high",
+      "reasoning": "The tool's declared purpose ('reads and writes the system clipboard') directly explains why both 'read' and 'write' scopes are required. The 'C1_DECLARED_READONLY_BUT_WRITE_SCOPE' policy finding is a metadata annotation inconsistency, not evidence of an attack chain. The tool's functionality is clear and common for clipboard managers. While the publisher is unknown and the package is unsigned (supply chain risk), these are metadata-level risks without evidence of malicious intent or behavior. The sandbox observed no suspicious behavior.",
+      "key_evidence": [
+        "metadata: annotation_claims -> read_only",
+        "permission: requires_scope -> write",
+        "sandbox: observes_behavior -> no_suspicious_behavior",
+        "Description explicitly states it 'reads and writes' the clipboard"
+      ],
+      "recommended_action": "monitor"
+    },
+    "reviewer_2": {
+      "classification": "L1",
+      "confidence": "medium",
+      "reasoning": "The scope mismatch is explainable and expected for clipboard functionality - a tool that reads AND writes clipboard must legitimately require write scope. The metadata annotation 'read_only' appears to be a mislabeling or refers to read operations only, not the tool's overall capability. No evidence shows code exfiltration, persistence mechanisms, or privilege escalation beyond clipboard access. Supply chain concerns (unknown publisher, unsigned) are noted but don't constitute confirmed vulnerability.",
+      "key_evidence": [
+        "permission: requires_scope -> write",
+        "metadata: annotation_claims -> read_only",
+        "governance: published_by -> unknown"
+      ],
+      "recommended_action": "monitor"
+    },
+    "consensus_classification": "L1",
+    "reviewer_agreement": true
+  },
+  {
+    "artifact": "MadaBurns/bv-mcp",
+    "url": "https://smithery.ai/servers/MadaBurns/bv-mcp",
+    "source": "smithery_mcp",
+    "code_availability": "manifest_only",
+    "language": "remote",
+    "automated_analysis": {
+      "evidence_count": 11,
+      "risk": "medium",
+      "decision": "degrade",
+      "score": 6.0,
+      "findings": [
+        {
+          "constraint": "C1_DECLARED_READONLY_BUT_WRITE_SCOPE",
+          "severity": "medium",
+          "message": "Skill declares read-only or low-risk behavior but requests write/export/admin-like scope."
+        },
+        {
+          "constraint": "C7_LEAST_PRIVILEGE_SCOPE",
+          "severity": "medium",
+          "message": "Task context indicates read-only need but skill requests elevated scope."
+        }
+      ],
+      "evidence_summary": [
+        {
+          "kind": "permission",
+          "predicate": "requires_scope",
+          "object": "run"
+        },
+        {
+          "kind": "permission",
+          "predicate": "requires_scope",
+          "object": "query"
+        },
+        {
+          "kind": "permission",
+          "predicate": "requires_scope",
+          "object": "read"
+        },
+        {
+          "kind": "permission",
+          "predicate": "requires_scope",
+          "object": "list"
+        },
+        {
+          "kind": "permission",
+          "predicate": "requires_scope",
+          "object": "send"
+        },
+        {
+          "kind": "permission",
+          "predicate": "requires_high_risk_scope",
+          "object": "send"
+        },
+        {
+          "kind": "metadata",
+          "predicate": "declares_external_access",
+          "object": "open_world"
+        },
+        {
+          "kind": "metadata",
+          "predicate": "annotation_claims",
+          "object": "read_only"
+        },
+        {
+          "kind": "governance",
+          "predicate": "published_by",
+          "object": "madaburns"
+        },
+        {
+          "kind": "governance",
+          "predicate": "signed",
+          "object": "false"
+        },
+        {
+          "kind": "sandbox",
+          "predicate": "observes_behavior",
+          "object": "no_suspicious_behavior"
+        }
+      ]
+    },
+    "reviewer_1": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    },
+    "reviewer_2": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": "```json\n{\n  \"classification\": \"L1\",\n  \"confidence\": \"medium\",\n  \"reasoning\": \"The artifact has metadata/source inconsistencies: it declares read-only behavior (annotation_claims -> read_only) but requ"
+    },
+    "consensus_classification": "L1",
+    "reviewer_agreement": true
+  },
+  {
+    "artifact": "andysalvo/agentic-platform",
+    "url": "https://smithery.ai/servers/andysalvo/agentic-platform",
+    "source": "smithery_mcp",
+    "code_availability": "manifest_only",
+    "language": "remote",
+    "automated_analysis": {
+      "evidence_count": 12,
+      "risk": "medium",
+      "decision": "degrade",
+      "score": 6.0,
+      "findings": [
+        {
+          "constraint": "C1_DECLARED_READONLY_BUT_WRITE_SCOPE",
+          "severity": "medium",
+          "message": "Skill declares read-only or low-risk behavior but requests write/export/admin-like scope."
+        },
+        {
+          "constraint": "C7_LEAST_PRIVILEGE_SCOPE",
+          "severity": "medium",
+          "message": "Task context indicates read-only need but skill requests elevated scope."
+        }
+      ],
+      "evidence_summary": [
+        {
+          "kind": "permission",
+          "predicate": "requires_scope",
+          "object": "run"
+        },
+        {
+          "kind": "permission",
+          "predicate": "requires_scope",
+          "object": "query"
+        },
+        {
+          "kind": "permission",
+          "predicate": "requires_scope",
+          "object": "read"
+        },
+        {
+          "kind": "permission",
+          "predicate": "requires_scope",
+          "object": "modify"
+        },
+        {
+          "kind": "permission",
+          "predicate": "requires_scope",
+          "object": "list"
+        },
+        {
+          "kind": "permission",
+          "predicate": "requires_high_risk_scope",
+          "object": "modify"
+        },
+        {
+          "kind": "metadata",
+          "predicate": "declares_external_access",
+          "object": "open_world"
+        },
+        {
+          "kind": "metadata",
+          "predicate": "annotation_claims",
+          "object": "read_only"
+        },
+        {
+          "kind": "metadata",
+          "predicate": "contains_instruction_like_text",
+          "object": "manifest_text"
+        },
+        {
+          "kind": "governance",
+          "predicate": "published_by",
+          "object": "andysalvo"
+        },
+        {
+          "kind": "governance",
+          "predicate": "signed",
+          "object": "false"
+        },
+        {
+          "kind": "sandbox",
+          "predicate": "observes_behavior",
+          "object": "no_suspicious_behavior"
+        }
+      ]
+    },
+    "reviewer_1": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    },
+    "reviewer_2": {
+      "classification": "L2",
+      "confidence": "medium",
+      "reasoning": "The artifact declares read-only behavior ('annotation_claims -> read_only') but requests 'modify' scope (write capability), creating a cross-layer inconsistency. This is explainable as the tool may need to modify local manifests for validation, but the mismatch isn't justified by the described functionality. No runtime confirmation exists to prove malicious intent, but the policy violation warrants investigation.",
+      "key_evidence": [
+        "metadata: annotation_claims -> read_only",
+        "permission: requires_scope -> modify",
+        "metadata: declares_external_access -> open_world",
+        "governance: signed -> false"
+      ],
+      "recommended_action": "investigate"
+    },
+    "consensus_classification": "L2",
+    "reviewer_agreement": false
+  },
+  {
+    "artifact": "award-flight-daily/mcp-server",
+    "url": "https://smithery.ai/servers/award-flight-daily/mcp-server",
+    "source": "smithery_mcp",
+    "code_availability": "manifest_only",
+    "language": "remote",
+    "automated_analysis": {
+      "evidence_count": 11,
+      "risk": "medium",
+      "decision": "degrade",
+      "score": 6.0,
+      "findings": [
+        {
+          "constraint": "C1_DECLARED_READONLY_BUT_WRITE_SCOPE",
+          "severity": "medium",
+          "message": "Skill declares read-only or low-risk behavior but requests write/export/admin-like scope."
+        },
+        {
+          "constraint": "C7_LEAST_PRIVILEGE_SCOPE",
+          "severity": "medium",
+          "message": "Task context indicates read-only need but skill requests elevated scope."
+        }
+      ],
+      "evidence_summary": [
+        {
+          "kind": "metadata",
+          "predicate": "declares_capability",
+          "object": "read_only_or_low_risk"
+        },
+        {
+          "kind": "permission",
+          "predicate": "requires_scope",
+          "object": "search"
+        },
+        {
+          "kind": "permission",
+          "predicate": "requires_scope",
+          "object": "query"
+        },
+        {
+          "kind": "permission",
+          "predicate": "requires_scope",
+          "object": "read"
+        },
+        {
+          "kind": "permission",
+          "predicate": "requires_scope",
+          "object": "modify"
+        },
+        {
+          "kind": "permission",
+          "predicate": "requires_scope",
+          "object": "list"
+        },
+        {
+          "kind": "permission",
+          "predicate": "requires_high_risk_scope",
+          "object": "modify"
+        },
+        {
+          "kind": "metadata",
+          "predicate": "declares_external_access",
+          "object": "open_world"
+        },
+        {
+          "kind": "governance",
+          "predicate": "published_by",
+          "object": "award-flight-daily"
+        },
+        {
+          "kind": "governance",
+          "predicate": "signed",
+          "object": "false"
+        },
+        {
+          "kind": "sandbox",
+          "predicate": "observes_behavior",
+          "object": "destructive_annotation_present"
+        }
+      ]
+    },
+    "reviewer_1": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": "{\n  \"classification\": \"L2\",\n  \"confidence\": \"medium\",\n  \"reasoning\": \"The artifact declares read-only/low-risk behavior (metadata) but requests a `modify` scope, which is a clear write/export/admin-li"
+    },
+    "reviewer_2": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    },
+    "consensus_classification": "L1",
+    "reviewer_agreement": true
+  },
+  {
+    "artifact": "douglas/banco-mcp",
+    "url": "https://smithery.ai/servers/douglas/banco-mcp",
+    "source": "smithery_mcp",
+    "code_availability": "manifest_only",
+    "language": "remote",
+    "automated_analysis": {
+      "evidence_count": 10,
+      "risk": "medium",
+      "decision": "degrade",
+      "score": 6.0,
+      "findings": [
+        {
+          "constraint": "C1_DECLARED_READONLY_BUT_WRITE_SCOPE",
+          "severity": "medium",
+          "message": "Skill declares read-only or low-risk behavior but requests write/export/admin-like scope."
+        },
+        {
+          "constraint": "C7_LEAST_PRIVILEGE_SCOPE",
+          "severity": "medium",
+          "message": "Task context indicates read-only need but skill requests elevated scope."
+        }
+      ],
+      "evidence_summary": [
+        {
+          "kind": "metadata",
+          "predicate": "declares_capability",
+          "object": "read_only_or_low_risk"
+        },
+        {
+          "kind": "permission",
+          "predicate": "requires_scope",
+          "object": "run"
+        },
+        {
+          "kind": "permission",
+          "predicate": "requires_scope",
+          "object": "send"
+        },
+        {
+          "kind": "permission",
+          "predicate": "requires_scope",
+          "object": "read"
+        },
+        {
+          "kind": "permission",
+          "predicate": "requires_high_risk_scope",
+          "object": "send"
+        },
+        {
+          "kind": "metadata",
+          "predicate": "declares_external_access",
+          "object": "open_world"
+        },
+        {
+          "kind": "metadata",
+          "predicate": "annotation_claims",
+          "object": "read_only"
+        },
+        {
+          "kind": "governance",
+          "predicate": "published_by",
+          "object": "douglas"
+        },
+        {
+          "kind": "governance",
+          "predicate": "signed",
+          "object": "false"
+        },
+        {
+          "kind": "sandbox",
+          "predicate": "observes_behavior",
+          "object": "no_suspicious_behavior"
+        }
+      ]
+    },
+    "reviewer_1": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": "```json\n{\n  \"classification\": \"L2\",\n  \"confidence\": \"medium\",\n  \"reasoning\": \"The artifact declares itself as 'read-only' (13 read-only"
+    },
+    "reviewer_2": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": "```json\n{\n  \"classification\": \"L2\",\n  \"confidence\": \"medium\",\n  \"reasoning\": \"The artifact declares read-only behavior but requests 'run' and 'send' scopes which are higher risk. This is a cross-layer"
+    },
+    "consensus_classification": "L1",
+    "reviewer_agreement": true
+  },
+  {
+    "artifact": "easyweek/easyweek",
+    "url": "https://smithery.ai/servers/easyweek/easyweek",
+    "source": "smithery_mcp",
+    "code_availability": "manifest_only",
+    "language": "remote",
+    "automated_analysis": {
+      "evidence_count": 12,
+      "risk": "medium",
+      "decision": "degrade",
+      "score": 6.0,
+      "findings": [
+        {
+          "constraint": "C1_DECLARED_READONLY_BUT_WRITE_SCOPE",
+          "severity": "medium",
+          "message": "Skill declares read-only or low-risk behavior but requests write/export/admin-like scope."
+        },
+        {
+          "constraint": "C7_LEAST_PRIVILEGE_SCOPE",
+          "severity": "medium",
+          "message": "Task context indicates read-only need but skill requests elevated scope."
+        }
+      ],
+      "evidence_summary": [
+        {
+          "kind": "metadata",
+          "predicate": "declares_capability",
+          "object": "read_only_or_low_risk"
+        },
+        {
+          "kind": "permission",
+          "predicate": "requires_scope",
+          "object": "run"
+        },
+        {
+          "kind": "permission",
+          "predicate": "requires_scope",
+          "object": "read"
+        },
+        {
+          "kind": "permission",
+          "predicate": "requires_scope",
+          "object": "modify"
+        },
+        {
+          "kind": "permission",
+          "predicate": "requires_scope",
+          "object": "list"
+        },
+        {
+          "kind": "permission",
+          "predicate": "requires_scope",
+          "object": "send"
+        },
+        {
+          "kind": "permission",
+          "predicate": "requires_high_risk_scope",
+          "object": "modify,send"
+        },
+        {
+          "kind": "governance",
+          "predicate": "has_trust_label",
+          "object": "trusted_server"
+        },
+        {
+          "kind": "metadata",
+          "predicate": "declares_external_access",
+          "object": "open_world"
+        },
+        {
+          "kind": "governance",
+          "predicate": "published_by",
+          "object": "easyweek"
+        },
+        {
+          "kind": "governance",
+          "predicate": "signed",
+          "object": "false"
+        },
+        {
+          "kind": "sandbox",
+          "predicate": "observes_behavior",
+          "object": "destructive_annotation_present"
+        }
+      ]
+    },
+    "reviewer_1": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    },
+    "reviewer_2": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": "{\n  \"classification\": \"L2\",\n  \"confidence\": \"medium\",\n  \"reasoning\": \"The artifact declares 'read_only_or_low_risk' metadata but requests write scopes (modify, send), creating a policy mismatch. This "
+    },
+    "consensus_classification": "L1",
+    "reviewer_agreement": true
+  },
+  {
+    "artifact": "equipdash/equipdash",
+    "url": "https://smithery.ai/servers/equipdash/equipdash",
+    "source": "smithery_mcp",
+    "code_availability": "manifest_only",
+    "language": "remote",
+    "automated_analysis": {
+      "evidence_count": 13,
+      "risk": "medium",
+      "decision": "degrade",
+      "score": 6.0,
+      "findings": [
+        {
+          "constraint": "C1_DECLARED_READONLY_BUT_WRITE_SCOPE",
+          "severity": "medium",
+          "message": "Skill declares read-only or low-risk behavior but requests write/export/admin-like scope."
+        },
+        {
+          "constraint": "C7_LEAST_PRIVILEGE_SCOPE",
+          "severity": "medium",
+          "message": "Task context indicates read-only need but skill requests elevated scope."
+        }
+      ],
+      "evidence_summary": [
+        {
+          "kind": "metadata",
+          "predicate": "declares_capability",
+          "object": "read_only_or_low_risk"
+        },
+        {
+          "kind": "permission",
+          "predicate": "requires_scope",
+          "object": "run"
+        },
+        {
+          "kind": "permission",
+          "predicate": "requires_scope",
+          "object": "search"
+        },
+        {
+          "kind": "permission",
+          "predicate": "requires_scope",
+          "object": "query"
+        },
+        {
+          "kind": "permission",
+          "predicate": "requires_scope",
+          "object": "execute"
+        },
+        {
+          "kind": "permission",
+          "predicate": "requires_scope",
+          "object": "read"
+        },
+        {
+          "kind": "permission",
+          "predicate": "requires_scope",
+          "object": "modify"
+        },
+        {
+          "kind": "permission",
+          "predicate": "requires_scope",
+          "object": "list"
+        },
+        {
+          "kind": "permission",
+          "predicate": "requires_high_risk_scope",
+          "object": "modify"
+        },
+        {
+          "kind": "metadata",
+          "predicate": "declares_external_access",
+          "object": "open_world"
+        },
+        {
+          "kind": "governance",
+          "predicate": "published_by",
+          "object": "equipdash"
+        },
+        {
+          "kind": "governance",
+          "predicate": "signed",
+          "object": "false"
+        },
+        {
+          "kind": "sandbox",
+          "predicate": "observes_behavior",
+          "object": "destructive_annotation_present"
+        }
+      ]
+    },
+    "reviewer_1": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    },
+    "reviewer_2": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    },
+    "consensus_classification": "L1",
+    "reviewer_agreement": true
+  },
+  {
+    "artifact": "hiroshi-c9/edition",
+    "url": "https://smithery.ai/servers/hiroshi-c9/edition",
+    "source": "smithery_mcp",
+    "code_availability": "manifest_only",
+    "language": "remote",
+    "automated_analysis": {
+      "evidence_count": 12,
+      "risk": "medium",
+      "decision": "degrade",
+      "score": 6.0,
+      "findings": [
+        {
+          "constraint": "C1_DECLARED_READONLY_BUT_WRITE_SCOPE",
+          "severity": "medium",
+          "message": "Skill declares read-only or low-risk behavior but requests write/export/admin-like scope."
+        },
+        {
+          "constraint": "C7_LEAST_PRIVILEGE_SCOPE",
+          "severity": "medium",
+          "message": "Task context indicates read-only need but skill requests elevated scope."
+        }
+      ],
+      "evidence_summary": [
+        {
+          "kind": "permission",
+          "predicate": "requires_scope",
+          "object": "run"
+        },
+        {
+          "kind": "permission",
+          "predicate": "requires_scope",
+          "object": "search"
+        },
+        {
+          "kind": "permission",
+          "predicate": "requires_scope",
+          "object": "query"
+        },
+        {
+          "kind": "permission",
+          "predicate": "requires_scope",
+          "object": "read"
+        },
+        {
+          "kind": "permission",
+          "predicate": "requires_scope",
+          "object": "list"
+        },
+        {
+          "kind": "permission",
+          "predicate": "requires_scope",
+          "object": "admin"
+        },
+        {
+          "kind": "permission",
+          "predicate": "requires_high_risk_scope",
+          "object": "admin"
+        },
+        {
+          "kind": "metadata",
+          "predicate": "declares_external_access",
+          "object": "open_world"
+        },
+        {
+          "kind": "metadata",
+          "predicate": "annotation_claims",
+          "object": "read_only"
+        },
+        {
+          "kind": "governance",
+          "predicate": "published_by",
+          "object": "hiroshi-c9"
+        },
+        {
+          "kind": "governance",
+          "predicate": "signed",
+          "object": "false"
+        },
+        {
+          "kind": "sandbox",
+          "predicate": "observes_behavior",
+          "object": "no_suspicious_behavior"
+        }
+      ]
+    },
+    "reviewer_1": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    },
+    "reviewer_2": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    },
+    "consensus_classification": "L1",
+    "reviewer_agreement": true
+  },
+  {
+    "artifact": "indigoprotocol/indigo-mcp",
+    "url": "https://smithery.ai/servers/indigoprotocol/indigo-mcp",
+    "source": "smithery_mcp",
+    "code_availability": "manifest_only",
+    "language": "remote",
+    "automated_analysis": {
+      "evidence_count": 10,
+      "risk": "medium",
+      "decision": "degrade",
+      "score": 6.0,
+      "findings": [
+        {
+          "constraint": "C1_DECLARED_READONLY_BUT_WRITE_SCOPE",
+          "severity": "medium",
+          "message": "Skill declares read-only or low-risk behavior but requests write/export/admin-like scope."
+        },
+        {
+          "constraint": "C7_LEAST_PRIVILEGE_SCOPE",
+          "severity": "medium",
+          "message": "Task context indicates read-only need but skill requests elevated scope."
+        }
+      ],
+      "evidence_summary": [
+        {
+          "kind": "metadata",
+          "predicate": "declares_capability",
+          "object": "read_only_or_low_risk"
+        },
+        {
+          "kind": "permission",
+          "predicate": "requires_scope",
+          "object": "run"
+        },
+        {
+          "kind": "permission",
+          "predicate": "requires_scope",
+          "object": "modify"
+        },
+        {
+          "kind": "permission",
+          "predicate": "requires_scope",
+          "object": "admin"
+        },
+        {
+          "kind": "permission",
+          "predicate": "requires_scope",
+          "object": "read"
+        },
+        {
+          "kind": "permission",
+          "predicate": "requires_high_risk_scope",
+          "object": "admin,modify"
+        },
+        {
+          "kind": "metadata",
+          "predicate": "declares_external_access",
+          "object": "open_world"
+        },
+        {
+          "kind": "governance",
+          "predicate": "published_by",
+          "object": "indigoprotocol"
+        },
+        {
+          "kind": "governance",
+          "predicate": "signed",
+          "object": "false"
+        },
+        {
+          "kind": "sandbox",
+          "predicate": "observes_behavior",
+          "object": "destructive_annotation_present"
+        }
+      ]
+    },
+    "reviewer_1": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    },
+    "reviewer_2": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    },
+    "consensus_classification": "L1",
+    "reviewer_agreement": true
+  },
+  {
+    "artifact": "jl-3044/agentndx",
+    "url": "https://smithery.ai/servers/jl-3044/agentndx",
+    "source": "smithery_mcp",
+    "code_availability": "manifest_only",
+    "language": "remote",
+    "automated_analysis": {
+      "evidence_count": 11,
+      "risk": "medium",
+      "decision": "degrade",
+      "score": 6.0,
+      "findings": [
+        {
+          "constraint": "C1_DECLARED_READONLY_BUT_WRITE_SCOPE",
+          "severity": "medium",
+          "message": "Skill declares read-only or low-risk behavior but requests write/export/admin-like scope."
+        },
+        {
+          "constraint": "C7_LEAST_PRIVILEGE_SCOPE",
+          "severity": "medium",
+          "message": "Task context indicates read-only need but skill requests elevated scope."
+        }
+      ],
+      "evidence_summary": [
+        {
+          "kind": "metadata",
+          "predicate": "declares_capability",
+          "object": "read_only_or_low_risk"
+        },
+        {
+          "kind": "permission",
+          "predicate": "requires_scope",
+          "object": "search"
+        },
+        {
+          "kind": "permission",
+          "predicate": "requires_scope",
+          "object": "query"
+        },
+        {
+          "kind": "permission",
+          "predicate": "requires_scope",
+          "object": "read"
+        },
+        {
+          "kind": "permission",
+          "predicate": "requires_scope",
+          "object": "list"
+        },
+        {
+          "kind": "permission",
+          "predicate": "requires_scope",
+          "object": "send"
+        },
+        {
+          "kind": "permission",
+          "predicate": "requires_high_risk_scope",
+          "object": "send"
+        },
+        {
+          "kind": "metadata",
+          "predicate": "declares_external_access",
+          "object": "open_world"
+        },
+        {
+          "kind": "governance",
+          "predicate": "published_by",
+          "object": "jl-3044"
+        },
+        {
+          "kind": "governance",
+          "predicate": "signed",
+          "object": "false"
+        },
+        {
+          "kind": "sandbox",
+          "predicate": "observes_behavior",
+          "object": "destructive_annotation_present"
+        }
+      ]
+    },
+    "reviewer_1": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    },
+    "reviewer_2": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    },
+    "consensus_classification": "L1",
+    "reviewer_agreement": true
+  },
+  {
+    "artifact": "legalfournier/spain-legal",
+    "url": "https://smithery.ai/servers/legalfournier/spain-legal",
+    "source": "smithery_mcp",
+    "code_availability": "manifest_only",
+    "language": "remote",
+    "automated_analysis": {
+      "evidence_count": 10,
+      "risk": "medium",
+      "decision": "degrade",
+      "score": 6.0,
+      "findings": [
+        {
+          "constraint": "C1_DECLARED_READONLY_BUT_WRITE_SCOPE",
+          "severity": "medium",
+          "message": "Skill declares read-only or low-risk behavior but requests write/export/admin-like scope."
+        },
+        {
+          "constraint": "C7_LEAST_PRIVILEGE_SCOPE",
+          "severity": "medium",
+          "message": "Task context indicates read-only need but skill requests elevated scope."
+        }
+      ],
+      "evidence_summary": [
+        {
+          "kind": "permission",
+          "predicate": "requires_scope",
+          "object": "send"
+        },
+        {
+          "kind": "permission",
+          "predicate": "requires_scope",
+          "object": "list"
+        },
+        {
+          "kind": "permission",
+          "predicate": "requires_scope",
+          "object": "query"
+        },
+        {
+          "kind": "permission",
+          "predicate": "requires_scope",
+          "object": "read"
+        },
+        {
+          "kind": "permission",
+          "predicate": "requires_high_risk_scope",
+          "object": "send"
+        },
+        {
+          "kind": "metadata",
+          "predicate": "declares_external_access",
+          "object": "open_world"
+        },
+        {
+          "kind": "metadata",
+          "predicate": "annotation_claims",
+          "object": "read_only"
+        },
+        {
+          "kind": "governance",
+          "predicate": "published_by",
+          "object": "legalfournier"
+        },
+        {
+          "kind": "governance",
+          "predicate": "signed",
+          "object": "false"
+        },
+        {
+          "kind": "sandbox",
+          "predicate": "observes_behavior",
+          "object": "no_suspicious_behavior"
+        }
+      ]
+    },
+    "reviewer_1": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": "```json\n{\n  \"classification\": \"L1\",\n  \"confidence\": \"medium\",\n  \"reasoning\": \"The primary finding is a metadata/annotation inconsistency: the tool claims to be read-only but requires a 'send' scope. H"
+    },
+    "reviewer_2": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    },
+    "consensus_classification": "L1",
+    "reviewer_agreement": true
+  },
+  {
+    "artifact": "licium/licium",
+    "url": "https://smithery.ai/servers/licium/licium",
+    "source": "smithery_mcp",
+    "code_availability": "manifest_only",
+    "language": "remote",
+    "automated_analysis": {
+      "evidence_count": 14,
+      "risk": "medium",
+      "decision": "degrade",
+      "score": 6.0,
+      "findings": [
+        {
+          "constraint": "C1_DECLARED_READONLY_BUT_WRITE_SCOPE",
+          "severity": "medium",
+          "message": "Skill declares read-only or low-risk behavior but requests write/export/admin-like scope."
+        },
+        {
+          "constraint": "C7_LEAST_PRIVILEGE_SCOPE",
+          "severity": "medium",
+          "message": "Task context indicates read-only need but skill requests elevated scope."
+        }
+      ],
+      "evidence_summary": [
+        {
+          "kind": "metadata",
+          "predicate": "declares_capability",
+          "object": "read_only_or_low_risk"
+        },
+        {
+          "kind": "permission",
+          "predicate": "requires_scope",
+          "object": "run"
+        },
+        {
+          "kind": "permission",
+          "predicate": "requires_scope",
+          "object": "search"
+        },
+        {
+          "kind": "permission",
+          "predicate": "requires_scope",
+          "object": "query"
+        },
+        {
+          "kind": "permission",
+          "predicate": "requires_scope",
+          "object": "execute"
+        },
+        {
+          "kind": "permission",
+          "predicate": "requires_scope",
+          "object": "read"
+        },
+        {
+          "kind": "permission",
+          "predicate": "requires_scope",
+          "object": "modify"
+        },
+        {
+          "kind": "permission",
+          "predicate": "requires_scope",
+          "object": "list"
+        },
+        {
+          "kind": "permission",
+          "predicate": "requires_scope",
+          "object": "send"
+        },
+        {
+          "kind": "permission",
+          "predicate": "requires_high_risk_scope",
+          "object": "modify,send"
+        },
+        {
+          "kind": "metadata",
+          "predicate": "declares_external_access",
+          "object": "open_world"
+        },
+        {
+          "kind": "governance",
+          "predicate": "published_by",
+          "object": "licium"
+        },
+        {
+          "kind": "governance",
+          "predicate": "signed",
+          "object": "false"
+        },
+        {
+          "kind": "sandbox",
+          "predicate": "observes_behavior",
+          "object": "destructive_annotation_present"
+        }
+      ]
+    },
+    "reviewer_1": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    },
+    "reviewer_2": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    },
+    "consensus_classification": "L1",
+    "reviewer_agreement": true
+  },
+  {
+    "artifact": "mpprimo/ratings",
+    "url": "https://smithery.ai/servers/mpprimo/ratings",
+    "source": "smithery_mcp",
+    "code_availability": "manifest_only",
+    "language": "remote",
+    "automated_analysis": {
+      "evidence_count": 11,
+      "risk": "medium",
+      "decision": "degrade",
+      "score": 6.0,
+      "findings": [
+        {
+          "constraint": "C1_DECLARED_READONLY_BUT_WRITE_SCOPE",
+          "severity": "medium",
+          "message": "Skill declares read-only or low-risk behavior but requests write/export/admin-like scope."
+        },
+        {
+          "constraint": "C7_LEAST_PRIVILEGE_SCOPE",
+          "severity": "medium",
+          "message": "Task context indicates read-only need but skill requests elevated scope."
+        }
+      ],
+      "evidence_summary": [
+        {
+          "kind": "permission",
+          "predicate": "requires_scope",
+          "object": "search"
+        },
+        {
+          "kind": "permission",
+          "predicate": "requires_scope",
+          "object": "query"
+        },
+        {
+          "kind": "permission",
+          "predicate": "requires_scope",
+          "object": "read"
+        },
+        {
+          "kind": "permission",
+          "predicate": "requires_scope",
+          "object": "list"
+        },
+        {
+          "kind": "permission",
+          "predicate": "requires_scope",
+          "object": "send"
+        },
+        {
+          "kind": "permission",
+          "predicate": "requires_high_risk_scope",
+          "object": "send"
+        },
+        {
+          "kind": "metadata",
+          "predicate": "declares_external_access",
+          "object": "open_world"
+        },
+        {
+          "kind": "metadata",
+          "predicate": "annotation_claims",
+          "object": "read_only"
+        },
+        {
+          "kind": "governance",
+          "predicate": "published_by",
+          "object": "mpprimo"
+        },
+        {
+          "kind": "governance",
+          "predicate": "signed",
+          "object": "false"
+        },
+        {
+          "kind": "sandbox",
+          "predicate": "observes_behavior",
+          "object": "no_suspicious_behavior"
+        }
+      ]
+    },
+    "reviewer_1": {
+      "classification": "L2",
+      "confidence": "medium",
+      "reasoning": "The tool declares read-only behavior in its metadata but requests a 'send' scope, creating an explainable cross-layer inconsistency. The 'send' scope suggests write/export capability that contradicts the read-only annotation. However, the sandbox runtime observation shows no suspicious behavior, meaning the unsafe chain exists in declarations but hasn't been confirmed through runtime execution. The unsigned nature of the tool and external publisher add supply chain concerns.",
+      "key_evidence": [
+        "metadata: annotation_claims -> read_only vs permission: requires_high_risk_scope -> send",
+        "governance: signed -> false",
+        "sandbox: observes_behavior -> no_suspicious_behavior"
+      ],
+      "recommended_action": "investigate"
+    },
+    "reviewer_2": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": "```json\n{\n  \"classification\": \"L2\",\n  \"confidence\": \"medium\",\n  \"reasoning\": \"The artifact declares a read-only annotation but requests the 'send' scope, creating an explicit cross-layer inconsistency"
+    },
+    "consensus_classification": "L2",
+    "reviewer_agreement": false
+  }
+]
