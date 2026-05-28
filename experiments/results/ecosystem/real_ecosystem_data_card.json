@@ -1,13 +1,14 @@
 {
   "crawl_started_goal": "Passive real-public MCP/tool/package/space measurement",
-  "crawl_completed_at": "2026-05-28T04:57:44Z",
+  "crawl_completed_at": "2026-05-28T15:35:46Z",
   "target_samples": 1000,
   "actual_samples": 1000,
   "enabled_sources": [
     "github_mcp",
     "npm_mcp",
     "pypi_mcp",
-    "hf_spaces_mcp"
+    "hf_spaces_mcp",
+    "smithery_mcp"
   ],
   "source_details": {
     "github_mcp": {
@@ -57,7 +58,17 @@
         "autodoc-mcp",
         "mcp-clipboard"
       ],
-      "metadata_api": "https://pypi.org/pypi/<name>/json"
+      "metadata_api": "https://pypi.org/pypi/<name>/json",
+      "simple_index_limit": "target*2"
+    },
+    "smithery_mcp": {
+      "terms": [
+        "mcp",
+        "model context protocol",
+        "tool"
+      ],
+      "page_size": 100,
+      "detail_api": "https://api.smithery.ai/servers/<namespace>/<slug>"
     },
     "hf_spaces_mcp": {
       "queries": [
@@ -68,20 +79,22 @@
       "search_limit": 200
     }
   },
+  "source_quotas": null,
   "source_budget": 100,
-  "dedup_rule": "Deduplicate by source-specific artifact identifier (GitHub full_name, npm package name, PyPI package name, or Hugging Face space id); retain linked_repository when an upstream package points to GitHub.",
-  "filter_rule": "Collect public GitHub MCP repositories, npm MCP-related packages, curated PyPI MCP packages, and Hugging Face Spaces returned by MCP-related search terms; include metadata-only samples when bounded source probing finds no recognized entrypoint.",
-  "version_rule": "Record GitHub default_branch plus timestamps; record npm/PyPI package version metadata; record Hugging Face Space sha and created/lastModified timestamps when exposed.",
+  "dedup_rule": "Deduplicate by source-specific artifact identifier (GitHub full_name, npm package name, PyPI package name, Hugging Face space id, or Smithery qualifiedName); retain linked_repository when an upstream package points to GitHub.",
+  "filter_rule": "Collect public GitHub MCP repositories, npm MCP-related packages, discovered PyPI MCP packages, Hugging Face Spaces returned by MCP-related search terms, and hosted Smithery registry entries returned by MCP-related search terms; include metadata-only samples when bounded source probing finds no recognized entrypoint.",
+  "version_rule": "Record GitHub default_branch plus timestamps; record npm/PyPI package version metadata; record Hugging Face Space sha and created/lastModified timestamps when exposed; record Smithery createdAt plus deployment metadata when exposed.",
   "license_rule": "Record SPDX identifier when the upstream API provides one; otherwise mark unknown.",
   "availability_rule": {
-    "manifest_only": 980,
-    "source_available": 20
+    "manifest_only": 982,
+    "source_available": 18
   },
   "safety_boundary": "Passive metadata/source collection only; no third-party code execution, no destructive calls, no credential use.",
   "limitations": [
-    "GitHub, npm, PyPI, and Hugging Face coverage are query- or seed-biased and incomplete.",
-    "Repository-level, package-level, and space-level signals do not prove deployable vulnerabilities.",
+    "GitHub, npm, PyPI, Hugging Face, and Smithery coverage are query- or discovery-biased and incomplete.",
+    "Repository-level, package-level, space-level, and hosted-registry signals do not prove deployable vulnerabilities.",
     "Manifest-only samples retain metadata evidence but weak implementation coverage.",
-    "npm, PyPI, and Hugging Face source coverage depends on linked public files when present."
+    "npm, PyPI, and Hugging Face source coverage depends on linked public files when present.",
+    "Smithery coverage reflects a public hosted registry and does not include private enterprise catalogs."
   ]
 }

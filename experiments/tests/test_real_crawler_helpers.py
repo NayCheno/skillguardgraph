@@ -15,7 +15,9 @@ from crawl_real_ecosystem import (  # noqa: E402
     _rate_limit_hint,
     _request_headers,
     build_hf_manifest,
+    build_smithery_manifest,
     cached_source_samples,
+    build_smithery_tools,
     canonicalize_package_name,
     extract_github_repo_ref,
     npm_entrypoint_candidates,
@@ -73,6 +75,32 @@ def test_build_hf_manifest_marks_liked_spaces_as_trusted():
     assert manifest["source"] == "hf_spaces_mcp"
     assert manifest["tool_count"] == 1
 
+
+def test_build_smithery_manifest_marks_verified_servers_trusted():
+    detail = {
+        "qualifiedName": "demo/server",
+        "displayName": "Demo Server",
+        "description": "Search and compare MCP servers through a hosted gateway.",
+        "remote": True,
+        "deploymentUrl": "https://demo.run.tools",
+        "connections": [{"type": "http"}],
+        "tools": [
+            {
+                "name": "search_servers",
+                "description": "Search and compare remote MCP servers",
+                "inputSchema": {"type": "object", "properties": {"query": {"type": "string"}}},
+            }
+        ],
+    }
+    summary = {"namespace": "demo", "verified": True, "bySmithery": False, "useCount": 42, "isDeployed": True}
+    tools = build_smithery_tools(detail)
+    manifest = build_smithery_manifest(summary, detail, tools)
+    assert manifest["trusted_server"] is True
+    assert manifest["source"] == "smithery_mcp"
+    assert manifest["annotations"]["openWorldHint"] is True
+    assert manifest["tool_count"] == 1
+    assert tools[0]["has_network"] is True
+    assert "query" in tools[0]["scopes"]
 def test_tarball_member_texts_reads_package_json_entrypoints():
     buffer = io.BytesIO()
     with tarfile.open(fileobj=buffer, mode="w:gz") as archive:
@@ -117,6 +145,11 @@ def test_request_headers_include_github_token(monkeypatch):
     assert headers["Authorization"] == "Bearer secret"
     assert headers["Accept"] == "application/vnd.github+json"
 
+
+def test_request_headers_include_smithery_token(monkeypatch):
+    monkeypatch.setenv("SMITHERY_API_KEY", "secret")
+    headers = _request_headers("smithery")
+    assert headers["Authorization"] == "Bearer secret"
 def test_rate_limit_hint_mentions_resume():
     assert "GITHUB_TOKEN" in _rate_limit_hint("github")
     assert "--resume" in _rate_limit_hint("github")
@@ -126,9 +159,10 @@ def test_canonicalize_package_name_normalizes_variants():
 
 def test_parse_source_quotas_validates_total_and_members():
     quotas = parse_source_quotas(
-        "github_mcp=10,npm_mcp=5,pypi_mcp=3,hf_spaces_mcp=2",
-        ["github_mcp", "npm_mcp", "pypi_mcp", "hf_spaces_mcp"],
+        "github_mcp=10,npm_mcp=5,pypi_mcp=2,hf_spaces_mcp=2,smithery_mcp=1",
+        ["github_mcp", "npm_mcp", "pypi_mcp", "hf_spaces_mcp", "smithery_mcp"],
         20,
     )
     assert quotas["github_mcp"] == 10
     assert quotas["hf_spaces_mcp"] == 2
+    assert quotas["smithery_mcp"] == 1

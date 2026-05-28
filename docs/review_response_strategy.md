@@ -58,6 +58,7 @@ Do not upgrade the paper's wording unless all corresponding evidence exists in t
 - confirmed or disclosure-backed real cases;
 - third-party dynamic sandbox execution beyond bounded source-available public-package cases;
 - production-like runtime integration;
+- private enterprise catalog coverage beyond today's public-source/public-registry slice;
 - stronger source-backed real-world validation.
 
 If a reviewer asks for any of those directly, respond that they are future work and out of scope for the current artifact claim boundary.

@@ -15,6 +15,7 @@ from __future__ import annotations
 import argparse
 import io
 import json
+import math
 import os
 import re
 import sys
@@ -56,10 +57,11 @@ NPM_SEARCH_SIZE = 100
 SOURCE_LANGUAGES = {"python", "typescript", "javascript"}
 
 SOURCE_WEIGHTS: Dict[str, float] = {
-    "github_mcp": 0.50,
+    "github_mcp": 0.40,
     "npm_mcp": 0.20,
     "hf_spaces_mcp": 0.15,
     "pypi_mcp": 0.15,
+    "smithery_mcp": 0.10,
 }
 
 GITHUB_SOURCE_QUERIES: Dict[str, List[str]] = {
@@ -83,6 +85,8 @@ NPM_SEARCH_TERMS = [
     '"mcp tool"',
 ]
 HF_SEARCH_LIMIT = 200
+SMITHERY_SEARCH_TERMS = ["mcp", "model context protocol", "tool"]
+SMITHERY_PAGE_SIZE = 100
 PYPI_PACKAGE_SEEDS = [
     "mcp",
     "fastmcp",
@@ -135,6 +139,10 @@ def _request_headers(service: str, extra: Optional[Dict[str, str]] = None) -> Di
         token = os.environ.get("HF_TOKEN")
         if token:
             headers["Authorization"] = f"Bearer {token}"
+    elif service == "smithery":
+        token = os.environ.get("SMITHERY_API_KEY")
+        if token:
+            headers["Authorization"] = f"Bearer {token}"
     elif service == "pypi":
         token = os.environ.get("PYPI_TOKEN")
         if token:
@@ -149,6 +157,8 @@ def _rate_limit_hint(service: str) -> str:
         return "GitHub API rate limit exceeded. Set GITHUB_TOKEN or rerun with --resume after cache warmup."
     if service == "hf":
         return "Hugging Face API rate limit exceeded. Set HF_TOKEN or rerun with --resume after cache warmup."
+    if service == "smithery":
+        return "Smithery registry request failed due to rate limiting. Set SMITHERY_API_KEY if available or rerun with --resume after cache warmup."
     return "Remote request failed due to rate limiting."
 
 
@@ -368,6 +378,22 @@ def npm_package_metadata(name: str) -> Dict[str, Any]:
     encoded = urllib.parse.quote(name, safe="@")
     return _json_request(f"https://registry.npmjs.org/{encoded}")
 
+def smithery_request(url: str) -> Dict[str, Any]:
+    return _json_request(url, headers=_request_headers("smithery"), service="smithery")
+
+
+def smithery_search(query: str, page: int, page_size: int = SMITHERY_PAGE_SIZE) -> Dict[str, Any]:
+    params = urllib.parse.urlencode({
+        "q": query,
+        "page": page,
+        "pageSize": page_size,
+    })
+    return smithery_request(f"https://api.smithery.ai/servers?{params}")
+
+
+def smithery_server_detail(namespace: str, slug: str) -> Dict[str, Any]:
+    return smithery_request(f"https://api.smithery.ai/servers/{urllib.parse.quote(namespace)}/{urllib.parse.quote(slug)}")
+
 
 # ---------------------------------------------------------------------------
 # Metadata helpers
@@ -580,6 +606,47 @@ def extract_tools_from_typescript(source: str, repo_name: str) -> List[Dict[str,
         })
     return tools
 
+def build_smithery_tools(detail: Dict[str, Any]) -> List[Dict[str, Any]]:
+    tools: List[Dict[str, Any]] = []
+    remote = bool(detail.get("remote"))
+    deployed = bool(detail.get("deploymentUrl") or detail.get("connections"))
+    for tool in detail.get("tools") or []:
+        description = str(tool.get("description") or "")
+        schema = tool.get("inputSchema") or {}
+        haystack = " ".join([
+            str(tool.get("name") or ""),
+            description,
+            json.dumps(schema, ensure_ascii=False),
+        ]).lower()
+        scopes = {match.lower() for match in SCOPE_PATTERNS.findall(haystack)}
+        if any(token in haystack for token in ("create", "add ", "update", "delete", "cancel", "modify", "publish")):
+            scopes.add("modify")
+        if any(token in haystack for token in ("search", "discover", "list", "show", "get ", "read", "compare", "query")):
+            scopes.add("read")
+        if any(token in haystack for token in ("search", "discover", "compare", "query")):
+            scopes.add("query")
+        if any(token in haystack for token in ("call", "invoke", "run", "execute", "gateway")):
+            scopes.add("run")
+        tools.append({
+            "name": str(tool.get("name") or "tool"),
+            "description": description or f"Smithery tool {tool.get('name') or 'tool'}",
+            "scopes": sorted(scopes)[:8] if scopes else ["read"],
+            "has_network": remote or deployed or "http" in haystack or "oauth" in haystack or "remote" in haystack,
+            "has_file_write": any(token in haystack for token in ("write", "create", "update", "delete", "cancel", "modify", "publish")),
+            "has_shell": any(token in haystack for token in ("shell", "exec", "command", "spawn", "subprocess", "bash")),
+            "language": "remote",
+        })
+    return tools or [{
+        "name": str(detail.get("qualifiedName") or "smithery-server"),
+        "description": str(detail.get("description") or "Hosted Smithery MCP server"),
+        "scopes": ["read"],
+        "has_network": True,
+        "has_file_write": False,
+        "has_shell": False,
+        "language": "remote",
+    }]
+
+
 
 def summarize_tools_from_source(source_blobs: List[str], artifact_name: str, fallback_language: str) -> List[Dict[str, Any]]:
     tools: List[Dict[str, Any]] = []
@@ -681,6 +748,32 @@ def build_npm_manifest(
         "repository": normalize_repo_url((version_doc.get("repository") or {}).get("url") if isinstance(version_doc.get("repository"), dict) else version_doc.get("repository")),
     }
     return manifest
+
+def build_smithery_manifest(summary: Dict[str, Any], detail: Dict[str, Any], tools: List[Dict[str, Any]]) -> Dict[str, Any]:
+    all_scopes, has_network, has_file_write, has_shell = _aggregate_tool_flags(tools)
+    description = detail.get("description") or summary.get("description") or f"Smithery server {summary.get('qualifiedName')}"
+    return {
+        "name": str(detail.get("displayName") or summary.get("displayName") or summary.get("slug") or "smithery-server"),
+        "description": str(description),
+        "scopes": sorted(all_scopes)[:8] if all_scopes else ["read"],
+        "annotations": {
+            "readOnlyHint": not has_file_write and not has_shell,
+            "destructiveHint": has_shell or has_file_write,
+            "openWorldHint": bool(detail.get("remote")) or has_network,
+        },
+        "publisher": str(summary.get("namespace") or "unknown"),
+        "trusted_server": bool(summary.get("verified")) or bool(summary.get("bySmithery")),
+        "signature": None,
+        "tool_count": len(tools),
+        "stars": int(summary.get("useCount", 0)),
+        "language": "remote",
+        "source": "smithery_mcp",
+        "remote": bool(detail.get("remote")),
+        "is_deployed": bool(summary.get("isDeployed")) or bool(detail.get("deploymentUrl")),
+        "homepage": detail.get("homepage") or summary.get("homepage"),
+        "deployment_url": detail.get("deploymentUrl"),
+    }
+
 
 
 # ---------------------------------------------------------------------------
@@ -1297,6 +1390,102 @@ def crawl_hf_spaces_source(target: int, cache: Dict[str, Dict[str, Any]], source
     save_cache(cache)
     return samples[:target], remaining_source_budget
 
+# ---------------------------------------------------------------------------
+# Smithery hosted registry crawl
+# ---------------------------------------------------------------------------
+
+def smithery_search_space(target: int) -> Dict[str, Dict[str, Any]]:
+    servers: Dict[str, Dict[str, Any]] = {}
+    max_pages = max(2, int(math.ceil((target * 2) / SMITHERY_PAGE_SIZE)))
+    for term in SMITHERY_SEARCH_TERMS:
+        for page in range(1, max_pages + 1):
+            if len(servers) >= target * 2:
+                return servers
+            result = smithery_search(term, page, SMITHERY_PAGE_SIZE)
+            items = result.get("servers") or []
+            if not items:
+                break
+            for item in items:
+                qualified_name = str(item.get("qualifiedName") or "")
+                if not qualified_name:
+                    continue
+                current = servers.setdefault(qualified_name, item)
+                current.setdefault("_matched_terms", [])
+                if term not in current["_matched_terms"]:
+                    current["_matched_terms"].append(term)
+            pagination = result.get("pagination") or {}
+            total_pages = int(pagination.get("totalPages", page))
+            if page >= total_pages:
+                break
+    return servers
+
+
+def analyze_smithery_server(entry: Dict[str, Any]) -> Dict[str, Any]:
+    namespace = str(entry.get("namespace") or "")
+    slug = str(entry.get("slug") or "")
+    detail = smithery_server_detail(namespace, slug)
+    tools = build_smithery_tools(detail)
+    manifest = build_smithery_manifest(entry, detail, tools)
+    qualified_name = str(detail.get("qualifiedName") or entry.get("qualifiedName") or f"{namespace}/{slug}")
+
+    return analyze_artifact(
+        artifact_id=qualified_name,
+        artifact_url=f"https://smithery.ai/servers/{qualified_name}",
+        source_label="smithery_mcp",
+        dedup_key=qualified_name,
+        manifest=manifest,
+        tools=tools,
+        source_files=[],
+        source_code="",
+        metadata={
+            "query_matches": sorted(entry.get("_matched_terms", [])),
+            "created_at": entry.get("createdAt"),
+            "updated_at": entry.get("createdAt"),
+            "pushed_at": entry.get("createdAt"),
+            "default_branch": "hosted",
+            "license": "unknown",
+            "stars": int(entry.get("useCount", 0)),
+            "language": "remote",
+            "archived": False,
+            "fork": False,
+            "verified": bool(entry.get("verified")),
+            "remote": bool(detail.get("remote")),
+            "is_deployed": bool(entry.get("isDeployed")) or bool(detail.get("deploymentUrl")),
+            "smithery_use_count": int(entry.get("useCount", 0)),
+            "smithery_deployment_url": detail.get("deploymentUrl"),
+            "smithery_homepage": detail.get("homepage") or entry.get("homepage"),
+        },
+    )
+
+
+def crawl_smithery_source(target: int, cache: Dict[str, Dict[str, Any]], source_budget: int) -> Tuple[List[Dict[str, Any]], int]:
+    cached_items = cached_source_samples(cache, "smithery_mcp")
+    if len(cached_items) >= target:
+        print(f"Using {target} cached Smithery servers")
+        return cached_items[:target], source_budget
+
+    samples: List[Dict[str, Any]] = list(cached_items)
+    servers = smithery_search_space(target)
+    print(f"Search produced {len(servers)} unique Smithery servers")
+
+    for qualified_name, entry in servers.items():
+        if len(samples) >= target:
+            break
+        if any(sample.get("dedup_key") == qualified_name for sample in samples):
+            continue
+        try:
+            sample = analyze_smithery_server(entry)
+            samples.append(sample)
+            put_cached_sample(cache, "smithery_mcp", qualified_name, sample)
+            if len(samples) % 25 == 0:
+                print(f"  analyzed {len(samples)} Smithery servers")
+                save_cache(cache)
+        except Exception as exc:
+            print(f"  skipping Smithery server {qualified_name}: {exc}")
+    save_cache(cache)
+    return samples[:target], source_budget
+
+
 
 # ---------------------------------------------------------------------------
 # Aggregation
@@ -1457,6 +1646,12 @@ def build_data_card(
             "metadata_api": "https://pypi.org/pypi/<name>/json",
             "simple_index_limit": "target*2",
         }
+    if "smithery_mcp" in enabled_sources:
+        source_details["smithery_mcp"] = {
+            "terms": SMITHERY_SEARCH_TERMS,
+            "page_size": SMITHERY_PAGE_SIZE,
+            "detail_api": "https://api.smithery.ai/servers/<namespace>/<slug>",
+        }
     if "hf_spaces_mcp" in enabled_sources:
         source_details["hf_spaces_mcp"] = {
             "queries": ["mcp", "mcp-server", "model context protocol"],
@@ -1471,17 +1666,18 @@ def build_data_card(
         "source_details": source_details,
         "source_quotas": source_quotas,
         "source_budget": source_budget,
-        "dedup_rule": "Deduplicate by source-specific artifact identifier (GitHub full_name, npm package name, PyPI package name, or Hugging Face space id); retain linked_repository when an upstream package points to GitHub.",
-        "filter_rule": "Collect public GitHub MCP repositories, npm MCP-related packages, discovered PyPI MCP packages, and Hugging Face Spaces returned by MCP-related search terms; include metadata-only samples when bounded source probing finds no recognized entrypoint.",
-        "version_rule": "Record GitHub default_branch plus timestamps; record npm/PyPI package version metadata; record Hugging Face Space sha and created/lastModified timestamps when exposed.",
+        "dedup_rule": "Deduplicate by source-specific artifact identifier (GitHub full_name, npm package name, PyPI package name, Hugging Face space id, or Smithery qualifiedName); retain linked_repository when an upstream package points to GitHub.",
+        "filter_rule": "Collect public GitHub MCP repositories, npm MCP-related packages, discovered PyPI MCP packages, Hugging Face Spaces returned by MCP-related search terms, and hosted Smithery registry entries returned by MCP-related search terms; include metadata-only samples when bounded source probing finds no recognized entrypoint.",
+        "version_rule": "Record GitHub default_branch plus timestamps; record npm/PyPI package version metadata; record Hugging Face Space sha and created/lastModified timestamps when exposed; record Smithery createdAt plus deployment metadata when exposed.",
         "license_rule": "Record SPDX identifier when the upstream API provides one; otherwise mark unknown.",
         "availability_rule": stats.get("code_availability", {}),
         "safety_boundary": "Passive metadata/source collection only; no third-party code execution, no destructive calls, no credential use.",
         "limitations": [
-            "GitHub, npm, PyPI, and Hugging Face coverage are query- or discovery-biased and incomplete.",
-            "Repository-level, package-level, and space-level signals do not prove deployable vulnerabilities.",
+            "GitHub, npm, PyPI, Hugging Face, and Smithery coverage are query- or discovery-biased and incomplete.",
+            "Repository-level, package-level, space-level, and hosted-registry signals do not prove deployable vulnerabilities.",
             "Manifest-only samples retain metadata evidence but weak implementation coverage.",
             "npm, PyPI, and Hugging Face source coverage depends on linked public files when present.",
+            "Smithery coverage reflects a public hosted registry and does not include private enterprise catalogs.",
         ],
     }
 
@@ -1497,13 +1693,13 @@ def write_samples_jsonl(samples: List[Dict[str, Any]]) -> None:
 # ---------------------------------------------------------------------------
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Crawl public MCP-related artifacts from GitHub, npm, PyPI, and Hugging Face Spaces")
+    parser = argparse.ArgumentParser(description="Crawl public MCP-related artifacts from GitHub, npm, PyPI, Hugging Face Spaces, and Smithery")
     parser.add_argument("--target", type=int, default=1000, help="Number of artifacts to retain")
     parser.add_argument("--pages-per-query", type=int, default=3, help="GitHub search pages to request for each query")
     parser.add_argument("--source-budget", type=int, default=200, help="Maximum number of artifacts for which raw source entrypoints are fetched")
     parser.add_argument("--resume", action="store_true", help="Resume from cached per-artifact samples")
-    parser.add_argument("--sources", default="github_mcp,npm_mcp,pypi_mcp,hf_spaces_mcp", help="Comma-separated source set")
-    parser.add_argument("--source-quotas", default="", help="Comma-separated exact quotas like github_mcp=3000,npm_mcp=1200,pypi_mcp=420,hf_spaces_mcp=380")
+    parser.add_argument("--sources", default="github_mcp,npm_mcp,pypi_mcp,hf_spaces_mcp,smithery_mcp", help="Comma-separated source set")
+    parser.add_argument("--source-quotas", default="", help="Comma-separated exact quotas like github_mcp=3000,npm_mcp=1200,pypi_mcp=420,hf_spaces_mcp=380,smithery_mcp=200")
     parser.add_argument("--output-prefix", default="real_ecosystem", help="Output file prefix under results/ecosystem/")
     args = parser.parse_args()
 
@@ -1541,13 +1737,15 @@ def main() -> None:
             source_samples, remaining_budget = crawl_pypi_source(quota, cache, remaining_budget)
         elif source == "hf_spaces_mcp":
             source_samples, remaining_budget = crawl_hf_spaces_source(quota, cache, remaining_budget)
+        elif source == "smithery_mcp":
+            source_samples, remaining_budget = crawl_smithery_source(quota, cache, remaining_budget)
         else:
             raise SystemExit(f"Unsupported source: {source}")
         samples.extend(source_samples)
 
     if len(samples) < args.target:
         deficit = args.target - len(samples)
-        for fallback_source in ("github_mcp", "npm_mcp", "pypi_mcp"):
+        for fallback_source in ("github_mcp", "npm_mcp", "pypi_mcp", "smithery_mcp"):
             if fallback_source not in enabled_sources or deficit <= 0:
                 continue
             existing = {sample["dedup_key"] for sample in samples if sample["source"] == fallback_source}
@@ -1559,8 +1757,10 @@ def main() -> None:
                 )
             elif fallback_source == "npm_mcp":
                 extra_samples, remaining_budget = crawl_npm_source(refill_target, cache, remaining_budget)
-            else:
+            elif fallback_source == "pypi_mcp":
                 extra_samples, remaining_budget = crawl_pypi_source(refill_target, cache, remaining_budget)
+            else:
+                extra_samples, remaining_budget = crawl_smithery_source(refill_target, cache, remaining_budget)
             for sample in extra_samples:
                 if sample["dedup_key"] not in existing:
                     samples.append(sample)

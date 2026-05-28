@@ -602,33 +602,33 @@ Instruction-like description & 68 & 5.7\% \\
 
 \subsection{Real-World Ecosystem Measurement}
 
-To validate the synthetic findings, we conducted a real-world passive measurement across four public ecosystems: GitHub MCP repositories, npm MCP packages, discovered PyPI MCP packages, and Hugging Face Spaces. The current batch contains 1{,}000 public artifacts (500 GitHub repositories, 200 npm packages, 150 discovered PyPI packages, and 150 Hugging Face Spaces), of which 20 had bounded source-entrypoint coverage and 980 were retained as metadata-only samples.
+To validate the synthetic findings, we conducted a real-world passive measurement across five public ecosystems: GitHub MCP repositories, npm MCP packages, discovered PyPI MCP packages, Hugging Face Spaces, and Smithery hosted-registry entries. The current batch contains 1{,}000 public artifacts (400 GitHub repositories, 200 npm packages, 150 discovered PyPI packages, 150 Hugging Face Spaces, and 100 Smithery hosted-registry entries), of which 18 had bounded source-entrypoint coverage and 982 were retained as metadata-only samples.
 
 Table~\ref{tab:real_ecosystem} reports risk pattern prevalence in the real ecosystem.
 
 \begin{table}[t]
 \centering
-\caption{Real-world MCP ecosystem risk patterns (1{,}000 public artifacts across GitHub, npm, PyPI, and Hugging Face).}
+\caption{Real-world MCP ecosystem risk patterns (1{,}000 public artifacts across GitHub, npm, PyPI, Hugging Face, and Smithery).}
 \label{tab:real_ecosystem}
 \begin{tabular}{lcc}
 \toprule
 Risk Pattern & Count & Rate \\
 \midrule
 Missing signature & 800 & 80.0\% \\
-Untrusted publisher & 458 & 45.8\% \\
-Open-world network access & 9 & 0.9\% \\
-Scope inflation & 6 & 0.6\% \\
-Description--code mismatch & 0 & 0.0\% \\
+Untrusted publisher & 552 & 55.2\% \\
+Open-world network access & 108 & 10.8\% \\
+Scope inflation & 31 & 3.1\% \\
+Description--code mismatch & 7 & 0.7\% \\
 \bottomrule
 \end{tabular}
 \end{table}
 
 \paragraph{Key findings.}
-(1)~80.0\% of measured public artifacts lack signatures, confirming that governance provenance remains weak even after adding discovered PyPI packages to the passive public corpus.
+(1)~80.0\% of measured public artifacts lack signatures, confirming that governance provenance remains weak even after adding discovered PyPI packages and a hosted registry slice to the passive public corpus.
 (2)~Only 2 of 1{,}000 artifacts trigger HIGH passive findings, and manual triage classifies both as likely false positives or metadata-capability mismatches rather than confirmed vulnerabilities.
-(3)~45.8\% of artifacts come from untrusted publishers, but only 20/1{,}000 have bounded source-entrypoint coverage, so most real-corpus findings should be interpreted as catalog-level governance observations rather than code-complete security judgments.
-(4)~The current batch spans four public sources—GitHub MCP repositories, npm MCP packages, 150 discovered PyPI MCP packages, and Hugging Face Spaces—which is stronger than the earlier GitHub-only snapshot, but it still excludes hosted enterprise marketplaces and private catalogs.
-(5)~Even with bounded GitHub contents, package.json-derived entrypoints, broad PyPI simple-index discovery, and Hugging Face \texttt{app\_file}/sibling discovery, the public corpus remains overwhelmingly metadata-only and should be treated as catalog-level evidence rather than runtime validation.
+(3)~55.2\% of artifacts come from untrusted publishers, but only 18/1{,}000 have bounded source-entrypoint coverage, so most real-corpus findings should be interpreted as catalog-level governance observations rather than code-complete security judgments.
+(4)~The current batch spans five public sources—GitHub MCP repositories, npm MCP packages, 150 discovered PyPI MCP packages, 150 Hugging Face Spaces, and 100 Smithery hosted-registry entries—which is stronger than the earlier GitHub-only snapshot, but it still excludes private enterprise catalogs.
+(5)~Even with bounded GitHub contents, package.json-derived entrypoints, broad PyPI simple-index discovery, Hugging Face \texttt{app\_file}/sibling discovery, and Smithery hosted-registry metadata, the public corpus remains overwhelmingly metadata-only and should be treated as catalog-level evidence rather than runtime validation.
 
 \paragraph{Supplementary scale-out batches.}
 To test whether the passive collector can sustain larger public-corpus runs, we also check in supplementary 2{,}000-, 3{,}000-, 5{,}000-, and 10{,}000-artifact batches. The 10{,}000-artifact batch reaches the roadmap's strongest scale target, but it also confirms the current external-validity bottleneck: breadth scales much faster than high-confidence implementation evidence, and the larger batches remain overwhelmingly metadata-only. We therefore use those runs to support coverage and prevalence claims, not to strengthen exploit-confirmation or deployment claims.

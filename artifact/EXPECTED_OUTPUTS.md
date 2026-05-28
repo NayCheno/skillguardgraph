@@ -250,23 +250,24 @@ This sandbox executes bounded source-available third-party PyPI package cases dr
 - `results/ecosystem/real_ecosystem_data_card.json`
 - `results/ecosystem/real_high_risk_triage.json`
 
-**Produced by:** `python scripts/crawl_real_ecosystem.py --target 1000 --pages-per-query 3 --source-budget 100 --resume` (defaults to `github_mcp,npm_mcp,pypi_mcp,hf_spaces_mcp`)
+**Produced by:** `python scripts/crawl_real_ecosystem.py --target 1000 --pages-per-query 3 --source-budget 100 --resume` (defaults to `github_mcp,npm_mcp,pypi_mcp,hf_spaces_mcp,smithery_mcp`)
 
 | Metric | Value |
 |---|---:|
 | Total artifacts | 1,000 |
-| GitHub MCP repositories | 500 |
+| GitHub MCP repositories | 400 |
 | npm MCP packages | 200 |
 | PyPI MCP packages | 150 |
 | Hugging Face Spaces | 150 |
-| Source-available samples | 20 |
-| Manifest-only samples | 980 |
+| Smithery hosted registry entries | 100 |
+| Source-available samples | 18 |
+| Manifest-only samples | 982 |
 | High severity | 2 |
-| Medium severity | 16 |
+| Medium severity | 35 |
 | Missing signatures | 800 (80.0%) |
-| Untrusted publishers | 458 (45.8%) |
-| Open-world network access | 9 (0.9%) |
-| Scope inflation | 6 (0.6%) |
+| Untrusted publishers | 552 (55.2%) |
+| Open-world network access | 108 (10.8%) |
+| Scope inflation | 31 (3.1%) |
 | Confirmed vulnerabilities | 0 |
 
 ---

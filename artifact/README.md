@@ -68,7 +68,7 @@ pip install -e ".[dev]"
 make smoke
 ```
 
-Expected: the demo prints a JSON policy report to stdout, and all 104 unit
+Expected: the demo prints a JSON policy report to stdout, and all 106 unit
 tests pass.
 
 ### Alternative: Docker
@@ -100,7 +100,7 @@ make smoke
 
 What it does:
 1. Runs `run_demo.py` — scans a sample manifest and evaluates a sample trace.
-2. Runs all 104 unit tests (`pytest tests/ -q`).
+2. Runs all 106 unit tests (`pytest tests/ -q`).
 
 ### Mode 2: Main Reproduction (~30 minutes)
 
@@ -128,7 +128,7 @@ What it does:
 1. Everything in Mode 2.
 2. `make ecosystem` — Builds 1200-sample synthetic ecosystem corpus from 5 sources.
 3. `make triage` — Triages ecosystem findings, identifies risk patterns.
-4. `make real-ecosystem` — Collects a 1,000-artifact passive multi-source corpus (GitHub MCP repositories + npm MCP packages + discovered PyPI MCP packages + Hugging Face Spaces), writes a data card, and records real-finding triage inputs.
+4. `make real-ecosystem` — Collects a 1,000-artifact passive multi-source corpus (GitHub MCP repositories + npm MCP packages + discovered PyPI MCP packages + Hugging Face Spaces + Smithery hosted-registry entries), writes a data card, and records real-finding triage inputs.
 
 A supplementary large-batch command is also available: `make real-ecosystem-large` collects a 2,000-artifact passive corpus into `real_ecosystem_large_*` outputs without replacing the reviewer-friendly 1,000-artifact batch. An additional `make real-ecosystem-xl` target collects a 3,000-artifact four-source corpus into `real_ecosystem_xl_*` outputs. A `make real-ecosystem-5k` target now checks in a 5,000-artifact quota-tuned corpus, and `make real-ecosystem-10k` checks in a 10,000-artifact quota-tuned corpus. These larger targets use `--resume` so partially warmed caches can survive upstream rate limits.
 ---
@@ -190,9 +190,9 @@ A supplementary large-batch command is also available: `make real-ecosystem-larg
 | False block rate | 0.000 |
 | Third-party fixture sandbox | 3 fixtures, 3 archive resolutions, 1 blocked subprocess, 0 unsafe egress |
 | Corpus-derived package sandbox | 3 PyPI cases, 3 archive resolutions, 2 client tool calls, 1 blocked subprocess, 0 unsafe egress |
-| Unit tests | 104 (all pass) |
+| Unit tests | 106 (all pass) |
 | Completion audit | generated on demand |
-| Ecosystem corpus size | 1200 synthetic + 1000 real public artifacts (500 GitHub + 200 npm + 150 discovered PyPI + 150 Hugging Face Spaces) |
+| Ecosystem corpus size | 1200 synthetic + 1000 real public artifacts (400 GitHub + 200 npm + 150 discovered PyPI + 150 Hugging Face Spaces + 100 Smithery hosted-registry entries) |
 | Supplementary scaled corpus | 2000 real public artifacts (1200 GitHub + 500 npm + 300 Hugging Face Spaces) |
 | Supplementary XL corpus | 3000 real public artifacts (1999 GitHub + 600 npm + 20 PyPI + 381 Hugging Face Spaces) |
 | Supplementary 5k corpus | 5000 real public artifacts (2600 GitHub + 2000 npm + 20 PyPI + 380 Hugging Face Spaces) |

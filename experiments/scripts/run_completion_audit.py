@@ -107,7 +107,7 @@ def main() -> None:
             "No confirmed real vulnerabilities or disclosure-backed cases.",
             "No arbitrary third-party dynamic sandbox execution beyond bounded source-available PyPI cases.",
             "No production-like runtime deployment evidence.",
-            "No hosted enterprise/private catalog coverage.",
+            "No private enterprise catalog coverage.",
         ],
     }
 
