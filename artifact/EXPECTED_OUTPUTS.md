@@ -279,4 +279,4 @@ All generalization acceptance booleans in the JSON are `true`. These checks are 
 - All synthetic network destinations point to sinkhole or reserved domains.
 - No real credentials, tokens, or API keys appear in the artifact.
 - Smoke tests and synthetic reproduction do not require network access.
-- Real public ecosystem measurement requires outbound access to GitHub's public APIs/raw content endpoints, npm registry APIs, and Hugging Face Space metadata/file endpoints.
+- Real public ecosystem measurement requires outbound access to GitHub's public APIs/raw content endpoints, npm registry APIs, and Hugging Face Space metadata/file endpoints. If available, set `GITHUB_TOKEN` and `HF_TOKEN` to reduce rate-limit failures during larger crawls.

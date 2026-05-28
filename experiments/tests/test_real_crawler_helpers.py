@@ -12,6 +12,8 @@ sys.path.insert(0, str(ROOT / "scripts"))
 import crawl_real_ecosystem as cre  # noqa: E402
 from crawl_real_ecosystem import (  # noqa: E402
     _package_json_entrypoints,
+    _rate_limit_hint,
+    _request_headers,
     build_hf_manifest,
     cached_source_samples,
     extract_github_repo_ref,
@@ -106,3 +108,13 @@ def test_cached_source_samples_filter_and_sort_by_source():
     }
     samples = cached_source_samples(cache, "github_mcp")
     assert [sample["dedup_key"] for sample in samples] == ["a", "b"]
+
+def test_request_headers_include_github_token(monkeypatch):
+    monkeypatch.setenv("GITHUB_TOKEN", "secret")
+    headers = _request_headers("github")
+    assert headers["Authorization"] == "Bearer secret"
+    assert headers["Accept"] == "application/vnd.github+json"
+
+def test_rate_limit_hint_mentions_resume():
+    assert "GITHUB_TOKEN" in _rate_limit_hint("github")
+    assert "--resume" in _rate_limit_hint("github")

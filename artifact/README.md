@@ -46,7 +46,7 @@ needed to reproduce every result reported in the paper.
 - **Docker** — a `Dockerfile` is provided for containerized smoke-test reproduction.
 - **Conda** — an `environment.yml` is provided for environment setup.
 
-Network access is not required for smoke tests or synthetic reproduction. The real public ecosystem measurement step (`make real-ecosystem`, `make real-ecosystem-large`, or `make eval-all`) requires outbound access to GitHub's public APIs/raw content endpoints, npm registry APIs, and Hugging Face Space metadata/file endpoints.
+Network access is not required for smoke tests or synthetic reproduction. The real public ecosystem measurement step (`make real-ecosystem`, `make real-ecosystem-large`, or `make eval-all`) requires outbound access to GitHub's public APIs/raw content endpoints, npm registry APIs, and Hugging Face Space metadata/file endpoints. If available, set `GITHUB_TOKEN` and `HF_TOKEN` to reduce rate-limit failures during larger crawls.
 
 ---
 
@@ -130,7 +130,7 @@ What it does:
 3. `make triage` — Triages ecosystem findings, identifies risk patterns.
 4. `make real-ecosystem` — Collects a 1,000-artifact passive multi-source corpus (GitHub MCP repositories + npm MCP packages + Hugging Face Spaces), writes a data card, and records real-finding triage inputs.
 
-A supplementary large-batch command is also available: `make real-ecosystem-large` collects a 2,000-artifact passive corpus into `real_ecosystem_large_*` outputs without replacing the reviewer-friendly 1,000-artifact batch.
+A supplementary large-batch command is also available: `make real-ecosystem-large` collects a 2,000-artifact passive corpus into `real_ecosystem_large_*` outputs without replacing the reviewer-friendly 1,000-artifact batch. The target uses `--resume` so partially warmed caches can survive upstream rate limits.
 ---
 
 ## Expected Outputs

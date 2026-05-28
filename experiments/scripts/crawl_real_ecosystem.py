@@ -15,10 +15,12 @@ from __future__ import annotations
 import argparse
 import io
 import json
+import os
 import re
 import sys
 import tarfile
 import time
+import urllib.error
 import urllib.parse
 import urllib.request
 from collections import Counter, defaultdict
@@ -98,19 +100,47 @@ SHELL_PATTERNS = re.compile(r'(subprocess|os\.system|exec\(|eval\(|child_process
 def iso_now() -> str:
     return datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
 
+def _request_headers(service: str, extra: Optional[Dict[str, str]] = None) -> Dict[str, str]:
+    headers: Dict[str, str] = {"User-Agent": "skillguardgraph-research-bot"}
+    if service == "github":
+        headers["Accept"] = "application/vnd.github+json"
+        token = os.environ.get("GITHUB_TOKEN")
+        if token:
+            headers["Authorization"] = f"Bearer {token}"
+    elif service == "hf":
+        token = os.environ.get("HF_TOKEN")
+        if token:
+            headers["Authorization"] = f"Bearer {token}"
+    elif service == "pypi":
+        token = os.environ.get("PYPI_TOKEN")
+        if token:
+            headers["Authorization"] = f"Bearer {token}"
+    if extra:
+        headers.update(extra)
+    return headers
 
-def _json_request(url: str, headers: Optional[Dict[str, str]] = None) -> Dict[str, Any]:
+
+def _rate_limit_hint(service: str) -> str:
+    if service == "github":
+        return "GitHub API rate limit exceeded. Set GITHUB_TOKEN or rerun with --resume after cache warmup."
+    if service == "hf":
+        return "Hugging Face API rate limit exceeded. Set HF_TOKEN or rerun with --resume after cache warmup."
+    return "Remote request failed due to rate limiting."
+
+
+def _json_request(url: str, headers: Optional[Dict[str, str]] = None, service: str = "generic") -> Dict[str, Any]:
     req = urllib.request.Request(url, headers=headers or {})
-    with urllib.request.urlopen(req, timeout=30) as resp:
-        return json.loads(resp.read().decode("utf-8"))
+    try:
+        with urllib.request.urlopen(req, timeout=30) as resp:
+            return json.loads(resp.read().decode("utf-8"))
+    except urllib.error.HTTPError as exc:
+        if exc.code == 403:
+            raise RuntimeError(_rate_limit_hint(service)) from exc
+        raise
 
 
 def github_request(url: str) -> Dict[str, Any]:
-    headers = {
-        "Accept": "application/vnd.github+json",
-        "User-Agent": "skillguardgraph-research-bot",
-    }
-    return _json_request(url, headers=headers)
+    return _json_request(url, headers=_request_headers("github"), service="github")
 
 
 def github_search(query: str, page: int) -> Dict[str, Any]:
@@ -132,7 +162,7 @@ def github_repo(owner: str, repo: str) -> Dict[str, Any]:
 
 def fetch_raw(owner: str, repo: str, path: str, branch: str) -> Optional[str]:
     url = f"https://raw.githubusercontent.com/{owner}/{repo}/{branch}/{path}"
-    req = urllib.request.Request(url, headers={"User-Agent": "skillguardgraph-research-bot"})
+    req = urllib.request.Request(url, headers=_request_headers("github"))
     try:
         with urllib.request.urlopen(req, timeout=20) as resp:
             return resp.read().decode("utf-8", errors="replace")
@@ -149,7 +179,7 @@ def github_contents(owner: str, repo: str, branch: str, path: str = "") -> Any:
     return github_request(f"{url}{sep}ref={urllib.parse.quote(branch)}")
 
 def fetch_bytes(url: str) -> Optional[bytes]:
-    req = urllib.request.Request(url, headers={"User-Agent": "skillguardgraph-research-bot"})
+    req = urllib.request.Request(url, headers=_request_headers("pypi"))
     try:
         with urllib.request.urlopen(req, timeout=30) as resp:
             return resp.read()
@@ -219,19 +249,27 @@ def tarball_member_texts(tarball_url: str, candidate_suffixes: List[str]) -> Lis
 
 def hf_spaces_search(query: str, limit: int) -> List[Dict[str, Any]]:
     encoded = urllib.parse.quote(query)
-    return _json_request(f"https://huggingface.co/api/spaces?search={encoded}&limit={limit}")
+    return _json_request(
+        f"https://huggingface.co/api/spaces?search={encoded}&limit={limit}",
+        headers=_request_headers("hf"),
+        service="hf",
+    )
 
 
 def hf_space_metadata(space_id: str) -> Dict[str, Any]:
     encoded = urllib.parse.quote(space_id, safe="/")
-    return _json_request(f"https://huggingface.co/api/spaces/{encoded}")
+    return _json_request(
+        f"https://huggingface.co/api/spaces/{encoded}",
+        headers=_request_headers("hf"),
+        service="hf",
+    )
 
 
 def fetch_hf_space_file(space_id: str, path: str) -> Optional[str]:
     encoded_id = urllib.parse.quote(space_id, safe="/")
     encoded_path = urllib.parse.quote(path.strip("/"))
     url = f"https://huggingface.co/spaces/{encoded_id}/resolve/main/{encoded_path}"
-    req = urllib.request.Request(url, headers={"User-Agent": "skillguardgraph-research-bot"})
+    req = urllib.request.Request(url, headers=_request_headers("hf"))
     try:
         with urllib.request.urlopen(req, timeout=20) as resp:
             return resp.read().decode("utf-8", errors="replace")
@@ -560,12 +598,21 @@ def build_npm_manifest(
 def load_cache() -> Dict[str, Dict[str, Any]]:
     if CACHE_FILE.exists():
         return json.loads(CACHE_FILE.read_text(encoding="utf-8"))
+    if SAMPLES_FILE.exists():
+        cache: Dict[str, Dict[str, Any]] = {}
+        for line in SAMPLES_FILE.read_text(encoding="utf-8").splitlines():
+            line = line.strip()
+            if not line:
+                continue
+            sample = json.loads(line)
+            key = f"{sample.get('source')}:{sample.get('dedup_key') or sample.get('repo')}"
+            cache[key] = sample
+        return cache
     return {}
 
 
 def save_cache(cache: Dict[str, Dict[str, Any]]) -> None:
     CACHE_FILE.write_text(json.dumps(cache, indent=2, ensure_ascii=False), encoding="utf-8")
-
 
 def cached_sample(cache: Dict[str, Dict[str, Any]], source: str, dedup_key: str) -> Optional[Dict[str, Any]]:
     namespaced = f"{source}:{dedup_key}"

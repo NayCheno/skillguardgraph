@@ -118,7 +118,7 @@ experiments/
 | `make ecosystem` | Crawl synthetic ecosystem corpus | ~10 min |
 | `make real-ecosystem` | Crawl passive real public GitHub + npm + Hugging Face MCP corpus | network-bound |
 | `make triage` | Triage synthetic ecosystem findings | ~5 min |
-| `make real-ecosystem-large` | Crawl supplementary 2,000-artifact public corpus | network-bound |
+| `make real-ecosystem-large` | Crawl supplementary 2,000-artifact public corpus (resume-aware) | network-bound |
 | `make reproduce` | benchmark + validate + eval-main + tables | ~30 min |
 | `make eval-all` | reproduce + ecosystem + triage + real-ecosystem | network-bound |
 | `make scan` | Scan a sample manifest | ~5 sec |
@@ -209,7 +209,10 @@ PYTHONPATH=src python scripts/run_runtime_redteam.py
 
 
 # Supplementary larger public corpus
-PYTHONPATH=src python scripts/crawl_real_ecosystem.py --target 2000 --pages-per-query 3 --source-budget 25 --output-prefix real_ecosystem_large
+# Supplementary larger public corpus
+PYTHONPATH=src python scripts/crawl_real_ecosystem.py --target 2000 --pages-per-query 3 --source-budget 25 --output-prefix real_ecosystem_large --resume
+
+If available, export `GITHUB_TOKEN` and `HF_TOKEN` before large crawls to reduce upstream rate-limit failures.
 
 # Local instrumented runtime harness
 PYTHONPATH=src python scripts/run_runtime_harness.py

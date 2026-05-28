@@ -1,6 +1,6 @@
 {
   "crawl_started_goal": "Passive real-public MCP/tool/package/space measurement",
-  "crawl_completed_at": "2026-05-28T02:01:06Z",
+  "crawl_completed_at": "2026-05-28T02:22:13Z",
   "target_samples": 2000,
   "actual_samples": 2000,
   "enabled_sources": [
