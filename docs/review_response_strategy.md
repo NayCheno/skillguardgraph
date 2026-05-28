@@ -36,7 +36,7 @@ Do **not** position it as:
 Concede these points quickly rather than resisting them:
 
 - no confirmed real vulnerabilities;
-- no arbitrary third-party sandbox execution beyond curated public-code fixtures;
+- no arbitrary third-party sandbox execution beyond bounded public-code and repo/package cases;
 - no authenticated or task-level production agent-runtime deployment;
 - limited source-available coverage in the real batches;
 - incomplete marketplace/private-catalog coverage.
@@ -56,7 +56,7 @@ If rebuttal space is limited, respond in this order:
 Do not upgrade the paper's wording unless all corresponding evidence exists in the repo:
 
 - confirmed or disclosure-backed real cases;
-- third-party dynamic sandbox execution beyond bounded source-available public-package cases;
+- third-party dynamic sandbox execution beyond bounded source-available public-package and repo cases;
 - authenticated or task-level production-like runtime integration;
 - private enterprise catalog coverage beyond today's public-source/public-registry slice;
 - stronger source-backed real-world validation.

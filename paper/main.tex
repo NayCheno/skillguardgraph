@@ -560,12 +560,34 @@ Case p95 latency (ms) & 91.746 \\
 
 This bounded suite is stronger than static public-code snippets because the cases are selected from the checked-in public corpus and executed from real package archives under isolation. It still does not constitute arbitrary package execution, marketplace-wide coverage, or production deployment evidence.
 
+
+\paragraph{Bounded GitHub repo execution.}
+We also execute a small GitHub-repo sandbox derived from the source-available GitHub slice of the checked-in 1{,}000-artifact public corpus. The current version covers the two Python repo entrypoints available in that batch: \texttt{ahujasid/blender-mcp} and \texttt{BeehiveInnovations/pal-mcp-server}. For each case, we fetch the exact raw source file recorded in the corpus, execute it inside the same isolated worker with shimmed local dependencies, and record whether the entrypoint delegates into the expected server code or materializes a non-empty tool registry.
+
+\begin{table}[t]
+\centering
+\caption{Bounded source-available GitHub repo sandbox.}
+\label{tab:github_repo_sandbox}
+\begin{tabular}{lr}
+\toprule
+Metric & Value \\
+\midrule
+Cases executed & 2 \\
+Blender delegate calls & 1 \\
+Registered tools observed & 18 \\
+Unsafe egress events & 0 \\
+Case p95 latency (ms) & 106.825 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+This bounded GitHub slice is stronger than metadata-only prevalence evidence because it executes real checked-in repo entrypoints under isolation, but it still falls short of arbitrary repository execution, authenticated runtime workflows, or production deployment validation.
 \subsection{Failure Analysis}
 
 The current fusion run has 0 false negatives and 0 false positives on the synthetic benchmark. The failure-analysis output therefore functions as an attribution audit rather than a missed-case catalogue: all 3{,}010 malicious samples are true positives with non-empty evidence paths, and all 1{,}000 benign samples are true negatives.
 
 \paragraph{Residual risk.}
- A zero-error synthetic result does not imply zero real-world risk. The benchmark is template-generated, the default simulated prober does not execute untrusted code, and even the local sandbox/runtime harnesses operate only on repository-controlled toy cases, curated public-code fixtures, or a bounded set of source-available PyPI package cases rather than arbitrary third-party packages. Real agent platforms may also omit provenance labels needed by C2/C3/C6. We therefore treat the current result as evidence that the artifact is internally consistent and use RQ5 to evaluate external validity.
+ A zero-error synthetic result does not imply zero real-world risk. The benchmark is template-generated, the default simulated prober does not execute untrusted code, and even the local sandbox/runtime harnesses operate only on repository-controlled toy cases, curated public-code fixtures, or bounded sets of source-available PyPI package and GitHub repo cases rather than arbitrary third-party packages. Real agent platforms may also omit provenance labels needed by C2/C3/C6. We therefore treat the current result as evidence that the artifact is internally consistent and use RQ5 to evaluate external validity.
 
 % ============================================================
 \section{Ecosystem Measurement (RQ5)}

@@ -156,6 +156,24 @@ This audit probes a bounded set of public remote MCP endpoints selected from the
 
 ---
 
+### GitHub Repo Sandbox
+
+**File:** `results/main/github_repo_sandbox.json`
+**Format:** JSON
+**Produced by:** `python scripts/run_github_repo_sandbox.py`
+
+| Metric | Value |
+|---|---:|
+| Cases executed | 2 |
+| Blender delegate calls | 1 |
+| Registered tools observed | 18 |
+| No unsafe egress | true |
+| Case p95 latency | 106.825 ms |
+
+This audit executes bounded source-available GitHub repo entrypoints selected from the checked-in main public corpus. It confirms Python entrypoint delegation and a populated third-party tool registry under isolation, but it still does not constitute arbitrary repository execution or production deployment evidence.
+
+---
+
 ## 8. Latency Measurement
 
 **File:** `results/main/latency.json`  

@@ -107,25 +107,36 @@ Table 8: Local Sandbox Harness
 +----------------------------+--------+
 
 Table 9: Third-Party Public-Code Sandbox
-+------------------------------+--------+
-| Metric                       | Value  |
-+------------------------------+--------+
-| Fixtures executed            | 3      |
-| Archive fixtures resolved    | 3      |
-| Subprocess attempts observed | 1      |
-| No unsafe egress             | true   |
-| Fixture p95 latency (ms)     | 91.206 |
-+------------------------------+--------+
++------------------------------+---------+
+| Metric                       | Value   |
++------------------------------+---------+
+| Fixtures executed            | 3       |
+| Archive fixtures resolved    | 3       |
+| Subprocess attempts observed | 1       |
+| No unsafe egress             | true    |
+| Fixture p95 latency (ms)     | 103.396 |
++------------------------------+---------+
 
 Table 10: Corpus-Derived Package Sandbox
-+------------------------------+--------+
-| Metric                       | Value  |
-+------------------------------+--------+
-| Cases executed               | 3      |
-| Archive cases resolved       | 3      |
-| Client tool calls observed   | 2      |
-| Subprocess attempts observed | 1      |
-| Registered tools observed    | 2      |
-| No unsafe egress             | true   |
-| Case p95 latency (ms)        | 91.746 |
-+------------------------------+--------+
++------------------------------+---------+
+| Metric                       | Value   |
++------------------------------+---------+
+| Cases executed               | 3       |
+| Archive cases resolved       | 3       |
+| Client tool calls observed   | 2       |
+| Subprocess attempts observed | 1       |
+| Registered tools observed    | 2       |
+| No unsafe egress             | true    |
+| Case p95 latency (ms)        | 100.500 |
++------------------------------+---------+
+
+Table 11: GitHub Repo Sandbox
++---------------------------+---------+
+| Metric                    | Value   |
++---------------------------+---------+
+| Cases executed            | 2       |
+| Blender delegate calls    | 1       |
+| Registered tools observed | 18      |
+| No unsafe egress          | true    |
+| Case p95 latency (ms)     | 106.825 |
++---------------------------+---------+

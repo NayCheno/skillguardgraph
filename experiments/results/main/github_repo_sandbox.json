@@ -1,0 +1,60 @@
+{
+  "cases_total": 2,
+  "cases_executed": 2,
+  "repos": [
+    "ahujasid/blender-mcp",
+    "BeehiveInnovations/pal-mcp-server"
+  ],
+  "server_main_calls": 1,
+  "tool_registry_total": 18,
+  "latency_ms": {
+    "p50": 96.438,
+    "p95": 106.825,
+    "max": 106.825
+  },
+  "acceptance": {
+    "all_cases_executed": true,
+    "blender_delegate_observed": true,
+    "tool_registry_observed": true,
+    "no_unsafe_egress": true
+  },
+  "cases": [
+    {
+      "case_id": "ahujasid__blender-mcp",
+      "repo": "ahujasid/blender-mcp",
+      "url": "https://github.com/ahujasid/blender-mcp",
+      "raw_url": "https://raw.githubusercontent.com/ahujasid/blender-mcp/main/main.py",
+      "source_path": "main.py",
+      "description": "GitHub Python entrypoint that delegates to blender_mcp.server.main.",
+      "duration_ms": 96.438,
+      "events": [
+        {
+          "kind": "blender_server_main"
+        }
+      ],
+      "result": {
+        "server_main_called": true
+      },
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "case_id": "BeehiveInnovations__pal-mcp-server",
+      "repo": "BeehiveInnovations/pal-mcp-server",
+      "url": "https://github.com/BeehiveInnovations/pal-mcp-server",
+      "raw_url": "https://raw.githubusercontent.com/BeehiveInnovations/pal-mcp-server/main/server.py",
+      "source_path": "server.py",
+      "description": "GitHub Python MCP server entrypoint with a populated tool registry.",
+      "duration_ms": 106.825,
+      "events": [],
+      "result": {
+        "tool_count": 18,
+        "has_version_tool": true,
+        "has_listmodels_tool": true,
+        "server_name": "pal-server"
+      },
+      "stdout": "",
+      "stderr": "2026-05-29 00:55:02,591 - root - INFO - Logging to: logs\\mcp_server.log\n2026-05-29 00:55:02,591 - root - INFO - Process PID: 77524\n2026-05-29 00:55:02,591 - sandbox_fixture - DEBUG - PAL_MCP_FORCE_ENV_OVERRIDE disabled - system environment variables take precedence\n2026-05-29 00:55:02,591 - sandbox_fixture - INFO - All tools enabled (DISABLED_TOOLS not set)\n"
+    }
+  ]
+}
