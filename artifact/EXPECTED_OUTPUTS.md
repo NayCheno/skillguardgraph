@@ -113,13 +113,33 @@ This document describes every output file produced by the experiment pipeline, i
 | Archive fixtures resolved | 3 |
 | Subprocess attempts observed | 1 |
 | No unsafe egress | true |
-| Fixture p95 latency | 95.757 ms |
+| Fixture p95 latency | 91.206 ms |
 
 This fixture suite executes curated public third-party code resolved from downloaded package source archives inside the sandbox harness. It is stronger than the repository-only toy sandbox, but it still does not amount to arbitrary third-party package execution.
 
 ---
 
-## 7. Latency Measurement
+## 7. Corpus-Derived Package Sandbox
+
+**File:** `results/main/corpus_package_sandbox.json`
+**Format:** JSON
+**Produced by:** `python scripts/run_corpus_package_sandbox.py`
+
+| Metric | Value |
+|---|---:|
+| Cases executed | 3 |
+| Archive cases resolved | 3 |
+| Client tool calls observed | 2 |
+| Subprocess attempts observed | 1 |
+| Registered tools observed | 2 |
+| No unsafe egress | true |
+| Case p95 latency | 91.746 ms |
+
+This sandbox executes bounded source-available third-party PyPI package cases drawn from the checked-in real-corpus batch. It is stronger than curated archive snippets because it resolves real package test/server files from public source distributions, but it still does not amount to arbitrary marketplace package execution.
+
+---
+
+## 8. Latency Measurement
 
 **File:** `results/main/latency.json`  
 **Format:** JSON  
@@ -136,7 +156,7 @@ This fixture suite executes curated public third-party code resolved from downlo
 
 ---
 
-## 8. Bootstrap Confidence Intervals
+## 9. Bootstrap Confidence Intervals
 
 **File:** `results/main/bootstrap_ci.json`  
 **Format:** JSON  
@@ -151,7 +171,7 @@ This fixture suite executes curated public third-party code resolved from downlo
 
 ---
 
-## 9. Failure Analysis
+## 10. Failure Analysis
 
 **Files:** `results/main/failure_analysis.json`, `results/main/failure_cases.md`  
 **Produced by:** `python scripts/run_failure_analysis.py`
@@ -164,7 +184,7 @@ This fixture suite executes curated public third-party code resolved from downlo
 
 ---
 
-## 10. Significance Tests
+## 11. Significance Tests
 
 **File:** `results/main/significance_tests.json`  
 **Format:** JSON  
@@ -182,7 +202,7 @@ This fixture suite executes curated public third-party code resolved from downlo
 
 ---
 
-## 11. Generalization Stress Checks
+## 12. Generalization Stress Checks
 
 **File:** `results/main/generalization_eval.json`  
 **Format:** JSON  
@@ -197,7 +217,7 @@ This fixture suite executes curated public third-party code resolved from downlo
 
 ---
 
-## 12. Paper Tables
+## 13. Paper Tables
 
 **Files:** `results/main/tables.txt`, `results/main/tables.tex`  
 **Format:** Plain text / LaTeX  
@@ -205,7 +225,7 @@ This fixture suite executes curated public third-party code resolved from downlo
 
 ---
 
-## 13. Synthetic Ecosystem Triage
+## 14. Synthetic Ecosystem Triage
 
 **Files:** `results/ecosystem/ecosystem_triage.json`, `results/ecosystem/risk_patterns.json`  
 **Produced by:** `python scripts/crawl_ecosystem.py` and `python scripts/triage_findings.py`
@@ -221,7 +241,7 @@ This fixture suite executes curated public third-party code resolved from downlo
 
 ---
 
-## 14. Real Public Ecosystem Measurement
+## 15. Real Public Ecosystem Measurement
 
 **Files:**
 
@@ -251,7 +271,7 @@ This fixture suite executes curated public third-party code resolved from downlo
 
 ---
 
-## 15. Supplementary Large Public Ecosystem Measurement
+## 16. Supplementary Large Public Ecosystem Measurement
 
 **Files:**
 
@@ -276,7 +296,7 @@ This fixture suite executes curated public third-party code resolved from downlo
 
 ---
 
-## 16. Supplementary XL Public Ecosystem Measurement
+## 17. Supplementary XL Public Ecosystem Measurement
 
 **Files:**
 
@@ -302,7 +322,7 @@ This fixture suite executes curated public third-party code resolved from downlo
 
 ---
 
-## 17. Supplementary 5k Public Ecosystem Measurement
+## 18. Supplementary 5k Public Ecosystem Measurement
 
 **Files:**
 
@@ -328,7 +348,7 @@ This fixture suite executes curated public third-party code resolved from downlo
 
 ---
 
-## 18. Supplementary 10k Public Ecosystem Measurement
+## 19. Supplementary 10k Public Ecosystem Measurement
 
 **Files:**
 
@@ -354,7 +374,7 @@ This fixture suite executes curated public third-party code resolved from downlo
 
 ---
 
-## 19. Completion Audit
+## 20. Completion Audit
 
 **Files:** `results/main/completion_audit.json`, `results/main/completion_audit.md`  \n**Format:** JSON / Markdown  \n**Produced by:** `python scripts/run_completion_audit.py`
 

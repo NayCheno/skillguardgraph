@@ -26,6 +26,7 @@ GENERALIZATION_PATH = RESULTS / "generalization_eval.json"
 RUNTIME_HARNESS_PATH = RESULTS / "runtime_harness.json"
 SANDBOX_HARNESS_PATH = RESULTS / "sandbox_harness.json"
 THIRD_PARTY_SANDBOX_PATH = RESULTS / "third_party_sandbox.json"
+CORPUS_PACKAGE_SANDBOX_PATH = RESULTS / "corpus_package_sandbox.json"
 TXT_PATH = RESULTS / "tables.txt"
 TEX_PATH = RESULTS / "tables.tex"
 
@@ -304,6 +305,24 @@ def build_table9(third_party: dict) -> tuple[str, str]:
     rows_tex = [[k.replace("_", "\\_"), v] for k, v in pairs]
     return _txt_table(title, headers, rows_txt), _tex_table(title, "tab:third_party_sandbox", headers, rows_tex, "lr")
 
+def build_table10(corpus_packages: dict) -> tuple[str, str]:
+    """Bounded corpus-derived third-party package sandbox."""
+    title = "Table 10: Corpus-Derived Package Sandbox"
+    headers = ["Metric", "Value"]
+    latency = corpus_packages["latency_ms"]
+    pairs = [
+        ("Cases executed", str(corpus_packages["cases_executed"])),
+        ("Archive cases resolved", str(corpus_packages["archive_cases_resolved"])),
+        ("Client tool calls observed", str(corpus_packages["client_tool_calls_observed"])),
+        ("Subprocess attempts observed", str(corpus_packages["subprocess_attempts_observed"])),
+        ("Registered tools observed", str(corpus_packages["registered_tools_observed"])),
+        ("No unsafe egress", str(corpus_packages["acceptance"]["no_unsafe_egress"]).lower()),
+        ("Case p95 latency (ms)", f"{latency['p95']:.3f}"),
+    ]
+    rows_txt = [[k, v] for k, v in pairs]
+    rows_tex = [[k.replace("_", "\\_"), v] for k, v in pairs]
+    return _txt_table(title, headers, rows_txt), _tex_table(title, "tab:corpus_package_sandbox", headers, rows_tex, "lr")
+
 
 # ---------------------------------------------------------------------------
 # Main
@@ -318,6 +337,7 @@ def main() -> None:
     runtime_harness = load_json(RUNTIME_HARNESS_PATH)
     sandbox_harness = load_json(SANDBOX_HARNESS_PATH)
     third_party_sandbox = load_json(THIRD_PARTY_SANDBOX_PATH)
+    corpus_package_sandbox = load_json(CORPUS_PACKAGE_SANDBOX_PATH)
 
     txt_parts: list[str] = ["=" * 72, "SkillGuardGraph Experiment Results", "=" * 72]
     tex_parts: list[str] = [
@@ -326,9 +346,9 @@ def main() -> None:
         "",
     ]
 
-    builders = [build_table1, build_table2, build_table3, build_table4, build_table5, build_table6, build_table7, build_table8, build_table9]
-    # Table 1 & 2 need detector, 3 needs ablation, 4 & 5 need redteam, 6 needs generalization, 7 needs runtime harness, 8 needs sandbox harness, 9 needs third-party sandbox.
-    args = [detector, detector, ablation, redteam, redteam, generalization, runtime_harness, sandbox_harness, third_party_sandbox]
+    builders = [build_table1, build_table2, build_table3, build_table4, build_table5, build_table6, build_table7, build_table8, build_table9, build_table10]
+    # Table 1 & 2 need detector, 3 needs ablation, 4 & 5 need redteam, 6 needs generalization, 7 needs runtime harness, 8 needs sandbox harness, 9 needs third-party sandbox, 10 needs corpus-package sandbox.
+    args = [detector, detector, ablation, redteam, redteam, generalization, runtime_harness, sandbox_harness, third_party_sandbox, corpus_package_sandbox]
 
     for builder, arg in zip(builders, args):
         txt, tex = builder(arg)

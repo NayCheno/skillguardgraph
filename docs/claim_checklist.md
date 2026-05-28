@@ -13,6 +13,7 @@ This file is the paper-facing audit map for SkillGuardGraph's current claim boun
 | The artifact includes a local instrumented runtime harness | `experiments/results/main/runtime_harness.json`, `experiments/src/skillguardgraph/runtime_harness.py` | Supported |
 | The artifact includes a local isolated sandbox harness | `experiments/results/main/sandbox_harness.json`, `experiments/src/skillguardgraph/sandbox_harness.py` | Supported |
 | The artifact includes an archive-backed third-party public-code sandbox fixture suite | `experiments/results/main/third_party_sandbox.json`, `experiments/src/skillguardgraph/third_party_sandbox.py`, `experiments/scripts/run_third_party_sandbox.py` | Supported |
+| The artifact includes a bounded corpus-derived third-party package sandbox over source-available PyPI cases | `experiments/results/main/corpus_package_sandbox.json`, `experiments/src/skillguardgraph/corpus_package_sandbox.py`, `experiments/scripts/run_corpus_package_sandbox.py` | Supported |
 | Passive multi-source public measurement is implemented and documented, including supplementary 2k/3k/5k/10k batches | `experiments/results/ecosystem/real_ecosystem_results.json`, `experiments/results/ecosystem/real_ecosystem_large_results.json`, `experiments/results/ecosystem/real_ecosystem_xl_results.json`, `experiments/results/ecosystem/real_ecosystem_5k_results.json`, `experiments/results/ecosystem/real_ecosystem_10k_results.json`, `docs/ecosystem_measurement.md` | Supported |
 
 ## Claims that must remain explicitly limited
@@ -20,7 +21,7 @@ This file is the paper-facing audit map for SkillGuardGraph's current claim boun
 | Claim area | Current evidence | Required wording |
 |---|---|---|
 | Real-world exploit confirmation | Passive repo/package/space metadata + bounded source only | Do not claim confirmed vulnerabilities or exploit paths |
-| Dynamic sandboxing | Local toy sandbox harness plus archive-backed curated third-party public-code fixtures only; no arbitrary third-party skill execution | Do not claim production sandbox coverage |
+| Dynamic sandboxing | Local toy sandbox harness plus archive-backed curated third-party public-code fixtures and bounded source-available PyPI package cases only; no arbitrary third-party skill execution | Do not claim production sandbox coverage |
 | Production runtime deployment | Local toy runtime harness only | Do not claim deployed agent-runtime efficacy |
 | Ecosystem prevalence | 1k main batch + 2k/3k/5k/10k supplementary catalog measurements | Frame as passive catalog evidence, not exhaustive market coverage |
 | PyPI coverage | Simple-index discovery only | Do not claim comprehensive PyPI measurement |
@@ -30,7 +31,7 @@ This file is the paper-facing audit map for SkillGuardGraph's current claim boun
 | Gap | Missing evidence |
 |---|---|
 | Confirmed real cases | Responsible disclosure-backed validations |
-| Third-party dynamic sandbox beyond curated fixtures | Isolated execution of non-toy external skills |
+| Third-party dynamic sandbox beyond bounded public-package cases | Isolated execution of non-toy external skills at arbitrary package / marketplace breadth |
 | Production-like runtime data | Real agent integration and overhead measurements |
 | Broader marketplace coverage | Hosted enterprise or other external tool catalogs |
 

@@ -38,6 +38,7 @@ RESULT_FILES = [
     RESULTS_MAIN / "runtime_harness.json",
     RESULTS_MAIN / "sandbox_harness.json",
     RESULTS_MAIN / "third_party_sandbox.json",
+    RESULTS_MAIN / "corpus_package_sandbox.json",
     RESULTS_MAIN / "latency.json",
     RESULTS_MAIN / "bootstrap_ci.json",
     RESULTS_MAIN / "generalization_eval.json",
@@ -79,6 +80,7 @@ def main() -> None:
     runtime_harness = read_json(RESULTS_MAIN / "runtime_harness.json")
     sandbox_harness = read_json(RESULTS_MAIN / "sandbox_harness.json")
     third_party = read_json(RESULTS_MAIN / "third_party_sandbox.json")
+    corpus_package_sandbox = read_json(RESULTS_MAIN / "corpus_package_sandbox.json")
     generalization = read_json(RESULTS_MAIN / "generalization_eval.json")
 
     supported = {
@@ -89,6 +91,7 @@ def main() -> None:
         "sandbox_harness_acceptance": all(sandbox_harness["acceptance"].values()),
         "third_party_fixture_acceptance": all(third_party["acceptance"].values()),
         "generalization_acceptance": all(generalization["acceptance"].values()),
+        "corpus_package_acceptance": all(corpus_package_sandbox["acceptance"].values()),
         "public_corpus_reaches_5k": int(batch_5k.get("total_samples", 0)) >= 5000,
         "public_corpus_reaches_10k": int(batch_10k.get("total_samples", 0)) >= 10000,
     }
@@ -102,7 +105,7 @@ def main() -> None:
         "tenk_batch_total": int(batch_10k.get("total_samples", 0)),
         "strong_submission_blockers": [
             "No confirmed real vulnerabilities or disclosure-backed cases.",
-            "No arbitrary third-party dynamic sandbox execution beyond curated fixtures.",
+            "No arbitrary third-party dynamic sandbox execution beyond bounded source-available PyPI cases.",
             "No production-like runtime deployment evidence.",
             "No hosted enterprise/private catalog coverage.",
         ],
@@ -134,6 +137,7 @@ def main() -> None:
         "## Current real-corpus state",
         "",
         f"- main batch: {main_eco.get('total_samples', 0)} artifacts, source_available={main_eco.get('code_availability', {}).get('source_available', 0)}",
+        f"- corpus-derived package sandbox: {corpus_package_sandbox.get('cases_executed', 0)} cases, archive_resolved={corpus_package_sandbox.get('archive_cases_resolved', 0)}",
         f"- 5k batch: {batch_5k.get('total_samples', 0)} artifacts",
         f"- 10k batch: {batch_10k.get('total_samples', 0)} artifacts, source_available={batch_10k.get('code_availability', {}).get('source_available', 0)}",
         f"- confirmed real vulnerabilities: {triage['summary'].get('confirmed_vulnerabilities', 0)}",

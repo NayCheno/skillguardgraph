@@ -1,0 +1,136 @@
+{
+  "cases_total": 3,
+  "cases_executed": 3,
+  "archive_cases_resolved": 3,
+  "package_names": [
+    "autodoc-mcp",
+    "mcp-server-creator",
+    "search-mcp-server"
+  ],
+  "subprocess_attempts_observed": 1,
+  "client_tool_calls_observed": 2,
+  "registered_tools_observed": 2,
+  "latency_ms": {
+    "p50": 85.907,
+    "p95": 91.746,
+    "max": 91.746
+  },
+  "acceptance": {
+    "all_cases_executed": true,
+    "archive_cases_resolved_ge_3": true,
+    "subprocess_or_client_events_captured": true,
+    "registered_tools_observed": true,
+    "no_unsafe_egress": true
+  },
+  "cases": [
+    {
+      "case_id": "autodoc-mcp",
+      "package_name": "autodoc-mcp",
+      "version": "0.5.1",
+      "artifact_url": "https://pypi.org/project/autodoc-mcp/",
+      "linked_repository": "https://github.com/bradleyfay/autodoc-mcp",
+      "source_paths": [
+        "test_mcp_server.py"
+      ],
+      "source_path": "test_mcp_server.py",
+      "sdist_url": "https://files.pythonhosted.org/packages/93/2a/a4620c8e6165e6d7291eb2d1f05fe75cd1ada6615f00b4f7f4cdf80cccbf/autodoc_mcp-0.5.1.tar.gz",
+      "archive_member": "autodoc_mcp-0.5.1/tests/integration/test_mcp_server.py",
+      "description": "PyPI integration test exercising import, tempfile, and subprocess smoke checks.",
+      "duration_ms": 85.697,
+      "events": [
+        {
+          "kind": "subprocess_run",
+          "cmd": [
+            "d:\\env\\language\\python\\python.exe",
+            "-c",
+            "import autodoc_mcp.main; print('OK')"
+          ],
+          "timeout": 10
+        }
+      ],
+      "result": {
+        "tests_executed": 3
+      },
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "case_id": "mcp-server-creator",
+      "package_name": "mcp-server-creator",
+      "version": "0.1.3",
+      "artifact_url": "https://pypi.org/project/mcp-server-creator/",
+      "linked_repository": "https://github.com/GongRzhe/MCP-Server-Creator",
+      "source_paths": [
+        "mcp_creator_example.py",
+        "test_mcp_creator.py"
+      ],
+      "source_path": "test_mcp_creator.py",
+      "sdist_url": "https://files.pythonhosted.org/packages/36/2d/175239ecffdfc2a3b285c1d9bd3f382d319bcb9c551b6252e3734a582b82/mcp_server_creator-0.1.3.tar.gz",
+      "archive_member": "mcp_server_creator-0.1.3/test_mcp_creator.py",
+      "description": "PyPI package test script that drives a FastMCP client against a server-creator package.",
+      "duration_ms": 85.907,
+      "events": [
+        {
+          "kind": "client_enter",
+          "target": "mcp_server_creator.mcp_server_creator"
+        },
+        {
+          "kind": "client_call_tool",
+          "name": "create_server",
+          "param_keys": [
+            "description",
+            "name",
+            "version"
+          ]
+        },
+        {
+          "kind": "client_call_tool",
+          "name": "add_tool",
+          "param_keys": [
+            "description",
+            "implementation",
+            "parameters",
+            "return_type",
+            "server_id",
+            "tool_name"
+          ]
+        },
+        {
+          "kind": "client_exit",
+          "target": "mcp_server_creator.mcp_server_creator"
+        }
+      ],
+      "result": {
+        "create_server_success": true,
+        "add_tool_success": true
+      },
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "case_id": "search-mcp-server",
+      "package_name": "search-mcp-server",
+      "version": "0.2.0",
+      "artifact_url": "https://pypi.org/project/search-mcp-server/",
+      "linked_repository": "https://github.com/krzysztofkucmierz/search-mcp-server",
+      "source_paths": [
+        "mcp_server.py"
+      ],
+      "source_path": "mcp_server.py",
+      "sdist_url": "https://files.pythonhosted.org/packages/05/14/e0e56d1eaf68ce177afaebf6d3746dabfe2ddaf3831075430481676ea593/search_mcp_server-0.2.0.tar.gz",
+      "archive_member": "search_mcp_server-0.2.0/mcp_server.py",
+      "description": "PyPI MCP server module with registered tools/resources and mocked catalog data.",
+      "duration_ms": 91.746,
+      "events": [],
+      "result": {
+        "search_total_results": 1,
+        "tool_count": 2,
+        "resource_count": 2,
+        "category_total": 2,
+        "all_servers_len": 478
+      },
+      "stdout": "",
+      "stderr": ""
+    }
+  ]
+}

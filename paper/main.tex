@@ -529,19 +529,43 @@ Fixtures executed & 3 \\
 Archive fixtures resolved & 3 \\
 Subprocess attempts observed & 1 \\
 Unsafe egress events & 0 \\
-Fixture p95 latency (ms) & 95.757 \\
+Fixture p95 latency (ms) & 91.206 \\
 \bottomrule
 \end{tabular}
 \end{table}
 
 The fixture suite is stronger than a repository-only toy harness because it executes public third-party source pulled from upstream package archives under isolation, but it is still not equivalent to arbitrary package execution or production sandbox deployment.
 
+\paragraph{Bounded corpus-derived package execution.}
+To move one step beyond hand-picked public-code fixtures, we also execute a bounded sandbox suite derived from the checked-in real-corpus batch itself. The current version targets every source-available PyPI artifact in the 1{,}000-artifact main batch (three packages at the time of writing): \texttt{autodoc-mcp}, \texttt{mcp-server-creator}, and \texttt{search-mcp-server}. For each case, we fetch the public source-distribution archive, resolve the source file recorded in the corpus, execute it inside the same isolated worker with shimmed MCP/client interfaces, and record whether subprocess or client-tool activity is observed.
+
+\begin{table}[t]
+\centering
+\caption{Bounded corpus-derived third-party package sandbox.}
+\label{tab:corpus_package_sandbox}
+\begin{tabular}{lr}
+\toprule
+Metric & Value \\
+\midrule
+Cases executed & 3 \\
+Archive cases resolved & 3 \\
+Client tool calls observed & 2 \\
+Subprocess attempts observed & 1 \\
+Registered tools observed & 2 \\
+Unsafe egress events & 0 \\
+Case p95 latency (ms) & 91.746 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+This bounded suite is stronger than static public-code snippets because the cases are selected from the checked-in public corpus and executed from real package archives under isolation. It still does not constitute arbitrary package execution, marketplace-wide coverage, or production deployment evidence.
+
 \subsection{Failure Analysis}
 
 The current fusion run has 0 false negatives and 0 false positives on the synthetic benchmark. The failure-analysis output therefore functions as an attribution audit rather than a missed-case catalogue: all 3{,}010 malicious samples are true positives with non-empty evidence paths, and all 1{,}000 benign samples are true negatives.
 
 \paragraph{Residual risk.}
-A zero-error synthetic result does not imply zero real-world risk. The benchmark is template-generated, the default simulated prober does not execute untrusted code, and even the local sandbox/runtime harnesses operate only on repository-controlled toy cases or a tiny set of archive-backed third-party public-code fixtures rather than arbitrary third-party packages. Real agent platforms may also omit provenance labels needed by C2/C3/C6. We therefore treat the current result as evidence that the artifact is internally consistent and use RQ5 to evaluate external validity.
+ A zero-error synthetic result does not imply zero real-world risk. The benchmark is template-generated, the default simulated prober does not execute untrusted code, and even the local sandbox/runtime harnesses operate only on repository-controlled toy cases, curated public-code fixtures, or a bounded set of source-available PyPI package cases rather than arbitrary third-party packages. Real agent platforms may also omit provenance labels needed by C2/C3/C6. We therefore treat the current result as evidence that the artifact is internally consistent and use RQ5 to evaluate external validity.
 
 % ============================================================
 \section{Ecosystem Measurement (RQ5)}

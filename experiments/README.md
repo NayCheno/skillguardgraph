@@ -113,7 +113,7 @@ experiments/
 | `make test` | Unit tests (verbose) | ~2 min |
 | `make benchmark` | Build benchmark (4010 samples) | ~5 min |
 | `make validate` | Validate benchmark labels | ~2 min |
-| `make eval-main` | Detection + ablation + runtime eval + runtime/sandbox harnesses + third-party fixture sandbox + bootstrap + generalization | ~15 min |
+| `make eval-main` | Detection + ablation + runtime eval + runtime/sandbox harnesses + third-party fixture sandbox + bounded corpus-package sandbox + bootstrap + generalization | ~15 min |
 | `make tables` | Generate tables + failure analysis + significance | ~1 min |
 | `make ecosystem` | Crawl synthetic ecosystem corpus | ~10 min |
 | `make real-ecosystem` | Crawl passive real public GitHub + npm + PyPI + Hugging Face MCP corpus | network-bound |
@@ -129,6 +129,7 @@ experiments/
 | `make runtime-harness` | Run local instrumented runtime harness | ~1 min |
 | `make sandbox-harness` | Run local isolated sandbox harness | ~1 min |
 | `make third-party-sandbox` | Run archive-backed third-party public-code sandbox fixtures | ~1 min |
+| `make corpus-package-sandbox` | Run bounded corpus-derived third-party package sandbox cases | ~1 min |
 | `make completion-audit` | Generate current completion audit report | ~5 sec |
 | `make clean` | Remove all generated results and data | instant |
 
@@ -150,6 +151,7 @@ results/main/tables.txt           # Formatted plain-text tables
 results/main/generalization_eval.json # Held-out/hard-negative/mutation/leakage checks
 results/main/tables.tex           # LaTeX tables for paper inclusion
 results/main/third_party_sandbox.json # Archive-backed third-party public-code sandbox metrics
+results/main/corpus_package_sandbox.json # Bounded corpus-derived package sandbox metrics
 ```
 
 After `make eval-all` (additional files):
@@ -208,6 +210,7 @@ Key result numbers:
 | Supplementary 5k corpus | 5,000 artifacts (2600 GitHub + 2000 npm + 20 PyPI + 380 Hugging Face Spaces) |
 | Supplementary 10k corpus | 10,000 artifacts (4000 GitHub + 4000 npm + 1620 PyPI + 380 Hugging Face Spaces) |
 | Third-party fixture sandbox | 3 public-code fixtures, 1 blocked subprocess, 0 unsafe egress |
+| Corpus-derived package sandbox | 3 PyPI cases, 2 client tool calls, 1 blocked subprocess, 0 unsafe egress |
 
 See `../artifact/EXPECTED_OUTPUTS.md` for full output documentation.
 ---
@@ -237,6 +240,9 @@ PYTHONPATH=src python scripts/crawl_real_ecosystem.py --target 2000 --pages-per-
 
 # Archive-backed third-party public-code sandbox
 PYTHONPATH=src python scripts/run_third_party_sandbox.py
+
+# Bounded corpus-derived package sandbox
+PYTHONPATH=src python scripts/run_corpus_package_sandbox.py
 
 # Supplementary XL public corpus
 PYTHONPATH=src python scripts/crawl_real_ecosystem.py --target 3000 --pages-per-query 3 --output-prefix real_ecosystem_xl --resume

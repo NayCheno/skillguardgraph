@@ -56,7 +56,7 @@ If rebuttal space is limited, respond in this order:
 Do not upgrade the paper's wording unless all corresponding evidence exists in the repo:
 
 - confirmed or disclosure-backed real cases;
-- third-party dynamic sandbox execution beyond curated fixtures;
+- third-party dynamic sandbox execution beyond bounded source-available public-package cases;
 - production-like runtime integration;
 - stronger source-backed real-world validation.
 
