@@ -24,7 +24,7 @@ This file is the paper-facing audit map for SkillGuardGraph's current claim boun
 | Real-world exploit confirmation | Passive repo/package/space metadata + bounded source, plus advisory cross-checking for known public MCP cases | Do not claim newly confirmed vulnerabilities or exploit paths from this artifact alone |
 | Dynamic sandboxing | Local toy sandbox harness plus archive-backed curated third-party public-code fixtures and bounded source-available PyPI package cases only; no arbitrary third-party skill execution | Do not claim production sandbox coverage |
 | Production runtime deployment | Local toy runtime harness only | Do not claim deployed agent-runtime efficacy |
-| Ecosystem prevalence | 1k main batch including a public hosted-registry slice + 2k/3k/5k/10k supplementary catalog measurements | Frame as passive catalog evidence, not exhaustive market coverage |
+| Ecosystem prevalence | 1k main batch including public hosted-registry and official-registry slices + 2k/3k/5k/10k supplementary catalog measurements | Frame as passive catalog evidence, not exhaustive market coverage |
 | PyPI coverage | Simple-index discovery only | Do not claim comprehensive PyPI measurement |
 
 ## Open claim gaps before stronger submission positioning

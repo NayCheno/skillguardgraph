@@ -15,9 +15,11 @@ from crawl_real_ecosystem import (  # noqa: E402
     _rate_limit_hint,
     _request_headers,
     build_hf_manifest,
+    build_official_registry_manifest,
+    build_official_registry_tools,
     build_smithery_manifest,
-    cached_source_samples,
     build_smithery_tools,
+    cached_source_samples,
     canonicalize_package_name,
     extract_github_repo_ref,
     npm_entrypoint_candidates,
@@ -99,8 +101,27 @@ def test_build_smithery_manifest_marks_verified_servers_trusted():
     assert manifest["source"] == "smithery_mcp"
     assert manifest["annotations"]["openWorldHint"] is True
     assert manifest["tool_count"] == 1
+
+def test_build_official_registry_manifest_marks_remote_registry_entries_trusted():
+    server_doc = {
+        "name": "io.github.example/demo-server",
+        "description": "Browse and execute remote tools over streamable-http.",
+        "title": "Demo Server",
+        "version": "1.2.3",
+        "remotes": [{"type": "streamable-http", "url": "https://example.invalid/mcp"}],
+        "repository": {"url": "https://github.com/example/demo-server", "source": "github"},
+    }
+    meta = {"io.modelcontextprotocol.registry/official": {"status": "active", "isLatest": True}}
+    tools = build_official_registry_tools(server_doc)
+    manifest = build_official_registry_manifest(server_doc, meta, tools)
+    assert manifest["trusted_server"] is True
+    assert manifest["source"] == "official_registry_mcp"
+    assert manifest["annotations"]["openWorldHint"] is True
     assert tools[0]["has_network"] is True
+    assert "run" in tools[0]["scopes"]
     assert "query" in tools[0]["scopes"]
+
+
 def test_tarball_member_texts_reads_package_json_entrypoints():
     buffer = io.BytesIO()
     with tarfile.open(fileobj=buffer, mode="w:gz") as archive:
@@ -130,6 +151,7 @@ def test_tarball_member_texts_reads_package_json_entrypoints():
     assert any(path.endswith("dist/index.js") for path in paths)
     assert any(path.endswith("bin/cli.js") for path in paths)
 
+
 def test_cached_source_samples_filter_and_sort_by_source():
     cache = {
         "github_mcp:b": {"source": "github_mcp", "dedup_key": "b"},
@@ -138,6 +160,7 @@ def test_cached_source_samples_filter_and_sort_by_source():
     }
     samples = cached_source_samples(cache, "github_mcp")
     assert [sample["dedup_key"] for sample in samples] == ["a", "b"]
+
 
 def test_request_headers_include_github_token(monkeypatch):
     monkeypatch.setenv("GITHUB_TOKEN", "secret")
@@ -150,19 +173,24 @@ def test_request_headers_include_smithery_token(monkeypatch):
     monkeypatch.setenv("SMITHERY_API_KEY", "secret")
     headers = _request_headers("smithery")
     assert headers["Authorization"] == "Bearer secret"
+
+
 def test_rate_limit_hint_mentions_resume():
     assert "GITHUB_TOKEN" in _rate_limit_hint("github")
     assert "--resume" in _rate_limit_hint("github")
 
+
 def test_canonicalize_package_name_normalizes_variants():
     assert canonicalize_package_name("Aivpp.My_Test-MCP") == "aivpp-my-test-mcp"
 
+
 def test_parse_source_quotas_validates_total_and_members():
     quotas = parse_source_quotas(
-        "github_mcp=10,npm_mcp=5,pypi_mcp=2,hf_spaces_mcp=2,smithery_mcp=1",
-        ["github_mcp", "npm_mcp", "pypi_mcp", "hf_spaces_mcp", "smithery_mcp"],
+        "github_mcp=10,npm_mcp=5,pypi_mcp=2,hf_spaces_mcp=1,smithery_mcp=1,official_registry_mcp=1",
+        ["github_mcp", "npm_mcp", "pypi_mcp", "hf_spaces_mcp", "smithery_mcp", "official_registry_mcp"],
         20,
     )
     assert quotas["github_mcp"] == 10
-    assert quotas["hf_spaces_mcp"] == 2
+    assert quotas["hf_spaces_mcp"] == 1
     assert quotas["smithery_mcp"] == 1
+    assert quotas["official_registry_mcp"] == 1

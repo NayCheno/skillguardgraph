@@ -55,13 +55,13 @@ SEARCH_DELAY_SECONDS = 6.5
 SEARCH_PER_PAGE = 100
 NPM_SEARCH_SIZE = 100
 SOURCE_LANGUAGES = {"python", "typescript", "javascript"}
-
 SOURCE_WEIGHTS: Dict[str, float] = {
-    "github_mcp": 0.40,
+    "github_mcp": 0.30,
     "npm_mcp": 0.20,
     "hf_spaces_mcp": 0.15,
     "pypi_mcp": 0.15,
     "smithery_mcp": 0.10,
+    "official_registry_mcp": 0.10,
 }
 
 GITHUB_SOURCE_QUERIES: Dict[str, List[str]] = {
@@ -86,6 +86,7 @@ NPM_SEARCH_TERMS = [
 ]
 HF_SEARCH_LIMIT = 200
 SMITHERY_SEARCH_TERMS = ["mcp", "model context protocol", "tool"]
+OFFICIAL_REGISTRY_PAGE_SIZE = 100
 SMITHERY_PAGE_SIZE = 100
 PYPI_PACKAGE_SEEDS = [
     "mcp",
@@ -391,6 +392,18 @@ def smithery_search(query: str, page: int, page_size: int = SMITHERY_PAGE_SIZE) 
     return smithery_request(f"https://api.smithery.ai/servers?{params}")
 
 
+def official_registry_request(url: str) -> Dict[str, Any]:
+    return _json_request(url, headers=_request_headers("generic"), service="generic")
+
+
+def official_registry_list(cursor: str | None = None, limit: int = OFFICIAL_REGISTRY_PAGE_SIZE) -> Dict[str, Any]:
+    params = {"limit": str(limit)}
+    if cursor:
+        params["cursor"] = cursor
+    query = urllib.parse.urlencode(params)
+    return official_registry_request(f"https://registry.modelcontextprotocol.io/v0.1/servers?{query}")
+
+
 def smithery_server_detail(namespace: str, slug: str) -> Dict[str, Any]:
     return smithery_request(f"https://api.smithery.ai/servers/{urllib.parse.quote(namespace)}/{urllib.parse.quote(slug)}")
 
@@ -646,6 +659,33 @@ def build_smithery_tools(detail: Dict[str, Any]) -> List[Dict[str, Any]]:
         "language": "remote",
     }]
 
+def build_official_registry_tools(server_doc: Dict[str, Any]) -> List[Dict[str, Any]]:
+    description = str(server_doc.get("description") or "")
+    haystack = " ".join([
+        str(server_doc.get("name") or ""),
+        str(server_doc.get("title") or ""),
+        description,
+        json.dumps(server_doc.get("packages") or [], ensure_ascii=False),
+        json.dumps(server_doc.get("remotes") or [], ensure_ascii=False),
+    ]).lower()
+    scopes = {match.lower() for match in SCOPE_PATTERNS.findall(haystack)}
+    if any(token in haystack for token in ("search", "discover", "list", "query", "browse")):
+        scopes.update({"read", "query"})
+    if any(token in haystack for token in ("create", "update", "delete", "cancel", "publish", "write", "sync")):
+        scopes.add("modify")
+    if any(token in haystack for token in ("run", "execute", "stream", "gateway", "invoke")):
+        scopes.add("run")
+    return [{
+        "name": str(server_doc.get("name") or "registry-server"),
+        "description": description or f"Official registry server {server_doc.get('name') or 'registry-server'}",
+        "scopes": sorted(scopes)[:8] if scopes else ["read"],
+        "has_network": bool(server_doc.get("remotes")) or "http" in haystack or "remote" in haystack or "streamable-http" in haystack,
+        "has_file_write": any(token in haystack for token in ("write", "create", "update", "delete", "publish", "modify")),
+        "has_shell": any(token in haystack for token in ("shell", "exec", "command", "spawn", "subprocess")),
+        "language": "remote",
+    }]
+
+
 
 
 def summarize_tools_from_source(source_blobs: List[str], artifact_name: str, fallback_language: str) -> List[Dict[str, Any]]:
@@ -773,6 +813,35 @@ def build_smithery_manifest(summary: Dict[str, Any], detail: Dict[str, Any], too
         "homepage": detail.get("homepage") or summary.get("homepage"),
         "deployment_url": detail.get("deploymentUrl"),
     }
+
+def build_official_registry_manifest(server_doc: Dict[str, Any], meta: Dict[str, Any], tools: List[Dict[str, Any]]) -> Dict[str, Any]:
+    all_scopes, has_network, has_file_write, has_shell = _aggregate_tool_flags(tools)
+    remotes = server_doc.get("remotes") or []
+    packages = server_doc.get("packages") or []
+    repository = server_doc.get("repository") or {}
+    return {
+        "name": str(server_doc.get("name") or "registry-server"),
+        "description": str(server_doc.get("description") or f"Official registry server {server_doc.get('name') or 'registry-server'}"),
+        "scopes": sorted(all_scopes)[:8] if all_scopes else ["read"],
+        "annotations": {
+            "readOnlyHint": not has_file_write and not has_shell,
+            "destructiveHint": has_shell or has_file_write,
+            "openWorldHint": bool(remotes) or has_network,
+        },
+        "publisher": str(server_doc.get("name") or "unknown").split("/", 1)[0],
+        "trusted_server": True,
+        "signature": None,
+        "tool_count": len(tools),
+        "stars": 0,
+        "language": "remote",
+        "source": "official_registry_mcp",
+        "remote": bool(remotes),
+        "package_count": len(packages),
+        "homepage": server_doc.get("websiteUrl"),
+        "repository": normalize_repo_url(repository.get("url") if isinstance(repository, dict) else repository),
+        "registry_status": ((meta.get("io.modelcontextprotocol.registry/official") or {}).get("status") if isinstance(meta, dict) else None),
+    }
+
 
 
 
@@ -1485,6 +1554,100 @@ def crawl_smithery_source(target: int, cache: Dict[str, Dict[str, Any]], source_
     save_cache(cache)
     return samples[:target], source_budget
 
+def official_registry_search_space(target: int) -> Dict[str, Dict[str, Any]]:
+    servers: Dict[str, Dict[str, Any]] = {}
+    cursor: str | None = None
+    while len(servers) < target * 2:
+        payload = official_registry_list(cursor, OFFICIAL_REGISTRY_PAGE_SIZE)
+        items = payload.get("servers") or []
+        if not items:
+            break
+        for item in items:
+            server_doc = item.get("server") or {}
+            meta = item.get("_meta") or {}
+            official = meta.get("io.modelcontextprotocol.registry/official") or {}
+            if not official.get("isLatest", False):
+                continue
+            if official.get("status") != "active":
+                continue
+            name = str(server_doc.get("name") or "")
+            if not name:
+                continue
+            servers[name] = item
+            if len(servers) >= target * 2:
+                break
+        cursor = (payload.get("metadata") or {}).get("nextCursor")
+        if not cursor:
+            break
+    return servers
+
+
+def analyze_official_registry_server(entry: Dict[str, Any]) -> Dict[str, Any]:
+    server_doc = entry.get("server") or {}
+    meta = entry.get("_meta") or {}
+    official = meta.get("io.modelcontextprotocol.registry/official") or {}
+    tools = build_official_registry_tools(server_doc)
+    manifest = build_official_registry_manifest(server_doc, meta, tools)
+    server_name = str(server_doc.get("name") or "registry-server")
+    repository = server_doc.get("repository") or {}
+    repository_url = normalize_repo_url(repository.get("url") if isinstance(repository, dict) else repository)
+    return analyze_artifact(
+        artifact_id=server_name,
+        artifact_url=f"https://registry.modelcontextprotocol.io/servers/{urllib.parse.quote(server_name, safe='')}",
+        source_label="official_registry_mcp",
+        dedup_key=server_name,
+        manifest=manifest,
+        tools=tools,
+        source_files=[],
+        source_code="",
+        metadata={
+            "query_matches": ["official_registry_latest"],
+            "created_at": official.get("publishedAt"),
+            "updated_at": official.get("updatedAt"),
+            "pushed_at": official.get("updatedAt"),
+            "default_branch": "registry",
+            "license": "unknown",
+            "stars": 0,
+            "language": "remote",
+            "archived": False,
+            "fork": False,
+            "linked_repository": repository_url,
+            "official_registry_status": official.get("status"),
+            "official_registry_version": server_doc.get("version"),
+            "official_registry_packages": server_doc.get("packages") or [],
+            "official_registry_remotes": server_doc.get("remotes") or [],
+        },
+    )
+
+
+def crawl_official_registry_source(target: int, cache: Dict[str, Dict[str, Any]], source_budget: int) -> Tuple[List[Dict[str, Any]], int]:
+    cached_items = cached_source_samples(cache, "official_registry_mcp")
+    if len(cached_items) >= target:
+        print(f"Using {target} cached official registry servers")
+        return cached_items[:target], source_budget
+
+    samples: List[Dict[str, Any]] = list(cached_items)
+    servers = official_registry_search_space(target)
+    print(f"Search produced {len(servers)} unique official registry servers")
+
+    for server_name, entry in servers.items():
+        if len(samples) >= target:
+            break
+        if any(sample.get("dedup_key") == server_name for sample in samples):
+            continue
+        try:
+            sample = analyze_official_registry_server(entry)
+            samples.append(sample)
+            put_cached_sample(cache, "official_registry_mcp", server_name, sample)
+            if len(samples) % 25 == 0:
+                print(f"  analyzed {len(samples)} official registry servers")
+                save_cache(cache)
+        except Exception as exc:
+            print(f"  skipping official registry server {server_name}: {exc}")
+    save_cache(cache)
+    return samples[:target], source_budget
+
+
 
 
 # ---------------------------------------------------------------------------
@@ -1657,6 +1820,12 @@ def build_data_card(
             "queries": ["mcp", "mcp-server", "model context protocol"],
             "search_limit": HF_SEARCH_LIMIT,
         }
+    if "official_registry_mcp" in enabled_sources:
+        source_details["official_registry_mcp"] = {
+            "list_api": "https://registry.modelcontextprotocol.io/v0.1/servers",
+            "page_size": OFFICIAL_REGISTRY_PAGE_SIZE,
+            "selection_rule": "active latest versions only",
+        }
     return {
         "crawl_started_goal": "Passive real-public MCP/tool/package/space measurement",
         "crawl_completed_at": iso_now(),
@@ -1673,11 +1842,11 @@ def build_data_card(
         "availability_rule": stats.get("code_availability", {}),
         "safety_boundary": "Passive metadata/source collection only; no third-party code execution, no destructive calls, no credential use.",
         "limitations": [
-            "GitHub, npm, PyPI, Hugging Face, and Smithery coverage are query- or discovery-biased and incomplete.",
+            "GitHub, npm, PyPI, Hugging Face, Smithery, and official MCP Registry coverage are query- or discovery-biased and incomplete.",
             "Repository-level, package-level, space-level, and hosted-registry signals do not prove deployable vulnerabilities.",
             "Manifest-only samples retain metadata evidence but weak implementation coverage.",
             "npm, PyPI, and Hugging Face source coverage depends on linked public files when present.",
-            "Smithery coverage reflects a public hosted registry and does not include private enterprise catalogs.",
+            "Public hosted-registry coverage (Smithery and the official MCP Registry) still does not include private enterprise catalogs.",
         ],
     }
 
@@ -1693,13 +1862,13 @@ def write_samples_jsonl(samples: List[Dict[str, Any]]) -> None:
 # ---------------------------------------------------------------------------
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Crawl public MCP-related artifacts from GitHub, npm, PyPI, Hugging Face Spaces, and Smithery")
+    parser = argparse.ArgumentParser(description="Crawl public MCP-related artifacts from GitHub, npm, PyPI, Hugging Face Spaces, Smithery, and the official MCP Registry")
     parser.add_argument("--target", type=int, default=1000, help="Number of artifacts to retain")
     parser.add_argument("--pages-per-query", type=int, default=3, help="GitHub search pages to request for each query")
     parser.add_argument("--source-budget", type=int, default=200, help="Maximum number of artifacts for which raw source entrypoints are fetched")
     parser.add_argument("--resume", action="store_true", help="Resume from cached per-artifact samples")
-    parser.add_argument("--sources", default="github_mcp,npm_mcp,pypi_mcp,hf_spaces_mcp,smithery_mcp", help="Comma-separated source set")
-    parser.add_argument("--source-quotas", default="", help="Comma-separated exact quotas like github_mcp=3000,npm_mcp=1200,pypi_mcp=420,hf_spaces_mcp=380,smithery_mcp=200")
+    parser.add_argument("--sources", default="github_mcp,npm_mcp,pypi_mcp,hf_spaces_mcp,smithery_mcp,official_registry_mcp", help="Comma-separated source set")
+    parser.add_argument("--source-quotas", default="", help="Comma-separated exact quotas like github_mcp=3000,npm_mcp=1200,pypi_mcp=420,hf_spaces_mcp=380,smithery_mcp=200,official_registry_mcp=200")
     parser.add_argument("--output-prefix", default="real_ecosystem", help="Output file prefix under results/ecosystem/")
     args = parser.parse_args()
 
@@ -1739,13 +1908,15 @@ def main() -> None:
             source_samples, remaining_budget = crawl_hf_spaces_source(quota, cache, remaining_budget)
         elif source == "smithery_mcp":
             source_samples, remaining_budget = crawl_smithery_source(quota, cache, remaining_budget)
+        elif source == "official_registry_mcp":
+            source_samples, remaining_budget = crawl_official_registry_source(quota, cache, remaining_budget)
         else:
             raise SystemExit(f"Unsupported source: {source}")
         samples.extend(source_samples)
 
     if len(samples) < args.target:
         deficit = args.target - len(samples)
-        for fallback_source in ("github_mcp", "npm_mcp", "pypi_mcp", "smithery_mcp"):
+        for fallback_source in ("github_mcp", "npm_mcp", "pypi_mcp", "smithery_mcp", "official_registry_mcp"):
             if fallback_source not in enabled_sources or deficit <= 0:
                 continue
             existing = {sample["dedup_key"] for sample in samples if sample["source"] == fallback_source}
@@ -1759,8 +1930,10 @@ def main() -> None:
                 extra_samples, remaining_budget = crawl_npm_source(refill_target, cache, remaining_budget)
             elif fallback_source == "pypi_mcp":
                 extra_samples, remaining_budget = crawl_pypi_source(refill_target, cache, remaining_budget)
-            else:
+            elif fallback_source == "smithery_mcp":
                 extra_samples, remaining_budget = crawl_smithery_source(refill_target, cache, remaining_budget)
+            else:
+                extra_samples, remaining_budget = crawl_official_registry_source(refill_target, cache, remaining_budget)
             for sample in extra_samples:
                 if sample["dedup_key"] not in existing:
                     samples.append(sample)

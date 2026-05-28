@@ -255,18 +255,19 @@ This sandbox executes bounded source-available third-party PyPI package cases dr
 | Metric | Value |
 |---|---:|
 | Total artifacts | 1,000 |
-| GitHub MCP repositories | 400 |
+| GitHub MCP repositories | 300 |
 | npm MCP packages | 200 |
 | PyPI MCP packages | 150 |
 | Hugging Face Spaces | 150 |
 | Smithery hosted registry entries | 100 |
-| Source-available samples | 18 |
-| Manifest-only samples | 982 |
-| High severity | 2 |
+| Official MCP Registry entries | 100 |
+| Source-available samples | 15 |
+| Manifest-only samples | 985 |
+| High severity | 1 |
 | Medium severity | 35 |
 | Missing signatures | 800 (80.0%) |
 | Untrusted publishers | 552 (55.2%) |
-| Open-world network access | 108 (10.8%) |
+| Open-world network access | 199 (19.9%) |
 | Scope inflation | 31 (3.1%) |
 | Confirmed vulnerabilities | 0 |
 

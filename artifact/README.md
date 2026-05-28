@@ -100,7 +100,7 @@ make smoke
 
 What it does:
 1. Runs `run_demo.py` — scans a sample manifest and evaluates a sample trace.
-2. Runs all 109 unit tests (`pytest tests/ -q`).
+2. Runs all 110 unit tests (`pytest tests/ -q`).
 
 ### Mode 2: Main Reproduction (~30 minutes)
 
@@ -191,10 +191,10 @@ A supplementary large-batch command is also available: `make real-ecosystem-larg
 | False block rate | 0.000 |
 | Third-party fixture sandbox | 3 fixtures, 3 archive resolutions, 1 blocked subprocess, 0 unsafe egress |
 | Corpus-derived package sandbox | 3 PyPI cases, 3 archive resolutions, 2 client tool calls, 1 blocked subprocess, 0 unsafe egress |
-| Unit tests | 109 (all pass) |
+| Unit tests | 110 (all pass) |
 | Public advisory audit | 2 advisories tracked, 1 corpus match, 0 currently vulnerable matches |
 | Completion audit | generated on demand |
-| Ecosystem corpus size | 1200 synthetic + 1000 real public artifacts (400 GitHub + 200 npm + 150 discovered PyPI + 150 Hugging Face Spaces + 100 Smithery hosted-registry entries) |
+| Ecosystem corpus size | 1200 synthetic + 1000 real public artifacts (300 GitHub + 200 npm + 150 discovered PyPI + 150 Hugging Face Spaces + 100 Smithery hosted-registry entries + 100 official MCP Registry entries) |
 | Supplementary scaled corpus | 2000 real public artifacts (1200 GitHub + 500 npm + 300 Hugging Face Spaces) |
 | Supplementary XL corpus | 3000 real public artifacts (1999 GitHub + 600 npm + 20 PyPI + 381 Hugging Face Spaces) |
 | Supplementary 5k corpus | 5000 real public artifacts (2600 GitHub + 2000 npm + 20 PyPI + 380 Hugging Face Spaces) |

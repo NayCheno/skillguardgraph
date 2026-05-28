@@ -113,10 +113,10 @@ experiments/
 | `make test` | Unit tests (verbose) | ~2 min |
 | `make benchmark` | Build benchmark (4010 samples) | ~5 min |
 | `make validate` | Validate benchmark labels | ~2 min |
-| `make eval-main` | Detection + ablation + runtime eval + runtime/sandbox harnesses + third-party fixture sandbox + bounded corpus-package sandbox + bootstrap + generalization | ~15 min |
+| `make eval-main` | Detection + ablation + runtime eval + runtime/sandbox harnesses + third-party fixture sandbox + bounded corpus-package sandbox + public advisory audit + bootstrap + generalization | ~15 min |
 | `make tables` | Generate tables + failure analysis + significance | ~1 min |
 | `make ecosystem` | Crawl synthetic ecosystem corpus | ~10 min |
-| `make real-ecosystem` | Crawl passive real public GitHub + npm + PyPI + Hugging Face + Smithery MCP corpus | network-bound |
+| `make real-ecosystem` | Crawl passive real public GitHub + npm + PyPI + Hugging Face + Smithery + official MCP Registry corpus | network-bound |
 | `make triage` | Triage synthetic ecosystem findings | ~5 min |
 | `make real-ecosystem-large` | Crawl supplementary 2,000-artifact public corpus (GitHub + npm + Hugging Face, resume-aware) | network-bound |
 | `make real-ecosystem-xl` | Crawl supplementary 3,000-artifact public corpus (4-source, resume-aware) | network-bound |
@@ -204,8 +204,8 @@ Key result numbers:
 | False block rate | 0.000 |
 | Latency p50 / p95 | 0.5ms / 0.6ms |
 | Sandbox harness recall / benign alert rate | 1.000 / 0.000 |
-| Real public corpus | 1,000 artifacts (400 GitHub + 200 npm + 150 PyPI + 150 Hugging Face Spaces + 100 Smithery entries) |
-| Real corpus high severity | 2 |
+| Real public corpus | 1,000 artifacts (300 GitHub + 200 npm + 150 PyPI + 150 Hugging Face Spaces + 100 Smithery entries + 100 official MCP Registry entries) |
+| Real corpus high severity | 1 |
 | Real corpus confirmed vulnerabilities | 0 |
 | Supplementary scaled corpus | 2,000 artifacts (1200 GitHub + 500 npm + 300 Hugging Face Spaces) |
 | Supplementary XL corpus | 3,000 artifacts (1999 GitHub + 600 npm + 20 PyPI + 381 Hugging Face Spaces) |

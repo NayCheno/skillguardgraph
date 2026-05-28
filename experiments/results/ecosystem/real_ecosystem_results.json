@@ -1,52 +1,50 @@
 {
   "total_samples": 1000,
   "sources": {
-    "github_mcp": 400,
+    "github_mcp": 300,
     "npm_mcp": 200,
     "pypi_mcp": 150,
     "hf_spaces_mcp": 150,
-    "smithery_mcp": 100
+    "smithery_mcp": 100,
+    "official_registry_mcp": 100
   },
   "code_availability": {
-    "manifest_only": 982,
-    "source_available": 18
+    "manifest_only": 985,
+    "source_available": 15
   },
   "languages": {
-    "python": 358,
-    "go": 18,
-    "typescript": 115,
+    "python": 307,
+    "go": 9,
+    "typescript": 90,
     "c#": 2,
-    "javascript": 13,
-    "swift": 2,
+    "javascript": 10,
+    "swift": 1,
     "dart": 1,
-    "unknown": 220,
-    "rust": 7,
+    "unknown": 215,
+    "rust": 5,
     "kotlin": 2,
     "java": 2,
-    "jupyter notebook": 3,
+    "jupyter notebook": 2,
     "html": 2,
     "shell": 3,
     "c++": 2,
     "less": 1,
-    "svg": 1,
-    "php": 1,
-    "emacs lisp": 1,
     "static": 4,
     "gradio": 98,
     "docker": 37,
     "streamlit": 7,
-    "remote": 100
+    "remote": 200
   },
   "licenses": {
-    "MIT": 335,
-    "AGPL-3.0": 24,
-    "GPL-3.0": 11,
-    "Apache-2.0": 144,
-    "unknown": 391,
-    "NOASSERTION": 38,
-    "BSD-3-Clause": 2,
+    "MIT": 296,
+    "AGPL-3.0": 17,
+    "GPL-3.0": 8,
+    "Apache-2.0": 115,
+    "unknown": 481,
+    "NOASSERTION": 29,
+    "BSD-3-Clause": 1,
     "CC-BY-SA-4.0": 1,
-    "CC0-1.0": 7,
+    "CC0-1.0": 5,
     "BSD-2-Clause": 2,
     "Unlicense": 1,
     "UNLICENSED": 1,
@@ -88,8 +86,8 @@
       "rate": 0.8
     },
     "open_world_network": {
-      "count": 108,
-      "rate": 0.108
+      "count": 199,
+      "rate": 0.199
     },
     "scope_inflation": {
       "count": 31,
@@ -101,16 +99,16 @@
     }
   },
   "severity": {
-    "low": 963,
+    "low": 964,
     "medium": 35,
-    "high": 2
+    "high": 1
   },
   "per_source_risk": {
     "github_mcp": {
-      "count": 400,
-      "mean_score": 0.155,
+      "count": 300,
+      "mean_score": 0.133,
       "max_score": 10.0,
-      "high_risk_count": 2
+      "high_risk_count": 1
     },
     "npm_mcp": {
       "count": 200,
@@ -135,22 +133,15 @@
       "mean_score": 1.2,
       "max_score": 6.0,
       "high_risk_count": 0
+    },
+    "official_registry_mcp": {
+      "count": 100,
+      "mean_score": 0.12,
+      "max_score": 6.0,
+      "high_risk_count": 0
     }
   },
   "top_high_risk": [
-    {
-      "repo": "idosal/git-mcp",
-      "url": "https://github.com/idosal/git-mcp",
-      "license": "Apache-2.0",
-      "stars": 8103,
-      "code_availability": "source_available",
-      "policy_risk": "high",
-      "policy_decision": "hitl",
-      "policy_score": 10.0,
-      "findings": [
-        "C1_DECLARED_READONLY_BUT_WRITE_SCOPE"
-      ]
-    },
     {
       "repo": "firecrawl/firecrawl-mcp-server",
       "url": "https://github.com/firecrawl/firecrawl-mcp-server",

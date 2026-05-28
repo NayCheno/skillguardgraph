@@ -1,6 +1,6 @@
 {
   "crawl_started_goal": "Passive real-public MCP/tool/package/space measurement",
-  "crawl_completed_at": "2026-05-28T15:35:46Z",
+  "crawl_completed_at": "2026-05-28T16:11:52Z",
   "target_samples": 1000,
   "actual_samples": 1000,
   "enabled_sources": [
@@ -8,7 +8,8 @@
     "npm_mcp",
     "pypi_mcp",
     "hf_spaces_mcp",
-    "smithery_mcp"
+    "smithery_mcp",
+    "official_registry_mcp"
   ],
   "source_details": {
     "github_mcp": {
@@ -77,6 +78,11 @@
         "model context protocol"
       ],
       "search_limit": 200
+    },
+    "official_registry_mcp": {
+      "list_api": "https://registry.modelcontextprotocol.io/v0.1/servers",
+      "page_size": 100,
+      "selection_rule": "active latest versions only"
     }
   },
   "source_quotas": null,
@@ -86,15 +92,15 @@
   "version_rule": "Record GitHub default_branch plus timestamps; record npm/PyPI package version metadata; record Hugging Face Space sha and created/lastModified timestamps when exposed; record Smithery createdAt plus deployment metadata when exposed.",
   "license_rule": "Record SPDX identifier when the upstream API provides one; otherwise mark unknown.",
   "availability_rule": {
-    "manifest_only": 982,
-    "source_available": 18
+    "manifest_only": 985,
+    "source_available": 15
   },
   "safety_boundary": "Passive metadata/source collection only; no third-party code execution, no destructive calls, no credential use.",
   "limitations": [
-    "GitHub, npm, PyPI, Hugging Face, and Smithery coverage are query- or discovery-biased and incomplete.",
+    "GitHub, npm, PyPI, Hugging Face, Smithery, and official MCP Registry coverage are query- or discovery-biased and incomplete.",
     "Repository-level, package-level, space-level, and hosted-registry signals do not prove deployable vulnerabilities.",
     "Manifest-only samples retain metadata evidence but weak implementation coverage.",
     "npm, PyPI, and Hugging Face source coverage depends on linked public files when present.",
-    "Smithery coverage reflects a public hosted registry and does not include private enterprise catalogs."
+    "Public hosted-registry coverage (Smithery and the official MCP Registry) still does not include private enterprise catalogs."
   ]
 }

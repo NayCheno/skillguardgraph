@@ -13,54 +13,55 @@ The real measurement does **not** execute third-party code, perform destructive 
 
 ### 2.1 Collection protocol
 
-- Sources: GitHub public repositories returned by MCP-related search queries, npm packages returned by MCP-related registry search terms, discovered PyPI MCP packages, Hugging Face Spaces returned by MCP-oriented space search terms, and hosted Smithery registry entries returned by MCP-oriented registry search terms.
+ - Sources: GitHub public repositories returned by MCP-related search queries, npm packages returned by MCP-related registry search terms, discovered PyPI MCP packages, Hugging Face Spaces returned by MCP-oriented space search terms, hosted Smithery registry entries returned by MCP-oriented registry search terms, and official MCP Registry entries returned by the registry list API.
 - Collector: `experiments/scripts/crawl_real_ecosystem.py`.
 - Output files:
   - `experiments/results/ecosystem/real_ecosystem_samples.jsonl`
   - `experiments/results/ecosystem/real_ecosystem_results.json`
   - `experiments/results/ecosystem/real_ecosystem_data_card.json`
   - `experiments/results/ecosystem/real_high_risk_triage.json`
-- Dedup rule: source-specific artifact identifier (`full_name` for GitHub, package name for npm/PyPI, space id for Hugging Face, and `qualifiedName` for Smithery), with `linked_repository` recorded when an upstream package points to GitHub.
-- Version provenance: GitHub `default_branch` plus `created_at`/`updated_at`/`pushed_at`; npm/PyPI latest package version plus publication/update timestamps; Hugging Face `sha` plus `createdAt`/`lastModified` when exposed; Smithery `createdAt` plus hosted deployment metadata when exposed.
+ - Dedup rule: source-specific artifact identifier (`full_name` for GitHub, package name for npm/PyPI, space id for Hugging Face, `qualifiedName` for Smithery, and server `name` for the official MCP Registry), with `linked_repository` recorded when an upstream package points to GitHub.
+ - Version provenance: GitHub `default_branch` plus `created_at`/`updated_at`/`pushed_at`; npm/PyPI latest package version plus publication/update timestamps; Hugging Face `sha` plus `createdAt`/`lastModified` when exposed; Smithery `createdAt` plus hosted deployment metadata when exposed; official MCP Registry `publishedAt`/`updatedAt` plus server version when exposed.
 - License provenance: SPDX identifier when an upstream API provides one; otherwise `unknown`.
-- Source coverage: fetch a bounded set of likely Python/TypeScript/JavaScript entrypoints using explicit candidates, GitHub contents listings, package.json-derived entrypoints, and Hugging Face `app_file`/`sibling` metadata when available; hosted Smithery entries remain metadata-only because the collector does not execute or decompile remote services.
+ - Source coverage: fetch a bounded set of likely Python/TypeScript/JavaScript entrypoints using explicit candidates, GitHub contents listings, package.json-derived entrypoints, and Hugging Face `app_file`/`sibling` metadata when available; hosted Smithery entries and official MCP Registry entries remain metadata-only because the collector does not execute or decompile remote services.
 
 ### 2.2 Dataset statistics
 
 | Metric | Value |
 |---|---:|
 | Total public artifacts | 1,000 |
-| GitHub MCP repositories | 400 |
+| GitHub MCP repositories | 300 |
 | npm MCP packages | 200 |
 | PyPI MCP packages | 150 |
 | Hugging Face Spaces | 150 |
 | Smithery hosted registry entries | 100 |
-| Source-available samples | 18 |
-| Manifest-only samples | 982 |
-| High severity | 2 |
+| Official MCP Registry entries | 100 |
+| Source-available samples | 15 |
+| Manifest-only samples | 985 |
+| High severity | 1 |
 | Medium severity | 35 |
-| Low severity | 963 |
+| Low severity | 964 |
 ### 2.3 Language and license mix
 
 Top language counts in the measured corpus:
 
 | Language | Count |
 |---|---:|
-| Unknown | 220 |
-| Python | 358 |
-| TypeScript | 115 |
-| Smithery remote | 100 |
+| Unknown | 215 |
+| Python | 307 |
+| Official/hosted remote | 200 |
 | Gradio | 98 |
+| TypeScript | 90 |
 
 Top license counts:
 
 | License | Count |
 |---|---:|
-| Unknown | 391 |
-| MIT | 335 |
-| Apache-2.0 | 144 |
-| NOASSERTION | 38 |
-| AGPL-3.0 | 24 |
+| Unknown | 481 |
+| MIT | 296 |
+| Apache-2.0 | 115 |
+| NOASSERTION | 29 |
+| AGPL-3.0 | 17 |
 
 ### 2.4 Risk-pattern prevalence
 
@@ -68,24 +69,26 @@ Top license counts:
 |---|---:|---:|
 | Missing signature | 800 | 80.0% |
 | Untrusted publisher | 552 | 55.2% |
-| Open-world network access | 108 | 10.8% |
+| Open-world network access | 199 | 19.9% |
 | Scope inflation | 31 | 3.1% |
 | Instruction-like descriptions | 2 | 0.2% |
 | Description-code mismatch | 7 | 0.7% |
 
 ### 2.5 Interpretation
 
-1. **Governance provenance remains weak even after broadening PyPI coverage and adding a hosted registry slice.** Missing signatures still appear on 800/1,000 artifacts (80.0%) because GitHub repositories, many PyPI projects, Hugging Face Spaces, and hosted registry entries do not expose strong signing metadata through the passive collector.
-2. **Only a very small fraction of artifacts trigger high-severity passive findings.** After the refined five-source passive crawl, the real corpus produces 2 HIGH findings and 35 MEDIUM findings, and both HIGH findings remain unconfirmed after manual review.
-3. **Metadata-only coverage still dominates.** 982/1,000 artifacts remain manifest-only because the collector intentionally bounds source probing and does not recurse through full repositories, package tarballs, or hosted services. This is acceptable for catalog-level measurement but not for code-complete vulnerability confirmation.
-4. **Source discovery is broader but still bounded.** The collector now combines GitHub contents listings, package.json-derived entrypoints, broad PyPI simple-index discovery, Hugging Face `app_file`/sibling metadata, and Smithery hosted-registry metadata before bounded source fetch, but the full 1,000-artifact batch still remains overwhelmingly metadata-only.
-5. **Multi-source coverage is stronger than the prior GitHub-only snapshot, but still incomplete.** The current batch spans GitHub MCP repositories, npm MCP packages, 150 discovered PyPI MCP packages, 150 Hugging Face Spaces, and 100 Smithery hosted-registry entries; it still does not cover private enterprise catalogs.
+1. **Governance provenance remains weak even after adding both hosted and official registry slices.** Missing signatures still appear on 800/1,000 artifacts (80.0%) because GitHub repositories, many PyPI projects, Hugging Face Spaces, and public registries do not expose strong signing metadata through the passive collector.
+2. **Only a very small fraction of artifacts trigger high-severity passive findings.** After the refined six-source passive crawl, the real corpus produces 1 HIGH finding and 35 MEDIUM findings, and the remaining HIGH finding remains unconfirmed after manual review.
+3. **Metadata-only coverage still dominates.** 985/1,000 artifacts remain manifest-only because the collector intentionally bounds source probing and does not recurse through full repositories, package tarballs, or hosted services. This is acceptable for catalog-level measurement but not for code-complete vulnerability confirmation.
+4. **Source discovery is broader but still bounded.** The collector now combines GitHub contents listings, package.json-derived entrypoints, broad PyPI simple-index discovery, Hugging Face `app_file`/sibling metadata, Smithery hosted-registry metadata, and the official MCP Registry list API before bounded source fetch, but the full 1,000-artifact batch still remains overwhelmingly metadata-only.
+5. **Multi-source coverage is stronger than the prior GitHub-only snapshot, but still incomplete.** The current batch spans GitHub MCP repositories, npm MCP packages, 150 discovered PyPI MCP packages, 150 Hugging Face Spaces, 100 Smithery hosted-registry entries, and 100 official MCP Registry entries; it still does not cover private enterprise catalogs.
 6. **Real-world prevalence is much lower than synthetic stress prevalence.** This is expected: the synthetic corpus is designed to exercise suspicious patterns, while the public corpus is used as a conservative external-validity check.
 
 ### 2.5.1 Public advisory cross-check
 
-We additionally cross-check the main 1,000-artifact public corpus against a small curated set of official MCP advisories recorded in `experiments/results/ecosystem/public_advisory_audit.json`. The current audit tracks two official advisories (`GHSA-345p-7cg4-v4c7` / `CVE-2026-25536` for `@modelcontextprotocol/sdk`, and `GHSA-vjqx-cfc4-9h6v` / `CVE-2026-27735` for the reference git server family). One advisory-backed package family is present in the checked-in corpus, but the observed package version is patched, so the cross-check yields 0 currently vulnerable matches in the measured snapshot. We treat this as external grounding for real ecosystem risk, not as a replacement for disclosure-backed validation of newly surfaced findings.
+We additionally cross-check the main 1,000-artifact public corpus against a small curated set of official MCP advisories recorded in `experiments/results/ecosystem/public_advisory_audit.json`. The current audit tracks two official advisories (`GHSA-345p-7cg4-v4c7` / `CVE-2026-25536` for `@modelcontextprotocol/sdk`, and `GHSA-vjqx-cfc4-9h6v` / `CVE-2026-27735` for `@modelcontextprotocol/server-git`). One advisory-backed package family is present in the checked-in corpus, but the observed package version is patched, so the cross-check yields 0 currently vulnerable matches in the measured snapshot. We treat this as external grounding for real ecosystem risk, not as a replacement for disclosure-backed validation of newly surfaced findings.
+
 ### 2.6 Supplementary scaled batch
+
 
 A supplementary large-batch run is checked in as:
 
@@ -148,10 +151,9 @@ Current synthetic summary from `experiments/results/ecosystem/risk_patterns.json
 | Untrusted publisher | 910 (75.8%) |
 
 The paper should treat these synthetic results as stress-test evidence, not as real-world prevalence estimates.
-
 ## 5. Limitations
 
-1. **Query and registry bias.** The real corpus now spans GitHub, npm, broad PyPI simple-index discovery, Hugging Face Spaces, and Smithery's public hosted registry, but it still excludes private enterprise catalogs.
+1. **Query and registry bias.** The real corpus now spans GitHub, npm, broad PyPI simple-index discovery, Hugging Face Spaces, Smithery's public hosted registry, and the official MCP Registry, but it still excludes private enterprise catalogs.
 2. **Manifest-only dominance.** Most real samples are metadata-only because the collector intentionally bounds raw source fetching for safety and runtime reasons.
 3. **No runtime validation.** The real measurement does not execute third-party code, so it cannot confirm dynamic exfiltration, persistence, or approval-laundering behaviors.
 4. **No confirmed-vulnerability claims.** The measurement is appropriate for prevalence and governance observations, not for naming exploitable packages without follow-up validation.
