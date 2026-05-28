@@ -148,7 +148,7 @@ The paper should treat these synthetic results as stress-test evidence, not as r
 
 ## 5. Limitations
 
-1. **Query and registry bias.** The real corpus now spans GitHub, npm, a curated PyPI seed list, and Hugging Face Spaces, but it still excludes broad PyPI discovery, hosted enterprise marketplaces, and private enterprise catalogs.
+1. **Query and registry bias.** The real corpus now spans GitHub, npm, broad PyPI simple-index discovery, and Hugging Face Spaces, but it still excludes hosted enterprise marketplaces and private enterprise catalogs.
 2. **Manifest-only dominance.** Most real samples are metadata-only because the collector intentionally bounds raw source fetching for safety and runtime reasons.
 3. **No runtime validation.** The real measurement does not execute third-party code, so it cannot confirm dynamic exfiltration, persistence, or approval-laundering behaviors.
 4. **No confirmed-vulnerability claims.** The measurement is appropriate for prevalence and governance observations, not for naming exploitable packages without follow-up validation.

@@ -48,13 +48,13 @@ real-ecosystem-large:
 
 real-ecosystem-5k:
 	$(PYTHONPATH_OPT) python scripts/crawl_real_ecosystem.py --target 5000 --pages-per-query 6 --source-budget 25 --sources github_mcp,npm_mcp,pypi_mcp,hf_spaces_mcp --source-quotas github_mcp=2600,npm_mcp=2000,pypi_mcp=20,hf_spaces_mcp=380 --output-prefix real_ecosystem_5k --resume
+
 real-ecosystem-xl:
-	$(PYTHONPATH_OPT) python scripts/crawl_real_ecosystem.py --target 3000 --pages-per-query 3 --source-budget 25 --output-prefix real_ecosystem_xl --resume
+	$(PYTHONPATH_OPT) python scripts/crawl_real_ecosystem.py --target 3000 --pages-per-query 3 --output-prefix real_ecosystem_xl --resume
 
 real-ecosystem-10k:
 	$(PYTHONPATH_OPT) python scripts/crawl_real_ecosystem.py --target 10000 --pages-per-query 10 --source-budget 0 --sources github_mcp,npm_mcp,pypi_mcp,hf_spaces_mcp --source-quotas github_mcp=4000,npm_mcp=4000,pypi_mcp=1620,hf_spaces_mcp=380 --output-prefix real_ecosystem_10k --resume
 
-triage:
 triage:
 	$(PYTHONPATH_OPT) python scripts/triage_findings.py
 

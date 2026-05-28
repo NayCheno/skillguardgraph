@@ -582,6 +582,9 @@ Description--code mismatch & 0 & 0.0\% \\
 (3)~45.8\% of artifacts come from untrusted publishers, but only 20/1{,}000 have bounded source-entrypoint coverage, so most real-corpus findings should be interpreted as catalog-level governance observations rather than code-complete security judgments.
 (4)~The current batch spans four public sources—GitHub MCP repositories, npm MCP packages, 150 discovered PyPI MCP packages, and Hugging Face Spaces—which is stronger than the earlier GitHub-only snapshot, but it still excludes hosted enterprise marketplaces and private catalogs.
 (5)~Even with bounded GitHub contents, package.json-derived entrypoints, broad PyPI simple-index discovery, and Hugging Face \texttt{app\_file}/sibling discovery, the public corpus remains overwhelmingly metadata-only and should be treated as catalog-level evidence rather than runtime validation.
+
+\paragraph{Supplementary scale-out batches.}
+To test whether the passive collector can sustain larger public-corpus runs, we also check in supplementary 2{,}000-, 3{,}000-, 5{,}000-, and 10{,}000-artifact batches. The 10{,}000-artifact batch reaches the roadmap's strongest scale target, but it also confirms the current external-validity bottleneck: breadth scales much faster than high-confidence implementation evidence, and the larger batches remain overwhelmingly metadata-only. We therefore use those runs to support coverage and prevalence claims, not to strengthen exploit-confirmation or deployment claims.
 % ============================================================
 \section{Related Work}
 \label{sec:related}
