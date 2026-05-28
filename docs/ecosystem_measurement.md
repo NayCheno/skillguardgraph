@@ -81,6 +81,15 @@ Top license counts:
 5. **Multi-source coverage is better than the prior GitHub-only snapshot, but still incomplete.** The current batch spans GitHub MCP repositories, npm MCP packages, and Hugging Face Spaces; it still does not cover PyPI, hosted enterprise marketplaces, or private catalogs.
 6. **Real-world prevalence is much lower than synthetic stress prevalence.** This is expected: the synthetic corpus is designed to exercise suspicious patterns, while the public corpus is used as a conservative external-validity check.
 
+### 2.6 Supplementary scaled batch
+
+A supplementary large-batch run is checked in as:
+
+- `experiments/results/ecosystem/real_ecosystem_large_results.json`
+- `experiments/results/ecosystem/real_ecosystem_large_data_card.json`
+
+This run uses the same passive collector with `--target 2000 --pages-per-query 3 --source-budget 25 --output-prefix real_ecosystem_large` and reaches 2,000 artifacts (1,200 GitHub, 500 npm, 300 Hugging Face). It produces 0 HIGH and 9 MEDIUM findings, but only 5 source-available samples. We therefore treat it as a scale-out catalog measurement, not as stronger code-level validation.
+
 ## 3. Manual triage and disclosure status
 
 All HIGH-severity real findings were manually reviewed in `experiments/results/ecosystem/real_high_risk_triage.json`.

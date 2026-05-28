@@ -41,6 +41,13 @@ SAMPLES_FILE = OUT_DIR / "real_ecosystem_samples.jsonl"
 RESULTS_FILE = OUT_DIR / "real_ecosystem_results.json"
 DATA_CARD_FILE = OUT_DIR / "real_ecosystem_data_card.json"
 
+def set_output_prefix(prefix: str) -> None:
+    global CACHE_FILE, SAMPLES_FILE, RESULTS_FILE, DATA_CARD_FILE
+    CACHE_FILE = OUT_DIR / f"{prefix}_cache.json"
+    SAMPLES_FILE = OUT_DIR / f"{prefix}_samples.jsonl"
+    RESULTS_FILE = OUT_DIR / f"{prefix}_results.json"
+    DATA_CARD_FILE = OUT_DIR / f"{prefix}_data_card.json"
+
 SEARCH_DELAY_SECONDS = 6.5
 SEARCH_PER_PAGE = 100
 NPM_SEARCH_SIZE = 100
@@ -58,6 +65,12 @@ GITHUB_SOURCE_QUERIES: Dict[str, List[str]] = {
         'mcp server language:python in:name,description,readme',
         'mcp server language:typescript in:name,description,readme',
         '"@modelcontextprotocol/sdk" in:file language:typescript',
+        'langchain tool language:python in:name,description,readme',
+        'langgraph tool language:python in:name,description,readme',
+        'crewai_tools language:python in:name,description,readme',
+        'autogpt plugin in:name,description,readme',
+        'agent tool language:typescript in:name,description,readme',
+        'agent action language:python in:name,description,readme',
     ],
 }
 
@@ -1188,7 +1201,10 @@ def main() -> None:
     parser.add_argument("--source-budget", type=int, default=200, help="Maximum number of artifacts for which raw source entrypoints are fetched")
     parser.add_argument("--resume", action="store_true", help="Resume from cached per-artifact samples")
     parser.add_argument("--sources", default="github_mcp,npm_mcp,hf_spaces_mcp", help="Comma-separated source set")
+    parser.add_argument("--output-prefix", default="real_ecosystem", help="Output file prefix under results/ecosystem/")
     args = parser.parse_args()
+
+    set_output_prefix(args.output_prefix)
 
     enabled_sources = [item.strip() for item in args.sources.split(",") if item.strip()]
     if not enabled_sources:
@@ -1200,7 +1216,8 @@ def main() -> None:
     print("=== Real Public Ecosystem Crawl ===")
     print(
         f"target={args.target} pages_per_query={args.pages_per_query} "
-        f"source_budget={args.source_budget} resume={args.resume} sources={enabled_sources}"
+        f"source_budget={args.source_budget} resume={args.resume} "
+        f"sources={enabled_sources} output_prefix={args.output_prefix}"
     )
 
     cache = load_cache() if args.resume else {}

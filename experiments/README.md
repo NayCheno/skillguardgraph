@@ -118,6 +118,7 @@ experiments/
 | `make ecosystem` | Crawl synthetic ecosystem corpus | ~10 min |
 | `make real-ecosystem` | Crawl passive real public GitHub + npm + Hugging Face MCP corpus | network-bound |
 | `make triage` | Triage synthetic ecosystem findings | ~5 min |
+| `make real-ecosystem-large` | Crawl supplementary 2,000-artifact public corpus | network-bound |
 | `make reproduce` | benchmark + validate + eval-main + tables | ~30 min |
 | `make eval-all` | reproduce + ecosystem + triage + real-ecosystem | network-bound |
 | `make scan` | Scan a sample manifest | ~5 sec |
@@ -153,7 +154,9 @@ results/ecosystem/risk_patterns.json         # Synthetic aggregated risk pattern
 results/ecosystem/real_ecosystem_samples.jsonl   # Real public repository sample records
 results/ecosystem/real_ecosystem_results.json    # Real-corpus aggregated metrics
 results/ecosystem/real_ecosystem_data_card.json  # Source/date/version/license/dedup metadata
+results/ecosystem/real_ecosystem_large_results.json # Supplementary scaled real-corpus metrics
 results/ecosystem/real_high_risk_triage.json     # Manual triage for HIGH real findings
+results/ecosystem/real_ecosystem_large_data_card.json # Supplementary scaled data card
 ```
 
 Key result numbers:
@@ -180,6 +183,7 @@ Key result numbers:
 | Real public corpus | 1,000 artifacts (600 GitHub + 250 npm + 150 Hugging Face Spaces) |
 | Real corpus high severity | 2 |
 | Real corpus confirmed vulnerabilities | 0 |
+| Supplementary scaled corpus | 2,000 artifacts (1200 GitHub + 500 npm + 300 Hugging Face Spaces) |
 
 See `../artifact/EXPECTED_OUTPUTS.md` for full output documentation.
 ---
@@ -203,6 +207,9 @@ PYTHONPATH=src python scripts/run_ablation.py
 # Runtime red-team evaluation
 PYTHONPATH=src python scripts/run_runtime_redteam.py
 
+
+# Supplementary larger public corpus
+PYTHONPATH=src python scripts/crawl_real_ecosystem.py --target 2000 --pages-per-query 3 --source-budget 25 --output-prefix real_ecosystem_large
 
 # Local instrumented runtime harness
 PYTHONPATH=src python scripts/run_runtime_harness.py

@@ -1,4 +1,4 @@
-.PHONY: demo test smoke eval-main eval-all tables validate benchmark ecosystem triage reproduce clean scan trace latency real-ecosystem significance generalization runtime-harness sandbox-harness
+.PHONY: demo test smoke eval-main eval-all tables validate benchmark ecosystem triage reproduce clean scan trace latency real-ecosystem real-ecosystem-large significance generalization runtime-harness sandbox-harness
 
 # Cross-platform PYTHONPATH setup
 ifeq ($(OS),Windows_NT)
@@ -40,6 +40,9 @@ ecosystem:
 
 real-ecosystem:
 	$(PYTHONPATH_OPT) python scripts/crawl_real_ecosystem.py --target 1000 --pages-per-query 3 --source-budget 100
+
+real-ecosystem-large:
+	$(PYTHONPATH_OPT) python scripts/crawl_real_ecosystem.py --target 2000 --pages-per-query 3 --source-budget 25 --output-prefix real_ecosystem_large --resume
 
 triage:
 	$(PYTHONPATH_OPT) python scripts/triage_findings.py

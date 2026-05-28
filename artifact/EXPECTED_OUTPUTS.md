@@ -248,10 +248,35 @@ All generalization acceptance booleans in the JSON are `true`. These checks are 
 
 ---
 
+## 14. Supplementary Large Public Ecosystem Measurement
+
+**Files:**
+
+- `results/ecosystem/real_ecosystem_large_samples.jsonl`
+- `results/ecosystem/real_ecosystem_large_results.json`
+- `results/ecosystem/real_ecosystem_large_data_card.json`
+
+**Produced by:** `python scripts/crawl_real_ecosystem.py --target 2000 --pages-per-query 3 --source-budget 25 --output-prefix real_ecosystem_large`
+
+| Metric | Value |
+|---|---:|
+| Total artifacts | 2,000 |
+| GitHub MCP repositories | 1,200 |
+| npm MCP packages | 500 |
+| Hugging Face Spaces | 300 |
+| Source-available samples | 5 |
+| Manifest-only samples | 1,995 |
+| High severity | 0 |
+| Medium severity | 9 |
+| Missing signatures | 1,500 (75.0%) |
+| Untrusted publishers | 746 (37.3%) |
+
+---
+
 ## Notes
 
 - All synthetic generation uses `seed=42` where randomness is involved.
 - All synthetic network destinations point to sinkhole or reserved domains.
 - No real credentials, tokens, or API keys appear in the artifact.
 - Smoke tests and synthetic reproduction do not require network access.
-- Real public ecosystem measurement requires outbound access to GitHub's public APIs/raw content endpoints and npm registry APIs.
+- Real public ecosystem measurement requires outbound access to GitHub's public APIs/raw content endpoints, npm registry APIs, and Hugging Face Space metadata/file endpoints.

@@ -46,7 +46,7 @@ needed to reproduce every result reported in the paper.
 - **Docker** — a `Dockerfile` is provided for containerized smoke-test reproduction.
 - **Conda** — an `environment.yml` is provided for environment setup.
 
-Network access is not required for smoke tests or synthetic reproduction. The real public ecosystem measurement step (`make real-ecosystem` or `make eval-all`) requires outbound access to GitHub's public APIs/raw content endpoints and npm registry APIs.
+Network access is not required for smoke tests or synthetic reproduction. The real public ecosystem measurement step (`make real-ecosystem`, `make real-ecosystem-large`, or `make eval-all`) requires outbound access to GitHub's public APIs/raw content endpoints, npm registry APIs, and Hugging Face Space metadata/file endpoints.
 
 ---
 
@@ -130,6 +130,7 @@ What it does:
 3. `make triage` — Triages ecosystem findings, identifies risk patterns.
 4. `make real-ecosystem` — Collects a 1,000-artifact passive multi-source corpus (GitHub MCP repositories + npm MCP packages + Hugging Face Spaces), writes a data card, and records real-finding triage inputs.
 
+A supplementary large-batch command is also available: `make real-ecosystem-large` collects a 2,000-artifact passive corpus into `real_ecosystem_large_*` outputs without replacing the reviewer-friendly 1,000-artifact batch.
 ---
 
 ## Expected Outputs
@@ -159,6 +160,8 @@ What it does:
 | `real_ecosystem_results.json` | JSON, ~3 KB | Real-corpus aggregated counts, per-source severity distribution, and top passive findings |
 | `real_ecosystem_data_card.json` | JSON, ~2 KB | Source/date/version/license/dedup collection metadata |
 | `real_high_risk_triage.json` | JSON, ~3 KB | Manual triage notes for all HIGH-severity real findings |
+| `real_ecosystem_large_results.json` | JSON, ~4 KB | Supplementary 2,000-artifact aggregate counts and per-source severity distribution |
+| `real_ecosystem_large_data_card.json` | JSON, ~2 KB | Supplementary 2,000-artifact source/date/version/license/dedup metadata |
 
 ### Key numbers to verify
 
@@ -177,6 +180,7 @@ What it does:
 | False block rate | 0.000 |
 | Ecosystem corpus size | 1200 synthetic + 1000 real public artifacts (600 GitHub + 250 npm + 150 Hugging Face Spaces) |
 | Unit tests | 94 (all pass) |
+| Supplementary scaled corpus | 2000 real public artifacts (1200 GitHub + 500 npm + 300 Hugging Face Spaces) |
 
 See `EXPECTED_OUTPUTS.md` for complete output documentation with example
 snippets and field-level descriptions.
