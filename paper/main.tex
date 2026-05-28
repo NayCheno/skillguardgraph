@@ -482,7 +482,7 @@ ASR reduction vs. no defense & 1.000 \\
 Task success rate & 1.000 \\
 False block rate & 0.000 \\
 Evidence path coverage & 1.000 \\
-Policy p95 latency (ms) & 0.430 \\
+Policy p95 latency (ms) & 0.265 \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -507,18 +507,40 @@ Blocked shell attempts & 8 \\
 Malicious detection recall & 1.000 \\
 Benign alert rate & 0.000 \\
 Unsafe egress events & 0 \\
-Sandbox p95 latency (ms) & 49.639 \\
+Sandbox p95 latency (ms) & 39.560 \\
 \bottomrule
 \end{tabular}
 \end{table}
 
 All sandbox-harness acceptance gates pass: no unsafe egress is observed, malicious-case detection recall is 100\%, benign alert rate is 0\%, and p95 overhead remains below 50\,ms. This is still a local toy harness rather than sandboxed execution of third-party skills, but it materially strengthens the artifact's isolation story beyond a purely pattern-based placeholder.
+
+\paragraph{Curated third-party public-code fixtures.}
+Beyond repository-controlled toy cases, we also execute a small public-code fixture suite inside the same isolation boundary. The current fixture set contains three curated snippets drawn from public MCP-related packages: the MCP Python SDK quickstart, the FastMCP quickstart, and an excerpt of the \texttt{mcp-clipboard} subprocess write helper. The first two confirm that public server-registration code can execute under shimmed MCP interfaces without unsafe side effects; the third confirms that a real third-party subprocess path is captured as a blocked sandbox event.
+
+\begin{table}[t]
+\centering
+\caption{Curated third-party public-code sandbox fixtures.}
+\label{tab:third_party_sandbox}
+\begin{tabular}{lr}
+\toprule
+Metric & Value \\
+\midrule
+Fixtures executed & 3 \\
+Subprocess attempts observed & 1 \\
+Unsafe egress events & 0 \\
+Fixture p95 latency (ms) & 88.077 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The fixture suite is stronger than a repository-only toy harness because it executes public third-party source snippets under isolation, but it is still not equivalent to arbitrary package execution or production sandbox deployment.
+
 \subsection{Failure Analysis}
 
 The current fusion run has 0 false negatives and 0 false positives on the synthetic benchmark. The failure-analysis output therefore functions as an attribution audit rather than a missed-case catalogue: all 3{,}010 malicious samples are true positives with non-empty evidence paths, and all 1{,}000 benign samples are true negatives.
 
 \paragraph{Residual risk.}
-A zero-error synthetic result does not imply zero real-world risk. The benchmark is template-generated, the default simulated prober does not execute untrusted code, and even the local sandbox/runtime harnesses operate only on repository-controlled toy cases rather than third-party packages. Real agent platforms may also omit provenance labels needed by C2/C3/C6. We therefore treat the current result as evidence that the artifact is internally consistent and use RQ5 to evaluate external validity.
+A zero-error synthetic result does not imply zero real-world risk. The benchmark is template-generated, the default simulated prober does not execute untrusted code, and even the local sandbox/runtime harnesses operate only on repository-controlled toy cases or curated third-party public-code snippets rather than arbitrary third-party packages. Real agent platforms may also omit provenance labels needed by C2/C3/C6. We therefore treat the current result as evidence that the artifact is internally consistent and use RQ5 to evaluate external validity.
 
 % ============================================================
 \section{Ecosystem Measurement (RQ5)}

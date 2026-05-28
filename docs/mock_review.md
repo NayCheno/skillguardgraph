@@ -18,7 +18,7 @@ SkillGuardGraph is a strong artifact-oriented research prototype with a coherent
 
 1. Real-world evidence remains passive and metadata-heavy.
 2. No confirmed real vulnerabilities or disclosure-backed case studies.
-3. Local runtime/sandbox harnesses are still toy harnesses rather than third-party execution environments.
+3. Local runtime/sandbox harnesses are improving, including curated third-party public-code fixtures, but they are still not arbitrary third-party execution environments.
 4. Source-available coverage in real batches remains too low for strong exploit or implementation claims.
 5. The 5k and 10k ecosystem measurements materially improve breadth but not validation depth.
 

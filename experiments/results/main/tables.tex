@@ -142,7 +142,7 @@ ASR reduction & 1.0000 \\
 Task success rate & 1.0000 \\
 False block rate & 0.0000 \\
 Evidence path coverage & 1.0000 \\
-Policy p95 latency (ms) & 0.430 \\
+Policy p95 latency (ms) & 0.265 \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -164,7 +164,25 @@ Blocked shell attempts & 8 \\
 Malicious detection recall & 1.0000 \\
 Benign alert rate & 0.0000 \\
 Unsafe egress events & 0 \\
-Sandbox p95 latency (ms) & 49.639 \\
+Sandbox p95 latency (ms) & 39.560 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+
+% --- Table 9: Third-Party Public-Code Sandbox ---
+\begin{table}[htbp]
+\centering
+\caption{Table 9: Third-Party Public-Code Sandbox}
+\label{tab:third_party_sandbox}
+\begin{tabular}{lr}
+\toprule
+\textbf{Metric} & \textbf{Value} \\
+\midrule
+Fixtures executed & 3 \\
+Subprocess attempts observed & 1 \\
+No unsafe egress & true \\
+Fixture p95 latency (ms) & 95.240 \\
 \bottomrule
 \end{tabular}
 \end{table}

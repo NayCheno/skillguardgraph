@@ -32,6 +32,7 @@ Use this as the final gate before marking the active goal complete.
 - [x] Local instrumented runtime harness metrics are generated.
 - [x] Local isolated sandbox harness metrics are generated.
 - [x] Failure-case markdown is current with latest detector outputs.
+- [x] Curated third-party public-code sandbox metrics are generated.
 - [x] Fusion vs calibrated/learned baseline significance is documented.
 - [x] Held-out-template, hard-negative, mutation-robustness, and label-leakage stress checks are generated.
 
@@ -59,6 +60,7 @@ Use this as the final gate before marking the active goal complete.
 - [x] Generalization stress checks regenerate and are included in generated paper tables.
 - [x] Local runtime harness acceptance checks pass.
 - [x] Local isolated sandbox harness acceptance checks pass.
+- [x] Curated third-party public-code sandbox acceptance checks pass.
 - [x] Tables regenerate.
 - [x] Docker/Conda instructions are verified or limitations are recorded (Docker build/run passed; `conda` command is unavailable on this workstation).
 - [x] No secrets, credentials, real third-party payloads, or unsafe egress targets are present.

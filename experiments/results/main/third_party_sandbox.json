@@ -1,0 +1,74 @@
+{
+  "fixtures_total": 3,
+  "fixtures_executed": 3,
+  "third_party_source_urls": [
+    "https://pypi.org/project/mcp/",
+    "https://pypi.org/project/fastmcp/",
+    "https://github.com/cmeans/mcp-clipboard/blob/main/src/mcp_clipboard/clipboard.py"
+  ],
+  "subprocess_attempts_observed": 1,
+  "latency_ms": {
+    "p50": 84.589,
+    "p95": 89.748,
+    "max": 89.748
+  },
+  "acceptance": {
+    "all_fixtures_executed": true,
+    "subprocess_attempts_captured": true,
+    "no_unsafe_egress": true
+  },
+  "fixtures": [
+    {
+      "fixture_id": "mcp-sdk-quickstart",
+      "label": "benign_registration",
+      "source_url": "https://pypi.org/project/mcp/",
+      "description": "Official MCP Python SDK quickstart server snippet.",
+      "duration_ms": 89.748,
+      "events": [],
+      "result": {
+        "tool_count": 1,
+        "resource_count": 1,
+        "prompt_count": 1
+      },
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "fixture_id": "fastmcp-quickstart",
+      "label": "benign_registration",
+      "source_url": "https://pypi.org/project/fastmcp/",
+      "description": "FastMCP quickstart server snippet.",
+      "duration_ms": 84.589,
+      "events": [],
+      "result": {
+        "tool_count": 1,
+        "server_name": "Demo"
+      },
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "fixture_id": "mcp-clipboard-subprocess",
+      "label": "subprocess_behavior",
+      "source_url": "https://github.com/cmeans/mcp-clipboard/blob/main/src/mcp_clipboard/clipboard.py",
+      "description": "mcp-clipboard subprocess write helper excerpt.",
+      "duration_ms": 83.951,
+      "events": [
+        {
+          "kind": "subprocess_attempt",
+          "cmd": [
+            "wl-copy",
+            "--type",
+            "text/plain"
+          ],
+          "input_bytes": 9
+        }
+      ],
+      "result": {
+        "subprocess_invoked": true
+      },
+      "stdout": "",
+      "stderr": ""
+    }
+  ]
+}

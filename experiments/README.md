@@ -113,7 +113,7 @@ experiments/
 | `make test` | Unit tests (verbose) | ~2 min |
 | `make benchmark` | Build benchmark (4010 samples) | ~5 min |
 | `make validate` | Validate benchmark labels | ~2 min |
-| `make eval-main` | Detection + ablation + runtime eval + runtime/sandbox harnesses + bootstrap + generalization | ~15 min |
+| `make eval-main` | Detection + ablation + runtime eval + runtime/sandbox harnesses + third-party fixture sandbox + bootstrap + generalization | ~15 min |
 | `make tables` | Generate tables + failure analysis + significance | ~1 min |
 | `make ecosystem` | Crawl synthetic ecosystem corpus | ~10 min |
 | `make real-ecosystem` | Crawl passive real public GitHub + npm + PyPI + Hugging Face MCP corpus | network-bound |
@@ -128,6 +128,7 @@ experiments/
 | `make trace` | Evaluate a sample trace | ~5 sec |
 | `make runtime-harness` | Run local instrumented runtime harness | ~1 min |
 | `make sandbox-harness` | Run local isolated sandbox harness | ~1 min |
+| `make third-party-sandbox` | Run curated third-party public-code sandbox fixtures | ~1 min |
 | `make clean` | Remove all generated results and data | instant |
 
 ---
@@ -147,6 +148,7 @@ results/main/significance_tests.json # McNemar + paired-bootstrap baseline compa
 results/main/tables.txt           # Formatted plain-text tables
 results/main/generalization_eval.json # Held-out/hard-negative/mutation/leakage checks
 results/main/tables.tex           # LaTeX tables for paper inclusion
+results/main/third_party_sandbox.json # Curated third-party public-code sandbox metrics
 ```
 
 After `make eval-all` (additional files):
@@ -196,6 +198,7 @@ Key result numbers:
 | Supplementary XL corpus | 3,000 artifacts (1999 GitHub + 600 npm + 20 PyPI + 381 Hugging Face Spaces) |
 | Supplementary 5k corpus | 5,000 artifacts (2600 GitHub + 2000 npm + 20 PyPI + 380 Hugging Face Spaces) |
 | Supplementary 10k corpus | 10,000 artifacts (4000 GitHub + 4000 npm + 1620 PyPI + 380 Hugging Face Spaces) |
+| Third-party fixture sandbox | 3 public-code fixtures, 1 blocked subprocess, 0 unsafe egress |
 
 See `../artifact/EXPECTED_OUTPUTS.md` for full output documentation.
 ---
@@ -222,6 +225,9 @@ PYTHONPATH=src python scripts/run_runtime_redteam.py
 
 # Supplementary larger public corpus
 PYTHONPATH=src python scripts/crawl_real_ecosystem.py --target 2000 --pages-per-query 3 --source-budget 25 --sources github_mcp,npm_mcp,hf_spaces_mcp --output-prefix real_ecosystem_large --resume
+
+# Third-party public-code sandbox
+PYTHONPATH=src python scripts/run_third_party_sandbox.py
 
 # Supplementary XL public corpus
 PYTHONPATH=src python scripts/crawl_real_ecosystem.py --target 3000 --pages-per-query 3 --output-prefix real_ecosystem_xl --resume

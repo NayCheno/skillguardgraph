@@ -14,10 +14,10 @@
     "unsafe_egress_events": 0
   },
   "latency_ms": {
-    "p50": 39.767,
-    "p95": 49.639,
-    "p99": 51.316,
-    "max": 51.316
+    "p50": 37.31,
+    "p95": 41.681,
+    "p99": 45.429,
+    "max": 45.429
   },
   "per_scenario": {
     "benign_local_export": {

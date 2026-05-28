@@ -6,17 +6,9 @@ This document describes every output file produced by the experiment pipeline, i
 
 ## 1. Detection Evaluation
 
-**File:** `results/main/detector_eval.json`
-**Format:** JSON
+**File:** `results/main/detector_eval.json`  
+**Format:** JSON  
 **Produced by:** `python scripts/run_detector_eval.py`
-
-Key fields:
-
-- per-method confusion counts and precision/recall/F1/FPR;
-- `score_metrics` with AUROC, AUPRC, FPR@Recall, and threshold sweeps;
-- `per_attack_class_recall`.
-
-### Current method metrics
 
 | Method | Precision | Recall | F1 | FPR | AUROC | AUPRC |
 |---|---:|---:|---:|---:|---:|---:|
@@ -33,8 +25,8 @@ Key fields:
 
 ## 2. Ablation Study
 
-**File:** `results/main/ablation.json`
-**Format:** JSON
+**File:** `results/main/ablation.json`  
+**Format:** JSON  
 **Produced by:** `python scripts/run_ablation.py`
 
 | Config | Precision | Recall | F1 | FPR | F1 Delta from Full |
@@ -46,14 +38,12 @@ Key fields:
 | no_runtime | 1.0000 | 0.2199 | 0.3606 | 0.0000 | -0.6394 |
 | no_sequence | 1.0000 | 0.7970 | 0.8870 | 0.0000 | -0.1130 |
 
-All seven attack classes retain 1.0000 recall under full fusion in the current artifact state.
-
 ---
 
 ## 3. Runtime Red-Team Evaluation
 
-**File:** `results/main/runtime_redteam.json`
-**Format:** JSON
+**File:** `results/main/runtime_redteam.json`  
+**Format:** JSON  
 **Produced by:** `python scripts/run_runtime_redteam.py`
 
 | Metric | Value |
@@ -75,8 +65,8 @@ All seven attack classes retain 1.0000 recall under full fusion in the current a
 
 ## 4. Local Runtime Harness
 
-**File:** `results/main/runtime_harness.json`
-**Format:** JSON
+**File:** `results/main/runtime_harness.json`  
+**Format:** JSON  
 **Produced by:** `python scripts/run_runtime_harness.py`
 
 | Metric | Value |
@@ -88,16 +78,14 @@ All seven attack classes retain 1.0000 recall under full fusion in the current a
 | Task success rate | 1.0000 |
 | False block rate | 0.0000 |
 | Evidence path coverage | 1.0000 |
-| Policy p95 latency | 0.430 ms |
-
-The harness executes only deterministic local toy task templates and records provenance events; it does not execute third-party code.
+| Policy p95 latency | 0.265 ms |
 
 ---
 
 ## 5. Local Sandbox Harness
 
-**File:** `results/main/sandbox_harness.json`
-**Format:** JSON
+**File:** `results/main/sandbox_harness.json`  
+**Format:** JSON  
 **Produced by:** `python scripts/run_sandbox_harness.py`
 
 | Metric | Value |
@@ -109,33 +97,48 @@ The harness executes only deterministic local toy task templates and records pro
 | Malicious detection recall | 1.0000 |
 | Benign alert rate | 0.0000 |
 | Unsafe egress events | 0 |
-| Sandbox p95 latency | 49.639 ms |
-
-The sandbox harness executes only repository-controlled toy snippets in fresh temporary directories with mocked network and shell helpers; it does not execute third-party code.
+| Sandbox p95 latency | 41.681 ms |
 
 ---
 
-## 6. Latency Measurement
+## 6. Third-Party Public-Code Sandbox
 
-**File:** `results/main/latency.json`
-**Format:** JSON
+**File:** `results/main/third_party_sandbox.json`  
+**Format:** JSON  
+**Produced by:** `python scripts/run_third_party_sandbox.py`
+
+| Metric | Value |
+|---|---:|
+| Fixtures executed | 3 |
+| Subprocess attempts observed | 1 |
+| No unsafe egress | true |
+| Fixture p95 latency | 89.748 ms |
+
+This fixture suite executes curated public third-party code snippets from MCP-related packages inside the sandbox harness. It is stronger than the repository-only toy sandbox, but it still does not amount to arbitrary third-party package execution.
+
+---
+
+## 7. Latency Measurement
+
+**File:** `results/main/latency.json`  
+**Format:** JSON  
 **Produced by:** `python scripts/run_latency.py`
 
 | Component | p50 (ms) | p95 (ms) | p99 (ms) | max (ms) |
 |---|---:|---:|---:|---:|
-| Total pipeline | 0.469 | 0.624 | 0.850 | 0.913 |
-| metadata_ms | 0.014 | 0.021 | 0.026 | 0.037 |
-| static_ms | 0.325 | 0.425 | 0.587 | 0.658 |
-| sandbox_ms | 0.065 | 0.093 | 0.121 | 0.142 |
-| runtime_ms | 0.009 | 0.015 | 0.020 | 0.028 |
-| fusion_ms | 0.055 | 0.085 | 0.105 | 0.133 |
+| Total pipeline | 0.410 | 0.499 | 0.518 | 0.568 |
+| metadata_ms | 0.012 | 0.014 | 0.016 | 0.029 |
+| static_ms | 0.287 | 0.353 | 0.362 | 0.399 |
+| sandbox_ms | 0.058 | 0.070 | 0.073 | 0.083 |
+| runtime_ms | 0.008 | 0.011 | 0.013 | 0.017 |
+| fusion_ms | 0.046 | 0.063 | 0.072 | 0.079 |
 
 ---
 
-## 7. Bootstrap Confidence Intervals
+## 8. Bootstrap Confidence Intervals
 
-**File:** `results/main/bootstrap_ci.json`
-**Format:** JSON
+**File:** `results/main/bootstrap_ci.json`  
+**Format:** JSON  
 **Produced by:** `python scripts/run_bootstrap_ci.py`
 
 | Metric | Mean | 95% CI Low | 95% CI High |
@@ -147,9 +150,9 @@ The sandbox harness executes only repository-controlled toy snippets in fresh te
 
 ---
 
-## 8. Failure Analysis
+## 9. Failure Analysis
 
-**Files:** `results/main/failure_analysis.json`, `results/main/failure_cases.md`
+**Files:** `results/main/failure_analysis.json`, `results/main/failure_cases.md`  
 **Produced by:** `python scripts/run_failure_analysis.py`
 
 | Metric | Value |
@@ -160,10 +163,10 @@ The sandbox harness executes only repository-controlled toy snippets in fresh te
 
 ---
 
-## 9. Significance Tests
+## 10. Significance Tests
 
-**File:** `results/main/significance_tests.json`
-**Format:** JSON
+**File:** `results/main/significance_tests.json`  
+**Format:** JSON  
 **Produced by:** `python scripts/run_significance_tests.py`
 
 | Metric | Value |
@@ -178,10 +181,10 @@ The sandbox harness executes only repository-controlled toy snippets in fresh te
 
 ---
 
-## 10. Generalization Stress Checks
+## 11. Generalization Stress Checks
 
-**File:** `results/main/generalization_eval.json`
-**Format:** JSON
+**File:** `results/main/generalization_eval.json`  
+**Format:** JSON  
 **Produced by:** `python scripts/run_generalization_eval.py`
 
 | Check | Samples | Precision | Recall | F1 | FPR | Key acceptance |
@@ -191,21 +194,19 @@ The sandbox harness executes only repository-controlled toy snippets in fresh te
 | Mutated held-out | 385 | 1.0000 | 1.0000 | 1.0000 | 0.0000 | F1 drop <= 0.10 |
 | Label-blinded audit | 475 | 1.0000 | 1.0000 | 1.0000 | 0.0000 | 0 decision changes |
 
-All generalization acceptance booleans in the JSON are `true`. These checks are synthetic robustness checks and do not replace real runtime or real exploit validation.
-
 ---
 
-## 11. Paper Tables
+## 12. Paper Tables
 
-**Files:** `results/main/tables.txt`, `results/main/tables.tex`
-**Format:** Plain text / LaTeX
+**Files:** `results/main/tables.txt`, `results/main/tables.tex`  
+**Format:** Plain text / LaTeX  
 **Produced by:** `python scripts/make_tables.py`
 
 ---
 
-## 12. Synthetic Ecosystem Triage
+## 13. Synthetic Ecosystem Triage
 
-**Files:** `results/ecosystem/ecosystem_triage.json`, `results/ecosystem/risk_patterns.json`
+**Files:** `results/ecosystem/ecosystem_triage.json`, `results/ecosystem/risk_patterns.json`  
 **Produced by:** `python scripts/crawl_ecosystem.py` and `python scripts/triage_findings.py`
 
 | Metric | Value |
@@ -219,7 +220,7 @@ All generalization acceptance booleans in the JSON are `true`. These checks are 
 
 ---
 
-## 13. Real Public Ecosystem Measurement
+## 14. Real Public Ecosystem Measurement
 
 **Files:**
 
@@ -249,7 +250,7 @@ All generalization acceptance booleans in the JSON are `true`. These checks are 
 
 ---
 
-## 14. Supplementary Large Public Ecosystem Measurement
+## 15. Supplementary Large Public Ecosystem Measurement
 
 **Files:**
 
@@ -271,9 +272,10 @@ All generalization acceptance booleans in the JSON are `true`. These checks are 
 | Medium severity | 9 |
 | Missing signatures | 1,500 (75.0%) |
 | Untrusted publishers | 746 (37.3%) |
+
 ---
 
-## 15. Supplementary XL Public Ecosystem Measurement
+## 16. Supplementary XL Public Ecosystem Measurement
 
 **Files:**
 
@@ -281,7 +283,7 @@ All generalization acceptance booleans in the JSON are `true`. These checks are 
 - `results/ecosystem/real_ecosystem_xl_results.json`
 - `results/ecosystem/real_ecosystem_xl_data_card.json`
 
-**Produced by:** `python scripts/crawl_real_ecosystem.py --target 3000 --pages-per-query 3 --source-budget 25 --output-prefix real_ecosystem_xl --resume`
+**Produced by:** `python scripts/crawl_real_ecosystem.py --target 3000 --pages-per-query 3 --output-prefix real_ecosystem_xl --resume`
 
 | Metric | Value |
 |---|---:|
@@ -299,7 +301,7 @@ All generalization acceptance booleans in the JSON are `true`. These checks are 
 
 ---
 
-## 16. Supplementary 5k Public Ecosystem Measurement
+## 17. Supplementary 5k Public Ecosystem Measurement
 
 **Files:**
 
@@ -325,7 +327,7 @@ All generalization acceptance booleans in the JSON are `true`. These checks are 
 
 ---
 
-## 17. Supplementary 10k Public Ecosystem Measurement
+## 18. Supplementary 10k Public Ecosystem Measurement
 
 **Files:**
 

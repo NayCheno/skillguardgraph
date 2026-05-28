@@ -40,6 +40,7 @@ This checklist is extracted from `README.md`, `docs/roadmap.md`, `docs/plan.md`,
 - [x] Report latency p50/p95/p99 for core pipeline components.
 - [x] Add a local isolated sandbox harness with blocked network/shell helpers, toy cases, and acceptance checks.
 - [x] Deepen sandbox/runtime realism only within safety constraints: fake credentials, sinkhole DNS, no real egress.
+- [x] Add a curated third-party public-code sandbox fixture suite executed under the same isolation boundary.
 
 ## Ecosystem Measurement and Disclosure
 
@@ -69,6 +70,7 @@ This checklist is extracted from `README.md`, `docs/roadmap.md`, `docs/plan.md`,
 - [x] Include `run_generalization_eval.py` in `eval-main` and generated paper tables.
 - [x] Include `run_runtime_harness.py` in `eval-main` and generated paper tables.
 - [x] Include `run_sandbox_harness.py` in `eval-main` and generated paper tables.
+- [x] Include `run_third_party_sandbox.py` in `eval-main`.
 - [x] Run smoke, tests, main evaluation, ablation, runtime red-team, latency, bootstrap, failure analysis, tables, and available Docker/Conda checks before final delivery.
 - [x] Confirm no real secrets, credentials, or operational payloads are included.
 - [x] Confirm `git status --short` is clean and list commits.

@@ -68,7 +68,7 @@ pip install -e ".[dev]"
 make smoke
 ```
 
-Expected: the demo prints a JSON policy report to stdout, and all 100 unit
+Expected: the demo prints a JSON policy report to stdout, and all 102 unit
 tests pass.
 
 ### Alternative: Docker
@@ -100,11 +100,11 @@ make smoke
 
 What it does:
 1. Runs `run_demo.py` — scans a sample manifest and evaluates a sample trace.
-2. Runs all 100 unit tests (`pytest tests/ -q`).
+2. Runs all 102 unit tests (`pytest tests/ -q`).
 
 ### Mode 2: Main Reproduction (~30 minutes)
 
-Reproduces all primary paper results (Tables 1–8).
+Reproduces all primary paper results (Tables 1–9).
 
 ```bash
 make reproduce
@@ -113,7 +113,7 @@ make reproduce
 What it does:
 1. `make benchmark` — Builds 4010-sample benchmark (1000 benign, 3010 malicious across 7 attack classes, ~430 samples each).
 2. `make validate` — Validates label integrity and class balance.
-3. `make eval-main` — Runs detection evaluation (8 methods), ablation study (6 configs), runtime red-team evaluation, local runtime harness, local sandbox harness, bootstrap CI, and generalization stress checks.
+3. `make eval-main` — Runs detection evaluation (8 methods), ablation study (6 configs), runtime red-team evaluation, local runtime harness, local sandbox harness, third-party public-code sandbox fixtures, bootstrap CI, and generalization stress checks.
 4. `make tables` — Generates formatted tables in plain text and LaTeX.
 
 ### Mode 3: Full Reproduction (~2+ hours)
@@ -145,10 +145,11 @@ A supplementary large-batch command is also available: `make real-ecosystem-larg
 | `failure_analysis.json` | JSON, ~1 KB | False-positive/false-negative counts and evidence path attribution |
 | `runtime_harness.json` | JSON, ~3 KB | Local instrumented toy runtime harness metrics |
 | `sandbox_harness.json` | JSON, ~2 KB | Local isolated sandbox harness metrics |
+| `third_party_sandbox.json` | JSON, ~3 KB | Curated third-party public-code sandbox fixture metrics |
 | `significance_tests.json` | JSON, ~1 KB | McNemar test and paired-bootstrap comparison for fusion vs weighted voting |
 | `generalization_eval.json` | JSON, ~120 KB | Held-out-template, hard-negative, mutation-robustness, and label-leakage checks |
-| `tables.txt` | Text, ~7 KB | 8 formatted plain-text tables |
-| `tables.tex` | LaTeX, ~7 KB | 8 LaTeX tables with labels for paper inclusion |
+| `tables.txt` | Text, ~8 KB | 9 formatted plain-text tables |
+| `tables.tex` | LaTeX, ~8 KB | 9 LaTeX tables with labels for paper inclusion |
 
 ### Ecosystem results (`results/ecosystem/`)
 
@@ -184,8 +185,9 @@ A supplementary large-batch command is also available: `make real-ecosystem-larg
 | Runtime ASR | 0.000 |
 | Task success rate | 1.000 |
 | False block rate | 0.000 |
+| Third-party fixture sandbox | 3 fixtures, 1 blocked subprocess, 0 unsafe egress |
+| Unit tests | 102 (all pass) |
 | Ecosystem corpus size | 1200 synthetic + 1000 real public artifacts (500 GitHub + 200 npm + 150 discovered PyPI + 150 Hugging Face Spaces) |
-| Unit tests | 100 (all pass) |
 | Supplementary scaled corpus | 2000 real public artifacts (1200 GitHub + 500 npm + 300 Hugging Face Spaces) |
 | Supplementary XL corpus | 3000 real public artifacts (1999 GitHub + 600 npm + 20 PyPI + 381 Hugging Face Spaces) |
 | Supplementary 5k corpus | 5000 real public artifacts (2600 GitHub + 2000 npm + 20 PyPI + 380 Hugging Face Spaces) |
