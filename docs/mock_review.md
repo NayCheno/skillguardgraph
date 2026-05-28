@@ -22,6 +22,12 @@ SkillGuardGraph is a strong artifact-oriented research prototype with a coherent
 4. Source-available coverage in real batches remains too low for strong exploit or implementation claims, even after adding a public hosted-registry slice.
 5. The 5k and 10k ecosystem measurements materially improve breadth but not validation depth.
 
+## Recent improvements since initial review
+
+1. Result/triage consistency: the high-severity count mismatch between `real_ecosystem_results.json` and `real_high_risk_triage.json` has been resolved (both now report 2 HIGH findings).
+2. Paper completeness: the abstract, conclusion, and ethics sections have been completed (previously truncated). New discussion subsections address static/sandbox ablation semantics and interpreting perfect synthetic scores.
+3. Limitations strengthened: added external-validity and scale-vs-depth limitation items.
+
 ## Likely reviewer scores if submitted now
 
 | Dimension | Assessment |

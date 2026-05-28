@@ -89,7 +89,7 @@ Table 7: Local Runtime Harness
 | Task success rate       | 1.0000 |
 | False block rate        | 0.0000 |
 | Evidence path coverage  | 1.0000 |
-| Policy p95 latency (ms) | 0.270  |
+| Policy p95 latency (ms) | 0.265  |
 +-------------------------+--------+
 
 Table 8: Local Sandbox Harness
@@ -103,7 +103,7 @@ Table 8: Local Sandbox Harness
 | Malicious detection recall | 1.0000 |
 | Benign alert rate          | 0.0000 |
 | Unsafe egress events       | 0      |
-| Sandbox p95 latency (ms)   | 41.049 |
+| Sandbox p95 latency (ms)   | 41.681 |
 +----------------------------+--------+
 
 Table 9: Third-Party Public-Code Sandbox
@@ -114,7 +114,7 @@ Table 9: Third-Party Public-Code Sandbox
 | Archive fixtures resolved    | 3      |
 | Subprocess attempts observed | 1      |
 | No unsafe egress             | true   |
-| Fixture p95 latency (ms)     | 97.325 |
+| Fixture p95 latency (ms)     | 91.206 |
 +------------------------------+--------+
 
 Table 10: Corpus-Derived Package Sandbox
@@ -127,7 +127,7 @@ Table 10: Corpus-Derived Package Sandbox
 | Subprocess attempts observed | 1      |
 | Registered tools observed    | 2      |
 | No unsafe egress             | true   |
-| Case p95 latency (ms)        | 98.268 |
+| Case p95 latency (ms)        | 91.746 |
 +------------------------------+--------+
 
 Table 11: GitHub Repo Sandbox
@@ -138,7 +138,7 @@ Table 11: GitHub Repo Sandbox
 | Blender delegate calls    | 1       |
 | Registered tools observed | 18      |
 | No unsafe egress          | true    |
-| Case p95 latency (ms)     | 108.686 |
+| Case p95 latency (ms)     | 106.825 |
 +---------------------------+---------+
 
 Table 12: TypeScript Repo Sandbox
