@@ -731,7 +731,39 @@ Case p95 latency (ms) & 67.707 \\
 \bottomrule
 \end{tabular}
 \end{table}
-\subsection{Failure Analysis}
+
+\subsection{Real-World Unsafe Chain Analysis}
+\label{sec:real_findings}
+
+Beyond synthetic evaluation, we apply SkillGuardGraph to the 1{,}000-artifact public corpus and identify cross-layer unsafe chains in source-available artifacts.
+
+\paragraph{Source-available findings.}
+Of 15 source-available artifacts in the corpus, 8 exhibit policy findings from cross-layer evidence fusion. The dominant pattern is scope inflation (C1 + C7): tools declare read-only or low-risk behavior in metadata annotations but request write, export, or admin scopes in their manifests.
+
+\begin{table}[t]
+\centering
+\caption{Real-world L2 unsafe chains in source-available MCP artifacts. All findings are passive cross-layer evidence; no runtime replay or exploit confirmation.}
+\label{tab:real_unsafe_chains}
+\begin{tabular}{llp{4.5cm}l}
+\toprule
+Artifact & Risk & Key evidence & Constraints \\
+\midrule
+firecrawl/firecrawl-mcp-server & HIGH & read-only claim + network\_send sink + env\_var source & C1, C7 \\
+GLips/Figma-Context-MCP & MED & read\_only annotation + write/export scopes + credential label & C1, C7 \\
+Portkey-AI/gateway & MED & write/export scopes + env\_var source + untrusted label & C1, C7 \\
+builderz-labs/mission-control & MED & admin + write + export + send + run scopes & C1, C7 \\
+czlonkowski/n8n-mcp & MED & export scope vs read\_only annotation & C1, C7 \\
+firebase/firebase-tools & MED & delete + export + run scopes & C1, C7 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\paragraph{Interpretation.}
+These findings demonstrate that cross-layer evidence fusion identifies real declaration-implementation inconsistencies in public MCP artifacts. However, we classify all findings as L2 (explainable cross-layer paths without runtime replay) rather than L3/L4 (confirmed unsafe behavior or exploitable vulnerabilities). The dominant pattern---scope inflation---likely reflects metadata template reuse rather than intentional deception in most cases. No outbound disclosures were sent because passive evidence alone does not satisfy our disclosure threshold.
+
+\paragraph{Limitations.}
+The real findings are limited by: (1) only 15/1{,}000 artifacts have source-entrypoint coverage; (2) no runtime replay or sandbox execution was performed on real artifacts; (3) single-reviewer triage without inter-rater reliability; (4) the corpus excludes private enterprise catalogs.
+
 
 The current fusion run has 0 false negatives and 0 false positives on the synthetic benchmark. The failure-analysis output therefore functions as an attribution audit rather than a missed-case catalogue: all 3{,}010 malicious samples are true positives with non-empty evidence paths, and all 1{,}000 benign samples are true negatives.
 

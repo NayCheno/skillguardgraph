@@ -135,6 +135,28 @@ All HIGH-severity real findings were manually reviewed in `experiments/results/e
 
 `docs/disclosure_log.md` records the disclosure decision. The current batch yields **0 confirmed vulnerabilities** and **0 outbound disclosures** because passive evidence alone does not satisfy the disclosure threshold in `docs/disclosure_log_template.md`.
 
+### 3.1 Real-world unsafe chain findings
+
+Beyond prevalence statistics, SkillGuardGraph identifies cross-layer unsafe chains in source-available artifacts. The full inventory is at `docs/real_unsafe_chain_inventory.md`.
+
+**L2 unsafe chains (source-available with cross-layer evidence):** 8 artifacts, all with C1 (declaration-implementation mismatch) and/or C7 (scope inflation) violations.
+
+| Artifact | Risk | Key evidence | Constraint |
+|---|---|---|---|
+| firecrawl/firecrawl-mcp-server | HIGH | read-only claim + network_send sink + env_var source + credential label | C1, C7 |
+| GLips/Figma-Context-MCP | MEDIUM | read_only annotation + write/export scopes + credential access | C1, C7 |
+| Portkey-AI/gateway | MEDIUM | write/export scopes + env_var source + untrusted label | C1, C7 |
+| builderz-labs/mission-control | MEDIUM | admin + write + export + send + run scopes | C1, C7 |
+| czlonkowski/n8n-mcp | MEDIUM | export scope vs read_only annotation | C1, C7 |
+| firebase/firebase-tools | MEDIUM | delete + export + run scopes | C1, C7 |
+
+**Key observations:**
+1. Scope inflation (C1 + C7) is the most common cross-layer pattern in real artifacts.
+2. All HIGH/MEDIUM findings involve metadata-implementation mismatches rather than confirmed exploit paths.
+3. No L3 (replay-confirmed) or L4 (vendor-confirmed) findings exist in the current corpus.
+4. These findings demonstrate that cross-layer evidence fusion can identify real declaration-implementation inconsistencies, but they do not constitute vulnerability discoveries.
+
+**Disclosure status:** All 8 findings classified as metadata governance issues, not exploitable vulnerabilities. No outbound disclosures sent.
 ## 4. Synthetic ecosystem measurement
 
 Synthetic ecosystem outputs remain useful for controlled prevalence experiments and for exercising policy behavior under noisier conditions.
