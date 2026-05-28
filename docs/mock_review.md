@@ -20,7 +20,7 @@ SkillGuardGraph is a strong artifact-oriented research prototype with a coherent
 2. No confirmed real vulnerabilities or disclosure-backed case studies.
 3. Local runtime/sandbox harnesses are still toy harnesses rather than third-party execution environments.
 4. Source-available coverage in real batches remains too low for strong exploit or implementation claims.
-5. The large-batch ecosystem measurements improve breadth but not validation depth.
+5. The 5k and 10k ecosystem measurements materially improve breadth but not validation depth.
 
 ## Likely reviewer scores if submitted now
 
@@ -39,7 +39,7 @@ SkillGuardGraph is a strong artifact-oriented research prototype with a coherent
 
 ## Minimum improvements that would change this recommendation
 
-1. A larger real-world public batch beyond 3k, ideally with materially better source coverage.
+1. The artifact now reaches 10k passive public artifacts, so the next missing step is no longer scale alone but materially better source coverage and validated real cases.
 2. At least one disclosure-ready or confirmed real case study.
 3. Third-party dynamic sandbox execution under safe isolation.
 4. Production-like runtime integration rather than only toy harnesses.

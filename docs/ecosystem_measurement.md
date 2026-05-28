@@ -109,6 +109,15 @@ A 5,000-artifact quota-tuned batch is also checked in as:
 - `experiments/results/ecosystem/real_ecosystem_5k_data_card.json`
 
 This run uses `--target 5000 --pages-per-query 6 --source-budget 25 --sources github_mcp,npm_mcp,pypi_mcp,hf_spaces_mcp --source-quotas github_mcp=2600,npm_mcp=2000,pypi_mcp=20,hf_spaces_mcp=380 --output-prefix real_ecosystem_5k --resume` and reaches 5,000 artifacts. It produces 0 HIGH and 59 MEDIUM findings, but only 21 source-available samples. We treat it as a scale-out catalog measurement that reaches the roadmap's minimum real-corpus scale target without upgrading any exploit or deployment claims.
+### 2.9 Supplementary 10k batch
+
+A 10,000-artifact quota-tuned batch is also checked in as:
+
+- `experiments/results/ecosystem/real_ecosystem_10k_results.json`
+- `experiments/results/ecosystem/real_ecosystem_10k_data_card.json`
+
+This run uses `--target 10000 --pages-per-query 10 --source-budget 0 --sources github_mcp,npm_mcp,pypi_mcp,hf_spaces_mcp --source-quotas github_mcp=4000,npm_mcp=4000,pypi_mcp=1620,hf_spaces_mcp=380 --output-prefix real_ecosystem_10k --resume` and reaches 10,000 artifacts. It produces 0 HIGH and 112 MEDIUM findings, but 0 source-available samples because the batch disables source fetch for scale. We treat it as breadth-only catalog evidence that satisfies the roadmap's strongest public-corpus scale target, not as deeper implementation validation.
+
 ## 3. Manual triage and disclosure status
 
 All HIGH-severity real findings were manually reviewed in `experiments/results/ecosystem/real_high_risk_triage.json`.

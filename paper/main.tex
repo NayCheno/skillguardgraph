@@ -555,7 +555,7 @@ Instruction-like description & 68 & 5.7\% \\
 
 \subsection{Real-World Ecosystem Measurement}
 
-To validate the synthetic findings, we conducted a real-world passive measurement across four public ecosystems: GitHub MCP repositories, npm MCP packages, a curated PyPI MCP seed list, and Hugging Face Spaces. The current batch contains 1{,}000 public artifacts (500 GitHub repositories, 200 npm packages, 150 discovered PyPI packages, and 150 Hugging Face Spaces), of which 20 had bounded source-entrypoint coverage and 980 were retained as metadata-only samples.
+To validate the synthetic findings, we conducted a real-world passive measurement across four public ecosystems: GitHub MCP repositories, npm MCP packages, discovered PyPI MCP packages, and Hugging Face Spaces. The current batch contains 1{,}000 public artifacts (500 GitHub repositories, 200 npm packages, 150 discovered PyPI packages, and 150 Hugging Face Spaces), of which 20 had bounded source-entrypoint coverage and 980 were retained as metadata-only samples.
 
 Table~\ref{tab:real_ecosystem} reports risk pattern prevalence in the real ecosystem.
 
@@ -577,7 +577,7 @@ Description--code mismatch & 0 & 0.0\% \\
 \end{table}
 
 \paragraph{Key findings.}
-(1)~80.0\% of measured public artifacts lack signatures, confirming that governance provenance remains weak even after adding curated PyPI packages to the passive public corpus.
+(1)~80.0\% of measured public artifacts lack signatures, confirming that governance provenance remains weak even after adding discovered PyPI packages to the passive public corpus.
 (2)~Only 2 of 1{,}000 artifacts trigger HIGH passive findings, and manual triage classifies both as likely false positives or metadata-capability mismatches rather than confirmed vulnerabilities.
 (3)~45.8\% of artifacts come from untrusted publishers, but only 20/1{,}000 have bounded source-entrypoint coverage, so most real-corpus findings should be interpreted as catalog-level governance observations rather than code-complete security judgments.
 (4)~The current batch spans four public sources—GitHub MCP repositories, npm MCP packages, 150 discovered PyPI MCP packages, and Hugging Face Spaces—which is stronger than the earlier GitHub-only snapshot, but it still excludes hosted enterprise marketplaces and private catalogs.

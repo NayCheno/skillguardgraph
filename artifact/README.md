@@ -68,7 +68,7 @@ pip install -e ".[dev]"
 make smoke
 ```
 
-Expected: the demo prints a JSON policy report to stdout, and all 98 unit
+Expected: the demo prints a JSON policy report to stdout, and all 100 unit
 tests pass.
 
 ### Alternative: Docker
@@ -100,7 +100,7 @@ make smoke
 
 What it does:
 1. Runs `run_demo.py` — scans a sample manifest and evaluates a sample trace.
-2. Runs all 98 unit tests (`pytest tests/ -q`).
+2. Runs all 100 unit tests (`pytest tests/ -q`).
 
 ### Mode 2: Main Reproduction (~30 minutes)
 
@@ -128,9 +128,9 @@ What it does:
 1. Everything in Mode 2.
 2. `make ecosystem` — Builds 1200-sample synthetic ecosystem corpus from 5 sources.
 3. `make triage` — Triages ecosystem findings, identifies risk patterns.
-4. `make real-ecosystem` — Collects a 1,000-artifact passive multi-source corpus (GitHub MCP repositories + npm MCP packages + curated PyPI MCP packages + Hugging Face Spaces), writes a data card, and records real-finding triage inputs.
+4. `make real-ecosystem` — Collects a 1,000-artifact passive multi-source corpus (GitHub MCP repositories + npm MCP packages + discovered PyPI MCP packages + Hugging Face Spaces), writes a data card, and records real-finding triage inputs.
 
-A supplementary large-batch command is also available: `make real-ecosystem-large` collects a 2,000-artifact passive corpus into `real_ecosystem_large_*` outputs without replacing the reviewer-friendly 1,000-artifact batch. An additional `make real-ecosystem-xl` target collects a 3,000-artifact four-source corpus into `real_ecosystem_xl_*` outputs. A `make real-ecosystem-5k` target now checks in a 5,000-artifact quota-tuned corpus into `real_ecosystem_5k_*` outputs. These larger targets use `--resume` so partially warmed caches can survive upstream rate limits.
+A supplementary large-batch command is also available: `make real-ecosystem-large` collects a 2,000-artifact passive corpus into `real_ecosystem_large_*` outputs without replacing the reviewer-friendly 1,000-artifact batch. An additional `make real-ecosystem-xl` target collects a 3,000-artifact four-source corpus into `real_ecosystem_xl_*` outputs. A `make real-ecosystem-5k` target now checks in a 5,000-artifact quota-tuned corpus, and `make real-ecosystem-10k` checks in a 10,000-artifact quota-tuned corpus. These larger targets use `--resume` so partially warmed caches can survive upstream rate limits.
 ---
 
 ## Expected Outputs
@@ -166,6 +166,8 @@ A supplementary large-batch command is also available: `make real-ecosystem-larg
 | `real_ecosystem_xl_data_card.json` | JSON, ~2 KB | Supplementary 3,000-artifact source/date/version/license/dedup metadata |
 | `real_ecosystem_5k_results.json` | JSON, ~6 KB | Supplementary 5,000-artifact aggregate counts and per-source severity distribution |
 | `real_ecosystem_5k_data_card.json` | JSON, ~2 KB | Supplementary 5,000-artifact source/date/version/license/dedup metadata |
+| `real_ecosystem_10k_results.json` | JSON, ~8 KB | Supplementary 10,000-artifact aggregate counts and per-source severity distribution |
+| `real_ecosystem_10k_data_card.json` | JSON, ~2 KB | Supplementary 10,000-artifact source/date/version/license/dedup metadata |
 
 ### Key numbers to verify
 
@@ -183,10 +185,11 @@ A supplementary large-batch command is also available: `make real-ecosystem-larg
 | Task success rate | 1.000 |
 | False block rate | 0.000 |
 | Ecosystem corpus size | 1200 synthetic + 1000 real public artifacts (500 GitHub + 200 npm + 150 discovered PyPI + 150 Hugging Face Spaces) |
-| Unit tests | 98 (all pass) |
+| Unit tests | 100 (all pass) |
 | Supplementary scaled corpus | 2000 real public artifacts (1200 GitHub + 500 npm + 300 Hugging Face Spaces) |
 | Supplementary XL corpus | 3000 real public artifacts (1999 GitHub + 600 npm + 20 PyPI + 381 Hugging Face Spaces) |
 | Supplementary 5k corpus | 5000 real public artifacts (2600 GitHub + 2000 npm + 20 PyPI + 380 Hugging Face Spaces) |
+| Supplementary 10k corpus | 10000 real public artifacts (4000 GitHub + 4000 npm + 1620 PyPI + 380 Hugging Face Spaces) |
 
 See `EXPECTED_OUTPUTS.md` for complete output documentation with example
 snippets and field-level descriptions.
