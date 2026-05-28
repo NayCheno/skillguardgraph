@@ -145,7 +145,7 @@ A supplementary large-batch command is also available: `make real-ecosystem-larg
 | `failure_analysis.json` | JSON, ~1 KB | False-positive/false-negative counts and evidence path attribution |
 | `runtime_harness.json` | JSON, ~3 KB | Local instrumented toy runtime harness metrics |
 | `sandbox_harness.json` | JSON, ~2 KB | Local isolated sandbox harness metrics |
-| `third_party_sandbox.json` | JSON, ~3 KB | Curated third-party public-code sandbox fixture metrics |
+| `third_party_sandbox.json` | JSON, ~3 KB | Archive-backed third-party public-code sandbox fixture metrics |
 | `significance_tests.json` | JSON, ~1 KB | McNemar test and paired-bootstrap comparison for fusion vs weighted voting |
 | `generalization_eval.json` | JSON, ~120 KB | Held-out-template, hard-negative, mutation-robustness, and label-leakage checks |
 | `tables.txt` | Text, ~8 KB | 9 formatted plain-text tables |
@@ -187,7 +187,7 @@ A supplementary large-batch command is also available: `make real-ecosystem-larg
 | Runtime ASR | 0.000 |
 | Task success rate | 1.000 |
 | False block rate | 0.000 |
-| Third-party fixture sandbox | 3 fixtures, 3 remote resolutions, 1 blocked subprocess, 0 unsafe egress |
+| Third-party fixture sandbox | 3 fixtures, 3 archive resolutions, 1 blocked subprocess, 0 unsafe egress |
 | Unit tests | 102 (all pass) |
 | Completion audit | generated on demand |
 | Ecosystem corpus size | 1200 synthetic + 1000 real public artifacts (500 GitHub + 200 npm + 150 discovered PyPI + 150 Hugging Face Spaces) |

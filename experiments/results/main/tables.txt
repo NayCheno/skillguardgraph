@@ -111,8 +111,8 @@ Table 9: Third-Party Public-Code Sandbox
 | Metric                       | Value  |
 +------------------------------+--------+
 | Fixtures executed            | 3      |
-| Remote fixtures resolved     | 3      |
+| Archive fixtures resolved    | 3      |
 | Subprocess attempts observed | 1      |
 | No unsafe egress             | true   |
-| Fixture p95 latency (ms)     | 96.804 |
+| Fixture p95 latency (ms)     | 95.757 |
 +------------------------------+--------+

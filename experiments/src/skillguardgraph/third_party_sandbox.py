@@ -20,6 +20,10 @@ class ThirdPartyFixture:
     remote_source_url: str | None = None
     extract_start: str | None = None
     extract_end: str | None = None
+    archive_url: str | None = None
+    archive_member: str | None = None
+    archive_extract_start: str | None = None
+    archive_extract_end: str | None = None
 
 
 def build_third_party_fixtures() -> List[ThirdPartyFixture]:
@@ -47,6 +51,8 @@ def build_third_party_fixtures() -> List[ThirdPartyFixture]:
             ),
             invoke="result = {'tool_count': len(mcp._tools), 'resource_count': len(mcp._resources), 'prompt_count': len(mcp._prompts)}",
             remote_source_url="https://raw.githubusercontent.com/modelcontextprotocol/python-sdk/v1.x/examples/snippets/servers/fastmcp_quickstart.py",
+            archive_url="https://files.pythonhosted.org/packages/38/83/d1efe7c2980d8a3afa476f4e3d42d53dd54c0ab94c27bee5d755b45c8b73/mcp-1.27.1.tar.gz",
+            archive_member="mcp-1.27.1/examples/snippets/servers/fastmcp_quickstart.py",
         ),
         ThirdPartyFixture(
             fixture_id="fastmcp-quickstart",
@@ -63,6 +69,8 @@ def build_third_party_fixtures() -> List[ThirdPartyFixture]:
             ),
             invoke="result = {'tool_count': len(mcp._tools), 'server_name': mcp.name}",
             remote_source_url="https://raw.githubusercontent.com/PrefectHQ/fastmcp/main/README.md",
+            archive_url="https://files.pythonhosted.org/packages/3b/a9/5c5a01b6abd5346bf60b97cfd29e4a86661940c27dd562bfcda07fd03519/fastmcp-3.3.1.tar.gz",
+            archive_member="fastmcp-3.3.1/examples/simple_echo.py",
             extract_start="```python",
             extract_end="```",
         ),
@@ -94,6 +102,10 @@ def build_third_party_fixtures() -> List[ThirdPartyFixture]:
             ),
             invoke="import asyncio\nasync def _fixture_call():\n    await _run_with_stdin(['wl-copy', '--type', 'text/plain'], b'test-data')\nasyncio.run(_fixture_call())\nresult = {'subprocess_invoked': True}",
             remote_source_url="https://raw.githubusercontent.com/cmeans/mcp-clipboard/main/src/mcp_clipboard/clipboard.py",
+            archive_url="https://files.pythonhosted.org/packages/47/d3/c90f9a293d6fbe6247cd7897c171e05a31181e62df9bdd0890271ec785e6/mcp_clipboard-2.6.1.tar.gz",
+            archive_member="mcp_clipboard-2.6.1/src/mcp_clipboard/clipboard.py",
+            archive_extract_start="import asyncio",
+            archive_extract_end="def _find_wayland_display",
             extract_start="import asyncio",
             extract_end="def _find_wayland_display",
         ),

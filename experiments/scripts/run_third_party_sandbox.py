@@ -2,9 +2,11 @@
 """Execute curated third-party public-code fixtures inside the local sandbox."""
 from __future__ import annotations
 
+import io
 import json
 import subprocess
 import sys
+import tarfile
 import tempfile
 import textwrap
 import time
@@ -97,33 +99,49 @@ def percentile(values: list[float], q: float) -> float:
     return ordered[idx]
 
 
-def _fetch_remote_text(url: str) -> str:
+def _fetch_text(url: str) -> str:
     req = urllib.request.Request(url, headers={"User-Agent": "skillguardgraph-research-bot"})
     with urllib.request.urlopen(req, timeout=30) as resp:
         return resp.read().decode("utf-8", errors="replace")
 
 
+def _slice_text(text: str, start: str | None, end: str | None) -> str:
+    if start:
+        start_idx = text.find(start)
+        if start_idx >= 0:
+            if start.startswith("```"):
+                text = text[start_idx + len(start):]
+            else:
+                text = text[start_idx:]
+    if end:
+        end_idx = text.find(end)
+        if end_idx >= 0:
+            text = text[:end_idx]
+    return text.strip()
+
+
 def _resolve_source(fixture: ThirdPartyFixture) -> tuple[str, str]:
-    if not fixture.remote_source_url:
-        return fixture.source_code, "embedded"
-    try:
-        text = _fetch_remote_text(fixture.remote_source_url)
-        if fixture.extract_start:
-            start_idx = text.find(fixture.extract_start)
-            if start_idx >= 0:
-                if fixture.extract_start.startswith("```"):
-                    text = text[start_idx + len(fixture.extract_start):]
-                else:
-                    text = text[start_idx:]
-        if fixture.extract_end:
-            end_idx = text.find(fixture.extract_end)
-            if end_idx >= 0:
-                text = text[:end_idx]
-        resolved = text.strip()
-        if resolved:
-            return resolved + "\n", "remote"
-    except Exception:
-        pass
+    if fixture.archive_url and fixture.archive_member:
+        try:
+            blob = urllib.request.urlopen(fixture.archive_url, timeout=60).read()
+            with tarfile.open(fileobj=io.BytesIO(blob), mode="r:gz") as archive:
+                member = archive.extractfile(fixture.archive_member)
+                if member is not None:
+                    text = member.read().decode("utf-8", errors="replace")
+                    resolved = _slice_text(text, fixture.archive_extract_start, fixture.archive_extract_end)
+                    if resolved:
+                        return resolved + "\n", "archive_remote"
+        except Exception:
+            pass
+
+    if fixture.remote_source_url:
+        try:
+            text = _fetch_text(fixture.remote_source_url)
+            resolved = _slice_text(text, fixture.extract_start, fixture.extract_end)
+            if resolved:
+                return resolved + "\n", "remote"
+        except Exception:
+            pass
     return fixture.source_code, "embedded_fallback"
 
 
@@ -133,11 +151,14 @@ def main() -> None:
     results = []
     subprocess_attempts = 0
     remote_resolved = 0
+    archive_resolved = 0
 
     for fixture in fixtures:
         source_code, source_origin = _resolve_source(fixture)
         if source_origin == "remote":
             remote_resolved += 1
+        elif source_origin == "archive_remote":
+            archive_resolved += 1
         with tempfile.TemporaryDirectory(prefix="sgg-third-party-") as tempdir:
             workdir = Path(tempdir)
             payload_path = workdir / "payload.json"
@@ -165,6 +186,8 @@ def main() -> None:
                 "label": fixture.label,
                 "source_url": fixture.source_url,
                 "remote_source_url": fixture.remote_source_url,
+                "archive_url": fixture.archive_url,
+                "archive_member": fixture.archive_member,
                 "source_origin": source_origin,
                 "description": fixture.description,
                 "duration_ms": round(duration_ms, 3),
@@ -178,6 +201,7 @@ def main() -> None:
         "fixtures_total": len(fixtures),
         "fixtures_executed": len(results),
         "remote_fixtures_resolved": remote_resolved,
+        "archive_fixtures_resolved": archive_resolved,
         "third_party_source_urls": [fixture.source_url for fixture in fixtures],
         "subprocess_attempts_observed": subprocess_attempts,
         "latency_ms": {
@@ -188,7 +212,7 @@ def main() -> None:
         "acceptance": {
             "all_fixtures_executed": len(results) == len(fixtures),
             "subprocess_attempts_captured": subprocess_attempts >= 1,
-            "remote_source_resolution_ge_2": remote_resolved >= 2,
+            "archive_source_resolution_ge_2": archive_resolved >= 2,
             "no_unsafe_egress": True,
         },
         "fixtures": results,
@@ -197,7 +221,7 @@ def main() -> None:
     OUT_PATH.parent.mkdir(parents=True, exist_ok=True)
     OUT_PATH.write_text(json.dumps(summary, indent=2, ensure_ascii=False), encoding="utf-8")
     print(f"Results written to {OUT_PATH}")
-    print(f"Fixtures executed={len(results)} subprocess_attempts={subprocess_attempts} remote_resolved={remote_resolved}")
+    print(f"Fixtures executed={len(results)} subprocess_attempts={subprocess_attempts} archive_resolved={archive_resolved} remote_resolved={remote_resolved}")
     print(f"Third-party fixture p95 latency={summary['latency_ms']['p95']}ms")
 
     failed = [name for name, ok in summary['acceptance'].items() if not ok]

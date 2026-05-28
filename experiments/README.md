@@ -128,7 +128,7 @@ experiments/
 | `make trace` | Evaluate a sample trace | ~5 sec |
 | `make runtime-harness` | Run local instrumented runtime harness | ~1 min |
 | `make sandbox-harness` | Run local isolated sandbox harness | ~1 min |
-| `make third-party-sandbox` | Run curated third-party public-code sandbox fixtures | ~1 min |
+| `make third-party-sandbox` | Run archive-backed third-party public-code sandbox fixtures | ~1 min |
 | `make completion-audit` | Generate current completion audit report | ~5 sec |
 | `make clean` | Remove all generated results and data | instant |
 
@@ -149,7 +149,7 @@ results/main/significance_tests.json # McNemar + paired-bootstrap baseline compa
 results/main/tables.txt           # Formatted plain-text tables
 results/main/generalization_eval.json # Held-out/hard-negative/mutation/leakage checks
 results/main/tables.tex           # LaTeX tables for paper inclusion
-results/main/third_party_sandbox.json # Curated third-party public-code sandbox metrics
+results/main/third_party_sandbox.json # Archive-backed third-party public-code sandbox metrics
 ```
 
 After `make eval-all` (additional files):
@@ -235,7 +235,7 @@ PYTHONPATH=src python scripts/run_runtime_redteam.py
 # Supplementary larger public corpus
 PYTHONPATH=src python scripts/crawl_real_ecosystem.py --target 2000 --pages-per-query 3 --source-budget 25 --sources github_mcp,npm_mcp,hf_spaces_mcp --output-prefix real_ecosystem_large --resume
 
-# Third-party public-code sandbox
+# Archive-backed third-party public-code sandbox
 PYTHONPATH=src python scripts/run_third_party_sandbox.py
 
 # Supplementary XL public corpus

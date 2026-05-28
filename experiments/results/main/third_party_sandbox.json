@@ -1,7 +1,8 @@
 {
   "fixtures_total": 3,
   "fixtures_executed": 3,
-  "remote_fixtures_resolved": 3,
+  "remote_fixtures_resolved": 0,
+  "archive_fixtures_resolved": 3,
   "third_party_source_urls": [
     "https://pypi.org/project/mcp/",
     "https://pypi.org/project/fastmcp/",
@@ -9,14 +10,14 @@
   ],
   "subprocess_attempts_observed": 1,
   "latency_ms": {
-    "p50": 80.742,
-    "p95": 83.356,
-    "max": 83.356
+    "p50": 91.222,
+    "p95": 100.009,
+    "max": 100.009
   },
   "acceptance": {
     "all_fixtures_executed": true,
     "subprocess_attempts_captured": true,
-    "remote_source_resolution_ge_2": true,
+    "archive_source_resolution_ge_2": true,
     "no_unsafe_egress": true
   },
   "fixtures": [
@@ -25,9 +26,11 @@
       "label": "benign_registration",
       "source_url": "https://pypi.org/project/mcp/",
       "remote_source_url": "https://raw.githubusercontent.com/modelcontextprotocol/python-sdk/v1.x/examples/snippets/servers/fastmcp_quickstart.py",
-      "source_origin": "remote",
+      "archive_url": "https://files.pythonhosted.org/packages/38/83/d1efe7c2980d8a3afa476f4e3d42d53dd54c0ab94c27bee5d755b45c8b73/mcp-1.27.1.tar.gz",
+      "archive_member": "mcp-1.27.1/examples/snippets/servers/fastmcp_quickstart.py",
+      "source_origin": "archive_remote",
       "description": "Official MCP Python SDK quickstart server snippet.",
-      "duration_ms": 80.742,
+      "duration_ms": 86.081,
       "events": [],
       "result": {
         "tool_count": 1,
@@ -42,13 +45,15 @@
       "label": "benign_registration",
       "source_url": "https://pypi.org/project/fastmcp/",
       "remote_source_url": "https://raw.githubusercontent.com/PrefectHQ/fastmcp/main/README.md",
-      "source_origin": "remote",
+      "archive_url": "https://files.pythonhosted.org/packages/3b/a9/5c5a01b6abd5346bf60b97cfd29e4a86661940c27dd562bfcda07fd03519/fastmcp-3.3.1.tar.gz",
+      "archive_member": "fastmcp-3.3.1/examples/simple_echo.py",
+      "source_origin": "archive_remote",
       "description": "FastMCP README quickstart snippet.",
-      "duration_ms": 78.457,
+      "duration_ms": 100.009,
       "events": [],
       "result": {
         "tool_count": 1,
-        "server_name": "Demo 🚀"
+        "server_name": "Echo Server"
       },
       "stdout": "",
       "stderr": ""
@@ -58,9 +63,11 @@
       "label": "subprocess_behavior",
       "source_url": "https://github.com/cmeans/mcp-clipboard/blob/main/src/mcp_clipboard/clipboard.py",
       "remote_source_url": "https://raw.githubusercontent.com/cmeans/mcp-clipboard/main/src/mcp_clipboard/clipboard.py",
-      "source_origin": "remote",
+      "archive_url": "https://files.pythonhosted.org/packages/47/d3/c90f9a293d6fbe6247cd7897c171e05a31181e62df9bdd0890271ec785e6/mcp_clipboard-2.6.1.tar.gz",
+      "archive_member": "mcp_clipboard-2.6.1/src/mcp_clipboard/clipboard.py",
+      "source_origin": "archive_remote",
       "description": "mcp-clipboard subprocess write helper excerpt.",
-      "duration_ms": 83.356,
+      "duration_ms": 91.222,
       "events": [
         {
           "kind": "subprocess_attempt",

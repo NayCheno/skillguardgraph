@@ -514,34 +514,34 @@ Sandbox p95 latency (ms) & 41.681 \\
 
 All sandbox-harness acceptance gates pass: no unsafe egress is observed, malicious-case detection recall is 100\%, benign alert rate is 0\%, and p95 overhead remains below 50\,ms. This is still a local toy harness rather than sandboxed execution of third-party skills, but it materially strengthens the artifact's isolation story beyond a purely pattern-based placeholder.
 
-\paragraph{Curated third-party public-code fixtures.}
-Beyond repository-controlled toy cases, we also execute a small public-code fixture suite inside the same isolation boundary. The current fixture set contains three public MCP-related fixtures resolved from their upstream source URLs at run time: the MCP Python SDK quickstart, the FastMCP README quickstart block, and an excerpt of the \texttt{mcp-clipboard} subprocess write helper. The first two confirm that public server-registration code can execute under shimmed MCP interfaces without unsafe side effects; the third confirms that a real third-party subprocess path is captured as a blocked sandbox event.
+\paragraph{Archive-backed third-party public-code fixtures.}
+Beyond repository-controlled toy cases, we also execute a small public-code fixture suite inside the same isolation boundary. The current fixture set contains three public MCP-related fixtures resolved from downloaded source-distribution archives: the MCP Python SDK quickstart example, the FastMCP simple echo example, and an excerpt of the \texttt{mcp-clipboard} subprocess write helper. The first two confirm that public server-registration code can execute under shimmed MCP interfaces without unsafe side effects; the third confirms that a real third-party subprocess path is captured as a blocked sandbox event.
 
 \begin{table}[t]
 \centering
-\caption{Curated third-party public-code sandbox fixtures.}
+\caption{Archive-backed third-party public-code sandbox fixtures.}
 \label{tab:third_party_sandbox}
 \begin{tabular}{lr}
 \toprule
 Metric & Value \\
 \midrule
 Fixtures executed & 3 \\
-Remote fixtures resolved & 3 \\
+Archive fixtures resolved & 3 \\
 Subprocess attempts observed & 1 \\
 Unsafe egress events & 0 \\
-Fixture p95 latency (ms) & 96.804 \\
+Fixture p95 latency (ms) & 95.757 \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-The fixture suite is stronger than a repository-only toy harness because it executes public third-party source fetched from upstream package or repository locations under isolation, but it is still not equivalent to arbitrary package execution or production sandbox deployment.
+The fixture suite is stronger than a repository-only toy harness because it executes public third-party source pulled from upstream package archives under isolation, but it is still not equivalent to arbitrary package execution or production sandbox deployment.
 
 \subsection{Failure Analysis}
 
 The current fusion run has 0 false negatives and 0 false positives on the synthetic benchmark. The failure-analysis output therefore functions as an attribution audit rather than a missed-case catalogue: all 3{,}010 malicious samples are true positives with non-empty evidence paths, and all 1{,}000 benign samples are true negatives.
 
 \paragraph{Residual risk.}
-A zero-error synthetic result does not imply zero real-world risk. The benchmark is template-generated, the default simulated prober does not execute untrusted code, and even the local sandbox/runtime harnesses operate only on repository-controlled toy cases or a tiny set of curated third-party public-code fixtures rather than arbitrary third-party packages. Real agent platforms may also omit provenance labels needed by C2/C3/C6. We therefore treat the current result as evidence that the artifact is internally consistent and use RQ5 to evaluate external validity.
+A zero-error synthetic result does not imply zero real-world risk. The benchmark is template-generated, the default simulated prober does not execute untrusted code, and even the local sandbox/runtime harnesses operate only on repository-controlled toy cases or a tiny set of archive-backed third-party public-code fixtures rather than arbitrary third-party packages. Real agent platforms may also omit provenance labels needed by C2/C3/C6. We therefore treat the current result as evidence that the artifact is internally consistent and use RQ5 to evaluate external validity.
 
 % ============================================================
 \section{Ecosystem Measurement (RQ5)}
