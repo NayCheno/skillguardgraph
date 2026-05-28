@@ -31,7 +31,26 @@
 \begin{abstract}
 Large language model (LLM) agents increasingly rely on external skills---tools, connectors, actions, MCP servers, and graph nodes---to access private data, invoke APIs, modify files, and maintain persistent state. This capability expansion creates a new security problem: malicious skills can exploit gaps between declared metadata, implemented behavior, granted permissions, runtime outputs, user approval, and post-approval updates. Existing defenses typically operate at a single layer: metadata scanning, prompt-injection filtering, static analysis, sandbox probing, or human-in-the-loop approval. We argue that malicious skills are compositional objects whose most damaging behaviors emerge across lifecycle boundaries.
 
-We present \textbf{SkillGuardGraph}, a cross-layer evidence fusion framework for detecting and containing malicious skills in LLM agent ecosystems. SkillGuardGraph represents skill metadata, implementation summaries, sandbox observations, runtime provenance, permission scopes, approval dialogs, and version histories as a typed evidence graph, then enforces source-aware, permission-aware, and version-aware constraints over tool-call chains. We introduce a compositional benchmark spanning seven attack classes with 4{,}010 samples, and evaluate against metadata-only, static-only, sandbox-only, runtime-only, naive union, weighted voting, and LLM-judge baselines. In this synthetic benchmark, SkillGuardGraph reaches 100.0\% precision and recall with 0.0\% FPR, compared with naive union's 100.0\% FPR and weighted voting's 20.8\% FPR. Runtime enforcement blocks all malicious traces in the current trace-replay suite while preserving 100.0\% benign task success. We further report a passive real-world measurement over 1{,}000 public MCP-related repositories with data-carded provenance, manual triage of all HIGH-severity findings, and no confirmed vulnerabilities disclosed from passive evidence alone.
+We present \textbf{SkillGuardGraph}, a cross-layer evidence fusion framework for
+detecting and containing malicious skills in LLM agent ecosystems.
+SkillGuardGraph represents skill metadata, implementation summaries, sandbox
+observations, runtime provenance, permission scopes, approval dialogs, and
+version histories as a typed evidence graph, then enforces source-aware,
+permission-aware, and version-aware constraints over tool-call chains. We
+introduce a compositional benchmark spanning seven attack classes with
+4{,}010 samples, and evaluate against metadata-only, static-only, sandbox-only,
+runtime-only, naive union, weighted voting, and LLM-judge baselines. In this
+synthetic benchmark, SkillGuardGraph fusion reaches 100.0\% precision and
+recall with 0.0\% false positive rate, compared to 93.6\% F1 and 20.8\% FPR
+for weighted voting. Ablation shows runtime provenance is the dominant signal
+(removing it drops F1 by 63.9 percentage points), while held-out, hard-negative,
+mutation, and label-blinding stress checks pass with zero degradation. We
+complement the synthetic evaluation with passive measurement of 1{,}000 public
+MCP artifacts across six sources, finding that 80.0\% lack signatures, 55.2\%
+come from untrusted publishers, and cross-layer governance gaps are prevalent.
+SkillGuardGraph demonstrates that typed evidence fusion with cross-layer
+constraints can detect compositional malicious skills that single-layer defenses
+miss, though real-world deployment validation remains future work.
 \end{abstract}
 
 % ============================================================
@@ -667,7 +686,7 @@ Description--code mismatch & 7 & 0.7\% \\
 
 \paragraph{Key findings.}
 (1)~80.0\% of measured public artifacts lack signatures, confirming that governance provenance remains weak even after adding discovered PyPI packages plus hosted and official registry slices to the passive public corpus.
-(2)~Only 1 of 1{,}000 artifacts triggers a HIGH passive finding, and manual triage still classifies that remaining HIGH case as insufficient evidence for a confirmed vulnerability.
+(2)~Only 2 of 1{,}000 artifacts trigger HIGH passive findings, and manual triage classifies both HIGH cases as likely false positives or insufficient evidence for confirmed vulnerabilities.
 (3)~55.2\% of artifacts come from untrusted publishers, but only 15/1{,}000 have bounded source-entrypoint coverage, so most real-corpus findings should be interpreted as catalog-level governance observations rather than code-complete security judgments.
 (4)~The current batch spans six public sources—GitHub MCP repositories, npm MCP packages, 150 discovered PyPI MCP packages, 150 Hugging Face Spaces, 100 Smithery hosted-registry entries, and 100 official MCP Registry entries—which is stronger than the earlier GitHub-only snapshot, but it still excludes private enterprise catalogs.
 (5)~Even with bounded GitHub contents, package.json-derived entrypoints, broad PyPI simple-index discovery, Hugging Face \texttt{app\_file}/sibling discovery, Smithery hosted-registry metadata, and official MCP Registry metadata, the public corpus remains overwhelmingly metadata-only and should be treated as catalog-level evidence rather than runtime validation.
@@ -750,6 +769,34 @@ HITL can fail when the approval dialog is generated from tainted context or hide
 
 SkillGuardGraph supports four deployment modes: (1)~registry mode with pre-publication review, signing, reputation, and drift monitoring; (2)~enterprise catalog mode with RBAC, DLP, scope minimization, and audit integration; (3)~runtime gateway mode with call-chain monitoring, structured output enforcement, and source isolation; and (4)~developer CI mode with metadata linting, permission diff, code analysis, and sandbox replay.
 
+\subsection{Static and Sandbox Layers as Auxiliary Evidence}
+
+The ablation study shows that static and sandbox evidence do not change
+aggregate F1 in the current synthetic benchmark because their signals overlap
+with metadata and runtime evidence. This result is specific to the synthetic
+benchmark: when source code is available, static analysis can independently
+identify suspicious patterns (e.g., obfuscated network sinks, credential
+extraction) that metadata and runtime signals may not reveal. Similarly,
+sandbox probing can surface runtime-unreachable behaviors such as conditional
+network access or delayed persistence writes. We therefore retain static and
+sandbox layers as auxiliary evidence sources and deployment hooks rather than
+claiming they are core performance drivers in the current evaluation.
+
+\subsection{Interpreting Perfect Synthetic Scores}
+
+The 100.0\% precision and recall on the synthetic benchmark should not be
+interpreted as evidence that the system works perfectly in real deployments.
+Several factors contribute to the perfect synthetic score: (1)~the benchmark
+generator and policy constraints share a common vocabulary of suspicious
+patterns, creating a controlled evaluation environment; (2)~runtime provenance
+labels are always present and correctly formatted in the synthetic traces,
+whereas real platforms may omit or inconsistently apply provenance annotations;
+and (3)~the held-out and mutation stress checks, while reducing obvious
+identifier leakage, remain within the same generator family. The stress checks
+verify internal consistency; they do not establish real-world separability. We
+explicitly position the synthetic results as artifact-consistency evidence and
+use RQ5 to evaluate external validity through passive ecosystem measurement.
+
 % ============================================================
 \section{Limitations}
 \label{sec:limitations}
@@ -762,20 +809,49 @@ SkillGuardGraph supports four deployment modes: (1)~registry mode with pre-publi
 \item \textbf{Ablation semantics.} Static and sandbox ablations have no aggregate effect in the current benchmark because their signals overlap with metadata and runtime evidence. This does not mean those layers are unnecessary in real source-available or runnable ecosystems.
 \item \textbf{Runtime harness realism.} The local instrumented harness emits execution-time provenance from deterministic toy tasks, but it is not a production MCP server, LangChain deployment, or multi-user agent runtime.
 \item \textbf{Platform dependency.} Some policies require platform integration (e.g., approval dialog inspection and provenance labels) that may not be available in all agent frameworks.
+\item \textbf{External validity.} The real ecosystem measurement is passive metadata collection with 1.5\% source-entrypoint coverage. It provides catalog-level governance evidence but does not constitute code-complete security audit or exploit confirmation. Confirmed real-world vulnerabilities and disclosure-backed case studies remain out of scope for the current artifact.
+\item \textbf{Scale vs.~validation depth.} Supplementary 2k/3k/5k/10k corpus batches confirm that the passive collector can sustain larger runs, but breadth scales much faster than high-confidence implementation evidence. The larger batches are useful for coverage and prevalence claims, not for strengthening exploit-confirmation or deployment claims.
 \end{enumerate}
 
 % ============================================================
 \section{Ethics}
 \label{sec:ethics}
 
-All attack cases use synthetic data, fake credentials, sinkhole domains (\texttt{*.example.invalid}, \texttt{*.sinkhole.test}), and isolated environments. No real third-party services are contacted during benchmark generation or evaluation. The synthetic ecosystem corpus is generated locally; the real ecosystem measurement is passive metadata/source-code collection from public repositories and does not execute third-party code or perform destructive probing. The artifact does not include operational payloads against real systems. We follow responsible AI and coordinated disclosure guidance consistent with NIST's GenAI risk profile~\cite{nist2024genai}: any confirmed real vulnerabilities found in public repositories would be reported to maintainers before publication. The benchmark releases minimized, non-operational cases with all external URLs pointing to sinkhole domains.
+All attack cases use synthetic data, fake credentials, sinkhole domains
+(\texttt{*.example.invalid}, \texttt{*.sinkhole.test}), and isolated
+environments. No real third-party services are contacted during benchmark
+generation or evaluation. The synthetic ecosystem corpus is generated locally;
+the real ecosystem measurement is passive metadata/source-code collection from
+public repositories and does not execute third-party code or perform
+destructive probing. The artifact does not include operational payloads against
+real systems. We follow responsible AI and coordinated disclosure guidance
+consistent with NIST's GenAI risk profile~\cite{nist2024genai}: any confirmed
+real vulnerabilities found in public repositories would be reported to
+maintainers before publication through a structured disclosure process. All
+high-risk real findings are manually triaged and documented in the disclosure
+log. The artifact includes a security and ethics guide at
+\texttt{artifact/SECURITY\_ETHICS.md}.
 % ============================================================
 \section{Conclusion}
 \label{sec:conclusion}
 
 Malicious skills are not merely bad tools. They are compositional attack surfaces spanning metadata, implementation, permissions, runtime outputs, approvals, persistence, and updates. SkillGuardGraph provides a framework for detecting and containing these attacks by fusing evidence across layers and enforcing security constraints over call sequences.
 
-Our evaluation on a benchmark of 4{,}010 samples across seven attack classes demonstrates that graph-based fusion reaches 100.0\% precision and recall with 0.0\% false positive rate in the current synthetic run, while naive union reaches the same recall only by flagging every benign sample. Held-out-template, hard-negative, mutation, and label-blinding stress checks pass in the artifact and reduce obvious leakage concerns, but they remain synthetic. Ablation experiments confirm that runtime evidence is the single most critical component, with its removal reducing F1 by 63.9 percentage points. Passive measurement of 1{,}000 public MCP artifacts across GitHub, npm, PyPI, and Hugging Face shows that signatures remain absent for 80.0\% of the corpus and that only 2 HIGH-severity passive findings remain after calibration; both were triaged as unconfirmed, so the paper treats them as suspicious governance mismatches rather than confirmed real-world vulnerabilities.
+Our evaluation on a benchmark of 4{,}010 samples across seven attack classes
+demonstrates that graph-based fusion reaches 100.0\% precision and recall with
+0.0\% false positive rate in the current synthetic run, while naive union
+reaches the same recall only by flagging every benign sample. Held-out-template,
+hard-negative, mutation, and label-blinding stress checks pass in the artifact
+and reduce obvious leakage concerns, but they remain synthetic. Ablation
+experiments confirm that runtime evidence is the single most critical
+component, with its removal reducing F1 by 63.9 percentage points. Passive
+measurement of 1{,}000 public MCP artifacts across GitHub, npm, PyPI,
+Hugging Face, Smithery, and the official MCP Registry shows that signatures
+remain absent for 80.0\% of the corpus and that only 2 of 1{,}000 artifacts
+trigger HIGH-severity passive findings, both of which manual triage classifies as
+insufficient evidence for confirmed vulnerabilities. Complementary bounded
+runtime and sandbox harnesses with 60 benign and 63 attack tasks confirm zero
+attack success rate and zero false block rate under safe local controls.
 
 The key contribution is not a larger detector stack, but a principled way to reason about cross-layer trust gaps in agent ecosystems through typed evidence, constraint-based evaluation, and explainable policy decisions.
 
