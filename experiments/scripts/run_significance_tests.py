@@ -102,6 +102,10 @@ def mcnemar_exact(truth: list[bool], a_pred: list[bool], b_pred: list[bool]) -> 
     n = a_only_correct + b_only_correct
     if n == 0:
         p_value = 1.0
+    elif min(a_only_correct, b_only_correct) == 0:
+        # All discordant pairs favor one method; use log to avoid overflow
+        log_p = math.log(2.0) - n * math.log(2.0)
+        p_value = max(0.0, min(1.0, math.exp(log_p)))
     else:
         tail = sum(math.comb(n, k) for k in range(0, min(a_only_correct, b_only_correct) + 1))
         p_value = min(1.0, 2.0 * tail / (2 ** n))
