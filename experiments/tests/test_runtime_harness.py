@@ -10,8 +10,21 @@ def test_runtime_harness_builds_required_task_volume():
     tasks = build_runtime_harness_tasks()
     benign = [task for task in tasks if not task.malicious]
     attacks = [task for task in tasks if task.malicious]
-    assert len(benign) >= 50
-    assert len(attacks) >= 50
+    assert len(benign) == 105
+    assert len(attacks) == 105
+    assert {task.scenario for task in benign} >= {
+        "local_read",
+        "local_export",
+        "trusted_sync",
+        "preference_save",
+        "data_export",
+        "web_scrape",
+        "file_sync",
+        "calendar_read",
+        "chat_respond",
+        "code_format",
+        "search_query",
+    }
     assert {task.scenario for task in attacks} >= {
         "capability_laundering",
         "cross_skill_confused_deputy",
@@ -20,6 +33,10 @@ def test_runtime_harness_builds_required_task_volume():
         "persistence_pivot",
         "split_exfiltration",
         "scope_inflation",
+        "obfuscated_exfil",
+        "credential_theft",
+        "config_poison",
+        "approval_bypass",
     }
 
 
