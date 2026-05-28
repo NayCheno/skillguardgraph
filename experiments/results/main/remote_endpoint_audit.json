@@ -1,0 +1,75 @@
+{
+  "cases_total": 4,
+  "cases_probed": 4,
+  "initialize_successes": 2,
+  "tools_list_successes": 2,
+  "protected_endpoints_observed": 2,
+  "acceptance": {
+    "all_cases_probed": true,
+    "initialize_success_ge_2": true,
+    "tools_list_success_ge_1": true,
+    "protected_endpoint_observed": true
+  },
+  "cases": [
+    {
+      "case_id": "public_tools_aarna",
+      "repo": "ai.aarna/atars-mcp",
+      "url": "https://mcp.aarna.ai/mcp",
+      "source": "official_registry_mcp",
+      "description": "Public official-registry endpoint expected to complete initialize plus tools/list over SSE.",
+      "expected_class": "public_tools",
+      "initialize_status": "initialize_success",
+      "initialized_notification_status": 202,
+      "tools_list_status": "tools_list_success",
+      "tool_count": 18,
+      "session_id_present": false,
+      "http_status": 200,
+      "notes": []
+    },
+    {
+      "case_id": "public_tools_agenticshelf",
+      "repo": "ai.agenticshelf/mcp",
+      "url": "https://api.agenticshelf.ai/mcp",
+      "source": "official_registry_mcp",
+      "description": "Public official-registry endpoint expected to complete initialize plus tools/list over JSON.",
+      "expected_class": "public_tools",
+      "initialize_status": "initialize_success",
+      "initialized_notification_status": 202,
+      "tools_list_status": "tools_list_success",
+      "tool_count": 5,
+      "session_id_present": false,
+      "http_status": 200,
+      "notes": []
+    },
+    {
+      "case_id": "protected_auth_inference",
+      "repo": "ac.inference.sh/mcp",
+      "url": "https://sh.inference.ac",
+      "source": "official_registry_mcp",
+      "description": "Public official-registry endpoint expected to require authentication before MCP use.",
+      "expected_class": "auth_required",
+      "initialize_status": "auth_required",
+      "initialized_notification_status": null,
+      "tools_list_status": null,
+      "tool_count": 0,
+      "session_id_present": false,
+      "http_status": 401,
+      "notes": []
+    },
+    {
+      "case_id": "protected_origin_tandem",
+      "repo": "ac.tandem/docs-mcp",
+      "url": "https://tandem.ac/mcp",
+      "source": "official_registry_mcp",
+      "description": "Public official-registry endpoint expected to reject unapproved Origin headers.",
+      "expected_class": "origin_protected",
+      "initialize_status": "origin_protected",
+      "initialized_notification_status": null,
+      "tools_list_status": null,
+      "tool_count": 0,
+      "session_id_present": false,
+      "http_status": 403,
+      "notes": []
+    }
+  ]
+}

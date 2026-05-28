@@ -38,6 +38,7 @@ Use this as the final gate before marking the active goal complete.
 - [x] Held-out-template, hard-negative, mutation-robustness, and label-leakage stress checks are generated.
 
 - [x] Public advisory cross-check output is generated.
+- [x] Public remote endpoint audit output is generated.
 ## Ecosystem and Ethics
 
 - [x] Synthetic ecosystem measurement exists.
@@ -66,6 +67,7 @@ Use this as the final gate before marking the active goal complete.
 - [x] Bounded corpus-derived third-party package sandbox acceptance checks pass.
 - [x] Tables regenerate.
 - [x] Public advisory cross-check runs against the checked-in main real corpus.
+- [x] Public remote endpoint audit completes against the checked-in remote corpus slice.
 - [x] Current completion audit can be generated on demand.
 - [x] Docker/Conda instructions are verified or limitations are recorded (Docker build/run passed; `conda` command is unavailable on this workstation).
 - [x] No secrets, credentials, real third-party payloads, or unsafe egress targets are present.

@@ -37,7 +37,7 @@ Concede these points quickly rather than resisting them:
 
 - no confirmed real vulnerabilities;
 - no arbitrary third-party sandbox execution beyond curated public-code fixtures;
-- no production agent-runtime deployment;
+- no authenticated or task-level production agent-runtime deployment;
 - limited source-available coverage in the real batches;
 - incomplete marketplace/private-catalog coverage.
 
@@ -57,7 +57,7 @@ Do not upgrade the paper's wording unless all corresponding evidence exists in t
 
 - confirmed or disclosure-backed real cases;
 - third-party dynamic sandbox execution beyond bounded source-available public-package cases;
-- production-like runtime integration;
+- authenticated or task-level production-like runtime integration;
 - private enterprise catalog coverage beyond today's public-source/public-registry slice;
 - stronger source-backed real-world validation.
 

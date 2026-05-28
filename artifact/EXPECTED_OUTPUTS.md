@@ -139,6 +139,23 @@ This sandbox executes bounded source-available third-party PyPI package cases dr
 
 ---
 
+### Public Remote Endpoint Audit
+
+**File:** `results/main/remote_endpoint_audit.json`
+**Format:** JSON
+**Produced by:** `python scripts/run_remote_endpoint_audit.py`
+
+| Metric | Value |
+|---|---:|
+| Endpoints probed | 4 |
+| Initialize successes | 2 |
+| Tools/list successes | 2 |
+| Protected endpoints observed | 2 |
+
+This audit probes a bounded set of public remote MCP endpoints selected from the checked-in official-registry slice. It confirms that some public deployments complete unauthenticated `initialize` + `tools/list`, while others enforce authentication or `Origin` protections. It is deployment-facing evidence, but it still does not constitute authenticated or task-level runtime evaluation.
+
+---
+
 ## 8. Latency Measurement
 
 **File:** `results/main/latency.json`  
@@ -249,8 +266,9 @@ This sandbox executes bounded source-available third-party PyPI package cases dr
 - `results/ecosystem/real_ecosystem_results.json`
 - `results/ecosystem/real_ecosystem_data_card.json`
 - `results/ecosystem/real_high_risk_triage.json`
+- `results/ecosystem/public_advisory_audit.json`
 
-**Produced by:** `python scripts/crawl_real_ecosystem.py --target 1000 --pages-per-query 3 --source-budget 100 --resume` (defaults to `github_mcp,npm_mcp,pypi_mcp,hf_spaces_mcp,smithery_mcp`)
+**Produced by:** `python scripts/crawl_real_ecosystem.py --target 1000 --pages-per-query 3 --source-budget 100 --resume` (defaults to `github_mcp,npm_mcp,pypi_mcp,hf_spaces_mcp,smithery_mcp,official_registry_mcp`)
 
 | Metric | Value |
 |---|---:|
@@ -271,7 +289,7 @@ This sandbox executes bounded source-available third-party PyPI package cases dr
 | Scope inflation | 31 (3.1%) |
 | Confirmed vulnerabilities | 0 |
 
-Additional cross-check: `results/ecosystem/public_advisory_audit.json` records known public MCP advisories matched against the checked-in 1,000-artifact corpus. The current snapshot tracks 2 official advisories, finds 1 corpus match (`@modelcontextprotocol/sdk`), and finds 0 currently vulnerable versions in the measured main batch.
+Additional cross-check: `results/ecosystem/public_advisory_audit.json` tracks 2 official advisories, finds 1 corpus match, and finds 0 currently vulnerable versions in the checked-in main batch.
 
 ---
 

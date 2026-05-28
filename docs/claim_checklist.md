@@ -16,6 +16,7 @@ This file is the paper-facing audit map for SkillGuardGraph's current claim boun
 | The artifact includes a bounded corpus-derived third-party package sandbox over source-available PyPI cases | `experiments/results/main/corpus_package_sandbox.json`, `experiments/src/skillguardgraph/corpus_package_sandbox.py`, `experiments/scripts/run_corpus_package_sandbox.py` | Supported |
 | Passive multi-source public measurement is implemented and documented, including supplementary 2k/3k/5k/10k batches | `experiments/results/ecosystem/real_ecosystem_results.json`, `experiments/results/ecosystem/real_ecosystem_large_results.json`, `experiments/results/ecosystem/real_ecosystem_xl_results.json`, `experiments/results/ecosystem/real_ecosystem_5k_results.json`, `experiments/results/ecosystem/real_ecosystem_10k_results.json`, `docs/ecosystem_measurement.md` | Supported |
 | The artifact includes a public-advisory cross-check over the main real public corpus | `experiments/results/ecosystem/public_advisory_audit.json`, `experiments/scripts/run_public_advisory_audit.py` | Supported |
+| The artifact includes a bounded public remote endpoint audit over official-registry deployments | `experiments/results/main/remote_endpoint_audit.json`, `experiments/scripts/run_remote_endpoint_audit.py` | Supported |
 
 ## Claims that must remain explicitly limited
 
@@ -23,7 +24,7 @@ This file is the paper-facing audit map for SkillGuardGraph's current claim boun
 |---|---|---|
 | Real-world exploit confirmation | Passive repo/package/space metadata + bounded source, plus advisory cross-checking for known public MCP cases | Do not claim newly confirmed vulnerabilities or exploit paths from this artifact alone |
 | Dynamic sandboxing | Local toy sandbox harness plus archive-backed curated third-party public-code fixtures and bounded source-available PyPI package cases only; no arbitrary third-party skill execution | Do not claim production sandbox coverage |
-| Production runtime deployment | Local toy runtime harness only | Do not claim deployed agent-runtime efficacy |
+| Production runtime deployment | Local toy runtime harness plus a bounded unauthenticated public remote endpoint audit | Do not claim authenticated or task-level deployed agent-runtime efficacy |
 | Ecosystem prevalence | 1k main batch including public hosted-registry and official-registry slices + 2k/3k/5k/10k supplementary catalog measurements | Frame as passive catalog evidence, not exhaustive market coverage |
 | PyPI coverage | Simple-index discovery only | Do not claim comprehensive PyPI measurement |
 
@@ -33,7 +34,7 @@ This file is the paper-facing audit map for SkillGuardGraph's current claim boun
 |---|---|
 | Confirmed real cases | Responsible disclosure-backed validations |
 | Third-party dynamic sandbox beyond bounded public-package cases | Isolated execution of non-toy external skills at arbitrary package / marketplace breadth |
-| Production-like runtime data | Real agent integration and overhead measurements |
+| Authenticated or task-level production runtime data | Real agent integration, authenticated remote workflows, and overhead measurements |
 | Private/enterprise marketplace coverage | Private enterprise or other non-public tool catalogs |
 
 ## Pre-submission checks

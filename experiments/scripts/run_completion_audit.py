@@ -39,6 +39,7 @@ RESULT_FILES = [
     RESULTS_MAIN / "sandbox_harness.json",
     RESULTS_MAIN / "third_party_sandbox.json",
     RESULTS_MAIN / "corpus_package_sandbox.json",
+    RESULTS_MAIN / "remote_endpoint_audit.json",
     RESULTS_MAIN / "latency.json",
     RESULTS_MAIN / "bootstrap_ci.json",
     RESULTS_MAIN / "generalization_eval.json",
@@ -84,6 +85,7 @@ def main() -> None:
     corpus_package_sandbox = read_json(RESULTS_MAIN / "corpus_package_sandbox.json")
     generalization = read_json(RESULTS_MAIN / "generalization_eval.json")
     public_advisory = read_json(RESULTS_ECO / "public_advisory_audit.json")
+    remote_endpoint_audit = read_json(RESULTS_MAIN / "remote_endpoint_audit.json")
 
     supported = {
         "docs_present": all(docs_present.values()),
@@ -96,6 +98,7 @@ def main() -> None:
         "corpus_package_acceptance": all(corpus_package_sandbox["acceptance"].values()),
         "public_advisory_audit_present": int(public_advisory.get("advisories_total", 0)) >= 1,
         "public_corpus_reaches_5k": int(batch_5k.get("total_samples", 0)) >= 5000,
+        "remote_endpoint_audit_acceptance": all(remote_endpoint_audit["acceptance"].values()),
         "public_corpus_reaches_10k": int(batch_10k.get("total_samples", 0)) >= 10000,
     }
 
@@ -111,7 +114,7 @@ def main() -> None:
         "strong_submission_blockers": [
             "No currently vulnerable or disclosure-backed real cases in the measured snapshot.",
             "No arbitrary third-party dynamic sandbox execution beyond bounded source-available PyPI cases.",
-            "No production-like runtime deployment evidence.",
+            "No authenticated or task-executing production runtime deployment evidence.",
             "No private enterprise catalog coverage.",
         ],
     }
@@ -129,6 +132,12 @@ def main() -> None:
             "advisories_total": public_advisory.get("advisories_total", 0),
             "advisories_present_in_corpus": public_advisory.get("advisories_present_in_corpus", 0),
             "currently_vulnerable_matches": public_advisory.get("currently_vulnerable_matches", 0),
+        },
+        "remote_endpoint_summary": {
+            "cases_probed": remote_endpoint_audit.get("cases_probed", 0),
+            "initialize_successes": remote_endpoint_audit.get("initialize_successes", 0),
+            "tools_list_successes": remote_endpoint_audit.get("tools_list_successes", 0),
+            "protected_endpoints_observed": remote_endpoint_audit.get("protected_endpoints_observed", 0),
         },
     }
 
@@ -149,6 +158,7 @@ def main() -> None:
         f"- main batch: {main_eco.get('total_samples', 0)} artifacts, source_available={main_eco.get('code_availability', {}).get('source_available', 0)}",
         f"- advisory-backed cases in corpus: {public_advisory.get('advisories_present_in_corpus', 0)} (currently vulnerable={public_advisory.get('currently_vulnerable_matches', 0)})",
         f"- corpus-derived package sandbox: {corpus_package_sandbox.get('cases_executed', 0)} cases, archive_resolved={corpus_package_sandbox.get('archive_cases_resolved', 0)}",
+        f"- public remote endpoint audit: {remote_endpoint_audit.get('cases_probed', 0)} probed, initialize_successes={remote_endpoint_audit.get('initialize_successes', 0)}, tools_list_successes={remote_endpoint_audit.get('tools_list_successes', 0)}",
         f"- 5k batch: {batch_5k.get('total_samples', 0)} artifacts",
         f"- 10k batch: {batch_10k.get('total_samples', 0)} artifacts, source_available={batch_10k.get('code_availability', {}).get('source_available', 0)}",
         f"- confirmed real vulnerabilities: {triage['summary'].get('confirmed_vulnerabilities', 0)}",

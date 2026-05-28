@@ -13,17 +13,17 @@ The real measurement does **not** execute third-party code, perform destructive 
 
 ### 2.1 Collection protocol
 
- - Sources: GitHub public repositories returned by MCP-related search queries, npm packages returned by MCP-related registry search terms, discovered PyPI MCP packages, Hugging Face Spaces returned by MCP-oriented space search terms, hosted Smithery registry entries returned by MCP-oriented registry search terms, and official MCP Registry entries returned by the registry list API.
+- Sources: GitHub public repositories returned by MCP-related search queries, npm packages returned by MCP-related registry search terms, discovered PyPI MCP packages, Hugging Face Spaces returned by MCP-oriented space search terms, hosted Smithery registry entries returned by MCP-oriented registry search terms, and official MCP Registry entries returned by the registry list API.
 - Collector: `experiments/scripts/crawl_real_ecosystem.py`.
 - Output files:
   - `experiments/results/ecosystem/real_ecosystem_samples.jsonl`
   - `experiments/results/ecosystem/real_ecosystem_results.json`
   - `experiments/results/ecosystem/real_ecosystem_data_card.json`
   - `experiments/results/ecosystem/real_high_risk_triage.json`
- - Dedup rule: source-specific artifact identifier (`full_name` for GitHub, package name for npm/PyPI, space id for Hugging Face, `qualifiedName` for Smithery, and server `name` for the official MCP Registry), with `linked_repository` recorded when an upstream package points to GitHub.
- - Version provenance: GitHub `default_branch` plus `created_at`/`updated_at`/`pushed_at`; npm/PyPI latest package version plus publication/update timestamps; Hugging Face `sha` plus `createdAt`/`lastModified` when exposed; Smithery `createdAt` plus hosted deployment metadata when exposed; official MCP Registry `publishedAt`/`updatedAt` plus server version when exposed.
+- Dedup rule: source-specific artifact identifier (`full_name` for GitHub, package name for npm/PyPI, space id for Hugging Face, `qualifiedName` for Smithery, and server `name` for the official MCP Registry), with `linked_repository` recorded when an upstream package points to GitHub.
+- Version provenance: GitHub `default_branch` plus `created_at`/`updated_at`/`pushed_at`; npm/PyPI latest package version plus publication/update timestamps; Hugging Face `sha` plus `createdAt`/`lastModified` when exposed; Smithery `createdAt` plus hosted deployment metadata when exposed; official MCP Registry `publishedAt`/`updatedAt` plus server version when exposed.
 - License provenance: SPDX identifier when an upstream API provides one; otherwise `unknown`.
- - Source coverage: fetch a bounded set of likely Python/TypeScript/JavaScript entrypoints using explicit candidates, GitHub contents listings, package.json-derived entrypoints, and Hugging Face `app_file`/`sibling` metadata when available; hosted Smithery entries and official MCP Registry entries remain metadata-only because the collector does not execute or decompile remote services.
+- Source coverage: fetch a bounded set of likely Python/TypeScript/JavaScript entrypoints using explicit candidates, GitHub contents listings, package.json-derived entrypoints, and Hugging Face `app_file`/`sibling` metadata when available; hosted Smithery entries and official MCP Registry entries remain metadata-only because the collector does not execute or decompile remote services.
 
 ### 2.2 Dataset statistics
 
@@ -151,6 +151,7 @@ Current synthetic summary from `experiments/results/ecosystem/risk_patterns.json
 | Untrusted publisher | 910 (75.8%) |
 
 The paper should treat these synthetic results as stress-test evidence, not as real-world prevalence estimates.
+
 ## 5. Limitations
 
 1. **Query and registry bias.** The real corpus now spans GitHub, npm, broad PyPI simple-index discovery, Hugging Face Spaces, Smithery's public hosted registry, and the official MCP Registry, but it still excludes private enterprise catalogs.
