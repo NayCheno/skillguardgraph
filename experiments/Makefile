@@ -1,4 +1,4 @@
-.PHONY: demo test smoke eval-main eval-all tables validate benchmark ecosystem triage reproduce clean scan trace latency real-ecosystem real-ecosystem-large real-ecosystem-xl real-ecosystem-5k real-ecosystem-10k significance generalization runtime-harness sandbox-harness third-party-sandbox corpus-package-sandbox advisory-audit remote-endpoint-audit github-repo-sandbox remote-task-audit typescript-repo-sandbox completion-audit
+.PHONY: demo test smoke eval-main eval-all tables validate benchmark benchmark-v1 ecosystem triage reproduce reproduce-main reproduce-appendix audit label-blind-audit real-corpus-card manual-triage-summary clean scan trace latency real-ecosystem real-ecosystem-large real-ecosystem-xl real-ecosystem-5k real-ecosystem-10k significance generalization runtime-harness sandbox-harness third-party-sandbox corpus-package-sandbox advisory-audit remote-endpoint-audit github-repo-sandbox remote-task-audit typescript-repo-sandbox completion-audit ablation-v1 detector-eval-both
 
 # Cross-platform PYTHONPATH setup
 ifeq ($(OS),Windows_NT)
@@ -36,6 +36,7 @@ eval-main:
 	$(PYTHONPATH_OPT) python scripts/run_bootstrap_ci.py
 	$(PYTHONPATH_OPT) python scripts/run_typescript_repo_sandbox.py
 	$(PYTHONPATH_OPT) python scripts/run_generalization_eval.py
+	$(PYTHONPATH_OPT) python scripts/run_significance_tests.py
 
 tables:
 	$(PYTHONPATH_OPT) python scripts/run_failure_analysis.py
@@ -102,9 +103,32 @@ latency:
 completion-audit:
 	$(PYTHONPATH_OPT) python scripts/run_completion_audit.py
 
-eval-all: benchmark validate eval-main tables ecosystem triage real-ecosystem
+benchmark-v1:
+	$(PYTHONPATH_OPT) python scripts/build_benchmark_v1.py
 
-reproduce: benchmark validate eval-main tables
+label-blind-audit:
+	$(PYTHONPATH_OPT) python scripts/run_label_blind_audit.py
+
+ablation-v1:
+	$(PYTHONPATH_OPT) python scripts/run_ablation.py --benchmark v1
+
+detector-eval-both:
+	$(PYTHONPATH_OPT) python scripts/run_detector_eval.py --benchmark both
+
+reproduce-main: benchmark validate eval-main tables
+	$(PYTHONPATH_OPT) python scripts/build_benchmark_v1.py
+	$(PYTHONPATH_OPT) python scripts/run_label_blind_audit.py
+	$(PYTHONPATH_OPT) python scripts/run_ablation.py --benchmark v1
+	$(PYTHONPATH_OPT) python scripts/run_detector_eval.py --benchmark both
+	$(PYTHONPATH_OPT) python scripts/run_failure_analysis.py
+	$(PYTHONPATH_OPT) python scripts/make_tables.py
+
+reproduce-appendix: ecosystem triage real-ecosystem
+
+audit: reproduce-main
+	$(PYTHONPATH_OPT) python scripts/run_completion_audit.py
+
+eval-all: benchmark validate eval-main tables ecosystem triage real-ecosystem benchmark-v1 label-blind-audit ablation-v1 detector-eval-both
 
 clean:
 ifeq ($(OS),Windows_NT)
