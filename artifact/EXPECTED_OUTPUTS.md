@@ -341,7 +341,7 @@ This audit executes bounded source-available TypeScript/JavaScript repo entrypoi
 | Scope inflation | 31 (3.1%) |
 | Confirmed vulnerabilities | 0 |
 
-Additional cross-check: `results/ecosystem/public_advisory_audit.json` tracks 2 official advisories, finds 1 corpus match, and finds 0 currently vulnerable versions in the checked-in main batch.
+Additional cross-check: `results/ecosystem/public_advisory_audit.json` tracks 5 official advisories, finds 4 corpus matches, and finds 0 currently vulnerable versions in the checked-in main batch.
 
 ---
 

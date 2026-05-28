@@ -121,7 +121,7 @@ def main() -> None:
         "tenk_batch_source_available": int(batch_10k.get("code_availability", {}).get("source_available", 0)),
         "tenk_batch_total": int(batch_10k.get("total_samples", 0)),
         "strong_submission_blockers": [
-            "No currently vulnerable or disclosure-backed real cases in the measured snapshot.",
+            "No disclosure-backed or independently validated real case studies from the measured snapshot.",
             "No arbitrary third-party dynamic sandbox execution beyond bounded source-available public-package and GitHub repo/TypeScript cases.",
             "No authenticated production runtime deployment evidence.",
             "No private enterprise catalog coverage.",

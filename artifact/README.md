@@ -196,7 +196,7 @@ A supplementary large-batch command is also available: `make real-ecosystem-larg
 | Third-party fixture sandbox | 3 fixtures, 3 archive resolutions, 1 blocked subprocess, 0 unsafe egress |
 | Corpus-derived package sandbox | 3 PyPI cases, 3 archive resolutions, 2 client tool calls, 1 blocked subprocess, 0 unsafe egress |
 | Unit tests | 120 (all pass) |
-| Public advisory audit | 2 advisories tracked, 1 corpus match, 0 currently vulnerable matches |
+| Public advisory audit | 5 advisories tracked, 4 corpus matches, 0 currently vulnerable matches |
 | Public remote endpoint audit | 4 endpoints, 2 initialize+tools/list successes, 2 protected rejections |
 | GitHub repo sandbox | 2 GitHub cases, tool registry total 18, blender delegate observed |
 | TypeScript repo sandbox | 2 TypeScript cases, tool registry total 4, CLI delegate observed |

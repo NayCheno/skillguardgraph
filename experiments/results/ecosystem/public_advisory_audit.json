@@ -1,8 +1,8 @@
 {
-  "advisories_total": 2,
-  "advisories_present_in_corpus": 1,
+  "advisories_total": 5,
+  "advisories_present_in_corpus": 4,
   "currently_vulnerable_matches": 0,
-  "patched_or_unaffected_matches": 1,
+  "patched_or_unaffected_matches": 4,
   "cases": [
     {
       "advisory_id": "GHSA-345p-7cg4-v4c7",
@@ -51,6 +51,93 @@
       ],
       "status": "not_in_corpus",
       "matches": []
+    },
+    {
+      "advisory_id": "GHSA-q66q-fx2p-7w4m",
+      "cve_id": "CVE-2025-53109",
+      "ecosystem": "npm",
+      "package_name": "@modelcontextprotocol/server-filesystem",
+      "repository_url": "https://github.com/modelcontextprotocol/servers",
+      "summary": "@modelcontextprotocol/server-filesystem allows path validation bypass via prefix matching and symlink handling.",
+      "severity": "high",
+      "published_at": "2025-07-01",
+      "affected_gte": "2025.1.14",
+      "affected_lt": "2025.7.1",
+      "fixed_version": "2025.7.1",
+      "source_urls": [
+        "https://github.com/advisories/GHSA-q66q-fx2p-7w4m",
+        "https://nvd.nist.gov/vuln/detail/CVE-2025-53109"
+      ],
+      "status": "present_patched",
+      "matches": [
+        {
+          "repo": "@modelcontextprotocol/server-filesystem",
+          "url": "https://www.npmjs.com/package/@modelcontextprotocol/server-filesystem",
+          "source": "npm_mcp",
+          "package_version": "2026.1.14",
+          "linked_repository": "https://github.com/modelcontextprotocol/servers",
+          "policy_risk": "low",
+          "code_availability": "manifest_only"
+        }
+      ]
+    },
+    {
+      "advisory_id": "GHSA-j975-95f5-7wqh",
+      "cve_id": "CVE-2025-53365",
+      "ecosystem": "pip",
+      "package_name": "mcp",
+      "repository_url": "https://github.com/modelcontextprotocol/python-sdk",
+      "summary": "MCP Python SDK streamable HTTP transport can crash on uncaught ClosedResourceError.",
+      "severity": "high",
+      "published_at": "2025-07-04",
+      "affected_gte": null,
+      "affected_lt": "1.10.0",
+      "fixed_version": "1.10.0",
+      "source_urls": [
+        "https://github.com/advisories/GHSA-j975-95f5-7wqh",
+        "https://nvd.nist.gov/vuln/detail/CVE-2025-53365"
+      ],
+      "status": "present_patched",
+      "matches": [
+        {
+          "repo": "mcp",
+          "url": "https://pypi.org/project/mcp/",
+          "source": "pypi_mcp",
+          "package_version": "1.27.1",
+          "linked_repository": "https://github.com/modelcontextprotocol/python-sdk",
+          "policy_risk": "low",
+          "code_availability": "manifest_only"
+        }
+      ]
+    },
+    {
+      "advisory_id": "GHSA-rww4-4w9c-7733",
+      "cve_id": "CVE-2026-27124",
+      "ecosystem": "pip",
+      "package_name": "fastmcp",
+      "repository_url": "https://github.com/PrefectHQ/fastmcp",
+      "summary": "FastMCP OAuth proxy callback misses consent verification, enabling confused deputy flows.",
+      "severity": "high",
+      "published_at": "2026-03-31",
+      "affected_gte": null,
+      "affected_lt": "3.2.0",
+      "fixed_version": "3.2.0",
+      "source_urls": [
+        "https://github.com/advisories/GHSA-rww4-4w9c-7733",
+        "https://nvd.nist.gov/vuln/detail/CVE-2026-27124"
+      ],
+      "status": "present_patched",
+      "matches": [
+        {
+          "repo": "fastmcp",
+          "url": "https://pypi.org/project/fastmcp/",
+          "source": "pypi_mcp",
+          "package_version": "3.3.1",
+          "linked_repository": "https://github.com/PrefectHQ/fastmcp",
+          "policy_risk": "low",
+          "code_availability": "manifest_only"
+        }
+      ]
     }
   ],
   "notes": [
