@@ -5,10 +5,11 @@ Reads samples.jsonl, runs each baseline detector and the full fusion pipeline,
 then computes per-method TP/FP/TN/FN, Precision, Recall, F1, FPR,
 AUROC/AUPRC, FPR at target recalls, and per-attack-class recall for the full fusion.
 
-Output: experiments/results/main/detector_eval.json
+Output: experiments/results/main/detector_eval*.json (varies by --benchmark)
 """
 from __future__ import annotations
 
+import argparse
 import json
 import sys
 from collections import defaultdict
@@ -18,8 +19,15 @@ from pathlib import Path
 # Paths
 # ---------------------------------------------------------------------------
 ROOT = Path(__file__).resolve().parent.parent  # experiments/
-DATA_PATH = ROOT / "data" / "benchmark_v0" / "samples.jsonl"
-OUT_PATH = ROOT / "results" / "main" / "detector_eval.json"
+DATA_PATHS = {
+    "v0": ROOT / "data" / "benchmark_v0" / "samples.jsonl",
+    "v1": ROOT / "data" / "benchmark_v1" / "samples.jsonl",
+}
+OUT_PATHS = {
+    "v0": ROOT / "results" / "main" / "detector_eval.json",
+    "v1": ROOT / "results" / "main" / "detector_eval_v1.json",
+    "both": ROOT / "results" / "main" / "detector_eval_both.json",
+}
 
 # ---------------------------------------------------------------------------
 # Imports from skillguardgraph
@@ -169,39 +177,40 @@ def compute_score_metrics(labels: list[bool], scores: list[float]) -> dict:
     }
 
 
-# ---------------------------------------------------------------------------
-# Main
-# ---------------------------------------------------------------------------
 
-def main() -> None:
-    print(f"Loading samples from {DATA_PATH} ...")
-    samples = load_samples(DATA_PATH)
+def parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(
+        "--benchmark",
+        choices=("v0", "v1", "both"),
+        default="v0",
+        help="Benchmark split to evaluate.",
+    )
+    return parser.parse_args()
+
+
+def evaluate_benchmark(benchmark_name: str, data_path: Path) -> dict:
+    print(f"Loading {benchmark_name} samples from {data_path} ...")
+    samples = load_samples(data_path)
     total = len(samples)
     print(f"  {total} samples loaded.")
 
     # Pre-collect evidence and pre-compute reports per method
-    # Method names: all baselines + "fusion"
     method_names = list(BASELINES.keys()) + ["fusion"]
 
-    # Per-method confusion counts
-    # Continuous scores for AUROC/AUPRC and threshold sweep
     score_labels: list[bool] = []
     method_scores: dict[str, list[float]] = {m: [] for m in method_names}
     confusion: dict[str, dict[str, int]] = {
         m: {"TP": 0, "FP": 0, "TN": 0, "FN": 0} for m in method_names
     }
 
-    # Per-attack-class recall for fusion
     attack_classes: set[str] = set()
     fusion_class_tp: dict[str, int] = defaultdict(int)
     fusion_class_fn: dict[str, int] = defaultdict(int)
 
-    # Per-method per-sample decisions (for debugging)
-    per_sample: list[dict] = []
-
     for i, sample in enumerate(samples):
         if (i + 1) % 100 == 0:
-            print(f"  Processing sample {i + 1}/{total} ...")
+            print(f"  [{benchmark_name}] Processing sample {i + 1}/{total} ...")
 
         label = sample.get("label", "benign")
         mal = is_malicious(label)
@@ -209,14 +218,9 @@ def main() -> None:
         if mal:
             attack_classes.add(attack_class)
 
-        # Collect evidence once
         evidence = collect_evidence(sample)
 
-        sample_result: dict = {"case_id": sample.get("case_id"), "label": label}
-
-        # Run baselines on the shared evidence list
         baseline_reports = run_all_baselines(evidence)
-
         for bname, breport in baseline_reports.items():
             pred_mal = predicted_malicious(breport)
             if mal and pred_mal:
@@ -227,19 +231,14 @@ def main() -> None:
                 confusion[bname]["FP"] += 1
             else:
                 confusion[bname]["TN"] += 1
-            sample_result[bname] = pred_mal
             method_scores[bname].append(float(breport.score))
 
-        # Full fusion (uses individual sources, not pre-collected evidence)
         manifest = sample.get("manifest")
         source_code = sample.get("source_code")
         trace = sample.get("runtime_trace")
         skill_name = "unknown_skill"
         if manifest is not None:
             skill_name = str(manifest.get("name") or manifest.get("id") or "unknown_skill")
-        sandbox_obs = None
-        if manifest is not None:
-            sandbox_obs = probe_skill(skill_name, manifest, source_code)
 
         fusion_report = fuse_and_evaluate(
             manifest=manifest or {},
@@ -257,31 +256,26 @@ def main() -> None:
             confusion["fusion"]["FP"] += 1
         else:
             confusion["fusion"]["TN"] += 1
-        sample_result["fusion"] = pred_mal
 
         score_labels.append(mal)
-        # Per-attack-class recall for fusion
         if mal:
             if pred_mal:
                 fusion_class_tp[attack_class] += 1
             else:
                 fusion_class_fn[attack_class] += 1
 
-        per_sample.append(sample_result)
 
-    # Build results
     methods: dict[str, dict] = {}
-    for m in method_names:
-        c = confusion[m]
-        methods[m] = compute_metrics(c["TP"], c["FP"], c["TN"], c["FN"])
+    for method_name in method_names:
+        counts = confusion[method_name]
+        methods[method_name] = compute_metrics(counts["TP"], counts["FP"], counts["TN"], counts["FN"])
 
-    # Per-attack-class recall for fusion
     per_class_recall: dict[str, dict] = {}
-    for ac in sorted(attack_classes):
-        tp_c = fusion_class_tp[ac]
-        fn_c = fusion_class_fn[ac]
+    for attack_class in sorted(attack_classes):
+        tp_c = fusion_class_tp[attack_class]
+        fn_c = fusion_class_fn[attack_class]
         total_c = tp_c + fn_c
-        per_class_recall[ac] = {
+        per_class_recall[attack_class] = {
             "TP": tp_c,
             "FN": fn_c,
             "total": total_c,
@@ -289,27 +283,52 @@ def main() -> None:
         }
 
     result = {
+        "benchmark": benchmark_name,
+        "data_path": str(data_path.relative_to(ROOT)),
         "total_samples": total,
         "methods": methods,
         "score_metrics": {
-            m: compute_score_metrics(score_labels, method_scores[m])
-            for m in method_names
+            method_name: compute_score_metrics(score_labels, method_scores[method_name])
+            for method_name in method_names
         },
         "per_attack_class_recall": per_class_recall,
     }
 
-    OUT_PATH.parent.mkdir(parents=True, exist_ok=True)
-    with OUT_PATH.open("w", encoding="utf-8") as fh:
+    print(f"\n[{benchmark_name}] Total samples: {total}")
+    print(f"[{benchmark_name}] Fusion F1:  {methods['fusion']['f1']}")
+    print(f"[{benchmark_name}] Naive Union F1: {methods['naive_union']['f1']}")
+    print(f"[{benchmark_name}] Fusion FPR: {methods['fusion']['fpr']}")
+    print(f"[{benchmark_name}] Naive Union FPR: {methods['naive_union']['fpr']}")
+    fpr_reduction = methods['naive_union']['fpr'] - methods['fusion']['fpr']
+    print(f"[{benchmark_name}] FPR reduction (naive_union - fusion): {round(fpr_reduction, 4)}")
+    return result
+
+
+# ---------------------------------------------------------------------------
+# Main
+# ---------------------------------------------------------------------------
+
+def main() -> None:
+    args = parse_args()
+    benchmark_names = ["v0", "v1"] if args.benchmark == "both" else [args.benchmark]
+
+    if args.benchmark == "both":
+        result = {
+            "benchmarks": {
+                benchmark_name: evaluate_benchmark(benchmark_name, DATA_PATHS[benchmark_name])
+                for benchmark_name in benchmark_names
+            }
+        }
+    else:
+        benchmark_name = benchmark_names[0]
+        result = evaluate_benchmark(benchmark_name, DATA_PATHS[benchmark_name])
+
+    out_path = OUT_PATHS[args.benchmark]
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+    with out_path.open("w", encoding="utf-8") as fh:
         json.dump(result, fh, indent=2, ensure_ascii=False)
 
-    print(f"\nResults written to {OUT_PATH}")
-    print(f"\nTotal samples: {total}")
-    print(f"Fusion F1:  {methods['fusion']['f1']}")
-    print(f"Naive Union F1: {methods['naive_union']['f1']}")
-    print(f"Fusion FPR: {methods['fusion']['fpr']}")
-    print(f"Naive Union FPR: {methods['naive_union']['fpr']}")
-    fpr_reduction = methods['naive_union']['fpr'] - methods['fusion']['fpr']
-    print(f"FPR reduction (naive_union - fusion): {round(fpr_reduction, 4)}")
+    print(f"\nResults written to {out_path}")
 
 
 if __name__ == "__main__":

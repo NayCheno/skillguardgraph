@@ -1,4 +1,6 @@
 {
+  "benchmark": "v0",
+  "data_path": "data\\benchmark_v0\\samples.jsonl",
   "total_samples": 4010,
   "methods": {
     "metadata_only": {
@@ -70,6 +72,46 @@
       "recall": 1.0,
       "f1": 0.8575,
       "fpr": 1.0
+    },
+    "trustdesc_style": {
+      "TP": 689,
+      "FP": 132,
+      "TN": 868,
+      "FN": 2321,
+      "precision": 0.8392,
+      "recall": 0.2289,
+      "f1": 0.3597,
+      "fpr": 0.132
+    },
+    "sast_style": {
+      "TP": 243,
+      "FP": 0,
+      "TN": 1000,
+      "FN": 2767,
+      "precision": 1.0,
+      "recall": 0.0807,
+      "f1": 0.1494,
+      "fpr": 0.0
+    },
+    "taint_dataflow": {
+      "TP": 1288,
+      "FP": 0,
+      "TN": 1000,
+      "FN": 1722,
+      "precision": 1.0,
+      "recall": 0.4279,
+      "f1": 0.5993,
+      "fpr": 0.0
+    },
+    "mcpshield_style": {
+      "TP": 159,
+      "FP": 0,
+      "TN": 1000,
+      "FN": 2851,
+      "precision": 1.0,
+      "recall": 0.0528,
+      "f1": 0.1003,
+      "fpr": 0.0
     },
     "fusion": {
       "TP": 3010,
@@ -325,6 +367,171 @@
         },
         {
           "threshold": 7.0,
+          "precision": 0.7506,
+          "recall": 1.0,
+          "f1": 0.8575,
+          "fpr": 1.0,
+          "TP": 3010,
+          "FP": 1000,
+          "TN": 0,
+          "FN": 0
+        }
+      ]
+    },
+    "trustdesc_style": {
+      "auroc": 0.5484,
+      "auprc": 0.8234,
+      "fpr_at_recall": {
+        "85": 1.0,
+        "90": 1.0,
+        "95": 1.0
+      },
+      "threshold_sweep": [
+        {
+          "threshold": 7.0,
+          "precision": 0.8392,
+          "recall": 0.2289,
+          "f1": 0.3597,
+          "fpr": 0.132,
+          "TP": 689,
+          "FP": 132,
+          "TN": 868,
+          "FN": 2321
+        },
+        {
+          "threshold": 0.0,
+          "precision": 0.7506,
+          "recall": 1.0,
+          "f1": 0.8575,
+          "fpr": 1.0,
+          "TP": 3010,
+          "FP": 1000,
+          "TN": 0,
+          "FN": 0
+        }
+      ]
+    },
+    "sast_style": {
+      "auroc": 0.8074,
+      "auprc": 0.94,
+      "fpr_at_recall": {
+        "85": 1.0,
+        "90": 1.0,
+        "95": 1.0
+      },
+      "threshold_sweep": [
+        {
+          "threshold": 7.0,
+          "precision": 1.0,
+          "recall": 0.0807,
+          "f1": 0.1494,
+          "fpr": 0.0,
+          "TP": 243,
+          "FP": 0,
+          "TN": 1000,
+          "FN": 2767
+        },
+        {
+          "threshold": 3.0,
+          "precision": 0.9309,
+          "recall": 0.7738,
+          "f1": 0.8451,
+          "fpr": 0.173,
+          "TP": 2329,
+          "FP": 173,
+          "TN": 827,
+          "FN": 681
+        },
+        {
+          "threshold": 0.0,
+          "precision": 0.7506,
+          "recall": 1.0,
+          "f1": 0.8575,
+          "fpr": 1.0,
+          "TP": 3010,
+          "FP": 1000,
+          "TN": 0,
+          "FN": 0
+        }
+      ]
+    },
+    "taint_dataflow": {
+      "auroc": 0.7139,
+      "auprc": 0.9287,
+      "fpr_at_recall": {
+        "85": 1.0,
+        "90": 1.0,
+        "95": 1.0
+      },
+      "threshold_sweep": [
+        {
+          "threshold": 10.0,
+          "precision": 1.0,
+          "recall": 0.0807,
+          "f1": 0.1494,
+          "fpr": 0.0,
+          "TP": 243,
+          "FP": 0,
+          "TN": 1000,
+          "FN": 2767
+        },
+        {
+          "threshold": 7.0,
+          "precision": 1.0,
+          "recall": 0.4279,
+          "f1": 0.5993,
+          "fpr": 0.0,
+          "TP": 1288,
+          "FP": 0,
+          "TN": 1000,
+          "FN": 1722
+        },
+        {
+          "threshold": 0.0,
+          "precision": 0.7506,
+          "recall": 1.0,
+          "f1": 0.8575,
+          "fpr": 1.0,
+          "TP": 3010,
+          "FP": 1000,
+          "TN": 0,
+          "FN": 0
+        }
+      ]
+    },
+    "mcpshield_style": {
+      "auroc": 0.5839,
+      "auprc": 0.8962,
+      "fpr_at_recall": {
+        "85": 1.0,
+        "90": 1.0,
+        "95": 1.0
+      },
+      "threshold_sweep": [
+        {
+          "threshold": 7.0,
+          "precision": 1.0,
+          "recall": 0.0528,
+          "f1": 0.1003,
+          "fpr": 0.0,
+          "TP": 159,
+          "FP": 0,
+          "TN": 1000,
+          "FN": 2851
+        },
+        {
+          "threshold": 3.0,
+          "precision": 1.0,
+          "recall": 0.1678,
+          "f1": 0.2873,
+          "fpr": 0.0,
+          "TP": 505,
+          "FP": 0,
+          "TN": 1000,
+          "FN": 2505
+        },
+        {
+          "threshold": 0.0,
           "precision": 0.7506,
           "recall": 1.0,
           "f1": 0.8575,
