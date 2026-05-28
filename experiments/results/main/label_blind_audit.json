@@ -1,0 +1,26 @@
+{
+  "samples_path": "D:\\Code\\research\\skillguardgraph\\experiments\\data\\benchmark_v1\\samples.jsonl",
+  "total_samples": 1400,
+  "decision_changes": 0,
+  "decision_change_rate": 0.0,
+  "risk_changes": 0,
+  "score_changes": 0,
+  "evidence_changes": 0,
+  "graph_issue_changes": 0,
+  "label_fields_removed": [
+    "attack_class",
+    "benign_pair",
+    "case_id",
+    "expected_evidence",
+    "generator_name",
+    "hard_negative_class",
+    "label",
+    "lifecycle_stages",
+    "success_validator",
+    "template_id"
+  ],
+  "acceptance": {
+    "decision_change_rate_is_zero": true
+  },
+  "changed_cases": []
+}
