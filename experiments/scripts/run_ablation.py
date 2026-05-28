@@ -73,7 +73,9 @@ def load_samples(path: Path) -> list[dict]:
 SEQUENCE_CONSTRAINTS = {"C2", "C3", "C6"}
 ALL_CONSTRAINTS = {"C1", "C2", "C3", "C4", "C5", "C6", "C7"}
 
-
+VERSION_CONSTRAINTS = {"C4"}
+APPROVAL_CONSTRAINTS = {"C5"}
+PERMISSION_CONSTRAINTS = {"C7"}
 def _constraint_id(finding: Finding) -> str:
     """Extract C1..C7 identifier from a finding's constraint string."""
     c = finding.constraint.upper()
@@ -270,8 +272,17 @@ def run_ablation(
     if ablation == "full":
         return fuse_from_evidence_list(evidence)
 
-    # no_sequence: filter out C2, C3, C6 findings and consistency bonuses.
-    exclude = SEQUENCE_CONSTRAINTS if ablation == "no_sequence" else None
+    # Constraint-filtered ablations
+    exclude = None
+    if ablation == "no_sequence":
+        exclude = SEQUENCE_CONSTRAINTS
+    elif ablation == "no_version":
+        exclude = VERSION_CONSTRAINTS
+    elif ablation == "no_approval":
+        exclude = APPROVAL_CONSTRAINTS
+    elif ablation == "no_permission":
+        exclude = PERMISSION_CONSTRAINTS
+
     return fuse_with_filter(evidence, exclude_constraints=exclude)
 
 
@@ -279,26 +290,28 @@ def run_ablation(
 # Main
 # ---------------------------------------------------------------------------
 
-def main() -> None:
-    print(f"Loading samples from {DATA_PATH} ...")
-    samples = load_samples(DATA_PATH)
+V1_DATA_PATH = ROOT / "data" / "benchmark_v1" / "samples.jsonl"
+V1_OUT_PATH = ROOT / "results" / "main" / "ablation_v1.json"
+
+
+ALL_ABLATION_NAMES = [
+    "full", "no_metadata", "no_static", "no_sandbox", "no_runtime",
+    "no_sequence", "no_version", "no_approval", "no_permission",
+]
+
+
+def _run_ablation_suite(samples: list[dict], ablation_names: list[str]) -> dict:
+    """Run all ablations on a sample list and return result dict."""
     total = len(samples)
-    print(f"  {total} samples loaded.")
-
-    ablation_names = ["full", "no_metadata", "no_static", "no_sandbox", "no_runtime", "no_sequence"]
-
-    # Per-ablation confusion counts
     confusion: dict[str, dict[str, int]] = {
         a: {"TP": 0, "FP": 0, "TN": 0, "FN": 0} for a in ablation_names
     }
-
-    # Per-ablation per-attack-class recall
     attack_classes: set[str] = set()
     class_tp: dict[str, dict[str, int]] = {a: defaultdict(int) for a in ablation_names}
     class_fn: dict[str, dict[str, int]] = {a: defaultdict(int) for a in ablation_names}
 
     for i, sample in enumerate(samples):
-        if (i + 1) % 100 == 0:
+        if (i + 1) % 200 == 0:
             print(f"  Processing sample {i + 1}/{total} ...")
 
         label = sample.get("label", "benign")
@@ -326,7 +339,6 @@ def main() -> None:
                 else:
                     class_fn[ablation][attack_class] += 1
 
-    # Build results
     def metrics(tp: int, fp: int, tn: int, fn: int) -> dict:
         prec = safe_div(tp, tp + fp)
         rec = safe_div(tp, tp + fn)
@@ -344,7 +356,6 @@ def main() -> None:
     for a in ablation_names:
         c = confusion[a]
         m = metrics(c["TP"], c["FP"], c["TN"], c["FN"])
-        # Per-attack-class recall
         per_class: dict[str, dict] = {}
         for ac in sorted(attack_classes):
             t = class_tp[a][ac]
@@ -356,20 +367,54 @@ def main() -> None:
             }
         ablation_results[a] = {**m, "per_attack_class_recall": per_class}
 
-    result = {
+    return {
         "total_samples": total,
         "ablations": ablation_results,
     }
 
-    OUT_PATH.parent.mkdir(parents=True, exist_ok=True)
-    with OUT_PATH.open("w", encoding="utf-8") as fh:
-        json.dump(result, fh, indent=2, ensure_ascii=False)
 
-    print(f"\nResults written to {OUT_PATH}")
-    print(f"Full fusion F1: {ablation_results['full']['f1']}")
-    for a in ablation_names[1:]:
-        delta = round(ablation_results[a]["f1"] - ablation_results["full"]["f1"], 4)
-        print(f"  {a}: F1={ablation_results[a]['f1']}  (delta={delta:+.4f})")
+def _print_ablation_summary(result: dict) -> None:
+    """Print ablation summary table."""
+    ablation_results = result["ablations"]
+    full_f1 = ablation_results["full"]["f1"]
+    print(f"Full fusion F1: {full_f1}")
+    for a, m in ablation_results.items():
+        if a == "full":
+            continue
+        delta = round(m["f1"] - full_f1, 4)
+        print(f"  {a:20s}: F1={m['f1']:.4f}  FPR={m['fpr']:.4f}  (ΔF1={delta:+.4f})")
+
+
+def main() -> None:
+    import argparse
+    parser = argparse.ArgumentParser(description="Run ablation study")
+    parser.add_argument("--benchmark", choices=["v0", "v1", "both"], default="both",
+                        help="Which benchmark to ablate (default: both)")
+    args = parser.parse_args()
+
+    if args.benchmark in ("v0", "both"):
+        print(f"Loading v0 samples from {DATA_PATH} ...")
+        samples_v0 = load_samples(DATA_PATH)
+        print(f"  {len(samples_v0)} v0 samples loaded.")
+        print("\nRunning v0 ablation ...")
+        result_v0 = _run_ablation_suite(samples_v0, ALL_ABLATION_NAMES)
+        OUT_PATH.parent.mkdir(parents=True, exist_ok=True)
+        with OUT_PATH.open("w", encoding="utf-8") as fh:
+            json.dump(result_v0, fh, indent=2, ensure_ascii=False)
+        print(f"\nV0 results written to {OUT_PATH}")
+        _print_ablation_summary(result_v0)
+
+    if args.benchmark in ("v1", "both"):
+        print(f"\nLoading v1 samples from {V1_DATA_PATH} ...")
+        samples_v1 = load_samples(V1_DATA_PATH)
+        print(f"  {len(samples_v1)} v1 samples loaded.")
+        print("\nRunning v1 ablation ...")
+        result_v1 = _run_ablation_suite(samples_v1, ALL_ABLATION_NAMES)
+        V1_OUT_PATH.parent.mkdir(parents=True, exist_ok=True)
+        with V1_OUT_PATH.open("w", encoding="utf-8") as fh:
+            json.dump(result_v1, fh, indent=2, ensure_ascii=False)
+        print(f"\nV1 results written to {V1_OUT_PATH}")
+        _print_ablation_summary(result_v1)
 
 
 if __name__ == "__main__":
