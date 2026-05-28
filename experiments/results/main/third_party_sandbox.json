@@ -10,9 +10,9 @@
   ],
   "subprocess_attempts_observed": 1,
   "latency_ms": {
-    "p50": 97.128,
-    "p95": 122.882,
-    "max": 122.882
+    "p50": 85.32,
+    "p95": 89.486,
+    "max": 89.486
   },
   "acceptance": {
     "all_fixtures_executed": true,
@@ -30,7 +30,7 @@
       "archive_member": "mcp-1.27.1/examples/snippets/servers/fastmcp_quickstart.py",
       "source_origin": "archive_remote",
       "description": "Official MCP Python SDK quickstart server snippet.",
-      "duration_ms": 90.77,
+      "duration_ms": 83.489,
       "events": [],
       "result": {
         "tool_count": 1,
@@ -49,7 +49,7 @@
       "archive_member": "fastmcp-3.3.1/examples/simple_echo.py",
       "source_origin": "archive_remote",
       "description": "FastMCP README quickstart snippet.",
-      "duration_ms": 97.128,
+      "duration_ms": 85.32,
       "events": [],
       "result": {
         "tool_count": 1,
@@ -67,7 +67,7 @@
       "archive_member": "mcp_clipboard-2.6.1/src/mcp_clipboard/clipboard.py",
       "source_origin": "archive_remote",
       "description": "mcp-clipboard subprocess write helper excerpt.",
-      "duration_ms": 122.882,
+      "duration_ms": 89.486,
       "events": [
         {
           "kind": "subprocess_attempt",
