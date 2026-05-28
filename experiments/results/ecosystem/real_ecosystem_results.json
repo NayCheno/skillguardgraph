@@ -99,16 +99,16 @@
     }
   },
   "severity": {
-    "low": 964,
+    "low": 963,
     "medium": 35,
-    "high": 1
+    "high": 2
   },
   "per_source_risk": {
     "github_mcp": {
       "count": 300,
       "mean_score": 0.133,
       "max_score": 10.0,
-      "high_risk_count": 1
+      "high_risk_count": 2
     },
     "npm_mcp": {
       "count": 200,
@@ -153,6 +153,20 @@
       "policy_score": 10.0,
       "findings": [
         "C1_DECLARED_READONLY_BUT_WRITE_SCOPE"
+      ]
+    },
+    {
+      "repo": "idosal/git-mcp",
+      "url": "https://github.com/idosal/git-mcp",
+      "license": "Apache-2.0",
+      "stars": null,
+      "code_availability": "source_available",
+      "policy_risk": "high",
+      "policy_decision": "hitl",
+      "policy_score": 10.0,
+      "findings": [
+        "C1_DECLARED_READONLY_BUT_WRITE_SCOPE",
+        "C7_LEAST_PRIVILEGE_SCOPE"
       ]
     }
   ]

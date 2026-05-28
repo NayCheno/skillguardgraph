@@ -333,7 +333,7 @@ This audit executes bounded source-available TypeScript/JavaScript repo entrypoi
 | Official MCP Registry entries | 100 |
 | Source-available samples | 15 |
 | Manifest-only samples | 985 |
-| High severity | 1 |
+| High severity | 2 |
 | Medium severity | 35 |
 | Missing signatures | 800 (80.0%) |
 | Untrusted publishers | 552 (55.2%) |
