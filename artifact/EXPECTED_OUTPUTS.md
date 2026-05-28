@@ -207,6 +207,24 @@ This audit executes harmless read-only tool calls against a bounded set of publi
 
 ---
 
+### TypeScript Repo Sandbox
+
+**File:** `results/main/typescript_repo_sandbox.json`
+**Format:** JSON
+**Produced by:** `python scripts/run_typescript_repo_sandbox.py`
+
+| Metric | Value |
+|---|---:|
+| Cases executed | 2 |
+| Registered tools observed | 4 |
+| CLI delegate calls | 1 |
+| No unsafe egress | true |
+| Case p95 latency | 67.707 ms |
+
+This audit executes bounded source-available TypeScript/JavaScript repo entrypoints selected from the checked-in GitHub slice. It confirms a four-tool MCP registration path and a delegated CLI path under a Node shim harness, but it still does not constitute arbitrary repository execution or production deployment evidence.
+
+---
+
 ## 9. Bootstrap Confidence Intervals
 
 **File:** `results/main/bootstrap_ci.json`  

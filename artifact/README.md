@@ -100,11 +100,11 @@ make smoke
 
 What it does:
 1. Runs `run_demo.py` — scans a sample manifest and evaluates a sample trace.
-2. Runs all 118 unit tests (`pytest tests/ -q`).
+2. Runs all 120 unit tests (`pytest tests/ -q`).
 
 ### Mode 2: Main Reproduction (~30 minutes)
 
-Reproduces all primary paper results (Tables 1–11).
+Reproduces all primary paper results (Tables 1–12).
 
 ```bash
 make reproduce
@@ -113,7 +113,7 @@ make reproduce
 What it does:
 1. `make benchmark` — Builds 4010-sample benchmark (1000 benign, 3010 malicious across 7 attack classes, ~430 samples each).
 2. `make validate` — Validates label integrity and class balance.
-3. `make eval-main` — Runs detection evaluation (8 methods), ablation study (6 configs), runtime red-team evaluation, local runtime harness, local sandbox harness, third-party public-code sandbox fixtures, bounded corpus-derived package sandbox cases, public-advisory cross-checking, bounded public remote endpoint probing, bounded GitHub repo sandbox execution, bounded remote task execution, bootstrap CI, and generalization stress checks.
+3. `make eval-main` — Runs detection evaluation (8 methods), ablation study (6 configs), runtime red-team evaluation, local runtime harness, local sandbox harness, third-party public-code sandbox fixtures, bounded corpus-derived package sandbox cases, public-advisory cross-checking, bounded public remote endpoint probing, bounded GitHub repo sandbox execution, bounded remote task execution, bounded TypeScript repo execution, bootstrap CI, and generalization stress checks.
 4. `make tables` — Generates formatted tables in plain text and LaTeX.
 
 ### Mode 3: Full Reproduction (~2+ hours)
@@ -151,10 +151,11 @@ A supplementary large-batch command is also available: `make real-ecosystem-larg
 | `remote_endpoint_audit.json` | JSON, ~2 KB | Bounded public remote MCP endpoint audit metrics |
 | `github_repo_sandbox.json` | JSON, ~2 KB | Bounded source-available GitHub repo sandbox metrics |
 | `significance_tests.json` | JSON, ~1 KB | McNemar test and paired-bootstrap comparison for fusion vs weighted voting |
+| `typescript_repo_sandbox.json` | JSON, ~2 KB | Bounded source-available TypeScript repo sandbox metrics |
 | `remote_task_audit.json` | JSON, ~2 KB | Bounded harmless remote MCP tool-call audit metrics |
 | `generalization_eval.json` | JSON, ~120 KB | Held-out-template, hard-negative, mutation-robustness, and label-leakage checks |
-| `tables.txt` | Text, ~9 KB | 11 formatted plain-text tables |
-| `tables.tex` | LaTeX, ~9 KB | 11 LaTeX tables with labels for paper inclusion |
+| `tables.txt` | Text, ~10 KB | 12 formatted plain-text tables |
+| `tables.tex` | LaTeX, ~10 KB | 12 LaTeX tables with labels for paper inclusion |
 | `completion_audit.json` | JSON, ~4 KB | Current-state completion audit summary |
 | `completion_audit.md` | Markdown, ~1 KB | Human-readable completion audit report |
 
@@ -194,10 +195,11 @@ A supplementary large-batch command is also available: `make real-ecosystem-larg
 | False block rate | 0.000 |
 | Third-party fixture sandbox | 3 fixtures, 3 archive resolutions, 1 blocked subprocess, 0 unsafe egress |
 | Corpus-derived package sandbox | 3 PyPI cases, 3 archive resolutions, 2 client tool calls, 1 blocked subprocess, 0 unsafe egress |
-| Unit tests | 118 (all pass) |
+| Unit tests | 120 (all pass) |
 | Public advisory audit | 2 advisories tracked, 1 corpus match, 0 currently vulnerable matches |
 | Public remote endpoint audit | 4 endpoints, 2 initialize+tools/list successes, 2 protected rejections |
 | GitHub repo sandbox | 2 GitHub cases, tool registry total 18, blender delegate observed |
+| TypeScript repo sandbox | 2 TypeScript cases, tool registry total 4, CLI delegate observed |
 | Completion audit | generated on demand |
 | Public remote task audit | 2 harmless tool calls succeeded, 1 structured result observed |
 | Ecosystem corpus size | 1200 synthetic + 1000 real public artifacts (300 GitHub + 200 npm + 150 discovered PyPI + 150 Hugging Face Spaces + 100 Smithery hosted-registry entries + 100 official MCP Registry entries) |

@@ -41,6 +41,7 @@ Use this as the final gate before marking the active goal complete.
 - [x] Public remote endpoint audit output is generated.
 - [x] Public GitHub repo sandbox output is generated.
 - [x] Public remote task audit output is generated.
+- [x] Public TypeScript repo sandbox output is generated.
 ## Ecosystem and Ethics
 
 - [x] Synthetic ecosystem measurement exists.
@@ -73,6 +74,7 @@ Use this as the final gate before marking the active goal complete.
 - [x] Public GitHub repo sandbox acceptance checks pass.
 - [x] Current completion audit can be generated on demand.
 - [x] Public remote task audit acceptance checks pass.
+- [x] Public TypeScript repo sandbox acceptance checks pass.
 - [x] Docker/Conda instructions are verified or limitations are recorded (Docker build/run passed; `conda` command is unavailable on this workstation).
 - [x] No secrets, credentials, real third-party payloads, or unsafe egress targets are present.
 - [x] `git status --short` is clean.

@@ -42,6 +42,7 @@ RESULT_FILES = [
     RESULTS_MAIN / "remote_endpoint_audit.json",
     RESULTS_MAIN / "github_repo_sandbox.json",
     RESULTS_MAIN / "remote_task_audit.json",
+    RESULTS_MAIN / "typescript_repo_sandbox.json",
     RESULTS_MAIN / "latency.json",
     RESULTS_MAIN / "bootstrap_ci.json",
     RESULTS_MAIN / "generalization_eval.json",
@@ -89,6 +90,7 @@ def main() -> None:
     public_advisory = read_json(RESULTS_ECO / "public_advisory_audit.json")
     github_repo_sandbox = read_json(RESULTS_MAIN / "github_repo_sandbox.json")
     remote_endpoint_audit = read_json(RESULTS_MAIN / "remote_endpoint_audit.json")
+    typescript_repo_sandbox = read_json(RESULTS_MAIN / "typescript_repo_sandbox.json")
     remote_task_audit = read_json(RESULTS_MAIN / "remote_task_audit.json")
 
     supported = {
@@ -103,6 +105,7 @@ def main() -> None:
         "public_advisory_audit_present": int(public_advisory.get("advisories_total", 0)) >= 1,
         "github_repo_acceptance": all(github_repo_sandbox["acceptance"].values()),
         "public_corpus_reaches_5k": int(batch_5k.get("total_samples", 0)) >= 5000,
+        "typescript_repo_acceptance": all(typescript_repo_sandbox["acceptance"].values()),
         "remote_endpoint_audit_acceptance": all(remote_endpoint_audit["acceptance"].values()),
         "remote_task_audit_acceptance": all(remote_task_audit["acceptance"].values()),
         "public_corpus_reaches_10k": int(batch_10k.get("total_samples", 0)) >= 10000,
@@ -119,7 +122,7 @@ def main() -> None:
         "tenk_batch_total": int(batch_10k.get("total_samples", 0)),
         "strong_submission_blockers": [
             "No currently vulnerable or disclosure-backed real cases in the measured snapshot.",
-            "No arbitrary third-party dynamic sandbox execution beyond bounded source-available public-package and GitHub repo cases.",
+            "No arbitrary third-party dynamic sandbox execution beyond bounded source-available public-package and GitHub repo/TypeScript cases.",
             "No authenticated production runtime deployment evidence.",
             "No private enterprise catalog coverage.",
         ],
@@ -165,6 +168,7 @@ def main() -> None:
     lines.extend([
         "",
         "## Current real-corpus state",
+        f"- TypeScript repo sandbox: {typescript_repo_sandbox.get('cases_executed', 0)} cases, tool_registry_total={typescript_repo_sandbox.get('tool_registry_total', 0)}, cli_calls={typescript_repo_sandbox.get('cli_calls', 0)}",
         "",
         f"- main batch: {main_eco.get('total_samples', 0)} artifacts, source_available={main_eco.get('code_availability', {}).get('source_available', 0)}",
         f"- advisory-backed cases in corpus: {public_advisory.get('advisories_present_in_corpus', 0)} (currently vulnerable={public_advisory.get('currently_vulnerable_matches', 0)})",

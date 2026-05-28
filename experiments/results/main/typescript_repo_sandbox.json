@@ -1,0 +1,97 @@
+{
+  "cases_total": 2,
+  "cases_executed": 2,
+  "repos": [
+    "21st-dev/magic-mcp",
+    "Done-0/fuck-u-code"
+  ],
+  "tool_registry_total": 4,
+  "cli_calls": 1,
+  "latency_ms": {
+    "p50": 57.411,
+    "p95": 67.707,
+    "max": 67.707
+  },
+  "acceptance": {
+    "all_cases_executed": true,
+    "tool_registry_observed": true,
+    "cli_delegate_observed": true,
+    "no_unsafe_egress": true
+  },
+  "cases": [
+    {
+      "case_id": "21st-dev__magic-mcp",
+      "repo": "21st-dev/magic-mcp",
+      "url": "https://github.com/21st-dev/magic-mcp",
+      "raw_url": "https://raw.githubusercontent.com/21st-dev/magic-mcp/main/src/index.ts",
+      "source_path": "src/index.ts",
+      "description": "TypeScript MCP server entrypoint registering four tools and connecting a stdio transport.",
+      "duration_ms": 57.411,
+      "events": [
+        {
+          "kind": "console_configured"
+        },
+        {
+          "kind": "tool_registered",
+          "name": "CreateUiTool"
+        },
+        {
+          "kind": "tool_registered",
+          "name": "LogoSearchTool"
+        },
+        {
+          "kind": "tool_registered",
+          "name": "FetchUiTool"
+        },
+        {
+          "kind": "tool_registered",
+          "name": "RefineUiTool"
+        },
+        {
+          "kind": "process_on",
+          "event": "SIGTERM"
+        },
+        {
+          "kind": "process_on",
+          "event": "SIGINT"
+        },
+        {
+          "kind": "process_on",
+          "event": "beforeExit"
+        },
+        {
+          "kind": "server_connect",
+          "transport": "StdioServerTransport",
+          "tool_count": 4
+        }
+      ],
+      "result": {
+        "toolCount": 4,
+        "connected": true,
+        "consoleConfigured": true
+      },
+      "stdout": "Starting server v0.0.46 (PID: 55820)\nServer started (PID: 55820)\nReceived beforeExit (PID: 55820)\nShutting down server (PID: 55820)...\nServer closed (PID: 55820)\n",
+      "stderr": ""
+    },
+    {
+      "case_id": "Done-0__fuck-u-code",
+      "repo": "Done-0/fuck-u-code",
+      "url": "https://github.com/Done-0/fuck-u-code",
+      "raw_url": "https://raw.githubusercontent.com/Done-0/fuck-u-code/main/src/index.ts",
+      "source_path": "src/index.ts",
+      "description": "TypeScript CLI wrapper that delegates to runCLI with translated fatal-error handling.",
+      "duration_ms": 67.707,
+      "events": [
+        {
+          "kind": "run_cli"
+        }
+      ],
+      "result": {
+        "runCliCalls": 1,
+        "translationCalls": 0
+      },
+      "stdout": "",
+      "stderr": ""
+    }
+  ]
+}
