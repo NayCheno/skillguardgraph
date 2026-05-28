@@ -236,14 +236,14 @@ All generalization acceptance booleans in the JSON are `true`. These checks are 
 | GitHub MCP repositories | 600 |
 | npm MCP packages | 250 |
 | Hugging Face Spaces | 150 |
-| Source-available samples | 23 |
-| Manifest-only samples | 977 |
+| Source-available samples | 15 |
+| Manifest-only samples | 985 |
 | High severity | 2 |
-| Medium severity | 15 |
-| Missing signatures | 750 (75.0%) |
-| Untrusted publishers | 356 (35.6%) |
-| Open-world network access | 9 (0.9%) |
-| Scope inflation | 7 (0.7%) |
+| Medium severity | 12 |
+| Missing signatures | 1000 (100.0%) |
+| Untrusted publishers | 357 (35.7%) |
+| Open-world network access | 7 (0.7%) |
+| Scope inflation | 6 (0.6%) |
 | Confirmed vulnerabilities | 0 |
 
 ---

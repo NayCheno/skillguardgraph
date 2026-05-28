@@ -33,10 +33,10 @@ The real measurement does **not** execute third-party code, perform destructive 
 | GitHub MCP repositories | 600 |
 | npm MCP packages | 250 |
 | Hugging Face Spaces | 150 |
-| Source-available samples | 23 |
-| Manifest-only samples | 977 |
+| Source-available samples | 15 |
+| Manifest-only samples | 985 |
 | High severity | 2 |
-| Medium severity | 15 |
+| Medium severity | 12 |
 | Low severity | 983 |
 
 ### 2.3 Language and license mix
@@ -65,18 +65,18 @@ Top license counts:
 
 | Pattern | Count | Rate |
 |---|---:|---:|
-| Missing signature | 750 | 75.0% |
-| Untrusted publisher | 356 | 35.6% |
-| Open-world network access | 9 | 0.9% |
-| Scope inflation | 7 | 0.7% |
+| Missing signature | 1000 | 100.0% |
+| Untrusted publisher | 357 | 35.7% |
+| Open-world network access | 7 | 0.7% |
+| Scope inflation | 6 | 0.6% |
 | Instruction-like descriptions | 0 | 0.0% |
 | Description-code mismatch | 0 | 0.0% |
 
 ### 2.5 Interpretation
 
-1. **Governance provenance remains weak, but registry-backed ecosystems help.** Missing signatures drop from the prior GitHub-only 100.0% result to 75.0% once npm package attestations are included, but the public ecosystem still lacks ubiquitous provenance because GitHub repositories and Hugging Face Spaces rarely expose strong signing metadata through their public APIs.
-2. **Only a very small fraction of artifacts trigger high-severity passive findings.** After the refined multi-source passive crawl, the real corpus produces 2 HIGH findings and 15 MEDIUM findings, and both HIGH findings remain unconfirmed after manual review.
-3. **Metadata-only coverage still dominates.** 977/1,000 artifacts remain manifest-only because the collector intentionally bounds source probing and does not recurse through full repositories or package tarballs. This is acceptable for catalog-level measurement but not for code-complete vulnerability confirmation.
+1. **Governance provenance remains weak across all three public sources.** Missing signatures are still universal in the current 1,000-artifact batch because the sampled GitHub repositories, npm packages, and Hugging Face Spaces do not expose strong signing metadata to the passive collector.
+2. **Only a very small fraction of artifacts trigger high-severity passive findings.** After the refined multi-source passive crawl, the real corpus produces 2 HIGH findings and 12 MEDIUM findings, and both HIGH findings remain unconfirmed after manual review.
+3. **Metadata-only coverage still dominates.** 985/1,000 artifacts remain manifest-only because the collector intentionally bounds source probing and does not recurse through full repositories, package tarballs, or hosted space bundles. This is acceptable for catalog-level measurement but not for code-complete vulnerability confirmation.
 4. **Source discovery is slightly richer but still bounded.** The collector now consults GitHub contents listings, package.json-derived entrypoints, and Hugging Face `app_file`/sibling metadata before bounded source fetch, but the full 1,000-artifact batch still remains overwhelmingly metadata-only.
 5. **Multi-source coverage is better than the prior GitHub-only snapshot, but still incomplete.** The current batch spans GitHub MCP repositories, npm MCP packages, and Hugging Face Spaces; it still does not cover PyPI, hosted enterprise marketplaces, or private catalogs.
 6. **Real-world prevalence is much lower than synthetic stress prevalence.** This is expected: the synthetic corpus is designed to exercise suspicious patterns, while the public corpus is used as a conservative external-validity check.

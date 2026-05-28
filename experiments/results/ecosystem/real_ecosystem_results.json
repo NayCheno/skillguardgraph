@@ -6,14 +6,14 @@
     "hf_spaces_mcp": 150
   },
   "code_availability": {
-    "manifest_only": 977,
-    "source_available": 23
+    "manifest_only": 985,
+    "source_available": 15
   },
   "languages": {
     "python": 308,
     "shell": 5,
-    "typescript": 166,
-    "unknown": 277,
+    "typescript": 160,
+    "unknown": 283,
     "rust": 15,
     "html": 6,
     "go": 31,
@@ -71,27 +71,27 @@
       "rate": 0.75
     },
     "open_world_network": {
-      "count": 9,
-      "rate": 0.009
-    },
-    "scope_inflation": {
       "count": 7,
       "rate": 0.007
     },
+    "scope_inflation": {
+      "count": 6,
+      "rate": 0.006
+    },
     "untrusted_publisher": {
-      "count": 356,
-      "rate": 0.356
+      "count": 357,
+      "rate": 0.357
     }
   },
   "severity": {
-    "low": 983,
-    "medium": 15,
+    "low": 986,
+    "medium": 12,
     "high": 2
   },
   "per_source_risk": {
     "github_mcp": {
       "count": 600,
-      "mean_score": 0.133,
+      "mean_score": 0.103,
       "max_score": 10.0,
       "high_risk_count": 2
     },
@@ -113,7 +113,7 @@
       "repo": "idosal/git-mcp",
       "url": "https://github.com/idosal/git-mcp",
       "license": "Apache-2.0",
-      "stars": 8102,
+      "stars": 8103,
       "code_availability": "source_available",
       "policy_risk": "high",
       "policy_decision": "hitl",
@@ -126,7 +126,7 @@
       "repo": "firecrawl/firecrawl-mcp-server",
       "url": "https://github.com/firecrawl/firecrawl-mcp-server",
       "license": "MIT",
-      "stars": 6399,
+      "stars": 6401,
       "code_availability": "source_available",
       "policy_risk": "high",
       "policy_decision": "hitl",

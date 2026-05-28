@@ -1,19 +1,23 @@
 """Tests for passive real-corpus crawler helpers."""
 from __future__ import annotations
 
+import io
 import sys
+import tarfile
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
 
+import crawl_real_ecosystem as cre  # noqa: E402
 from crawl_real_ecosystem import (  # noqa: E402
     _package_json_entrypoints,
     build_hf_manifest,
+    cached_source_samples,
     extract_github_repo_ref,
     npm_entrypoint_candidates,
     normalize_repo_url,
-    cached_source_samples,
+    tarball_member_texts,
 )
 
 
@@ -64,6 +68,35 @@ def test_build_hf_manifest_marks_liked_spaces_as_trusted():
     assert manifest["trusted_server"] is True
     assert manifest["source"] == "hf_spaces_mcp"
     assert manifest["tool_count"] == 1
+
+def test_tarball_member_texts_reads_package_json_entrypoints():
+    buffer = io.BytesIO()
+    with tarfile.open(fileobj=buffer, mode="w:gz") as archive:
+        package_json = b'{"main":"dist/index.js","bin":{"tool":"bin/cli.js"}}'
+        info = tarfile.TarInfo("package/package.json")
+        info.size = len(package_json)
+        archive.addfile(info, io.BytesIO(package_json))
+
+        index_js = b'console.log("hello")'
+        info = tarfile.TarInfo("package/dist/index.js")
+        info.size = len(index_js)
+        archive.addfile(info, io.BytesIO(index_js))
+
+        cli_js = b'console.log("cli")'
+        info = tarfile.TarInfo("package/bin/cli.js")
+        info.size = len(cli_js)
+        archive.addfile(info, io.BytesIO(cli_js))
+
+    original = cre.fetch_bytes
+    cre.fetch_bytes = lambda url: buffer.getvalue()
+    try:
+        members = tarball_member_texts("https://registry.npmjs.org/pkg.tgz", ["dist/index.js"])
+    finally:
+        cre.fetch_bytes = original
+
+    paths = [member["path"] for member in members]
+    assert any(path.endswith("dist/index.js") for path in paths)
+    assert any(path.endswith("bin/cli.js") for path in paths)
 
 def test_cached_source_samples_filter_and_sort_by_source():
     cache = {

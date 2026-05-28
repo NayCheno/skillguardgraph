@@ -13,9 +13,11 @@ Outputs:
 from __future__ import annotations
 
 import argparse
+import io
 import json
 import re
 import sys
+import tarfile
 import time
 import urllib.parse
 import urllib.request
@@ -132,6 +134,75 @@ def github_contents(owner: str, repo: str, branch: str, path: str = "") -> Any:
         url += f"/{encoded_path}"
     sep = "&" if "?" in url else "?"
     return github_request(f"{url}{sep}ref={urllib.parse.quote(branch)}")
+
+def fetch_bytes(url: str) -> Optional[bytes]:
+    req = urllib.request.Request(url, headers={"User-Agent": "skillguardgraph-research-bot"})
+    try:
+        with urllib.request.urlopen(req, timeout=30) as resp:
+            return resp.read()
+    except Exception:
+        return None
+
+
+def tarball_member_texts(tarball_url: str, candidate_suffixes: List[str]) -> List[Dict[str, str]]:
+    blob = fetch_bytes(tarball_url)
+    if not blob:
+        return []
+
+    matches: List[Dict[str, str]] = []
+    seen: set[str] = set()
+
+    try:
+        with tarfile.open(fileobj=io.BytesIO(blob), mode="r:gz") as archive:
+            members = [member for member in archive.getmembers() if member.isfile()]
+            package_json = next((member for member in members if member.name.endswith("/package.json")), None)
+            dynamic_suffixes: List[str] = []
+            if package_json is not None:
+                extracted = archive.extractfile(package_json)
+                if extracted is not None:
+                    package_json_text = extracted.read().decode("utf-8", errors="replace")
+                    dynamic_suffixes = _package_json_entrypoints(package_json_text)
+
+            wanted_suffixes = [
+                _normalize_repo_path(path)
+                for path in list(candidate_suffixes) + dynamic_suffixes
+                if path
+            ]
+            for suffix in wanted_suffixes:
+                for member in members:
+                    if member.name in seen or not member.name.endswith(suffix):
+                        continue
+                    extracted = archive.extractfile(member)
+                    if extracted is None:
+                        continue
+                    matches.append({
+                        "path": member.name,
+                        "content": extracted.read().decode("utf-8", errors="replace"),
+                    })
+                    seen.add(member.name)
+                    break
+
+            if len(matches) < 3:
+                for member in members:
+                    lower = member.name.lower()
+                    if member.name in seen:
+                        continue
+                    if lower.endswith((".py", ".ts", ".js")) and any(token in lower for token in ("mcp", "server", "index", "main", "tool", "cli", "app")):
+                        extracted = archive.extractfile(member)
+                        if extracted is None:
+                            continue
+                        matches.append({
+                            "path": member.name,
+                            "content": extracted.read().decode("utf-8", errors="replace"),
+                        })
+                        seen.add(member.name)
+                        if len(matches) >= 3:
+                            break
+    except tarfile.TarError:
+        return []
+
+    return matches[:3]
+
 
 def hf_spaces_search(query: str, limit: int) -> List[Dict[str, Any]]:
     encoded = urllib.parse.quote(query)
@@ -731,6 +802,10 @@ def analyze_npm_package(entry: Dict[str, Any], attempt_source_fetch: bool) -> Di
                 source_files.append({"path": path, "content": content})
                 if len(source_files) >= 3:
                     break
+    if attempt_source_fetch and not source_files:
+        tarball_url = str((version_doc.get("dist") or {}).get("tarball") or "")
+        if tarball_url:
+            source_files = tarball_member_texts(tarball_url, npm_entrypoint_candidates(version_doc))
 
     source_blobs = [item["content"] for item in source_files]
     fallback_language = str((linked_repo or {}).get("language") or "unknown").lower()
