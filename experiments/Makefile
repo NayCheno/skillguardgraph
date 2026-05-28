@@ -1,4 +1,4 @@
-.PHONY: demo test smoke eval-main eval-all tables validate benchmark ecosystem triage reproduce clean scan trace latency real-ecosystem real-ecosystem-large real-ecosystem-xl real-ecosystem-5k real-ecosystem-10k significance generalization runtime-harness sandbox-harness third-party-sandbox
+.PHONY: demo test smoke eval-main eval-all tables validate benchmark ecosystem triage reproduce clean scan trace latency real-ecosystem real-ecosystem-large real-ecosystem-xl real-ecosystem-5k real-ecosystem-10k significance generalization runtime-harness sandbox-harness third-party-sandbox completion-audit
 
 # Cross-platform PYTHONPATH setup
 ifeq ($(OS),Windows_NT)
@@ -74,6 +74,9 @@ sandbox-harness:
 
 latency:
 	$(PYTHONPATH_OPT) python scripts/run_latency.py
+
+completion-audit:
+	$(PYTHONPATH_OPT) python scripts/run_completion_audit.py
 
 eval-all: benchmark validate eval-main tables ecosystem triage real-ecosystem
 

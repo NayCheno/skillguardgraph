@@ -47,3 +47,5 @@ experiments/results/*.png
 experiments/results/*.svg
 experiments/results/*.html
 .env
+experiments/results/main/completion_audit.json
+experiments/results/main/completion_audit.md

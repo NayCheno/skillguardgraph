@@ -354,6 +354,14 @@ This fixture suite executes curated public third-party code snippets resolved fr
 
 ---
 
+## 19. Completion Audit
+
+**Files:** `results/main/completion_audit.json`, `results/main/completion_audit.md`  \n**Format:** JSON / Markdown  \n**Produced by:** `python scripts/run_completion_audit.py`
+
+The audit summarizes which current-state artifact checks pass, which high-level blockers remain, and whether the repository is currently clean. It is intended as a release/readiness report and is generated on demand rather than committed as a canonical benchmark result.
+
+---
+
 ## Notes
 
 - All synthetic generation uses `seed=42` where randomness is involved.

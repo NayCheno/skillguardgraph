@@ -150,6 +150,8 @@ A supplementary large-batch command is also available: `make real-ecosystem-larg
 | `generalization_eval.json` | JSON, ~120 KB | Held-out-template, hard-negative, mutation-robustness, and label-leakage checks |
 | `tables.txt` | Text, ~8 KB | 9 formatted plain-text tables |
 | `tables.tex` | LaTeX, ~8 KB | 9 LaTeX tables with labels for paper inclusion |
+| `completion_audit.json` | JSON, ~4 KB | Current-state completion audit summary |
+| `completion_audit.md` | Markdown, ~1 KB | Human-readable completion audit report |
 
 ### Ecosystem results (`results/ecosystem/`)
 
@@ -185,8 +187,9 @@ A supplementary large-batch command is also available: `make real-ecosystem-larg
 | Runtime ASR | 0.000 |
 | Task success rate | 1.000 |
 | False block rate | 0.000 |
-| Third-party fixture sandbox | 3 fixtures, 1 blocked subprocess, 0 unsafe egress |
+| Third-party fixture sandbox | 3 fixtures, 3 remote resolutions, 1 blocked subprocess, 0 unsafe egress |
 | Unit tests | 102 (all pass) |
+| Completion audit | generated on demand |
 | Ecosystem corpus size | 1200 synthetic + 1000 real public artifacts (500 GitHub + 200 npm + 150 discovered PyPI + 150 Hugging Face Spaces) |
 | Supplementary scaled corpus | 2000 real public artifacts (1200 GitHub + 500 npm + 300 Hugging Face Spaces) |
 | Supplementary XL corpus | 3000 real public artifacts (1999 GitHub + 600 npm + 20 PyPI + 381 Hugging Face Spaces) |

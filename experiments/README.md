@@ -129,6 +129,7 @@ experiments/
 | `make runtime-harness` | Run local instrumented runtime harness | ~1 min |
 | `make sandbox-harness` | Run local isolated sandbox harness | ~1 min |
 | `make third-party-sandbox` | Run curated third-party public-code sandbox fixtures | ~1 min |
+| `make completion-audit` | Generate current completion audit report | ~5 sec |
 | `make clean` | Remove all generated results and data | instant |
 
 ---
@@ -169,6 +170,14 @@ results/ecosystem/real_ecosystem_5k_data_card.json # Supplementary 5,000-artifac
 results/ecosystem/real_ecosystem_10k_results.json # Supplementary 10,000-artifact real-corpus metrics
 results/ecosystem/real_ecosystem_10k_data_card.json # Supplementary 10,000-artifact data card
 ```
+
+A lightweight current-state audit can also be generated on demand:
+
+```bash
+make completion-audit
+```
+
+This writes `results/main/completion_audit.json` and `results/main/completion_audit.md` for the current checkout without changing the claim boundary.
 
 Key result numbers:
 
@@ -240,6 +249,9 @@ PYTHONPATH=src python scripts/crawl_real_ecosystem.py --target 10000 --pages-per
 
 If available, export `GITHUB_TOKEN` and `HF_TOKEN` before large crawls. Broad PyPI discovery uses the public simple index and JSON endpoints and does not currently use a private token.
 
+
+# Completion audit
+PYTHONPATH=src python scripts/run_completion_audit.py
 # Generalization stress checks
 PYTHONPATH=src python scripts/run_generalization_eval.py
 # Generate paper tables

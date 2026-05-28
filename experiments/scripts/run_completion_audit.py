@@ -1,0 +1,153 @@
+#!/usr/bin/env python3
+"""Generate a current-state completion audit for SkillGuardGraph."""
+from __future__ import annotations
+
+import json
+import subprocess
+from pathlib import Path
+from typing import Any
+
+ROOT = Path(__file__).resolve().parent.parent.parent
+EXPERIMENTS = ROOT / "experiments"
+RESULTS_MAIN = EXPERIMENTS / "results" / "main"
+RESULTS_ECO = EXPERIMENTS / "results" / "ecosystem"
+OUT_JSON = RESULTS_MAIN / "completion_audit.json"
+OUT_MD = RESULTS_MAIN / "completion_audit.md"
+
+REQUIRED_DOCS = [
+    ROOT / "README.md",
+    ROOT / "PROJECT_INDEX.md",
+    ROOT / "docs" / "00_project_brief.md",
+    ROOT / "docs" / "01_initial_research_plan.md",
+    ROOT / "milestones" / "roadmap.md",
+    ROOT / "milestones" / "weekly_execution_plan.md",
+    ROOT / "checklists" / "acceptance_checklist.md",
+    ROOT / "docs" / "execution_checklist.md",
+    ROOT / "docs" / "claim_checklist.md",
+    ROOT / "docs" / "mock_review.md",
+    ROOT / "docs" / "rebuttal_bank.md",
+    ROOT / "docs" / "review_response_strategy.md",
+    ROOT / "paper" / "main.tex",
+    ROOT / "paper" / "appendix.tex",
+]
+
+RESULT_FILES = [
+    RESULTS_MAIN / "detector_eval.json",
+    RESULTS_MAIN / "ablation.json",
+    RESULTS_MAIN / "runtime_redteam.json",
+    RESULTS_MAIN / "runtime_harness.json",
+    RESULTS_MAIN / "sandbox_harness.json",
+    RESULTS_MAIN / "third_party_sandbox.json",
+    RESULTS_MAIN / "latency.json",
+    RESULTS_MAIN / "bootstrap_ci.json",
+    RESULTS_MAIN / "generalization_eval.json",
+    RESULTS_MAIN / "failure_analysis.json",
+    RESULTS_MAIN / "significance_tests.json",
+    RESULTS_MAIN / "tables.txt",
+    RESULTS_MAIN / "tables.tex",
+    RESULTS_ECO / "real_ecosystem_results.json",
+    RESULTS_ECO / "real_ecosystem_data_card.json",
+    RESULTS_ECO / "real_high_risk_triage.json",
+    RESULTS_ECO / "real_ecosystem_5k_results.json",
+    RESULTS_ECO / "real_ecosystem_10k_results.json",
+]
+
+
+def read_json(path: Path) -> dict[str, Any]:
+    return json.loads(path.read_text(encoding="utf-8"))
+
+
+def git_status_clean() -> bool:
+    proc = subprocess.run(
+        ["git", "status", "--short"],
+        cwd=str(ROOT),
+        capture_output=True,
+        text=True,
+        check=True,
+    )
+    return proc.stdout.strip() == ""
+
+
+def main() -> None:
+    docs_present = {str(path.relative_to(ROOT)): path.exists() for path in REQUIRED_DOCS}
+    results_present = {str(path.relative_to(ROOT)): path.exists() for path in RESULT_FILES}
+
+    main_eco = read_json(RESULTS_ECO / "real_ecosystem_results.json")
+    batch_5k = read_json(RESULTS_ECO / "real_ecosystem_5k_results.json")
+    batch_10k = read_json(RESULTS_ECO / "real_ecosystem_10k_results.json")
+    triage = read_json(RESULTS_ECO / "real_high_risk_triage.json")
+    runtime_harness = read_json(RESULTS_MAIN / "runtime_harness.json")
+    sandbox_harness = read_json(RESULTS_MAIN / "sandbox_harness.json")
+    third_party = read_json(RESULTS_MAIN / "third_party_sandbox.json")
+    generalization = read_json(RESULTS_MAIN / "generalization_eval.json")
+
+    supported = {
+        "docs_present": all(docs_present.values()),
+        "results_present": all(results_present.values()),
+        "git_clean": git_status_clean(),
+        "runtime_harness_acceptance": all(runtime_harness["acceptance"].values()),
+        "sandbox_harness_acceptance": all(sandbox_harness["acceptance"].values()),
+        "third_party_fixture_acceptance": all(third_party["acceptance"].values()),
+        "generalization_acceptance": all(generalization["acceptance"].values()),
+        "public_corpus_reaches_5k": int(batch_5k.get("total_samples", 0)) >= 5000,
+        "public_corpus_reaches_10k": int(batch_10k.get("total_samples", 0)) >= 10000,
+    }
+
+    unresolved = {
+        "confirmed_real_cases": int(triage["summary"].get("confirmed_vulnerabilities", 0)) == 0,
+        "disclosures_sent": int(triage["summary"].get("disclosures_sent", 0)) == 0,
+        "main_batch_source_available": int(main_eco.get("code_availability", {}).get("source_available", 0)),
+        "main_batch_total": int(main_eco.get("total_samples", 0)),
+        "tenk_batch_source_available": int(batch_10k.get("code_availability", {}).get("source_available", 0)),
+        "tenk_batch_total": int(batch_10k.get("total_samples", 0)),
+        "strong_submission_blockers": [
+            "No confirmed real vulnerabilities or disclosure-backed cases.",
+            "No arbitrary third-party dynamic sandbox execution beyond curated fixtures.",
+            "No production-like runtime deployment evidence.",
+            "No hosted enterprise/private catalog coverage.",
+        ],
+    }
+
+    summary = {
+        "supported": supported,
+        "current_real_batches": {
+            "main": main_eco,
+            "supplementary_5k": batch_5k,
+            "supplementary_10k": batch_10k,
+        },
+        "triage_summary": triage["summary"],
+        "unresolved": unresolved,
+    }
+
+    OUT_JSON.write_text(json.dumps(summary, indent=2, ensure_ascii=False), encoding="utf-8")
+
+    lines = [
+        "# Completion Audit",
+        "",
+        "## Supported checks",
+        "",
+    ]
+    for key, value in supported.items():
+        lines.append(f"- {key}: {'PASS' if value else 'FAIL'}")
+    lines.extend([
+        "",
+        "## Current real-corpus state",
+        "",
+        f"- main batch: {main_eco.get('total_samples', 0)} artifacts, source_available={main_eco.get('code_availability', {}).get('source_available', 0)}",
+        f"- 5k batch: {batch_5k.get('total_samples', 0)} artifacts",
+        f"- 10k batch: {batch_10k.get('total_samples', 0)} artifacts, source_available={batch_10k.get('code_availability', {}).get('source_available', 0)}",
+        f"- confirmed real vulnerabilities: {triage['summary'].get('confirmed_vulnerabilities', 0)}",
+        f"- disclosures sent: {triage['summary'].get('disclosures_sent', 0)}",
+        "",
+        "## Remaining blockers",
+        "",
+    ])
+    for blocker in unresolved["strong_submission_blockers"]:
+        lines.append(f"- {blocker}")
+    OUT_MD.write_text("\n".join(lines) + "\n", encoding="utf-8")
+    print(f"Audit written to {OUT_JSON}")
+    print(f"Audit summary written to {OUT_MD}")
+
+
+if __name__ == "__main__":
+    main()
