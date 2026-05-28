@@ -295,6 +295,7 @@ def build_table9(third_party: dict) -> tuple[str, str]:
     latency = third_party["latency_ms"]
     pairs = [
         ("Fixtures executed", str(third_party["fixtures_executed"])),
+        ("Remote fixtures resolved", str(third_party["remote_fixtures_resolved"])),
         ("Subprocess attempts observed", str(third_party["subprocess_attempts_observed"])),
         ("No unsafe egress", str(third_party["acceptance"]["no_unsafe_egress"]).lower()),
         ("Fixture p95 latency (ms)", f"{latency['p95']:.3f}"),

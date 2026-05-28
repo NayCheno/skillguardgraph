@@ -103,7 +103,7 @@ Table 8: Local Sandbox Harness
 | Malicious detection recall | 1.0000 |
 | Benign alert rate          | 0.0000 |
 | Unsafe egress events       | 0      |
-| Sandbox p95 latency (ms)   | 39.560 |
+| Sandbox p95 latency (ms)   | 41.681 |
 +----------------------------+--------+
 
 Table 9: Third-Party Public-Code Sandbox
@@ -111,7 +111,8 @@ Table 9: Third-Party Public-Code Sandbox
 | Metric                       | Value  |
 +------------------------------+--------+
 | Fixtures executed            | 3      |
+| Remote fixtures resolved     | 3      |
 | Subprocess attempts observed | 1      |
 | No unsafe egress             | true   |
-| Fixture p95 latency (ms)     | 95.240 |
+| Fixture p95 latency (ms)     | 96.804 |
 +------------------------------+--------+

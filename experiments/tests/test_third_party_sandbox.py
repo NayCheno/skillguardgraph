@@ -20,6 +20,7 @@ def test_third_party_fixtures_have_urls_and_invocations():
         assert fixture.source_url.startswith("https://")
         assert fixture.source_code.strip()
         assert fixture.invoke.strip()
+        assert fixture.remote_source_url
 
 
 def test_third_party_sandbox_runner_executes():
@@ -27,4 +28,5 @@ def test_third_party_sandbox_runner_executes():
     payload = json.loads(RESULT.read_text(encoding="utf-8"))
     assert payload["acceptance"]["all_fixtures_executed"] is True
     assert payload["acceptance"]["subprocess_attempts_captured"] is True
+    assert payload["acceptance"]["remote_source_resolution_ge_2"] is True
     assert payload["acceptance"]["no_unsafe_egress"] is True

@@ -1,8 +1,7 @@
 """Curated third-party public-code fixtures for sandbox execution.
 
-These fixtures are copied from public third-party package documentation or
-source files and executed only inside the local sandbox harness. They are not
-fetched or executed from remote origins at runtime.
+Fixtures keep a checked-in fallback snippet for deterministic reproduction, while
+optionally pointing at a raw public source file that can be fetched at runtime.
 """
 from __future__ import annotations
 
@@ -18,6 +17,9 @@ class ThirdPartyFixture:
     description: str
     source_code: str
     invoke: str
+    remote_source_url: str | None = None
+    extract_start: str | None = None
+    extract_end: str | None = None
 
 
 def build_third_party_fixtures() -> List[ThirdPartyFixture]:
@@ -44,21 +46,25 @@ def build_third_party_fixtures() -> List[ThirdPartyFixture]:
                 '    return name\n'
             ),
             invoke="result = {'tool_count': len(mcp._tools), 'resource_count': len(mcp._resources), 'prompt_count': len(mcp._prompts)}",
+            remote_source_url="https://raw.githubusercontent.com/modelcontextprotocol/python-sdk/v1.x/examples/snippets/servers/fastmcp_quickstart.py",
         ),
         ThirdPartyFixture(
             fixture_id="fastmcp-quickstart",
             label="benign_registration",
             source_url="https://pypi.org/project/fastmcp/",
-            description="FastMCP quickstart server snippet.",
+            description="FastMCP README quickstart snippet.",
             source_code=(
                 'from fastmcp import FastMCP\n\n'
-                'mcp = FastMCP("Demo")\n\n'
+                'mcp = FastMCP("Demo 🚀")\n\n'
                 '@mcp.tool\n'
                 'def add(a: int, b: int) -> int:\n'
                 '    """Add two numbers"""\n'
                 '    return a + b\n'
             ),
             invoke="result = {'tool_count': len(mcp._tools), 'server_name': mcp.name}",
+            remote_source_url="https://raw.githubusercontent.com/PrefectHQ/fastmcp/main/README.md",
+            extract_start="```python",
+            extract_end="```",
         ),
         ThirdPartyFixture(
             fixture_id="mcp-clipboard-subprocess",
@@ -87,5 +93,8 @@ def build_third_party_fixtures() -> List[ThirdPartyFixture]:
                 '        raise ClipboardError(msg)\n'
             ),
             invoke="import asyncio\nasync def _fixture_call():\n    await _run_with_stdin(['wl-copy', '--type', 'text/plain'], b'test-data')\nasyncio.run(_fixture_call())\nresult = {'subprocess_invoked': True}",
+            remote_source_url="https://raw.githubusercontent.com/cmeans/mcp-clipboard/main/src/mcp_clipboard/clipboard.py",
+            extract_start="import asyncio",
+            extract_end="def _find_wayland_display",
         ),
     ]

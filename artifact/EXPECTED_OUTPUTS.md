@@ -110,11 +110,12 @@ This document describes every output file produced by the experiment pipeline, i
 | Metric | Value |
 |---|---:|
 | Fixtures executed | 3 |
+| Remote fixtures resolved | 3 |
 | Subprocess attempts observed | 1 |
 | No unsafe egress | true |
-| Fixture p95 latency | 89.748 ms |
+| Fixture p95 latency | 96.804 ms |
 
-This fixture suite executes curated public third-party code snippets from MCP-related packages inside the sandbox harness. It is stronger than the repository-only toy sandbox, but it still does not amount to arbitrary third-party package execution.
+This fixture suite executes curated public third-party code snippets resolved from upstream package or repository locations inside the sandbox harness. It is stronger than the repository-only toy sandbox, but it still does not amount to arbitrary third-party package execution.
 
 ---
 

@@ -3,10 +3,12 @@
 from __future__ import annotations
 
 import json
+import subprocess
 import sys
 import tempfile
 import textwrap
 import time
+import urllib.request
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -14,7 +16,7 @@ OUT_PATH = ROOT / "results" / "main" / "third_party_sandbox.json"
 
 sys.path.insert(0, str(ROOT / "src"))
 
-from skillguardgraph.third_party_sandbox import build_third_party_fixtures  # noqa: E402
+from skillguardgraph.third_party_sandbox import ThirdPartyFixture, build_third_party_fixtures  # noqa: E402
 
 _WORKER = textwrap.dedent(
     """
@@ -95,23 +97,57 @@ def percentile(values: list[float], q: float) -> float:
     return ordered[idx]
 
 
+def _fetch_remote_text(url: str) -> str:
+    req = urllib.request.Request(url, headers={"User-Agent": "skillguardgraph-research-bot"})
+    with urllib.request.urlopen(req, timeout=30) as resp:
+        return resp.read().decode("utf-8", errors="replace")
+
+
+def _resolve_source(fixture: ThirdPartyFixture) -> tuple[str, str]:
+    if not fixture.remote_source_url:
+        return fixture.source_code, "embedded"
+    try:
+        text = _fetch_remote_text(fixture.remote_source_url)
+        if fixture.extract_start:
+            start_idx = text.find(fixture.extract_start)
+            if start_idx >= 0:
+                if fixture.extract_start.startswith("```"):
+                    text = text[start_idx + len(fixture.extract_start):]
+                else:
+                    text = text[start_idx:]
+        if fixture.extract_end:
+            end_idx = text.find(fixture.extract_end)
+            if end_idx >= 0:
+                text = text[:end_idx]
+        resolved = text.strip()
+        if resolved:
+            return resolved + "\n", "remote"
+    except Exception:
+        pass
+    return fixture.source_code, "embedded_fallback"
+
+
 def main() -> None:
     fixtures = build_third_party_fixtures()
     latencies: list[float] = []
     results = []
     subprocess_attempts = 0
+    remote_resolved = 0
 
     for fixture in fixtures:
+        source_code, source_origin = _resolve_source(fixture)
+        if source_origin == "remote":
+            remote_resolved += 1
         with tempfile.TemporaryDirectory(prefix="sgg-third-party-") as tempdir:
             workdir = Path(tempdir)
             payload_path = workdir / "payload.json"
             result_path = workdir / "result.json"
             payload_path.write_text(json.dumps({
-                "source_code": fixture.source_code,
+                "source_code": source_code,
                 "invoke": fixture.invoke,
             }, ensure_ascii=False), encoding="utf-8")
             started = time.perf_counter()
-            completed = __import__('subprocess').run(
+            completed = subprocess.run(
                 [sys.executable, "-c", _WORKER, str(payload_path), str(result_path)],
                 cwd=str(workdir),
                 capture_output=True,
@@ -128,6 +164,8 @@ def main() -> None:
                 "fixture_id": fixture.fixture_id,
                 "label": fixture.label,
                 "source_url": fixture.source_url,
+                "remote_source_url": fixture.remote_source_url,
+                "source_origin": source_origin,
                 "description": fixture.description,
                 "duration_ms": round(duration_ms, 3),
                 "events": events,
@@ -139,6 +177,7 @@ def main() -> None:
     summary = {
         "fixtures_total": len(fixtures),
         "fixtures_executed": len(results),
+        "remote_fixtures_resolved": remote_resolved,
         "third_party_source_urls": [fixture.source_url for fixture in fixtures],
         "subprocess_attempts_observed": subprocess_attempts,
         "latency_ms": {
@@ -149,6 +188,7 @@ def main() -> None:
         "acceptance": {
             "all_fixtures_executed": len(results) == len(fixtures),
             "subprocess_attempts_captured": subprocess_attempts >= 1,
+            "remote_source_resolution_ge_2": remote_resolved >= 2,
             "no_unsafe_egress": True,
         },
         "fixtures": results,
@@ -157,7 +197,7 @@ def main() -> None:
     OUT_PATH.parent.mkdir(parents=True, exist_ok=True)
     OUT_PATH.write_text(json.dumps(summary, indent=2, ensure_ascii=False), encoding="utf-8")
     print(f"Results written to {OUT_PATH}")
-    print(f"Fixtures executed={len(results)} subprocess_attempts={subprocess_attempts}")
+    print(f"Fixtures executed={len(results)} subprocess_attempts={subprocess_attempts} remote_resolved={remote_resolved}")
     print(f"Third-party fixture p95 latency={summary['latency_ms']['p95']}ms")
 
     failed = [name for name, ok in summary['acceptance'].items() if not ok]
