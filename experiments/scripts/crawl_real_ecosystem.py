@@ -106,7 +106,7 @@ PYPI_PACKAGE_SEEDS = [
     "mcp-clipboard",
 ]
 PYPI_SIMPLE_NAME = re.compile(r">([^<]*mcp[^<]*)<", re.IGNORECASE)
-
+PYPI_SIMPLE_HREF = re.compile(r'href=["\']/simple/([^/"\']+)/["\']', re.IGNORECASE)
 PY_TOOL_DECORATOR = re.compile(r'@(?:server|app|mcp)\s*\.\s*tool\s*\(\s*["\']([\w-]+)["\']', re.MULTILINE)
 TS_REGISTER_TOOL = re.compile(r'server\.tool\s*\(\s*["\']([\w-]+)["\']', re.MULTILINE)
 PY_DESC_FROM_DOCSTRING = re.compile(r'"""([^\"]{10,200})"""', re.MULTILINE)
@@ -183,13 +183,33 @@ def github_search(query: str, page: int) -> Dict[str, Any]:
 def github_repo(owner: str, repo: str) -> Dict[str, Any]:
     return github_request(f"https://api.github.com/repos/{owner}/{repo}")
 
+def canonicalize_package_name(name: str) -> str:
+    return re.sub(r"[-_.]+", "-", name).lower()
+
+
 def pypi_package_metadata(name: str) -> Dict[str, Any]:
-    encoded = urllib.parse.quote(name, safe="")
-    return _json_request(
-        f"https://pypi.org/pypi/{encoded}/json",
-        headers=_request_headers("pypi"),
-        service="pypi",
-    )
+    candidates = [name]
+    normalized = canonicalize_package_name(name)
+    if normalized != name:
+        candidates.append(normalized)
+
+    last_error: Exception | None = None
+    for candidate in candidates:
+        encoded = urllib.parse.quote(candidate, safe="")
+        try:
+            return _json_request(
+                f"https://pypi.org/pypi/{encoded}/json",
+                headers=_request_headers("pypi"),
+                service="pypi",
+            )
+        except urllib.error.HTTPError as exc:
+            last_error = exc
+            if exc.code == 404:
+                continue
+            raise
+    if last_error is not None:
+        raise last_error
+    raise RuntimeError(f"Unable to fetch PyPI metadata for {name}")
 
 def pypi_simple_candidates(limit: int) -> List[str]:
     req = urllib.request.Request("https://pypi.org/simple/", headers=_request_headers("pypi"))
@@ -199,15 +219,20 @@ def pypi_simple_candidates(limit: int) -> List[str]:
         with urllib.request.urlopen(req, timeout=120) as resp:
             for raw in resp:
                 line = raw.decode("utf-8", errors="ignore")
-                match = PYPI_SIMPLE_NAME.search(line)
-                if not match:
+                href_match = PYPI_SIMPLE_HREF.search(line)
+                text_match = PYPI_SIMPLE_NAME.search(line)
+                raw_name = None
+                if href_match:
+                    raw_name = href_match.group(1).strip()
+                elif text_match:
+                    raw_name = text_match.group(1).strip()
+                if not raw_name:
                     continue
-                name = match.group(1).strip()
-                lowered = name.lower()
-                if "mcp" not in lowered or lowered in seen:
+                normalized = canonicalize_package_name(raw_name)
+                if "mcp" not in normalized or normalized in seen:
                     continue
-                seen.add(lowered)
-                names.append(name)
+                seen.add(normalized)
+                names.append(normalized)
                 if len(names) >= limit:
                     break
     except urllib.error.HTTPError as exc:
@@ -1059,14 +1084,15 @@ def analyze_pypi_package(package_name: str, attempt_source_fetch: bool, query_ta
     if not source_blobs and info.get("summary"):
         source_blobs = [str(info.get("summary"))]
     fallback_language = str((linked_repo or {}).get("language") or "python").lower()
-    tools = summarize_tools_from_source(source_blobs, package_name, fallback_language)
-    manifest = build_pypi_manifest(package_name, metadata, linked_repo, tools)
+    canonical_name = canonicalize_package_name(str(info.get("name") or package_name))
+    tools = summarize_tools_from_source(source_blobs, canonical_name, fallback_language)
+    manifest = build_pypi_manifest(canonical_name, metadata, linked_repo, tools)
 
     return analyze_artifact(
-        artifact_id=package_name,
-        artifact_url=info.get("package_url") or f"https://pypi.org/project/{package_name}/",
+        artifact_id=canonical_name,
+        artifact_url=info.get("package_url") or f"https://pypi.org/project/{canonical_name}/",
         source_label="pypi_mcp",
-        dedup_key=package_name,
+        dedup_key=canonical_name,
         manifest=manifest,
         tools=tools,
         source_files=source_files,
@@ -1276,7 +1302,35 @@ def crawl_hf_spaces_source(target: int, cache: Dict[str, Dict[str, Any]], source
 # Aggregation
 # ---------------------------------------------------------------------------
 
-def allocate_targets(total_target: int, enabled_sources: List[str]) -> Dict[str, int]:
+def parse_source_quotas(spec: str, enabled_sources: List[str], target: int) -> Dict[str, int]:
+    quotas: Dict[str, int] = {}
+    for chunk in spec.split(","):
+        chunk = chunk.strip()
+        if not chunk:
+            continue
+        if "=" not in chunk:
+            raise ValueError(f"Invalid source quota entry: {chunk}")
+        source, raw_value = chunk.split("=", 1)
+        source = source.strip()
+        if source not in enabled_sources:
+            raise ValueError(f"Quota references disabled or unknown source: {source}")
+        value = int(raw_value.strip())
+        if value < 0:
+            raise ValueError(f"Quota must be non-negative: {chunk}")
+        quotas[source] = value
+
+    missing = [source for source in enabled_sources if source not in quotas]
+    if missing:
+        raise ValueError(f"Missing quotas for sources: {', '.join(missing)}")
+    if sum(quotas.values()) != target:
+        raise ValueError(f"Quota total {sum(quotas.values())} does not match target {target}")
+    return quotas
+
+
+def allocate_targets(total_target: int, enabled_sources: List[str], source_quotas: Optional[str] = None) -> Dict[str, int]:
+    if source_quotas:
+        return parse_source_quotas(source_quotas, enabled_sources, total_target)
+
     weight_sum = sum(SOURCE_WEIGHTS.get(source, 1.0) for source in enabled_sources)
     allocations: Dict[str, int] = {}
     assigned = 0
@@ -1381,6 +1435,7 @@ def build_data_card(
     pages_per_query: int,
     source_budget: int,
     enabled_sources: List[str],
+    source_quotas: Optional[str],
     samples: List[Dict[str, Any]],
     stats: Dict[str, Any],
 ) -> Dict[str, Any]:
@@ -1400,6 +1455,7 @@ def build_data_card(
         source_details["pypi_mcp"] = {
             "seed_packages": PYPI_PACKAGE_SEEDS,
             "metadata_api": "https://pypi.org/pypi/<name>/json",
+            "simple_index_limit": "target*2",
         }
     if "hf_spaces_mcp" in enabled_sources:
         source_details["hf_spaces_mcp"] = {
@@ -1413,15 +1469,16 @@ def build_data_card(
         "actual_samples": len(samples),
         "enabled_sources": enabled_sources,
         "source_details": source_details,
+        "source_quotas": source_quotas,
         "source_budget": source_budget,
         "dedup_rule": "Deduplicate by source-specific artifact identifier (GitHub full_name, npm package name, PyPI package name, or Hugging Face space id); retain linked_repository when an upstream package points to GitHub.",
-        "filter_rule": "Collect public GitHub MCP repositories, npm MCP-related packages, curated PyPI MCP packages, and Hugging Face Spaces returned by MCP-related search terms; include metadata-only samples when bounded source probing finds no recognized entrypoint.",
+        "filter_rule": "Collect public GitHub MCP repositories, npm MCP-related packages, discovered PyPI MCP packages, and Hugging Face Spaces returned by MCP-related search terms; include metadata-only samples when bounded source probing finds no recognized entrypoint.",
         "version_rule": "Record GitHub default_branch plus timestamps; record npm/PyPI package version metadata; record Hugging Face Space sha and created/lastModified timestamps when exposed.",
         "license_rule": "Record SPDX identifier when the upstream API provides one; otherwise mark unknown.",
         "availability_rule": stats.get("code_availability", {}),
         "safety_boundary": "Passive metadata/source collection only; no third-party code execution, no destructive calls, no credential use.",
         "limitations": [
-            "GitHub, npm, PyPI, and Hugging Face coverage are query- or seed-biased and incomplete.",
+            "GitHub, npm, PyPI, and Hugging Face coverage are query- or discovery-biased and incomplete.",
             "Repository-level, package-level, and space-level signals do not prove deployable vulnerabilities.",
             "Manifest-only samples retain metadata evidence but weak implementation coverage.",
             "npm, PyPI, and Hugging Face source coverage depends on linked public files when present.",
@@ -1446,6 +1503,7 @@ def main() -> None:
     parser.add_argument("--source-budget", type=int, default=200, help="Maximum number of artifacts for which raw source entrypoints are fetched")
     parser.add_argument("--resume", action="store_true", help="Resume from cached per-artifact samples")
     parser.add_argument("--sources", default="github_mcp,npm_mcp,pypi_mcp,hf_spaces_mcp", help="Comma-separated source set")
+    parser.add_argument("--source-quotas", default="", help="Comma-separated exact quotas like github_mcp=3000,npm_mcp=1200,pypi_mcp=420,hf_spaces_mcp=380")
     parser.add_argument("--output-prefix", default="real_ecosystem", help="Output file prefix under results/ecosystem/")
     args = parser.parse_args()
 
@@ -1462,14 +1520,14 @@ def main() -> None:
     print(
         f"target={args.target} pages_per_query={args.pages_per_query} "
         f"source_budget={args.source_budget} resume={args.resume} "
-        f"sources={enabled_sources} output_prefix={args.output_prefix}"
+        f"sources={enabled_sources} source_quotas={args.source_quotas or 'auto'} output_prefix={args.output_prefix}"
     )
 
     cache = load_cache() if args.resume else {}
     if cache:
         print(f"Loaded {len(cache)} cached artifacts")
 
-    quotas = allocate_targets(args.target, enabled_sources)
+    quotas = allocate_targets(args.target, enabled_sources, args.source_quotas or None)
     remaining_budget = args.source_budget
     samples: List[Dict[str, Any]] = []
 
@@ -1520,6 +1578,7 @@ def main() -> None:
         pages_per_query=args.pages_per_query,
         source_budget=args.source_budget,
         enabled_sources=enabled_sources,
+        source_quotas=args.source_quotas or None,
         samples=samples,
         stats=stats,
     )

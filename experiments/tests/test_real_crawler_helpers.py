@@ -16,9 +16,11 @@ from crawl_real_ecosystem import (  # noqa: E402
     _request_headers,
     build_hf_manifest,
     cached_source_samples,
+    canonicalize_package_name,
     extract_github_repo_ref,
     npm_entrypoint_candidates,
     normalize_repo_url,
+    parse_source_quotas,
     tarball_member_texts,
 )
 
@@ -118,3 +120,15 @@ def test_request_headers_include_github_token(monkeypatch):
 def test_rate_limit_hint_mentions_resume():
     assert "GITHUB_TOKEN" in _rate_limit_hint("github")
     assert "--resume" in _rate_limit_hint("github")
+
+def test_canonicalize_package_name_normalizes_variants():
+    assert canonicalize_package_name("Aivpp.My_Test-MCP") == "aivpp-my-test-mcp"
+
+def test_parse_source_quotas_validates_total_and_members():
+    quotas = parse_source_quotas(
+        "github_mcp=10,npm_mcp=5,pypi_mcp=3,hf_spaces_mcp=2",
+        ["github_mcp", "npm_mcp", "pypi_mcp", "hf_spaces_mcp"],
+        20,
+    )
+    assert quotas["github_mcp"] == 10
+    assert quotas["hf_spaces_mcp"] == 2
