@@ -297,7 +297,37 @@ All external URLs use sinkhole domains (\texttt{*.example.invalid}, \texttt{*.si
 
 All 4{,}010 samples pass label validation: required fields present, labels valid, attack class matches label, expected evidence non-empty, benign pairs reference valid IDs, URLs resolve to sinkhole domains, and no real credentials are present.
 
-% ============================================================
+\subsection{Dataset Composition}
+\label{sec:dataset_composition}
+
+Table~\ref{tab:dataset} summarizes the evaluation datasets used in this paper.
+
+\begin{table}[t]
+\centering
+\caption{Dataset composition. Synthetic benchmarks are template-generated; real corpus is passive metadata collection from public ecosystems.}
+\label{tab:dataset}
+\begin{tabular}{lrrrl}
+\toprule
+Dataset & Benign & Malicious & Total & Source \\
+\midrule
+v0 benchmark (synthetic) & 1{,}000 & 3{,}010 & 4{,}010 & Template-generated \\
+v1 benchmark (synthetic) & 700 & 700 & 1{,}400 & Label-blind, 8 HN classes \\
+Independent benchmark & 200 & 210 & 410 & Separate vocabulary \\
+Real ecosystem & \multicolumn{3}{c}{1{,}000 artifacts} & 6 public sources \\
+\quad Source-available & \multicolumn{3}{c}{15 artifacts} & GitHub repos + PyPI \\
+\quad Manifest-only & \multicolumn{3}{c}{985 artifacts} & Metadata-only \\
+\midrule
+\multicolumn{5}{l}{\textit{Runtime and sandbox harnesses}} \\
+Local harness & 336 & 315 & 651 & 3 agent types \\
+Sandbox harness & 16 & 24 & 40 & Subprocess-isolated \\
+Third-party fixtures & \multicolumn{3}{c}{3 cases} & Public archive \\
+Corpus packages & \multicolumn{3}{c}{3 cases} & PyPI source \\
+GitHub repos & \multicolumn{3}{c}{2 cases} & Source-available \\
+TypeScript repos & \multicolumn{3}{c}{2 cases} & Source-available \\
+\bottomrule
+\end{tabular}
+\end{table}
+
 \section{Evaluation}
 \label{sec:eval}
 
@@ -769,6 +799,43 @@ The current fusion run has 0 false negatives and 0 false positives on the synthe
 
 \paragraph{Residual risk.}
  A zero-error synthetic result does not imply zero real-world risk. The benchmark is template-generated, the default simulated prober does not execute untrusted code, and even the local sandbox/runtime harnesses operate only on repository-controlled toy cases, curated public-code fixtures, or bounded sets of source-available PyPI package and GitHub repo/TypeScript cases rather than arbitrary third-party packages. Real agent platforms may also omit provenance labels needed by C2/C3/C6. We therefore treat the current result as evidence that the artifact is internally consistent and use RQ5 to evaluate external validity.
+
+\subsection{False Positive and False Negative Analysis}
+\label{sec:fp_fn}
+
+Table~\ref{tab:fp_fn} summarizes false positive and false negative behavior across all evaluation contexts.
+
+\begin{table}[t]
+\centering
+\caption{False positive and false negative analysis across evaluation contexts.}
+\label{tab:fp_fn}
+\begin{tabular}{lcccc}
+\toprule
+Evaluation & Samples & FP & FN & FPR \\
+\midrule
+v0 benchmark (synthetic) & 4{,}010 & 0 & 0 & 0.0\% \\
+v1 benchmark (synthetic) & 1{,}400 & 0 & 0 & 0.0\% \\
+Independent benchmark & 410 & 6 & 0 & 3.0\% \\
+\quad Hard negatives only & 60 & 6 & --- & 10.0\% \\
+Local runtime harness & 651 & 0 & 0 & 0.0\% \\
+Sandbox harness & 40 & 0 & 0 & 0.0\% \\
+Label-blinded audit & 1{,}400 & 0 & 0 & 0.0\% \\
+Real ecosystem (passive) & 1{,}000 & 2 & --- & 0.2\% \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\paragraph{Synthetic benchmarks.}
+Both v0 and v1 benchmarks achieve zero false positives and zero false negatives. On v0, this reflects benchmark closure: the generator and detector share vocabulary. On v1, which uses independent vocabulary and label-blind separation, the zero-error result demonstrates that the fusion engine is not overfit to specific template patterns.
+
+\paragraph{Independent benchmark.}
+The vocabulary-shifted independent benchmark produces 6 false positives out of 60 hard-negative benign samples (10.0\% hard-negative FPR). All 6 FP cases exhibit legitimate but suspicious-looking patterns: write scopes for note-taking tools, network access for RSS readers, and persistence writes for session managers. This is acceptable for a security tool that prioritizes recall over precision.
+
+\paragraph{Real ecosystem.}
+Passive measurement of 1{,}000 public artifacts produces 2 HIGH-severity findings. Manual triage classifies both as likely false positives: \texttt{firecrawl/firecrawl-mcp-server} has intentional network behavior for web scraping, and \texttt{idosal/git-mcp} has metadata-capability mismatch without exploit evidence.
+
+\paragraph{Error taxonomy.}
+The dominant false-positive pattern across all evaluations is \textit{legitimate scope mismatch}: tools that necessarily require write, network, or export access but declare read-only annotations. This suggests that improving manifest annotation accuracy in the MCP ecosystem would reduce false positive rates for all scope-aware detectors.
 
 % ============================================================
 \section{Ecosystem Measurement (RQ5)}
