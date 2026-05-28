@@ -174,6 +174,22 @@ This audit executes bounded source-available GitHub repo entrypoints selected fr
 
 ---
 
+### Public Remote Task Audit
+
+**File:** `results/main/remote_task_audit.json`
+**Format:** JSON
+**Produced by:** `python scripts/run_remote_task_audit.py`
+
+| Metric | Value |
+|---|---:|
+| Cases executed | 2 |
+| Successful tool calls | 2 |
+| Structured tool results | 1 |
+
+This audit executes harmless read-only tool calls against a bounded set of public MCP endpoints selected from the checked-in official-registry slice. It demonstrates unauthenticated task execution on real deployments, but it still does not constitute authenticated or production-integrated runtime evaluation.
+
+---
+
 ## 8. Latency Measurement
 
 **File:** `results/main/latency.json`  

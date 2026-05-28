@@ -54,6 +54,7 @@ This checklist is extracted from `README.md`, `docs/roadmap.md`, `docs/plan.md`,
 - [x] Add a bounded public remote endpoint audit over official-registry deployments.
 - [x] Cross-check the main real public corpus against known official MCP advisories.
 - [x] Add a bounded GitHub repo sandbox over source-available public-repo entrypoints.
+- [x] Add a bounded public remote task audit over official-registry deployments.
 - [x] Use disclosure log entries before publishing real vulnerable package identities.
 
 ## Paper
@@ -80,6 +81,7 @@ This checklist is extracted from `README.md`, `docs/roadmap.md`, `docs/plan.md`,
 - [x] Include `run_public_advisory_audit.py` in `eval-main`.
 - [x] Include `run_remote_endpoint_audit.py` in `eval-main`.
 - [x] Include `run_github_repo_sandbox.py` in `eval-main`.
+- [x] Include `run_remote_task_audit.py` in `eval-main`.
 - [x] Run smoke, tests, main evaluation, ablation, runtime red-team, latency, bootstrap, failure analysis, tables, and available Docker/Conda checks before final delivery.
 - [x] Confirm no real secrets, credentials, or operational payloads are included.
 - [x] Confirm `git status --short` is clean and list commits.

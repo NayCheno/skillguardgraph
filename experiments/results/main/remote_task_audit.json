@@ -1,0 +1,44 @@
+{
+  "cases_total": 2,
+  "cases_executed": 2,
+  "successful_tool_calls": 2,
+  "structured_tool_results": 1,
+  "acceptance": {
+    "all_cases_executed": true,
+    "successful_tool_calls_ge_2": true,
+    "all_signals_matched": true,
+    "structured_result_observed": true
+  },
+  "cases": [
+    {
+      "case_id": "aarna_available_symbols",
+      "repo": "ai.aarna/atars-mcp",
+      "url": "https://mcp.aarna.ai/mcp",
+      "tool_name": "get_available_symbols",
+      "arguments": {},
+      "expected_signal": "available_symbols",
+      "description": "Read-only tool call expected to return the list of supported crypto symbols.",
+      "initialized_notification_status": 202,
+      "session_id_present": false,
+      "tool_call_success": true,
+      "signal_matched": true,
+      "structured_result": false,
+      "tool_result_preview": "{\n  \"available_symbols\": [\n    \"ADA\",\n    \"AVAX\",\n    \"BCH\",\n    \"BNB\",\n    \"BTC\",\n    \"DOGE\",\n    \"ETH\",\n    \"HBAR\",\n    \"LINK\",\n    \"LTC\",\n    \"SHIB\",\n    \"SOL\",\n    \"SUI\",\n    \"TRX\",\n    \"XLM\",\n    \"XRP\",\n    \"ZEC\"\n  ],\n  \"count\": 17\n}"
+    },
+    {
+      "case_id": "agenticshelf_list_products",
+      "repo": "ai.agenticshelf/mcp",
+      "url": "https://api.agenticshelf.ai/mcp",
+      "tool_name": "list_products",
+      "arguments": {},
+      "expected_signal": "commerce_unavailable",
+      "description": "Read-only tool call expected to return a structured placeholder when the commerce backend is absent.",
+      "initialized_notification_status": 202,
+      "session_id_present": false,
+      "tool_call_success": true,
+      "signal_matched": true,
+      "structured_result": true,
+      "tool_result_preview": "{\n  \"products\": [],\n  \"next_cursor\": null,\n  \"has_more\": false,\n  \"live\": false,\n  \"error\": \"commerce_unavailable\",\n  \"message\": \"Commerce backend is not configured. Set SHOPIFY_STORE_URL and SHOPIFY_ADMIN_API_KEY, or set COMMERCE_ALLOW_MOCK=1 for demo data.\"\n}"
+    }
+  ]
+}

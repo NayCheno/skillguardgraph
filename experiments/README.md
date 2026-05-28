@@ -113,7 +113,7 @@ experiments/
 | `make test` | Unit tests (verbose) | ~2 min |
 | `make benchmark` | Build benchmark (4010 samples) | ~5 min |
 | `make validate` | Validate benchmark labels | ~2 min |
-| `make eval-main` | Detection + ablation + runtime eval + runtime/sandbox harnesses + third-party fixture sandbox + bounded corpus-package sandbox + public advisory audit + bounded remote endpoint audit + bounded GitHub repo sandbox + bootstrap + generalization | ~15 min |
+| `make eval-main` | Detection + ablation + runtime eval + runtime/sandbox harnesses + third-party fixture sandbox + bounded corpus-package sandbox + public advisory audit + bounded remote endpoint audit + bounded GitHub repo sandbox + bounded remote task audit + bootstrap + generalization | ~15 min |
 | `make tables` | Generate tables + failure analysis + significance | ~1 min |
 | `make ecosystem` | Crawl synthetic ecosystem corpus | ~10 min |
 | `make real-ecosystem` | Crawl passive real public GitHub + npm + PyPI + Hugging Face + Smithery + official MCP Registry corpus | network-bound |
@@ -135,6 +135,7 @@ experiments/
 | `make remote-endpoint-audit` | Probe a bounded set of public remote MCP endpoints from the corpus | ~30 sec |
 | `make github-repo-sandbox` | Execute bounded source-available GitHub repo entrypoints from the corpus | ~30 sec |
 | `make clean` | Remove all generated results and data | instant |
+| `make remote-task-audit` | Execute harmless read-only tool calls on bounded public remote MCP endpoints | ~30 sec |
 
 ---
 
@@ -158,6 +159,7 @@ results/main/corpus_package_sandbox.json # Bounded corpus-derived package sandbo
 results/ecosystem/public_advisory_audit.json # Known public-advisory cross-check against the main real corpus
 results/main/remote_endpoint_audit.json # Bounded public remote MCP endpoint audit metrics
 results/main/github_repo_sandbox.json # Bounded source-available GitHub repo sandbox metrics
+results/main/remote_task_audit.json # Bounded harmless remote MCP tool-call audit metrics
 ```
 
 After `make eval-all` (additional files):
@@ -221,6 +223,7 @@ Key result numbers:
 | Public remote endpoint audit | 4 endpoints, 2 initialize+tools/list successes, 2 protected rejections |
 | GitHub repo sandbox | 2 GitHub cases, tool registry total 18, blender delegate observed |
 
+| Public remote task audit | 2 harmless tool calls succeeded, 1 structured result observed |
 See `../artifact/EXPECTED_OUTPUTS.md` for full output documentation.
 ---
 
@@ -264,6 +267,9 @@ PYTHONPATH=src python scripts/run_remote_endpoint_audit.py
 
 # Bounded GitHub repo sandbox
 PYTHONPATH=src python scripts/run_github_repo_sandbox.py
+
+# Bounded public remote task audit
+PYTHONPATH=src python scripts/run_remote_task_audit.py
 
 # Supplementary 5k public corpus
 PYTHONPATH=src python scripts/crawl_real_ecosystem.py --target 5000 --pages-per-query 6 --source-budget 25 --sources github_mcp,npm_mcp,pypi_mcp,hf_spaces_mcp --source-quotas github_mcp=2600,npm_mcp=2000,pypi_mcp=20,hf_spaces_mcp=380 --output-prefix real_ecosystem_5k --resume

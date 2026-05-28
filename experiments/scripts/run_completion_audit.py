@@ -41,6 +41,7 @@ RESULT_FILES = [
     RESULTS_MAIN / "corpus_package_sandbox.json",
     RESULTS_MAIN / "remote_endpoint_audit.json",
     RESULTS_MAIN / "github_repo_sandbox.json",
+    RESULTS_MAIN / "remote_task_audit.json",
     RESULTS_MAIN / "latency.json",
     RESULTS_MAIN / "bootstrap_ci.json",
     RESULTS_MAIN / "generalization_eval.json",
@@ -88,6 +89,7 @@ def main() -> None:
     public_advisory = read_json(RESULTS_ECO / "public_advisory_audit.json")
     github_repo_sandbox = read_json(RESULTS_MAIN / "github_repo_sandbox.json")
     remote_endpoint_audit = read_json(RESULTS_MAIN / "remote_endpoint_audit.json")
+    remote_task_audit = read_json(RESULTS_MAIN / "remote_task_audit.json")
 
     supported = {
         "docs_present": all(docs_present.values()),
@@ -102,6 +104,7 @@ def main() -> None:
         "github_repo_acceptance": all(github_repo_sandbox["acceptance"].values()),
         "public_corpus_reaches_5k": int(batch_5k.get("total_samples", 0)) >= 5000,
         "remote_endpoint_audit_acceptance": all(remote_endpoint_audit["acceptance"].values()),
+        "remote_task_audit_acceptance": all(remote_task_audit["acceptance"].values()),
         "public_corpus_reaches_10k": int(batch_10k.get("total_samples", 0)) >= 10000,
     }
 
@@ -117,7 +120,7 @@ def main() -> None:
         "strong_submission_blockers": [
             "No currently vulnerable or disclosure-backed real cases in the measured snapshot.",
             "No arbitrary third-party dynamic sandbox execution beyond bounded source-available public-package and GitHub repo cases.",
-            "No authenticated or task-executing production runtime deployment evidence.",
+            "No authenticated production runtime deployment evidence.",
             "No private enterprise catalog coverage.",
         ],
     }
@@ -142,6 +145,11 @@ def main() -> None:
             "tools_list_successes": remote_endpoint_audit.get("tools_list_successes", 0),
             "protected_endpoints_observed": remote_endpoint_audit.get("protected_endpoints_observed", 0),
         },
+        "remote_task_summary": {
+            "cases_executed": remote_task_audit.get("cases_executed", 0),
+            "successful_tool_calls": remote_task_audit.get("successful_tool_calls", 0),
+            "structured_tool_results": remote_task_audit.get("structured_tool_results", 0),
+        },
     }
 
     OUT_JSON.write_text(json.dumps(summary, indent=2, ensure_ascii=False), encoding="utf-8")
@@ -164,6 +172,7 @@ def main() -> None:
         f"- public remote endpoint audit: {remote_endpoint_audit.get('cases_probed', 0)} probed, initialize_successes={remote_endpoint_audit.get('initialize_successes', 0)}, tools_list_successes={remote_endpoint_audit.get('tools_list_successes', 0)}",
         f"- GitHub repo sandbox: {github_repo_sandbox.get('cases_executed', 0)} cases, tool_registry_total={github_repo_sandbox.get('tool_registry_total', 0)}",
         f"- 5k batch: {batch_5k.get('total_samples', 0)} artifacts",
+        f"- public remote task audit: {remote_task_audit.get('cases_executed', 0)} executed, successful_tool_calls={remote_task_audit.get('successful_tool_calls', 0)}, structured_results={remote_task_audit.get('structured_tool_results', 0)}",
         f"- 10k batch: {batch_10k.get('total_samples', 0)} artifacts, source_available={batch_10k.get('code_availability', {}).get('source_available', 0)}",
         f"- confirmed real vulnerabilities: {triage['summary'].get('confirmed_vulnerabilities', 0)}",
         f"- disclosures sent: {triage['summary'].get('disclosures_sent', 0)}",

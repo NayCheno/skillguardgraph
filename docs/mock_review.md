@@ -18,7 +18,7 @@ SkillGuardGraph is a strong artifact-oriented research prototype with a coherent
 
 1. Real-world evidence remains passive and metadata-heavy, even though the artifact now includes a small official-advisory cross-check over the main public corpus.
 2. No confirmed real vulnerabilities or disclosure-backed case studies.
-3. Local runtime/sandbox harnesses now include archive-backed public-code fixtures, bounded source-available PyPI package execution, bounded GitHub repo execution, and a bounded public remote endpoint audit, but they are still not arbitrary third-party execution environments.
+3. Local runtime/sandbox harnesses now include archive-backed public-code fixtures, bounded source-available PyPI package execution, bounded GitHub repo execution, a bounded public remote endpoint audit, and bounded harmless remote tool calls, but they are still not arbitrary third-party execution environments.
 4. Source-available coverage in real batches remains too low for strong exploit or implementation claims, even after adding a public hosted-registry slice.
 5. The 5k and 10k ecosystem measurements materially improve breadth but not validation depth.
 
@@ -42,7 +42,7 @@ SkillGuardGraph is a strong artifact-oriented research prototype with a coherent
 1. The artifact now reaches 10k passive public artifacts, so the next missing step is no longer scale alone but materially better source coverage and validated real cases.
 2. At least one disclosure-ready or confirmed real case study.
 3. Third-party dynamic sandbox execution under safe isolation at arbitrary package / marketplace breadth.
-4. Authenticated or task-level production runtime integration rather than only bounded unauthenticated probes and toy harnesses.
+4. Authenticated production runtime integration rather than only bounded unauthenticated probes, harmless public tool calls, and toy harnesses.
 
 ## Paper handling guidance
 

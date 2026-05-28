@@ -35,7 +35,7 @@ SkillGuardGraph currently targets a safe research setting:
 
 - Prototype and synthetic artifact are functional.
 - The benchmark covers seven attack classes and 4,010 samples.
-- Fusion evaluation reports threshold-independent metrics, paired significance tests, held-out/hard-negative robustness checks, a local instrumented runtime harness, a curated third-party public-code sandbox fixture suite, a bounded corpus-derived PyPI package sandbox, a bounded GitHub repo sandbox, a bounded public remote endpoint audit, label-leakage audit, and regenerated paper tables.
+- Fusion evaluation reports threshold-independent metrics, paired significance tests, held-out/hard-negative robustness checks, a local instrumented runtime harness, a curated third-party public-code sandbox fixture suite, a bounded corpus-derived PyPI package sandbox, a bounded GitHub repo sandbox, a bounded public remote endpoint audit, a bounded public remote task audit, label-leakage audit, and regenerated paper tables.
 - A passive real public measurement over 1,000 public MCP artifacts (300 GitHub repositories, 200 npm packages, 150 discovered PyPI packages, 150 Hugging Face Spaces, 100 Smithery hosted-registry entries, and 100 official MCP Registry entries) is included with a data card, an official-advisory cross-check, and manual triage of all HIGH findings, alongside supplementary 2k/3k/5k/10k scale-out catalog batches.
 - The remaining claim boundary is deployment-grade external validity: passive multi-source catalog evidence, local toy-harness evidence, and synthetic stress checks do not replace production runtime confirmation or disclosure-backed real vulnerability case studies.
 
