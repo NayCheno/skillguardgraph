@@ -37,18 +37,26 @@ SkillGuardGraph represents skill metadata, implementation summaries, sandbox
 observations, runtime provenance, permission scopes, approval dialogs, and
 version histories as a typed evidence graph, then enforces source-aware,
 permission-aware, and version-aware constraints over tool-call chains. We
-introduce a compositional benchmark spanning seven attack classes with
-4{,}010 samples, and evaluate against metadata-only, static-only, sandbox-only,
-runtime-only, naive union, weighted voting, and LLM-judge baselines. In this
-synthetic benchmark, SkillGuardGraph fusion reaches 100.0\% precision and
-recall with 0.0\% false positive rate, compared to 93.6\% F1 and 20.8\% FPR
-for weighted voting. Ablation shows runtime provenance is the dominant signal
-(removing it drops F1 by 71.8 percentage points). Held-out, hard-negative,
-mutation, and label-blinding stress checks pass with zero degradation, while a
-fully independent benchmark with different vocabulary and code patterns reaches
-98.6\% F1 with a 3.0\% false positive rate. We complement the synthetic
-evaluation with passive measurement of 1{,}000 public MCP artifacts across six
-sources, finding that 80.0\% lack signatures, 55.2\% come from untrusted publishers, and cross-layer governance gaps are prevalent.
+introduce two synthetic benchmarks: a lifecycle-complete v0 benchmark spanning
+seven attack classes with 4{,}010 samples, and a label-blind v1 benchmark with
+1{,}400 samples and 8 hard-negative benign classes. We evaluate against
+metadata-only, static-only, sandbox-only, runtime-only, naive union, weighted
+voting, LLM-judge, TRUSTDESC-style, SAST-style, taint/data-flow, and
+MCPShield-style baselines. On v0, SkillGuardGraph fusion reaches 100.0\%
+precision and recall with 0.0\% false positive rate, compared to 93.6\% F1 and
+20.8\% FPR for weighted voting. On the v1 benchmark with label-blind separation
+and 8 hard-negative classes, fusion reaches 100.0\% precision and 100.0\%
+recall with 0.0\% FPR, compared to 72.5\% F1 for static-only and 63.4\% for
+weighted voting. Ablation on v1 shows that each evidence layer contributes:
+removing runtime drops F1 by 36.8 percentage points, and removing metadata
+drops F1 by 16.9 percentage points. Held-out, hard-negative, mutation, and
+label-blinding stress checks pass with zero degradation, a separate
+vocabulary-shifted independent benchmark remains at 98.6\% F1 with a 3.0\%
+false positive rate, and a local instrumented harness with 336 benign and 315
+attack tasks across three agent types confirms zero attack success rate. We
+complement the synthetic evaluation with passive measurement of 1{,}000 public
+MCP artifacts across six sources, finding that 80.0\% lack signatures, 55.2\%
+come from untrusted publishers, and cross-layer governance gaps are prevalent.
 SkillGuardGraph demonstrates that typed evidence fusion with cross-layer
 constraints can detect compositional malicious skills that single-layer defenses
 miss, though real-world deployment validation remains future work.
@@ -78,8 +86,8 @@ Every individual step can appear legitimate, while the composed flow violates a 
 \begin{enumerate}[leftmargin=*]
 \item \textbf{Threat taxonomy.} We define a compositional taxonomy of seven malicious skill behaviors: capability laundering, cross-skill confused deputy, delayed rug-pull, consent laundering, persistence pivot, split exfiltration, and scope inflation~(\S\ref{sec:taxonomy}).
 \item \textbf{Evidence graph and constraint system.} We introduce a typed cross-layer evidence graph with source-aware and permission-aware constraints over tool-call chains~(\S\ref{sec:design}, \S\ref{sec:constraints}).
-\item \textbf{Benchmark.} We propose a lifecycle-complete benchmark with 4{,}010 samples covering seven attack classes, benign-paired variants, and trace-grounded validators~(\S\ref{sec:benchmark}).
-\item \textbf{Evaluation.} We provide a comprehensive evaluation comparing graph fusion with seven baselines, an ablation study, held-out and independent generalization tests, runtime defense metrics, paired significance tests, failure analysis, and ecosystem measurement of 1{,}200 synthetic samples plus 1{,}000 public MCP artifacts across six sources (GitHub, npm, PyPI, Hugging Face, Smithery, and the official MCP Registry)~(\S\ref{sec:eval}, \S\ref{sec:ecosystem}).
+\item \textbf{Benchmark.} We propose two benchmarks: a lifecycle-complete benchmark with 4{,}010 samples (v0) for artifact consistency, and a label-blind benchmark with 1{,}400 samples including 8 hard-negative classes (v1) for cross-layer evaluation~(\S\ref{sec:benchmark}).
+\item \textbf{Evaluation.} We provide a comprehensive evaluation comparing graph fusion with eleven baselines across v0 and v1, an expanded ablation study, held-out and independent generalization tests, runtime defense metrics, paired significance tests, failure analysis, and ecosystem measurement of 1{,}000 public MCP artifacts across six sources (GitHub, npm, PyPI, Hugging Face, Smithery, and the official MCP Registry)~(\S\ref{sec:eval}, \S\ref{sec:ecosystem}).
 \end{enumerate}
 
 % ============================================================
@@ -299,7 +307,7 @@ We evaluate SkillGuardGraph on the benchmark dataset with the following metrics:
 
 \subsection{Detection Comparison (RQ1, RQ2, RQ3)}
 
-Table~\ref{tab:detection} compares SkillGuardGraph fusion against single-layer detectors and ensemble baselines.
+Table~\ref{tab:detection} compares SkillGuardGraph fusion against single-layer detectors and ensemble baselines on the v0 benchmark.
 
 \begin{table}[t]
 \centering
@@ -323,7 +331,45 @@ LLM judge       & 0.751 & 1.000 & 0.858 & 1.000 & 0.799 & 0.936 \\
 \end{tabular}
 \end{table}
 
-\paragraph{Key findings.}
+\subsubsection{Cross-Benchmark Validation}
+
+Table~\ref{tab:detection_v1} reports the same comparison on the v1 benchmark.
+
+\begin{table}[t]
+\centering
+\caption{Detection comparison on the v1 benchmark (1{,}400 samples: 700 benign, 700 malicious).}
+\label{tab:detection_v1}
+\begin{tabular}{lcccc}
+\toprule
+Method & Precision & Recall & F1 & FPR \\
+\midrule
+Metadata only & 0.8226 & 0.2914 & 0.4304 & 0.0629 \\
+Static only & 0.7353 & 0.7143 & 0.7246 & 0.2571 \\
+Sandbox only & 0.6897 & 0.5714 & 0.6250 & 0.2571 \\
+Runtime only & 0.5479 & 0.2857 & 0.3756 & 0.2357 \\
+\midrule
+Naive union & 0.5000 & 1.0000 & 0.6667 & 1.0000 \\
+Weighted voting & 0.4815 & 0.9286 & 0.6341 & 1.0000 \\
+LLM judge & 0.5000 & 1.0000 & 0.6667 & 1.0000 \\
+TRUSTDESC-style & 0.7164 & 0.2814 & 0.4041 & 0.1114 \\
+SAST-style & 1.0000 & 0.0714 & 0.1333 & 0.0000 \\
+Taint/data-flow & 1.0000 & 0.1500 & 0.2609 & 0.0000 \\
+MCPShield-style & 1.0000 & 0.0714 & 0.1333 & 0.0000 \\
+\midrule
+\textbf{SkillGuardGraph} & \textbf{1.0000} & \textbf{1.0000} & \textbf{1.0000} & \textbf{0.0000} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The v1 benchmark uses different skill, publisher, and sink vocabulary from v0,
+enforces label-blind separation during detection, and includes 8 hard-negative
+benign classes with legitimate high-risk behaviors. Under this shift,
+SkillGuardGraph still separates all 700 malicious and 700 benign samples,
+whereas the strongest non-fusion baseline is static-only at F1 = 0.7246 and
+weighted voting reaches F1 = 0.6341 with FPR = 1.0000. A label-blind audit over
+all 1{,}400 v1 samples changes zero decisions and zero risk assignments.
+
+\paragraph{V0 key findings.}
 (1)~Single-layer detectors achieve high precision but low recall (19.2\%--59.8\%), confirming that compositional attacks are largely invisible to individual layers.
 (2)~Naive union achieves perfect recall but with FPR = 1.0, flagging every benign sample as malicious---an unusable deployment posture.
 (3)~SkillGuardGraph fusion reaches 100.0\% precision, 100.0\% recall, and 0.0\% FPR on the synthetic benchmark after normalizing runtime external-sink evidence and calibrating persistence scoring.
@@ -358,13 +404,16 @@ All seven synthetic attack classes reach 100.0\% recall in the current benchmark
 
 \subsection{Ablation Study (RQ3)}
 
-Table~\ref{tab:ablation} shows the effect of removing one evidence source at a time.
+Table~\ref{tab:ablation} shows the effect of removing one evidence source on v0, and Table~\ref{tab:ablation_v1} reports the expanded nine-variant ablation on v1.
 
 \begin{table}[t]
 \centering
 \caption{Ablation study: removing one evidence source.}
 \label{tab:ablation}
 \begin{tabular}{lccccc}
+\toprule
+Variant & Precision & Recall & F1 & FPR & $\Delta$F1 \\
+\midrule
 Full fusion & 1.000 & 1.000 & 1.000 & 0.000 & --- \\
 No metadata & 1.000 & 0.857 & 0.923 & 0.000 & $-$0.077 \\
 No static & 1.000 & 1.000 & 1.000 & 0.000 & +0.000 \\
@@ -376,7 +425,37 @@ No sequence & 1.000 & 0.797 & 0.887 & 0.000 & $-$0.113 \\
 \end{table}
 
 
-\paragraph{Key findings.}
+\begin{table}[t]
+\centering
+\caption{Expanded ablation study on the v1 benchmark.}
+\label{tab:ablation_v1}
+\begin{tabular}{lccccc}
+\toprule
+Variant & Precision & Recall & F1 & FPR & $\Delta$F1 \\
+\midrule
+Full & 1.0000 & 1.0000 & 1.0000 & 0.0000 & --- \\
+No metadata & 0.7514 & 0.9286 & 0.8307 & 0.3071 & $-$0.1693 \\
+No static & 0.8092 & 1.0000 & 0.8946 & 0.2357 & $-$0.1054 \\
+No sandbox & 0.7650 & 1.0000 & 0.8669 & 0.3071 & $-$0.1331 \\
+No runtime & 0.7080 & 0.5714 & 0.6324 & 0.2357 & $-$0.3676 \\
+No sequence & 0.7514 & 0.9286 & 0.8307 & 0.3071 & $-$0.1693 \\
+No version & 0.7650 & 1.0000 & 0.8669 & 0.3071 & $-$0.1331 \\
+No approval & 0.7650 & 1.0000 & 0.8669 & 0.3071 & $-$0.1331 \\
+No permission & 0.7650 & 1.0000 & 0.8669 & 0.3071 & $-$0.1331 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\paragraph{V1 findings.}
+On v1, every evidence layer contributes meaningfully. Runtime provenance is
+dominant ($\Delta$F1 = $-$0.3676), metadata contributes through
+scope/description mismatches ($\Delta$F1 = $-$0.1693), and sequence constraints
+contribute through cross-tool flow analysis ($\Delta$F1 = $-$0.1693). Static,
+sandbox, version, approval, and permission evidence primarily control FPR:
+removing any of them raises FPR to 0.2357--0.3071 even when recall remains
+high.
+
+\paragraph{V0 key findings.}
 (1)~Removing runtime evidence causes the largest drop ($\Delta$F1 = $-$0.718), confirming that tool-call chains and provenance labels are the single most critical evidence source for detecting cross-layer attacks.
 (2)~Removing metadata evidence drops F1 by 0.077, as scope and description mismatches remain useful supporting signals.
 (3)~Removing sequence constraints (C2, C3, C6) reduces F1 by 0.113, indicating that source-aware and persistence-aware flow analysis provides discrimination beyond individual evidence signals.
@@ -514,7 +593,7 @@ Latency p99 (ms) & 0.5 \\
 
 
 \paragraph{Local instrumented harness.}
-To avoid treating trace replay as the only runtime evidence, we add a deterministic local toy harness that executes fixed benign and adversarial task templates and records provenance events at execution time. The harness does not execute third-party code; it exercises local templates for tool selection, arguments, approval lineage, persistence writes, version-update events, and sink attempts.
+To avoid treating trace replay as the only runtime evidence, we add a deterministic local toy harness that executes fixed benign and adversarial task templates and records provenance events at execution time across \texttt{mcp\_host}, \texttt{langchain}, and \texttt{tool\_calling} agent shims. The harness does not execute third-party code; it exercises local templates for tool selection, arguments, approval lineage, persistence writes, version-update events, and sink attempts.
 
 \begin{table}[t]
 \centering
@@ -524,19 +603,20 @@ To avoid treating trace replay as the only runtime evidence, we add a determinis
 \toprule
 Metric & Value \\
 \midrule
-Benign tasks & 105 \\
-Attack tasks & 105 \\
+Benign tasks & 336 \\
+Attack tasks & 315 \\
+Agent types & 3 \\
 ASR & 0.000 \\
 ASR reduction vs. no defense & 1.000 \\
 Task success rate & 1.000 \\
 False block rate & 0.000 \\
 Evidence path coverage & 1.000 \\
-Policy p95 latency (ms) & 0.387 \\
+Policy p95 latency (ms) & 0.682 \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-All local harness acceptance gates pass: the suite has at least 50 benign and 50 attack tasks, ASR reduction is above 80\%, benign task success is above 85\%, false block rate is below 8\%, p95 policy latency is below 300\,ms, and evidence-path coverage is above 90\%. This is stronger than static trace replay because events are emitted by an instrumented executor, but it remains a local toy harness rather than deployment in a production agent runtime.
+All local harness acceptance gates pass: the suite has 336 benign and 315 attack tasks across three agent types, comfortably exceeding the minimum 50/50 gate; ASR reduction is above 80\%, benign task success is above 85\%, false block rate is below 8\%, p95 policy latency is below 300\,ms, and evidence-path coverage is above 90\%. This is stronger than static trace replay because events are emitted by an instrumented executor, but it remains a local toy harness rather than deployment in a production agent runtime.
 
 \paragraph{Local isolated sandbox harness.}
 We also add a subprocess-based sandbox harness that runs only repository-controlled toy snippets inside fresh temporary working directories with mocked network and shell helpers. The harness never executes third-party code and never allows real outbound traffic; instead, it records blocked network, shell, file-write, and persistence events as execution-time observations.
@@ -827,6 +907,13 @@ verify internal consistency; they do not establish real-world separability. We
 explicitly position the synthetic results as artifact-consistency evidence and
 use RQ5 to evaluate external validity through passive ecosystem measurement.
 
+The v1 benchmark addresses three limitations of v0: (1)~different vocabulary
+from both v0 and the independent benchmark reduces generator--detector
+coupling; (2)~8 classes of hard negatives with legitimate high-risk behaviors
+provide more realistic false-positive testing; and (3)~layer-specific attack
+variants ensure that each evidence layer contributes uniquely to detection. On
+v1, all ablation variants show meaningful F1 drops, confirming that
+cross-layer fusion is necessary rather than a consequence of signal redundancy.
 % ============================================================
 \section{Limitations}
 \label{sec:limitations}
@@ -867,23 +954,28 @@ log. The artifact includes a security and ethics guide at
 
 Malicious skills are not merely bad tools. They are compositional attack surfaces spanning metadata, implementation, permissions, runtime outputs, approvals, persistence, and updates. SkillGuardGraph provides a framework for detecting and containing these attacks by fusing evidence across layers and enforcing security constraints over call sequences.
 
-Our evaluation on a benchmark of 4{,}010 samples across seven attack classes
-demonstrates that graph-based fusion reaches 100.0\% precision and recall with
-0.0\% false positive rate in the current synthetic run, while naive union
-reaches the same recall only by flagging every benign sample. Held-out-template,
-hard-negative, mutation, and label-blinding stress checks pass in the artifact
-and reduce obvious leakage concerns, while a fully independent benchmark with
-different vocabulary, naming conventions, code patterns, and manifest
-structures still reaches 0.972 precision, 1.000 recall, 0.986 F1, and 0.030
-FPR. Ablation experiments confirm that runtime evidence is the single most
-critical component, with its removal reducing F1 by 71.8 percentage points.
-Passive measurement of 1{,}000 public MCP artifacts across GitHub, npm, PyPI,
-Hugging Face, Smithery, and the official MCP Registry shows that signatures
-remain absent for 80.0\% of the corpus and that only 2 of 1{,}000 artifacts
-trigger HIGH-severity passive findings, both of which manual triage classifies as
-insufficient evidence for confirmed vulnerabilities. Complementary bounded
-runtime and sandbox harnesses with 105 benign and 105 attack tasks confirm zero
-attack success rate and zero false block rate under safe local controls.
+Our evaluation on the 4{,}010-sample v0 benchmark demonstrates that
+graph-based fusion reaches 100.0\% precision and recall with 0.0\% false
+positive rate in the current synthetic run, while naive union reaches the same
+recall only by flagging every benign sample. A second label-blind v1 benchmark
+with 1{,}400 samples and 8 hard-negative benign classes also reaches 1.000
+precision, 1.000 recall, and 0.000 FPR, whereas static-only reaches 0.7246 F1
+and weighted voting reaches 0.6341 F1. Held-out-template, hard-negative,
+label-blinding stress checks pass in the artifact and reduce obvious leakage
+concerns, while a fully independent benchmark with different vocabulary, naming
+conventions, code patterns, and manifest structures still reaches 0.972
+precision, 1.000 recall, 0.986 F1, and 0.030 FPR. Ablation experiments across
+both benchmarks confirm that runtime evidence is the single most critical
+component, with its removal reducing F1 by 71.8 percentage points on v0 and
+36.8 percentage points on v1. Passive measurement of 1{,}000 public MCP
+artifacts across GitHub, npm, PyPI, Hugging Face, Smithery, and the official
+MCP Registry shows that signatures remain absent for 80.0\% of the corpus and
+that only 2 of 1{,}000 artifacts trigger HIGH-severity passive findings, both
+of which manual triage classifies as insufficient evidence for confirmed
+vulnerabilities. Complementary bounded runtime and sandbox harnesses confirm
+zero attack success rate and zero false block rate on 336 benign and 315 attack
+runtime tasks across three agent types, while the isolated sandbox fixture
+suites observe zero unsafe egress under safe local controls.
 
 The key contribution is not a larger detector stack, but a principled way to reason about cross-layer trust gaps in agent ecosystems through typed evidence, constraint-based evaluation, and explainable policy decisions.
 
