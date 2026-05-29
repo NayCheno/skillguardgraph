@@ -54,11 +54,11 @@ label-blinding stress checks pass with zero degradation, a separate
 vocabulary-shifted independent benchmark remains at 98.6\% F1 with a 3.0\%
 false positive rate, and a local instrumented harness with 336 benign and 315
 attack tasks across three agent types confirms zero attack success rate. We
-complement the synthetic evaluation with passive measurement of 1{,}000 public
-MCP artifacts across six sources, expanding source-entrypoint coverage to 50
-artifacts and performing LLM-assisted dual-reviewer classification on 86
-artifacts. This review identifies 20 L2 unsafe chains---primarily scope
-inflation patterns---with 77\% inter-reviewer agreement. SkillGuardGraph
+complement the synthetic evaluation with passive measurement of 1{,}003 public
+MCP artifacts across six sources, expanding source-entrypoint coverage to 201
+artifacts and performing LLM-assisted dual-reviewer classification on 235
+artifacts. This review identifies 40 L2 unsafe chains---primarily scope
+inflation patterns---with 84\% inter-reviewer agreement. SkillGuardGraph
 demonstrates that typed evidence fusion with cross-layer constraints can detect
 compositional malicious skills that single-layer defenses miss, though
 real-world deployment validation remains future work.
@@ -315,9 +315,9 @@ Dataset & Benign & Malicious & Total & Source \\
 v0 benchmark (synthetic) & 1{,}000 & 3{,}010 & 4{,}010 & Template-generated \\
 v1 benchmark (synthetic) & 700 & 700 & 1{,}400 & Label-blind, 8 HN classes \\
 Independent benchmark & 200 & 210 & 410 & Separate vocabulary \\
-Real ecosystem & \multicolumn{3}{c}{1{,}000 artifacts} & 6 public sources \\
-\quad Source-available & \multicolumn{3}{c}{15 artifacts} & GitHub repos + PyPI \\
-\quad Manifest-only & \multicolumn{3}{c}{985 artifacts} & Metadata-only \\
+Real ecosystem & \multicolumn{3}{c}{1{,}003 artifacts} & 6 public sources \\
+\quad Source-available & \multicolumn{3}{c}{201 artifacts} & GitHub repos + PyPI \\
+\quad Manifest-only & \multicolumn{3}{c}{802 artifacts} & Metadata-only \\
 \midrule
 \multicolumn{5}{l}{\textit{Runtime and sandbox harnesses}} \\
 Local harness & 336 & 315 & 651 & 3 agent types \\
@@ -767,16 +767,16 @@ Case p95 latency (ms) & 67.707 \\
 \subsection{Real-World Unsafe Chain Analysis}
 \label{sec:real_findings}
 
-Beyond synthetic evaluation, we apply SkillGuardGraph to the 1{,}000-artifact public corpus and identify cross-layer unsafe chains using automated policy analysis followed by LLM-assisted dual-reviewer classification.
+Beyond synthetic evaluation, we apply SkillGuardGraph to the 1{,}003-artifact public corpus and identify cross-layer unsafe chains using automated policy analysis followed by LLM-assisted dual-reviewer classification.
 
 \paragraph{Source-available analysis.}
-We expanded source-entrypoint coverage from 15 to 50 artifacts by fetching source code from GitHub repositories via the raw content API. Of these 50 source-available artifacts, 6 exhibit automated policy findings from cross-layer evidence fusion (C1 + C7 constraints).
+We expanded source-entrypoint coverage from 15 to 201 artifacts by fetching source code from GitHub repositories via the raw content API and npm packages via unpkg CDN. Of these 201 source-available artifacts, 6 exhibit automated policy findings from cross-layer evidence fusion (C1 + C7 constraints).
 
 \paragraph{LLM-assisted dual review.}
-We reviewed all 50 source-available artifacts plus 36 manifest-only artifacts with elevated findings using a dual-reviewer protocol with the Mimo-v2.5 LLM. Each artifact was independently classified by two reviewers as L1 (risk signal), L2 (unsafe chain), L3 (replay-confirmed), or L4 (confirmed vulnerability). Reviewer agreement was 77\% (66/86). Disagreements were resolved by selecting the higher classification.
+We reviewed all 201 source-available artifacts plus 34 manifest-only artifacts with elevated findings using a dual-reviewer protocol with the Mimo-v2.5 LLM. Each artifact was independently classified by two reviewers as L1 (risk signal), L2 (unsafe chain), L3 (replay-confirmed), or L4 (confirmed vulnerability). Reviewer agreement was 84\% (197/235). Disagreements were resolved by selecting the higher classification.
 
 \paragraph{Findings.}
-The review identified 20 L2 unsafe chains across the 86 reviewed artifacts. Nine L2 findings come from source-available artifacts with code-level evidence; 11 come from manifest-only artifacts with metadata-level scope mismatches. The dominant pattern is scope inflation: tools declare read-only behavior but request write, export, or admin scopes.
+The review identified 40 L2 unsafe chains across the 235 reviewed artifacts. The dominant pattern is scope inflation: tools declare read-only behavior but request write, export, or admin scopes. Other L2 patterns include network-capable tools with credential access, data download tools with persistence, and broad permission requests in management tools.
 
 \begin{table}[t]
 \centering
@@ -800,9 +800,7 @@ ai.cirra/salesforce-mcp & Registry & CRM integration + broad permissions & C1, C
 These findings demonstrate that cross-layer evidence fusion identifies real declaration-implementation inconsistencies in public MCP artifacts. However, we classify all findings as L2 (explainable cross-layer paths without runtime replay) rather than L3/L4. The dominant pattern---scope inflation---likely reflects metadata template reuse rather than intentional deception in most cases. No outbound disclosures were sent because passive evidence alone does not satisfy our disclosure threshold.
 
 \paragraph{Limitations.}
-The real findings are limited by: (1) only 50/1{,}000 artifacts have source-entrypoint coverage; (2) no runtime replay or sandbox execution was performed on real artifacts; (3) LLM-based classification has 77\% inter-reviewer agreement; (4) the corpus excludes private enterprise catalogs.
-
-
+The real findings are limited by: (1) only 201/1{,}003 artifacts have source-entrypoint coverage; (2) no runtime replay or sandbox execution was performed on real artifacts; (3) LLM-based classification has 84\% inter-reviewer agreement; (4) the corpus excludes private enterprise catalogs.
 
 The current fusion run has 0 false negatives and 0 false positives on the synthetic benchmark. The failure-analysis output therefore functions as an attribution audit rather than a missed-case catalogue: all 3{,}010 malicious samples are true positives with non-empty evidence paths, and all 1{,}000 benign samples are true negatives.
 
@@ -829,7 +827,7 @@ Independent benchmark & 410 & 6 & 0 & 3.0\% \\
 Local runtime harness & 651 & 0 & 0 & 0.0\% \\
 Sandbox harness & 40 & 0 & 0 & 0.0\% \\
 Label-blinded audit & 1{,}400 & 0 & 0 & 0.0\% \\
-Real ecosystem (passive) & 1{,}000 & 2 & --- & 0.2\% \\
+Real ecosystem (passive) & 1{,}003 & 2 & --- & 0.2\% \\
 \bottomrule
 \end{tabular}
 \end{table}

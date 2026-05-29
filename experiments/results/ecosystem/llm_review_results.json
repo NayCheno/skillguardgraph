@@ -3943,5 +3943,2538 @@
       "confidence": "medium",
       "reasoning": "The tool declares 'read_only' access but simultaneously has 'open_world' external access metadata. This cross-layer inconsistency combined with being a remote unsigned service creates a plausible risk chain where a server could be compromised to escalate privileges or exfiltrate data, though no active exploitation is confirmed."
     }
+  },
+  {
+    "artifact": "0xJacky/nginx-ui",
+    "source": "github_mcp",
+    "code_availability": "source_available",
+    "consensus": "L1",
+    "agreement": true,
+    "reviewer_1": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    },
+    "reviewer_2": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    }
+  },
+  {
+    "artifact": "21st-dev/1code",
+    "source": "github_mcp",
+    "code_availability": "source_available",
+    "consensus": "L1",
+    "agreement": true,
+    "reviewer_1": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": "```json\n{\n  \"classification\": \"L1\",\n  \"confidence\": \"medium\","
+    },
+    "reviewer_2": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": "{\n  \"classification\": \"L2\",\n  \"confidence\": \"medium\",\n  \"reasoning\": \"Tool claims read-only and trusted metadata, but static analysis reveals untrusted env_var feeding into high-privilege shell_exec"
+    }
+  },
+  {
+    "artifact": "54yyyu/zotero-mcp",
+    "source": "github_mcp",
+    "code_availability": "source_available",
+    "consensus": "L2",
+    "agreement": false,
+    "reviewer_1": {
+      "classification": "L2",
+      "confidence": "medium",
+      "reasoning": "The tool declares read-only capability and has a trusted server governance label, but the source is labeled untrusted and it is not signed. This creates a cross-layer inconsistency where declared behavior (read-only) is not fully aligned with trust indicators (untrusted source, unsigned). While no active exploit is confirmed, the mismatch suggests potential risks if the untrusted code misrepresents its actions."
+    },
+    "reviewer_2": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    }
+  },
+  {
+    "artifact": "AgriciDaniel/claude-ads",
+    "source": "github_mcp",
+    "code_availability": "source_available",
+    "consensus": "L1",
+    "agreement": true,
+    "reviewer_1": {
+      "classification": "L1",
+      "confidence": "high",
+      "reasoning": "The tool is explicitly read-only with trusted governance labels. The description mentions comprehensive audits, but the scope is limited to `read` operations. The 'signed: false' is a metadata inconsistency, but no cross-layer unsafe chains are present (e.g., no write permissions, no data exfiltration paths). Risk is confined to metadata inaccuracies."
+    },
+    "reviewer_2": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    }
+  },
+  {
+    "artifact": "AgriciDaniel/claude-seo",
+    "source": "github_mcp",
+    "code_availability": "source_available",
+    "consensus": "L1",
+    "agreement": true,
+    "reviewer_1": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": "```json\n{\"classification\":\"L1\",\"confidence\":\"medium\",\"reasoning\":\"The tool only requests 'read' scope and is annotated as read-only, which significantly limits its potential impact. However, the"
+    },
+    "reviewer_2": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    }
+  },
+  {
+    "artifact": "Arize-ai/phoenix",
+    "source": "github_mcp",
+    "code_availability": "source_available",
+    "consensus": "L2",
+    "agreement": false,
+    "reviewer_1": {
+      "classification": "L2",
+      "confidence": "medium",
+      "reasoning": "The manifest declares read-only access and trusted_server governance, yet static analysis reveals contradictory signals: source is marked 'untrusted' despite being published by Arize-ai (a reputable organization), and inferred_capability indicates 'credential_access' alongside a data_label of 'credential'. While the package is unsigned, the core inconsistency lies in the cross-layer tension between declared trust/scope and source/capability markers. This creates an explainable but not yet confirmed chain of potential risk if the 'read' scope is leveraged to access sensitive credentials through untrusted code paths."
+    },
+    "reviewer_2": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    }
+  },
+  {
+    "artifact": "AutoForgeAI/autoforge",
+    "source": "github_mcp",
+    "code_availability": "source_available",
+    "consensus": "L1",
+    "agreement": true,
+    "reviewer_1": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    },
+    "reviewer_2": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": "{\n  \"classification\": \"L1\",\n  \"confidence\": \"medium\",\n  \"reasoning\": \"The tool requests only `read` scope and is tagged as `trusted_server`. The primary finding is that it lacks a cryptographic signat"
+    }
+  },
+  {
+    "artifact": "BasedHardware/omi",
+    "source": "github_mcp",
+    "code_availability": "source_available",
+    "consensus": "L1",
+    "agreement": true,
+    "reviewer_1": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    },
+    "reviewer_2": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": "```json\n{\n  \"classification\": \"L2"
+    }
+  },
+  {
+    "artifact": "BerriAI/litellm",
+    "source": "github_mcp",
+    "code_availability": "source_available",
+    "consensus": "L1",
+    "agreement": true,
+    "reviewer_1": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    },
+    "reviewer_2": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    }
+  },
+  {
+    "artifact": "ChatGPTNextWeb/NextChat",
+    "source": "github_mcp",
+    "code_availability": "source_available",
+    "consensus": "L1",
+    "agreement": true,
+    "reviewer_1": {
+      "classification": "L1",
+      "confidence": "medium",
+      "reasoning": "工具声明为只读且发布者可信，但缺少代码签名可能表明元数据一致性存在潜在风险，未发现实际可利用漏洞或跨层不安全链。"
+    },
+    "reviewer_2": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    }
+  },
+  {
+    "artifact": "CherryHQ/cherry-studio",
+    "source": "github_mcp",
+    "code_availability": "source_available",
+    "consensus": "L1",
+    "agreement": true,
+    "reviewer_1": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    },
+    "reviewer_2": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": "```json\n{\n  \"classification\": \"L1\",\n  \"confidence\": \"high\",\n  \"reasoning\": \"核心"
+    }
+  },
+  {
+    "artifact": "CodeGraphContext/CodeGraphContext",
+    "source": "github_mcp",
+    "code_availability": "source_available",
+    "consensus": "L1",
+    "agreement": true,
+    "reviewer_1": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    },
+    "reviewer_2": {
+      "classification": "L1",
+      "confidence": "medium",
+      "reasoning": "The tool is explicitly marked as trusted with read-only scope and annotation claims, which suggests intended low-risk behavior. However, there are metadata inconsistencies: the source is labeled 'untrusted' and the binary is unsigned, which contradicts the 'trusted_server' governance label. No evidence of actual unsafe behavior or exploitation is provided, so this appears to be a metadata/policy mismatch rather than a confirmed or exploitable issue."
+    }
+  },
+  {
+    "artifact": "ComposioHQ/composio",
+    "source": "github_mcp",
+    "code_availability": "source_available",
+    "consensus": "L1",
+    "agreement": true,
+    "reviewer_1": {
+      "classification": "L1",
+      "confidence": "medium",
+      "reasoning": "All metadata and policy findings consistently claim read-only capability (read scope, annotation_claims=read_only, read_only_or_low_risk). No contradictory evidence suggests unsafe cross-layer behavior or exploitable vulnerabilities. The unsigned status is a governance note but doesn't indicate actual risk given the consistent low-risk claims. Minor metadata inconsistency possible but not evidenced."
+    },
+    "reviewer_2": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    }
+  },
+  {
+    "artifact": "CursorTouch/Windows-MCP",
+    "source": "github_mcp",
+    "code_availability": "source_available",
+    "consensus": "L1",
+    "agreement": true,
+    "reviewer_1": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": "```json\n{\n  \"classification\": \"L2\",\n  \"confidence\": \"medium\",\n  \"reasoning\": \"工具描述（'Computer Use in Windows'）强烈暗示具备交互、控制或执行操作的能力，这"
+    },
+    "reviewer_2": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    }
+  },
+  {
+    "artifact": "D4Vinci/Scrapling",
+    "source": "github_mcp",
+    "code_availability": "source_available",
+    "consensus": "L1",
+    "agreement": true,
+    "reviewer_1": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": "{\n  \"classification\": \"L1\",\n  \"confidence\": \"medium\",\n  \"reasoning\": \"Metadata声明(read-only, trusted)与"
+    },
+    "reviewer_2": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    }
+  },
+  {
+    "artifact": "DayuanJiang/next-ai-draw-io",
+    "source": "github_mcp",
+    "code_availability": "source_available",
+    "consensus": "L1",
+    "agreement": true,
+    "reviewer_1": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    },
+    "reviewer_2": {
+      "classification": "L1",
+      "confidence": "medium",
+      "reasoning": "The manifest declares a 'read' scope, but the static analysis infers a 'credential_access' capability. This represents an inconsistency between the declared metadata (read-only operation) and the inferred capability (potential credential handling), which aligns with the definition of an L1 finding (metadata inconsistency). While the 'trusted_server' label and 'read_only' claims provide some mitigation, the fundamental mismatch in capability claims requires attention before integration."
+    }
+  },
+  {
+    "artifact": "Dicklesworthstone/mcp_agent_mail",
+    "source": "github_mcp",
+    "code_availability": "source_available",
+    "consensus": "L1",
+    "agreement": true,
+    "reviewer_1": {
+      "classification": "L1",
+      "confidence": "high",
+      "reasoning": "Tool declares read-only capability with matching 'read' scope, has trust label, and no conflicting claims. Only minor metadata note (unsigned) without security impact."
+    },
+    "reviewer_2": {
+      "classification": "L1",
+      "confidence": "high",
+      "reasoning": "The tool is explicitly designed as read-only ('read' scope, 'read_only' annotation, 'read_only_or_low_risk' capability). The only minor inconsistency is the lack of a signature ('signed: false') despite being labeled as a 'trusted_server'. There is no evidence of write, execute, or unsafe cross-layer actions in the manifest or policy findings. The risk remains at the metadata/governance layer without escalation."
+    }
+  },
+  {
+    "artifact": "Dimillian/CodexMonitor",
+    "source": "github_mcp",
+    "code_availability": "source_available",
+    "consensus": "L1",
+    "agreement": true,
+    "reviewer_1": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": "```json\n{\n  \"classification\": \"L1\",\n  \"confidence\": \"high\",\n  \"reasoning\": \"The tool requests only the 'read' scope, is explicitly annotated as 'read_only', and is hosted on a 'trusted_server'. The la"
+    },
+    "reviewer_2": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    }
+  },
+  {
+    "artifact": "EpicenterHQ/epicenter",
+    "source": "github_mcp",
+    "code_availability": "source_available",
+    "consensus": "L2",
+    "agreement": false,
+    "reviewer_1": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    },
+    "reviewer_2": {
+      "classification": "L2",
+      "confidence": "medium",
+      "reasoning": "While the tool claims 'read_only' and only requests 'read' scope, static analysis infers 'credential_access' capability. The combination of open-source/local-first nature with potential credential access, despite 'read' scope, creates a cross-layer inconsistency that could be unsafe if the tool's runtime behavior doesn't align with its declared scope."
+    }
+  },
+  {
+    "artifact": "Eugeny/tabby",
+    "source": "github_mcp",
+    "code_availability": "source_available",
+    "consensus": "L1",
+    "agreement": true,
+    "reviewer_1": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    },
+    "reviewer_2": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    }
+  },
+  {
+    "artifact": "EvoScientist/EvoScientist",
+    "source": "github_mcp",
+    "code_availability": "source_available",
+    "consensus": "L1",
+    "agreement": true,
+    "reviewer_1": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": "{\"classification\":\"L2\",\"confidence\":\"medium\",\"reasoning\":\"The tool declares a 'read_only' capability but its static analysis infers '"
+    },
+    "reviewer_2": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    }
+  },
+  {
+    "artifact": "FellouAI/eko",
+    "source": "github_mcp",
+    "code_availability": "source_available",
+    "consensus": "L1",
+    "agreement": true,
+    "reviewer_1": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    },
+    "reviewer_2": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    }
+  },
+  {
+    "artifact": "FireRedTeam/FireRed-OpenStoryline",
+    "source": "github_mcp",
+    "code_availability": "source_available",
+    "consensus": "L1",
+    "agreement": true,
+    "reviewer_1": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    },
+    "reviewer_2": {
+      "classification": "L1",
+      "confidence": "medium",
+      "reasoning": "The tool's claimed read-only scope and trusted publisher align with its metadata. The primary finding—an unsigned package—represents a metadata inconsistency and supply chain integrity risk, but there is no evidence of actual misuse, unsafe behavior patterns, or exploitable vulnerabilities. No cross-layer unsafe chain is demonstrated."
+    }
+  },
+  {
+    "artifact": "FlowElement-ai/m_flow",
+    "source": "github_mcp",
+    "code_availability": "source_available",
+    "consensus": "L1",
+    "agreement": true,
+    "reviewer_1": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": "{\"classification\":\"L2\",\"confidence\":\"medium\",\"reasoning\":\"存在解释性跨层不安全链：虽然元数据层声称可信且只读（trusted_server, read_only），但代码层存在显著风险源——静态分析显示源代码标签为'untrusted'，且代码未签名（signed -> false），表明未经验证的代码可能被执行，违背了元"
+    },
+    "reviewer_2": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    }
+  },
+  {
+    "artifact": "GH05TCREW/pentestagent",
+    "source": "github_mcp",
+    "code_availability": "source_available",
+    "consensus": "L1",
+    "agreement": true,
+    "reviewer_1": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    },
+    "reviewer_2": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    }
+  },
+  {
+    "artifact": "GetStream/Vision-Agents",
+    "source": "github_mcp",
+    "code_availability": "source_available",
+    "consensus": "L1",
+    "agreement": true,
+    "reviewer_1": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    },
+    "reviewer_2": {
+      "classification": "L1",
+      "confidence": "medium",
+      "reasoning": "The metadata shows a minor inconsistency: the source is identified as an environment variable and labeled 'untrusted', while the tool is published by a trusted entity (GetStream) and has a trusted server trust label. However, the declared scope is 'read' and annotation claims are 'read_only', which aligns, and there is no evidence of an unsafe cross-layer chain or confirmed exploit. The risk is likely limited to potential misconfiguration or incomplete trust propagation."
+    }
+  },
+  {
+    "artifact": "Gitlawb/openclaude",
+    "source": "github_mcp",
+    "code_availability": "source_available",
+    "consensus": "L1",
+    "agreement": true,
+    "reviewer_1": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    },
+    "reviewer_2": {
+      "classification": "L1",
+      "confidence": "medium",
+      "reasoning": "Metadata inconsistency: The description claims the tool 'uses anything,' implying broad permissions, but the declared scopes are limited to ['read']. While the policy claims no findings and the tool is labeled trusted/read-only, the discrepancy between the stated capability and the declared scope suggests a potential misrepresentation or hidden functionality. No active exploitation evidence is provided."
+    }
+  },
+  {
+    "artifact": "GongRzhe/Office-Word-MCP-Server",
+    "source": "github_mcp",
+    "code_availability": "source_available",
+    "consensus": "L1",
+    "agreement": true,
+    "reviewer_1": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    },
+    "reviewer_2": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    }
+  },
+  {
+    "artifact": "GoogleCloudPlatform/kubectl-ai",
+    "source": "github_mcp",
+    "code_availability": "source_available",
+    "consensus": "L1",
+    "agreement": true,
+    "reviewer_1": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    },
+    "reviewer_2": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": "```json\n{\n    \"classification\": \"L2\",\n    \"confidence"
+    }
+  },
+  {
+    "artifact": "HKUDS/DeepCode",
+    "source": "github_mcp",
+    "code_availability": "source_available",
+    "consensus": "L1",
+    "agreement": true,
+    "reviewer_1": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    },
+    "reviewer_2": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": "```json\n{\n    \"classification\": \"L1\",\n    \"confidence\": \"high\",\n    \"reasoning\": \"The MCP tool's declared capabilities, manifest permissions (`read`), and static analysis all consistently point to a s"
+    }
+  },
+  {
+    "artifact": "HKUDS/DeepTutor",
+    "source": "github_mcp",
+    "code_availability": "source_available",
+    "consensus": "L2",
+    "agreement": false,
+    "reviewer_1": {
+      "classification": "L2",
+      "confidence": "medium",
+      "reasoning": "The tool declares a read-only scope and is labeled as such, but static analysis infers capabilities for 'shell_exec' and 'credential_access', which represent a clear cross-layer inconsistency. This suggests a potential escalation or unsafe functionality not aligned with the stated metadata, posing a security risk. It is not confirmed as actively exploitable (L3/L4) without further evidence."
+    },
+    "reviewer_2": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    }
+  },
+  {
+    "artifact": "HKUDS/OpenHarness",
+    "source": "github_mcp",
+    "code_availability": "source_available",
+    "consensus": "L1",
+    "agreement": true,
+    "reviewer_1": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    },
+    "reviewer_2": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    }
+  },
+  {
+    "artifact": "HKUDS/OpenSpace",
+    "source": "github_mcp",
+    "code_availability": "source_available",
+    "consensus": "L1",
+    "agreement": true,
+    "reviewer_1": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    },
+    "reviewer_2": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    }
+  },
+  {
+    "artifact": "HKUDS/Vibe-Trading",
+    "source": "github_mcp",
+    "code_availability": "source_available",
+    "consensus": "L2",
+    "agreement": false,
+    "reviewer_1": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    },
+    "reviewer_2": {
+      "classification": "L2",
+      "confidence": "medium",
+      "reasoning": "Metadata shows declared 'read' scope, but static analysis infers 'credential_access' capability with untrusted source and no signature. This creates a cross-layer unsafe chain: tool claims limited access but has latent risk of credential exposure despite 'trusted_server' governance label."
+    }
+  },
+  {
+    "artifact": "HKUDS/nanobot",
+    "source": "github_mcp",
+    "code_availability": "source_available",
+    "consensus": "L2",
+    "agreement": false,
+    "reviewer_1": {
+      "classification": "L2",
+      "confidence": "medium",
+      "reasoning": "The tool declares read-only access ('read' scope, 'read_only' annotation), but static analysis infers 'credential_access' capability, creating an unsafe chain between declared permissions and actual capabilities. While labeled trusted and published by a known entity, the mismatch between declared intent and technical capability presents an explainable cross-layer security concern that warrants scrutiny."
+    },
+    "reviewer_2": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    }
+  },
+  {
+    "artifact": "Helicone/helicone",
+    "source": "github_mcp",
+    "code_availability": "source_available",
+    "consensus": "L1",
+    "agreement": true,
+    "reviewer_1": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    },
+    "reviewer_2": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": "{\"classification\":\"L1\",\"confidence\":\"medium\",\"reasoning\":\"The tool's manifest claims a read-only scope ('read') and is published by 'Helicone' with a 'trusted_server' label, aligning with the descript"
+    }
+  },
+  {
+    "artifact": "Hiram-Wong/zyfun",
+    "source": "github_mcp",
+    "code_availability": "source_available",
+    "consensus": "L2",
+    "agreement": false,
+    "reviewer_1": {
+      "classification": "L1",
+      "confidence": "medium",
+      "reasoning": "The evidence shows a metadata inconsistency: the tool is marked with a 'trusted_server' governance label but has an 'untrusted' source label and is unsigned. While read-only and low-risk in practice, this mismatch represents a labeling conflict that could cause confusion in automated trust assessments, rather than an active exploit chain."
+    },
+    "reviewer_2": {
+      "classification": "L2",
+      "confidence": "medium",
+      "reasoning": "The tool's metadata claims read-only scope and trusted governance, but static analysis flags it as 'untrusted' with an identified source as an environment variable. This creates an explainable unsafe chain: an untrusted, unsigned package could potentially manipulate environment variables to escalate permissions or perform unintended actions, despite the read-only declaration. The inconsistency across layers (governance vs. static) warrants a higher risk classification than L1, but lacks active exploitation evidence for L3/L4."
+    }
+  },
+  {
+    "artifact": "IBM/mcp-cli",
+    "source": "github_mcp",
+    "code_availability": "source_available",
+    "consensus": "L1",
+    "agreement": true,
+    "reviewer_1": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": "{\n  \"classification\": \"L2\",\n  \"confidence\": \"medium\",\n  \"reasoning\": \"Key evidence presents a cross-layer conflict: the governance layer (trusted_server, read_only) and policy layer (no findings) sugg"
+    },
+    "reviewer_2": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    }
+  },
+  {
+    "artifact": "IBM/mcp-context-forge",
+    "source": "github_mcp",
+    "code_availability": "source_available",
+    "consensus": "L1",
+    "agreement": true,
+    "reviewer_1": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    },
+    "reviewer_2": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    }
+  },
+  {
+    "artifact": "InsForge/InsForge",
+    "source": "github_mcp",
+    "code_availability": "source_available",
+    "consensus": "L1",
+    "agreement": true,
+    "reviewer_1": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    },
+    "reviewer_2": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    }
+  },
+  {
+    "artifact": "Kiln-AI/Kiln",
+    "source": "github_mcp",
+    "code_availability": "source_available",
+    "consensus": "L1",
+    "agreement": true,
+    "reviewer_1": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    },
+    "reviewer_2": {
+      "classification": "L1",
+      "confidence": "medium",
+      "reasoning": "The metadata contains clear inconsistencies: 'trusted_server' and 'published_by' labels suggest trust, but 'signed -> false' and 'has_source_label -> untrusted' indicate verification gaps. However, the tool is scoped to 'read_only' and no policy findings were flagged, limiting immediate exploitability. This is primarily a metadata contradiction rather than a proven unsafe chain."
+    }
+  },
+  {
+    "artifact": "Kilo-Org/kilocode",
+    "source": "github_mcp",
+    "code_availability": "source_available",
+    "consensus": "L1",
+    "agreement": true,
+    "reviewer_1": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    },
+    "reviewer_2": {
+      "classification": "L1",
+      "confidence": "high",
+      "reasoning": "Metadata shows consistent read-only claims and trusted publisher, but unsigned package creates minor metadata inconsistency. No policy findings, no evidence of unsafe permission escalation or exploitable vulnerabilities."
+    }
+  },
+  {
+    "artifact": "LazyAGI/LazyLLM",
+    "source": "github_mcp",
+    "code_availability": "source_available",
+    "consensus": "L1",
+    "agreement": true,
+    "reviewer_1": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": "```json\n{\n    \"classification\": \"L1\",\n    \"confidence\": \"high\",\n    \"reasoning\": \"工具Manifest声明的'scope'仅限于'read"
+    },
+    "reviewer_2": {
+      "classification": "L1",
+      "confidence": "medium",
+      "reasoning": "The tool is published by a trusted server (LazyAGI), has only a 'read' scope, and its annotation claims it is read-only. However, the 'signed' status is false, which indicates a lack of code-signing verification. This is a metadata inconsistency or governance gap (unverified publisher identity), not an actively exploited or confirmed vulnerability, and does not exhibit an unsafe cross-layer chain based on the provided evidence."
+    }
+  },
+  {
+    "artifact": "LearningCircuit/local-deep-research",
+    "source": "github_mcp",
+    "code_availability": "source_available",
+    "consensus": "L1",
+    "agreement": true,
+    "reviewer_1": {
+      "classification": "L1",
+      "confidence": "high",
+      "reasoning": "All metadata, permissions, and governance layers consistently indicate a read-only, low-risk tool with trusted provenance. No cross-layer inconsistencies or unsafe patterns detected."
+    },
+    "reviewer_2": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    }
+  },
+  {
+    "artifact": "Lightning-AI/LitServe",
+    "source": "github_mcp",
+    "code_availability": "source_available",
+    "consensus": "L1",
+    "agreement": true,
+    "reviewer_1": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    },
+    "reviewer_2": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    }
+  },
+  {
+    "artifact": "MCP-UI-Org/mcp-ui",
+    "source": "github_mcp",
+    "code_availability": "source_available",
+    "consensus": "L1",
+    "agreement": true,
+    "reviewer_1": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    },
+    "reviewer_2": {
+      "classification": "L1",
+      "confidence": "medium",
+      "reasoning": "Tool declares read-only scope and trusted_server governance, but 'signed -> false' creates a metadata inconsistency: a trusted server typically provides signed artifacts to verify integrity. Without signing, the tool's trustworthiness relies entirely on the publisher's reputation, but no active vulnerability or unsafe behavior chain is evident from the provided evidence."
+    }
+  },
+  {
+    "artifact": "MarkusPfundstein/mcp-obsidian",
+    "source": "github_mcp",
+    "code_availability": "source_available",
+    "consensus": "L1",
+    "agreement": true,
+    "reviewer_1": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    },
+    "reviewer_2": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    }
+  },
+  {
+    "artifact": "MemMachine/MemMachine",
+    "source": "github_mcp",
+    "code_availability": "source_available",
+    "consensus": "L1",
+    "agreement": true,
+    "reviewer_1": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    },
+    "reviewer_2": {
+      "classification": "L1",
+      "confidence": "medium",
+      "reasoning": "The tool is marked as 'trusted_server' but has an 'untrusted' source label, creating a metadata inconsistency. There's no evidence of an actual exploit chain or confirmed vulnerability (no findings, read-only scope), making this primarily a governance labeling issue rather than an active security risk."
+    }
+  },
+  {
+    "artifact": "MemPalace/mempalace",
+    "source": "github_mcp",
+    "code_availability": "source_available",
+    "consensus": "L1",
+    "agreement": true,
+    "reviewer_1": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    },
+    "reviewer_2": {
+      "classification": "L1",
+      "confidence": "medium",
+      "reasoning": "Tool is from a trusted server with consistent 'read' scope and read-only annotations. Metadata claims of being 'best-benchmarked' and 'free' are marketing statements that cannot be verified in the evidence, representing potential inconsistency but no evidence of an unsafe execution chain or exploit. No policy violations are reported. The unsigned status reduces trust slightly but does not escalate risk without a contradicting unsafe behavior."
+    }
+  },
+  {
+    "artifact": "MemTensor/MemOS",
+    "source": "github_mcp",
+    "code_availability": "source_available",
+    "consensus": "L1",
+    "agreement": true,
+    "reviewer_1": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    },
+    "reviewer_2": {
+      "classification": "L1",
+      "confidence": "medium",
+      "reasoning": "The tool shows metadata inconsistencies (trusted_server vs. untrusted source label, unsigned) but has read-only scope and no policy findings suggesting active exploitation. The conflicting trust indicators require monitoring but don't indicate an explainable attack chain or confirmed vulnerability."
+    }
+  },
+  {
+    "artifact": "Memento-Teams/Memento",
+    "source": "github_mcp",
+    "code_availability": "source_available",
+    "consensus": "L2",
+    "agreement": false,
+    "reviewer_1": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": "{\"classification\":\"L1\",\"confidence\":\"high\",\"reasoning\":\"All metadata and permissions are consistent: read-only scope aligns with declared annotation claims, trusted server governance, and explicit rea"
+    },
+    "reviewer_2": {
+      "classification": "L2",
+      "confidence": "high",
+      "reasoning": "The tool is marked as 'read_only' but not signed. While the declared scope is read-only, the lack of cryptographic verification means a compromised or malicious package could potentially claim read-only access while implementing unintended behavior. This creates an explainable cross-layer risk where metadata trust cannot be fully validated."
+    }
+  },
+  {
+    "artifact": "MiniMax-AI/Mini-Agent",
+    "source": "github_mcp",
+    "code_availability": "source_available",
+    "consensus": "L1",
+    "agreement": true,
+    "reviewer_1": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    },
+    "reviewer_2": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    }
+  },
+  {
+    "artifact": "MinishLab/semble",
+    "source": "github_mcp",
+    "code_availability": "source_available",
+    "consensus": "L1",
+    "agreement": true,
+    "reviewer_1": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    },
+    "reviewer_2": {
+      "classification": "L1",
+      "confidence": "high",
+      "reasoning": "The tool has consistent metadata claiming read-only capabilities, only requests 'read' scope, is labeled as trusted, and no policy findings exist. The 'signed -> false' is a minor inconsistency but doesn't create an unsafe cross-layer chain (L2), nor is there evidence of exploitable vulnerabilities (L3/L4)."
+    }
+  },
+  {
+    "artifact": "MoonshotAI/kimi-cli",
+    "source": "github_mcp",
+    "code_availability": "source_available",
+    "consensus": "L1",
+    "agreement": true,
+    "reviewer_1": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": "```json"
+    },
+    "reviewer_2": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    }
+  },
+  {
+    "artifact": "NVIDIA/NeMo-Agent-Toolkit",
+    "source": "github_mcp",
+    "code_availability": "source_available",
+    "consensus": "L1",
+    "agreement": true,
+    "reviewer_1": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    },
+    "reviewer_2": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": "```json\n{\n    \"classification\": \"L1\","
+    }
+  },
+  {
+    "artifact": "NirDiamant/GenAI_Agents",
+    "source": "github_mcp",
+    "code_availability": "source_available",
+    "consensus": "L1",
+    "agreement": true,
+    "reviewer_1": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    },
+    "reviewer_2": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": "```json\n{\n  \"classification\": \"L1\",\n  \"confidence\": \"medium\",\n  \"reasoning\": \"核心发现是元数据不一致：治理标签标注为 `trusted_server`，但静态分析标签却为 `untrusted`。这种不一致可能源于标签生成流程的缺陷或数据源冲突"
+    }
+  },
+  {
+    "artifact": "NousResearch/hermes-agent",
+    "source": "github_mcp",
+    "code_availability": "source_available",
+    "consensus": "L1",
+    "agreement": true,
+    "reviewer_1": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    },
+    "reviewer_2": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    }
+  },
+  {
+    "artifact": "OpenBMB/ChatDev",
+    "source": "github_mcp",
+    "code_availability": "source_available",
+    "consensus": "L2",
+    "agreement": false,
+    "reviewer_1": {
+      "classification": "L2",
+      "confidence": "medium",
+      "reasoning": "While the tool claims read-only access, the multi-agent collaboration architecture could create complex interaction chains. The unsigned code from a trusted publisher, combined with the capability to orchestrate multiple agents, presents an explainable cross-layer risk where read-only metadata might enable unintended actions through agent coordination."
+    },
+    "reviewer_2": {
+      "classification": "L1",
+      "confidence": "medium",
+      "reasoning": "The tool is marked as read-only with trusted governance labels, but lacks a signature ('signed: false'). This creates a metadata inconsistency regarding trust verification without clear exploitability. No cross-layer unsafe chains or replay evidence are present."
+    }
+  },
+  {
+    "artifact": "OpenBMB/UltraRAG",
+    "source": "github_mcp",
+    "code_availability": "source_available",
+    "consensus": "L1",
+    "agreement": true,
+    "reviewer_1": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    },
+    "reviewer_2": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    }
+  },
+  {
+    "artifact": "OpenCut-app/OpenCut",
+    "source": "github_mcp",
+    "code_availability": "source_available",
+    "consensus": "L1",
+    "agreement": true,
+    "reviewer_1": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    },
+    "reviewer_2": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    }
+  },
+  {
+    "artifact": "OpenPipe/ART",
+    "source": "github_mcp",
+    "code_availability": "source_available",
+    "consensus": "L1",
+    "agreement": true,
+    "reviewer_1": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    },
+    "reviewer_2": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": "{\n  \"classification\": \"L1\","
+    }
+  },
+  {
+    "artifact": "Openpanel-dev/openpanel",
+    "source": "github_mcp",
+    "code_availability": "source_available",
+    "consensus": "L1",
+    "agreement": true,
+    "reviewer_1": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    },
+    "reviewer_2": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    }
+  },
+  {
+    "artifact": "PDFMathTranslate/PDFMathTranslate",
+    "source": "github_mcp",
+    "code_availability": "source_available",
+    "consensus": "L1",
+    "agreement": true,
+    "reviewer_1": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": "```json\n{\n  \"classification\": \"L1\",\n  \"confidence\": \"medium\",\n  \"reasoning\": \"The tool is explicitly declared as read-only with a trusted server label, and no policy findings are reported. The only di"
+    },
+    "reviewer_2": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    }
+  },
+  {
+    "artifact": "Panniantong/Agent-Reach",
+    "source": "github_mcp",
+    "code_availability": "source_available",
+    "consensus": "L1",
+    "agreement": true,
+    "reviewer_1": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    },
+    "reviewer_2": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    }
+  },
+  {
+    "artifact": "PatrickJS/awesome-angular",
+    "source": "github_mcp",
+    "code_availability": "source_available",
+    "consensus": "L1",
+    "agreement": true,
+    "reviewer_1": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    },
+    "reviewer_2": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    }
+  },
+  {
+    "artifact": "PleasePrompto/notebooklm-skill",
+    "source": "github_mcp",
+    "code_availability": "source_available",
+    "consensus": "L1",
+    "agreement": true,
+    "reviewer_1": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    },
+    "reviewer_2": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    }
+  },
+  {
+    "artifact": "PrefectHQ/fastmcp",
+    "source": "github_mcp",
+    "code_availability": "source_available",
+    "consensus": "L1",
+    "agreement": true,
+    "reviewer_1": {
+      "classification": "L1",
+      "confidence": "medium",
+      "reasoning": "The tool's declared scope ('read_only') conflicts with static analysis findings of shell_exec capability, indicating a metadata inconsistency. However, no concrete unsafe chain or replay evidence is provided, so it's not escalated to L2 or higher."
+    },
+    "reviewer_2": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": "```json\n{\n  \"classification"
+    }
+  },
+  {
+    "artifact": "Q00/ouroboros",
+    "source": "github_mcp",
+    "code_availability": "source_available",
+    "consensus": "L2",
+    "agreement": false,
+    "reviewer_1": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    },
+    "reviewer_2": {
+      "classification": "L2",
+      "confidence": "medium",
+      "reasoning": "The tool declares 'read' scope and 'read_only' annotation, but has 'signed: false' while claiming 'trusted_server'. This creates an unsafe chain where unverified code could be executed under a trust label. While not confirmed exploitable, the mismatch between governance (unsigned) and trust claims suggests potential for privilege escalation if the trusted label is misapplied."
+    }
+  },
+  {
+    "artifact": "QwenLM/Qwen-Agent",
+    "source": "github_mcp",
+    "code_availability": "source_available",
+    "consensus": "L1",
+    "agreement": true,
+    "reviewer_1": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    },
+    "reviewer_2": {
+      "classification": "L1",
+      "confidence": "medium",
+      "reasoning": "The tool declares a 'trusted_server' governance label and 'read_only' capability, but the static analysis reveals an 'untrusted' source label and identifies the source via environment variables/file reads, creating an inconsistency between the declared trust and the actual source trustworthiness. No exploit chain or confirmed vulnerability is described."
+    }
+  },
+  {
+    "artifact": "Redot-Engine/redot-engine",
+    "source": "github_mcp",
+    "code_availability": "source_available",
+    "consensus": "L1",
+    "agreement": true,
+    "reviewer_1": {
+      "classification": "L1",
+      "confidence": "high",
+      "reasoning": "The tool requires only read scope and is published by the official Redot-Engine organization with a trusted_server label. The unsigned status is a metadata note but doesn't create an explainable unsafe chain given the read-only, publicly available code context. No policy findings or unsafe actions are indicated."
+    },
+    "reviewer_2": {
+      "classification": "L1",
+      "confidence": "medium",
+      "reasoning": "The tool is read-only with no policy findings, originates from a trusted server, and is published by the official Redot-Engine organization. The only inconsistency is the 'signed: false' metadata, which is a metadata-level concern but does not indicate an exploitable or cross-layer vulnerability chain."
+    }
+  },
+  {
+    "artifact": "Remix-Design/RemixIcon",
+    "source": "github_mcp",
+    "code_availability": "source_available",
+    "consensus": "L1",
+    "agreement": true,
+    "reviewer_1": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    },
+    "reviewer_2": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    }
+  },
+  {
+    "artifact": "RooCodeInc/Roo-Code",
+    "source": "github_mcp",
+    "code_availability": "source_available",
+    "consensus": "L1",
+    "agreement": true,
+    "reviewer_1": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": "{\n  \"classification\": \"L1\",\n  \"confidence\": \"medium\",\n  \"reasoning\": \"The tool's metadata (scope: read, annotation: read_only, governance: trusted_server) is internally consistent with a read-only fun"
+    },
+    "reviewer_2": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    }
+  },
+  {
+    "artifact": "SchemaStore/schemastore",
+    "source": "github_mcp",
+    "code_availability": "source_available",
+    "consensus": "L1",
+    "agreement": true,
+    "reviewer_1": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    },
+    "reviewer_2": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    }
+  },
+  {
+    "artifact": "ScrapeGraphAI/Scrapegraph-ai",
+    "source": "github_mcp",
+    "code_availability": "source_available",
+    "consensus": "L1",
+    "agreement": true,
+    "reviewer_1": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    },
+    "reviewer_2": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    }
+  },
+  {
+    "artifact": "Simple-Efficient/RL-Factory",
+    "source": "github_mcp",
+    "code_availability": "source_available",
+    "consensus": "L1",
+    "agreement": true,
+    "reviewer_1": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    },
+    "reviewer_2": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": "```json\n{\n  \"classification\": \"L2\",\n  \"confidence\": \"high\",\n  \"reasoning\":"
+    }
+  },
+  {
+    "artifact": "Skyvern-AI/skyvern",
+    "source": "github_mcp",
+    "code_availability": "source_available",
+    "consensus": "L1",
+    "agreement": true,
+    "reviewer_1": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    },
+    "reviewer_2": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    }
+  },
+  {
+    "artifact": "SolaceLabs/solace-agent-mesh",
+    "source": "github_mcp",
+    "code_availability": "source_available",
+    "consensus": "L2",
+    "agreement": true,
+    "reviewer_1": {
+      "classification": "L2",
+      "confidence": "medium",
+      "reasoning": "The tool claims 'read_only' governance but shows conflicting indicators: credential access capability, untrusted source label, and lack of signing. This suggests a potential unsafe cross-layer chain where a read-scope tool might inadvertently access or expose sensitive credentials during event-driven operations."
+    },
+    "reviewer_2": {
+      "classification": "L2",
+      "confidence": "medium",
+      "reasoning": "The tool declares a 'read' scope and read-only metadata, but static analysis flags it with 'credential' data labels and 'credential_access' inferred capability. This creates a cross-layer inconsistency where the tool's actual data handling permissions exceed its declared scope, suggesting potential unauthorized credential access despite policy claims."
+    }
+  },
+  {
+    "artifact": "SuperClaude-Org/SuperClaude_Framework",
+    "source": "github_mcp",
+    "code_availability": "source_available",
+    "consensus": "L1",
+    "agreement": true,
+    "reviewer_1": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    },
+    "reviewer_2": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    }
+  },
+  {
+    "artifact": "THUDM/slime",
+    "source": "github_mcp",
+    "code_availability": "source_available",
+    "consensus": "L1",
+    "agreement": true,
+    "reviewer_1": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": "```json\n{\n  \"classification\": \"L1\",\n  \"confidence\": \"medium\",\n  \"reasoning\": \"工具声明为只读作用域，与所有证据（权限要求、元数据标注）一致。核心安全策略无发现。主要风险点在于元数据层：发布者为知名学术"
+    },
+    "reviewer_2": {
+      "classification": "L1",
+      "confidence": "high",
+      "reasoning": "Tool only requests read scope, has trusted publisher (THUDM), is explicitly annotated as read-only, and no policy findings exist. Missing signature is metadata-level and doesn't create cross-layer unsafe chain with given evidence."
+    }
+  },
+  {
+    "artifact": "The-Pocket/PocketFlow",
+    "source": "github_mcp",
+    "code_availability": "source_available",
+    "consensus": "L2",
+    "agreement": false,
+    "reviewer_1": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    },
+    "reviewer_2": {
+      "classification": "L2",
+      "confidence": "medium",
+      "reasoning": "The tool is read-only and marked as trusted, which aligns its metadata and governance layers. However, the description 'Let Agents build Agents' implies recursive or autonomous agent creation, which could potentially be exploited in a cross-layer chain to circumvent intended read-only constraints, despite no direct policy findings."
+    }
+  },
+  {
+    "artifact": "ThinkInAIXYZ/deepchat",
+    "source": "github_mcp",
+    "code_availability": "source_available",
+    "consensus": "L1",
+    "agreement": true,
+    "reviewer_1": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    },
+    "reviewer_2": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    }
+  },
+  {
+    "artifact": "TracecatHQ/tracecat",
+    "source": "github_mcp",
+    "code_availability": "source_available",
+    "consensus": "L2",
+    "agreement": false,
+    "reviewer_1": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    },
+    "reviewer_2": {
+      "classification": "L2",
+      "confidence": "medium",
+      "reasoning": "The tool's metadata labels it as trusted (has_trust_label) and read-only, but its static analysis indicates untrusted source (has_source_label) and credential access capability (has_data_label, inferred_capability). This creates an explainable cross-layer unsafe chain: despite claiming read-only governance, the tool's implementation (via env_var source and credential access) could potentially be misused to exfiltrate sensitive data, especially since it lacks a signed verification. The 'read' scope is insufficient to contain the inferred credential access risk."
+    }
+  },
+  {
+    "artifact": "TurixAI/TuriX-CUA",
+    "source": "github_mcp",
+    "code_availability": "source_available",
+    "consensus": "L1",
+    "agreement": true,
+    "reviewer_1": {
+      "classification": "L1",
+      "confidence": "medium",
+      "reasoning": "The tool exhibits a metadata inconsistency: it claims to be published by TurixAI with a trusted_server label and read_only annotation, yet the source is marked as untrusted (has_source_label -> untrusted) and unsigned (signed -> false). However, the tool operates strictly within read scope, the policy finds no findings, and the environment_var source identification suggests controlled deployment. This represents a metadata-level trust inconsistency rather than an exploitable or cross-layer unsafe chain."
+    },
+    "reviewer_2": {
+      "classification": "L1",
+      "confidence": "medium",
+      "reasoning": "The tool has a metadata inconsistency: it is published by TurixAI and labeled as 'trusted_server' but is unsigned and its source is marked 'untrusted' in static analysis. This conflict suggests a potential metadata trust issue but does not provide evidence of an unsafe cross-layer chain or confirmed exploit."
+    }
+  },
+  {
+    "artifact": "Upsonic/Upsonic",
+    "source": "github_mcp",
+    "code_availability": "source_available",
+    "consensus": "L2",
+    "agreement": false,
+    "reviewer_1": {
+      "classification": "L2",
+      "confidence": "medium",
+      "reasoning": "Conflicting trust signals create an unsafe cross-layer chain: governance claims 'trusted_server' but static analysis marks 'untrusted' with source as env_var, while requiring only read scope. The metadata inconsistency (L1) escalates to L2 due to unresolved trust contradiction affecting authorization assumptions, though limited by read-only permission."
+    },
+    "reviewer_2": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    }
+  },
+  {
+    "artifact": "VoltAgent/voltagent",
+    "source": "github_mcp",
+    "code_availability": "source_available",
+    "consensus": "L1",
+    "agreement": true,
+    "reviewer_1": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    },
+    "reviewer_2": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    }
+  },
+  {
+    "artifact": "Zipstack/unstract",
+    "source": "github_mcp",
+    "code_availability": "source_available",
+    "consensus": "L1",
+    "agreement": true,
+    "reviewer_1": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    },
+    "reviewer_2": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    }
+  },
+  {
+    "artifact": "abhigyanpatwari/GitNexus",
+    "source": "github_mcp",
+    "code_availability": "source_available",
+    "consensus": "L1",
+    "agreement": true,
+    "reviewer_1": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": "```json\n{\n    \"classification\": \"L1\",\n    \"confidence\": \"medium\",\n    \"reasoning\": \"The tool's declared 'read-only' scope and client-side nature align with security policy. However, the evidence indic"
+    },
+    "reviewer_2": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    }
+  },
+  {
+    "artifact": "activepieces/activepieces",
+    "source": "github_mcp",
+    "code_availability": "source_available",
+    "consensus": "L1",
+    "agreement": true,
+    "reviewer_1": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    },
+    "reviewer_2": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    }
+  },
+  {
+    "artifact": "ag-grid/ag-grid",
+    "source": "github_mcp",
+    "code_availability": "source_available",
+    "consensus": "L1",
+    "agreement": true,
+    "reviewer_1": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    },
+    "reviewer_2": {
+      "classification": "L1",
+      "confidence": "high",
+      "reasoning": "工具声称受信（trusted_server）且只读（read_only），但其包未签名（signed=false）。这是典型的元数据声明与可验证状态不一致，表明治理声明可能存在缺陷或未正确实施。然而，未发现与实际恶意行为或可利用漏洞相关的具体不安全代码链或行为，因此归类为仅元数据不一致。"
+    }
+  },
+  {
+    "artifact": "agent-infra/sandbox",
+    "source": "github_mcp",
+    "code_availability": "source_available",
+    "consensus": "L1",
+    "agreement": true,
+    "reviewer_1": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": "{\"classification\":\"L2\",\"confidence\":\"medium\",\"reasoning\":\"The tool description promises 'Shell' and 'File' capabilities, but its declared scope and metadata claims 'read_only'. This creates a potentia"
+    },
+    "reviewer_2": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    }
+  },
+  {
+    "artifact": "agent0ai/agent-zero",
+    "source": "github_mcp",
+    "code_availability": "source_available",
+    "consensus": "L1",
+    "agreement": true,
+    "reviewer_1": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    },
+    "reviewer_2": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    }
+  },
+  {
+    "artifact": "agentscope-ai/QwenPaw",
+    "source": "github_mcp",
+    "code_availability": "source_available",
+    "consensus": "L1",
+    "agreement": true,
+    "reviewer_1": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    },
+    "reviewer_2": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    }
+  },
+  {
+    "artifact": "agentuniverse-ai/agentUniverse",
+    "source": "github_mcp",
+    "code_availability": "source_available",
+    "consensus": "L1",
+    "agreement": true,
+    "reviewer_1": {
+      "classification": "L1",
+      "confidence": "medium",
+      "reasoning": "The manifest declares a read-only scope, and all policy evidence points to a trusted, published, read-only tool. While the 'signed -> false' flag indicates the package isn't cryptographically signed, no policy rule was triggered, suggesting this is a metadata-level note rather than an active vulnerability. The risk is limited to potential metadata inconsistency or trust assumptions about the publisher."
+    },
+    "reviewer_2": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    }
+  },
+  {
+    "artifact": "agiresearch/AIOS",
+    "source": "github_mcp",
+    "code_availability": "source_available",
+    "consensus": "L1",
+    "agreement": true,
+    "reviewer_1": {
+      "classification": "L1",
+      "confidence": "medium",
+      "reasoning": "The tool exhibits a metadata inconsistency: it is marked as a trusted server but the static analysis identifies the source as untrusted. There is no evidence of an actual exploitable chain or confirmed vulnerability, only a conflicting trust indicator which could be a misconfiguration."
+    },
+    "reviewer_2": {
+      "classification": "L1",
+      "confidence": "high",
+      "reasoning": "The tool exhibits clear metadata inconsistencies: it has a trusted_server trust label but an untrusted source label; it's signed=false but published by a known organization (agiresearch); and it claims read_only but has no governance findings despite these contradictions. No cross-layer unsafe chains or exploitable behaviors are evidenced."
+    }
+  },
+  {
+    "artifact": "ahujasid/ableton-mcp",
+    "source": "github_mcp",
+    "code_availability": "source_available",
+    "consensus": "L1",
+    "agreement": true,
+    "reviewer_1": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    },
+    "reviewer_2": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    }
+  },
+  {
+    "artifact": "aiming-lab/AutoResearchClaw",
+    "source": "github_mcp",
+    "code_availability": "source_available",
+    "consensus": "L2",
+    "agreement": false,
+    "reviewer_1": {
+      "classification": "L1",
+      "confidence": "high",
+      "reasoning": "The tool's declared scope is 'read', the description implies generating research (which could involve external actions), but the policy findings show no inconsistencies, and it has a 'trusted_server' governance label. The minor discrepancy between the 'read-only' claim and the autonomous paper-generation description could be a metadata inconsistency, but there is no evidence of an unsafe cross-layer chain or exploitability."
+    },
+    "reviewer_2": {
+      "classification": "L2",
+      "confidence": "medium",
+      "reasoning": "Declared scope is 'read' (low risk), but description claims 'fully autonomous & self-evolving research from idea to paper'—which strongly implies write/executive actions (e.g., generating content, executing code) beyond simple reading. This creates an explainable cross-layer unsafe chain where declared permissions don't match functional description, potentially allowing unauthorized actions if the tool escalates from reading to writing."
+    }
+  },
+  {
+    "artifact": "algorithmicsuperintelligence/optillm",
+    "source": "github_mcp",
+    "code_availability": "source_available",
+    "consensus": "L1",
+    "agreement": true,
+    "reviewer_1": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    },
+    "reviewer_2": {
+      "classification": "L1",
+      "confidence": "medium",
+      "reasoning": "Tool explicitly requests only 'read' scope, has a trusted_server label, and read_only annotations, indicating consistent low-risk metadata. The lack of a signature introduces minor uncertainty but does not elevate risk without evidence of an unsafe chain or exploit."
+    }
+  },
+  {
+    "artifact": "aliasrobotics/cai",
+    "source": "github_mcp",
+    "code_availability": "source_available",
+    "consensus": "L1",
+    "agreement": true,
+    "reviewer_1": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    },
+    "reviewer_2": {
+      "classification": "L1",
+      "confidence": "medium",
+      "reasoning": "Primary issue is metadata inconsistency: tool claims trusted_server status but has untrusted source label, and lacks signature despite being published. However, the tool only requests read scope and no active exploits or unsafe chains are demonstrated in the evidence."
+    }
+  },
+  {
+    "artifact": "alibaba/page-agent",
+    "source": "github_mcp",
+    "code_availability": "source_available",
+    "consensus": "L1",
+    "agreement": true,
+    "reviewer_1": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    },
+    "reviewer_2": {
+      "classification": "L1",
+      "confidence": "medium",
+      "reasoning": "Metadata inconsistencies exist (trusted server label vs. untrusted source label, no signature), but no policy findings indicate active security risks. The tool claims read-only operations and is published by a known organization, reducing likelihood of immediate exploitation without further validation."
+    }
+  },
+  {
+    "artifact": "andrewyng/aisuite",
+    "source": "github_mcp",
+    "code_availability": "source_available",
+    "consensus": "L1",
+    "agreement": true,
+    "reviewer_1": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    },
+    "reviewer_2": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    }
+  },
+  {
+    "artifact": "anthropics/claude-agent-sdk-python",
+    "source": "github_mcp",
+    "code_availability": "source_available",
+    "consensus": "L1",
+    "agreement": true,
+    "reviewer_1": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    },
+    "reviewer_2": {
+      "classification": "L1",
+      "confidence": "medium",
+      "reasoning": "The tool has minimal permissions ('read' scope only), is published by a trusted source (Anthropic), and has consistent metadata claims of being read-only. The only noted discrepancy is the lack of a signature, which is a metadata-level governance concern but does not indicate an active or exploitable risk. No evidence of unsafe behavior or cross-layer attack chain."
+    }
+  },
+  {
+    "artifact": "anthropics/claude-code-action",
+    "source": "github_mcp",
+    "code_availability": "source_available",
+    "consensus": "L1",
+    "agreement": true,
+    "reviewer_1": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    },
+    "reviewer_2": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": "```json\n{\n  \"classification\": \"L1\",\n  \"confidence\": \"medium\",\n  \"reasoning\": \"该工具的元数据（清单、描述、证据）内部一致，均指向为受信任发布者（Anthropic）提供的、仅需`read`权限的只读工具。主要风险点在于`signed -> false`，"
+    }
+  },
+  {
+    "artifact": "anus-dev/ANUS",
+    "source": "github_mcp",
+    "code_availability": "source_available",
+    "consensus": "L1",
+    "agreement": true,
+    "reviewer_1": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    },
+    "reviewer_2": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    }
+  },
+  {
+    "artifact": "apollographql/apollo-client",
+    "source": "github_mcp",
+    "code_availability": "source_available",
+    "consensus": "L1",
+    "agreement": true,
+    "reviewer_1": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": "```json\n{\n  \"classification\": \"L1\",\n  \"confidence\": \"medium\",\n  \"reasoning\": \"该工具Manifest声明的权限与治理元数据（trusted_server, published_by, read_only）存在关键不一致：`signed: false`。一个声称来自权威发布者（apollographql）且为‘read_o"
+    },
+    "reviewer_2": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    }
+  },
+  {
+    "artifact": "atilaahmettaner/tradingview-mcp",
+    "source": "github_mcp",
+    "code_availability": "source_available",
+    "consensus": "L1",
+    "agreement": true,
+    "reviewer_1": {
+      "classification": "L1",
+      "confidence": "medium",
+      "reasoning": "The tool's manifest declares a 'read' scope and has a trusted_server label, with annotation_claims indicating read-only behavior. However, it is unsigned, which creates a minor metadata trust inconsistency but no evidence of unsafe cross-layer chains, confirmed exploits, or operational vulnerabilities."
+    },
+    "reviewer_2": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    }
+  },
+  {
+    "artifact": "av/harbor",
+    "source": "github_mcp",
+    "code_availability": "source_available",
+    "consensus": "L1",
+    "agreement": true,
+    "reviewer_1": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    },
+    "reviewer_2": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": "{\n  \"classification\": \"L1\",\n  \"confidence\": \"medium\",\n  \"reason"
+    }
+  },
+  {
+    "artifact": "babybuddy/babybuddy",
+    "source": "github_mcp",
+    "code_availability": "source_available",
+    "consensus": "L1",
+    "agreement": true,
+    "reviewer_1": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    },
+    "reviewer_2": {
+      "classification": "L1",
+      "confidence": "medium",
+      "reasoning": "The tool's source is marked as 'untrusted' (has_source_label -> untrusted) while also being labeled as a 'trusted_server' and published by the original author (babybuddy). This indicates a metadata inconsistency rather than a confirmed exploit chain or vulnerability. The read-only scope and lack of policy findings support this being a low-risk metadata conflict."
+    }
+  },
+  {
+    "artifact": "basicmachines-co/basic-memory",
+    "source": "github_mcp",
+    "code_availability": "source_available",
+    "consensus": "L2",
+    "agreement": false,
+    "reviewer_1": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    },
+    "reviewer_2": {
+      "classification": "L2",
+      "confidence": "medium",
+      "reasoning": "Tool claims read-only access but has 'credential' data label and 'credential_access' capability inference, creating an unsafe cross-layer chain where credential exposure may occur despite metadata restrictions. The mismatch between declared read-only scope and inferred credential access represents a policy enforcement risk."
+    }
+  },
+  {
+    "artifact": "batrachianai/toad",
+    "source": "github_mcp",
+    "code_availability": "source_available",
+    "consensus": "L1",
+    "agreement": true,
+    "reviewer_1": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    },
+    "reviewer_2": {
+      "classification": "L1",
+      "confidence": "medium",
+      "reasoning": "The tool's stated scope ('read'), annotation ('read_only'), and governance label ('trusted_server') are consistent, with no contradictory evidence of unsafe behavior chains. The only noted discrepancy is the 'signed -> false' finding, which is a metadata integrity/verification concern rather than an exploitable vulnerability in the tool's functional chain. No cross-layer risks or replay evidence were presented to indicate a higher classification."
+    }
+  },
+  {
+    "artifact": "birobirobiro/awesome-shadcn-ui",
+    "source": "github_mcp",
+    "code_availability": "source_available",
+    "consensus": "L1",
+    "agreement": true,
+    "reviewer_1": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    },
+    "reviewer_2": {
+      "classification": "L1",
+      "confidence": "high",
+      "reasoning": "The tool has clear read-only scope, trusted governance labels, and annotation claims confirming read-only access. The only minor inconsistency is the unsigned status, but this is common for community tools and doesn't create an exploitable chain given the strong read-only protections and trusted server status."
+    }
+  },
+  {
+    "artifact": "blazickjp/arxiv-mcp-server",
+    "source": "github_mcp",
+    "code_availability": "source_available",
+    "consensus": "L1",
+    "agreement": true,
+    "reviewer_1": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": "{\n  \"classification\": \"L1\",\n  \"confidence\": \"medium\",\n  \"reasoning\": \"The tool declares a read-only scope and is labeled as trusted, which aligns with low-risk functionality. However, metadata inconsi"
+    },
+    "reviewer_2": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    }
+  },
+  {
+    "artifact": "boyter/scc",
+    "source": "github_mcp",
+    "code_availability": "source_available",
+    "consensus": "L2",
+    "agreement": false,
+    "reviewer_1": {
+      "classification": "L2",
+      "confidence": "medium",
+      "reasoning": "Metadata inconsistency is present ('trusted_server' label vs. missing signature), but the core risk is an explainable cross-layer unsafe chain: the tool is marked as trusted and read-only, but its lack of cryptographic signing (governance: signed -> false) creates a potential for supply-chain tampering. This undermines the trust assertion without requiring direct exploit confirmation."
+    },
+    "reviewer_2": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    }
+  },
+  {
+    "artifact": "breaking-brake/cc-wf-studio",
+    "source": "github_mcp",
+    "code_availability": "source_available",
+    "consensus": "L1",
+    "agreement": true,
+    "reviewer_1": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    },
+    "reviewer_2": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    }
+  },
+  {
+    "artifact": "bytedance/UI-TARS-desktop",
+    "source": "github_mcp",
+    "code_availability": "source_available",
+    "consensus": "L1",
+    "agreement": true,
+    "reviewer_1": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    },
+    "reviewer_2": {
+      "classification": "L1",
+      "confidence": "medium",
+      "reasoning": "The tool requires only read scope and is marked read-only, minimizing direct risk. However, the signed: false metadata creates inconsistency with the trusted_server governance label, as unsigned packages cannot be fully verified for tampering despite having a trusted publisher. No cross-layer unsafe chains or confirmed exploits are present."
+    }
+  },
+  {
+    "artifact": "bytedance/trae-agent",
+    "source": "github_mcp",
+    "code_availability": "source_available",
+    "consensus": "L1",
+    "agreement": true,
+    "reviewer_1": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    },
+    "reviewer_2": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    }
+  },
+  {
+    "artifact": "camel-ai/owl",
+    "source": "github_mcp",
+    "code_availability": "source_available",
+    "consensus": "L1",
+    "agreement": true,
+    "reviewer_1": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    },
+    "reviewer_2": {
+      "classification": "L1",
+      "confidence": "high",
+      "reasoning": "The tool is restricted to a 'read' scope with 'read_only' annotation, published by a known organization (camel-ai), and flagged as a trusted server. No policy findings or evidence of unsafe behavior. The only note is 'signed -> false', but this is a metadata attribute for a trusted, read-only tool and does not indicate an active risk or inconsistency."
+    }
+  },
+  {
+    "artifact": "campfirein/byterover-cli",
+    "source": "github_mcp",
+    "code_availability": "source_available",
+    "consensus": "L1",
+    "agreement": true,
+    "reviewer_1": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    },
+    "reviewer_2": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": "```json\n{\n  \"classification\": \"L1\",\n  \"confidence\": \"medium\",\n  \"reasoning\": \"该工具的权限声明（read-only）与其元数据注解（read_only）和"
+    }
+  },
+  {
+    "artifact": "can1357/oh-my-pi",
+    "source": "github_mcp",
+    "code_availability": "source_available",
+    "consensus": "L1",
+    "agreement": true,
+    "reviewer_1": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    },
+    "reviewer_2": {
+      "classification": "L1",
+      "confidence": "medium",
+      "reasoning": "Tool manifest declares 'read' scope and is labeled 'read_only', but its described functionality ('hash-anchored edits', 'browser', 'subagents') implies capabilities beyond read-only access. This is a metadata/policy inconsistency (L1). While concerning, there's no direct evidence of a cross-layer exploit chain or confirmed replay attack."
+    }
+  },
+  {
+    "artifact": "casdoor/casdoor",
+    "source": "github_mcp",
+    "code_availability": "source_available",
+    "consensus": "L1",
+    "agreement": true,
+    "reviewer_1": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    },
+    "reviewer_2": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": "```json\n{\n  \"classification\": \"L1\",\n  \"confidence\": \"medium\",\n  \"reasoning\": \"该工具声明为只读（scope: read, annotation_claims: read_only），并被标记为trusted_server，策略层面未发现异常。"
+    }
+  },
+  {
+    "artifact": "casey/just",
+    "source": "github_mcp",
+    "code_availability": "source_available",
+    "consensus": "L1",
+    "agreement": true,
+    "reviewer_1": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    },
+    "reviewer_2": {
+      "classification": "L1",
+      "confidence": "medium",
+      "reasoning": "Tool claims read-only operation via annotation_claims and manifests, but lacks code signing (signed -> false). The 'trusted_server' label provides some assurance, yet the absence of cryptographic verification creates a metadata inconsistency between claimed security posture and actual implementation verification."
+    }
+  },
+  {
+    "artifact": "castorini/pyserini",
+    "source": "github_mcp",
+    "code_availability": "source_available",
+    "consensus": "L1",
+    "agreement": true,
+    "reviewer_1": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    },
+    "reviewer_2": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    }
+  },
+  {
+    "artifact": "chakra-ui/ark",
+    "source": "github_mcp",
+    "code_availability": "source_available",
+    "consensus": "L1",
+    "agreement": true,
+    "reviewer_1": {
+      "classification": "L1",
+      "confidence": "high",
+      "reasoning": "All attributes (read-only scope, trusted publisher, read-only annotation) are consistent and align with a low-risk profile. The only minor note is the 'signed -> false' flag, which could be a governance detail but does not create an exploitable chain or confirm a vulnerability. No conflicting evidence suggests unsafe behavior."
+    },
+    "reviewer_2": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    }
+  },
+  {
+    "artifact": "charmbracelet/crush",
+    "source": "github_mcp",
+    "code_availability": "source_available",
+    "consensus": "L1",
+    "agreement": true,
+    "reviewer_1": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": "{\"classification\":\"L1\",\"confidence\":\"medium\",\"reasoning\":\"The tool requires only `read` scope, is published by a known maintainer (charm"
+    },
+    "reviewer_2": {
+      "classification": "L1",
+      "confidence": "medium",
+      "reasoning": "The tool is from a trusted publisher (charmbracelet), requires only 'read' scope, and has a trusted server label. The primary discrepancy is the `signed -> false` status, which is a metadata inconsistency. Given the read-only permissions and trusted origin, there is no evidence of an unsafe or exploitable chain, making this a metadata-level issue (L1). Confidence is medium due to the lack of cryptographic signing, but contextual factors reduce overall risk."
+    }
+  },
+  {
+    "artifact": "chopratejas/headroom",
+    "source": "github_mcp",
+    "code_availability": "source_available",
+    "consensus": "L1",
+    "agreement": true,
+    "reviewer_1": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": "```json\n{\n  \"classification\": \"L1\",\n  \"confidence\": \"medium\",\n  \"reasoning\":"
+    },
+    "reviewer_2": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    }
+  },
+  {
+    "artifact": "crewAIInc/crewAI",
+    "source": "github_mcp",
+    "code_availability": "source_available",
+    "consensus": "L2",
+    "agreement": false,
+    "reviewer_1": {
+      "classification": "L2",
+      "confidence": "medium",
+      "reasoning": "Declared read-only scope and trusted label, but static analysis infers actual shell execution capability (high-privilege call). This indicates an unsafe chain: metadata claims minimal permissions, while inferred capability is dangerous. Lack of signature adds to the risk. However, no confirmed exploitation evidence (L3) or active vulnerability proof (L4) is present."
+    },
+    "reviewer_2": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    }
+  },
+  {
+    "artifact": "crystaldba/postgres-mcp",
+    "source": "github_mcp",
+    "code_availability": "source_available",
+    "consensus": "L1",
+    "agreement": true,
+    "reviewer_1": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    },
+    "reviewer_2": {
+      "classification": "L1",
+      "confidence": "medium",
+      "reasoning": "The manifest scopes declare only 'read' and metadata claims 'read_only', but the tool's description promises 'configurable read/write access.' This is a clear inconsistency between advertised permissions and actual capability, which could mislead users or agents into expecting a safer tool. No evidence of active exploitation or confirmed unsafe chain is provided."
+    }
+  },
+  {
+    "artifact": "cursor/community-plugins",
+    "source": "github_mcp",
+    "code_availability": "source_available",
+    "consensus": "L1",
+    "agreement": true,
+    "reviewer_1": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    },
+    "reviewer_2": {
+      "classification": "L1",
+      "confidence": "medium",
+      "reasoning": "The tool's metadata indicates it is a 'trusted_server' and 'read_only', which aligns with its declared 'read' scope. However, the 'signed: false' attribute presents a metadata inconsistency with the trust claim, as lack of signing weakens verification of origin and integrity. No evidence of an actual unsafe execution chain or exploit is provided, so this is a governance/metadata concern, not a confirmed vulnerability."
+    }
+  },
+  {
+    "artifact": "danny-avila/LibreChat",
+    "source": "github_mcp",
+    "code_availability": "source_available",
+    "consensus": "L1",
+    "agreement": true,
+    "reviewer_1": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    },
+    "reviewer_2": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    }
+  },
+  {
+    "artifact": "datachain-ai/datachain",
+    "source": "github_mcp",
+    "code_availability": "source_available",
+    "consensus": "L1",
+    "agreement": true,
+    "reviewer_1": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    },
+    "reviewer_2": {
+      "classification": "L1",
+      "confidence": "medium",
+      "reasoning": "The primary risk is metadata inconsistency between trusted_server governance label and untrusted source label, but the tool has read-only permissions with no policy findings, reducing exploitation potential."
+    }
+  },
+  {
+    "artifact": "dathere/qsv",
+    "source": "github_mcp",
+    "code_availability": "source_available",
+    "consensus": "L1",
+    "agreement": true,
+    "reviewer_1": {
+      "classification": "L1",
+      "confidence": "high",
+      "reasoning": "The tool shows metadata inconsistency (unsigned binary) but maintains a trusted server label and read-only annotation. No unsafe execution patterns or evidence of cross-layer issues are present, aligning with L1 scope."
+    },
+    "reviewer_2": {
+      "classification": "L1",
+      "confidence": "high",
+      "reasoning": "Tool operates within declared read-only scope with trusted server status. No policy findings or cross-layer unsafe chains detected. The only minor note is 'signed -> false', but this is metadata-level, not indicating active exploitation."
+    }
+  },
+  {
+    "artifact": "davepoon/buildwithclaude",
+    "source": "github_mcp",
+    "code_availability": "source_available",
+    "consensus": "L1",
+    "agreement": true,
+    "reviewer_1": {
+      "classification": "L1",
+      "confidence": "medium",
+      "reasoning": "The tool requests only 'read' scope and is annotated as 'read_only' with no policy violations. The 'trusted_server' label and published_by metadata are present, but the tool is unsigned ('signed -> false'). This creates a minor metadata inconsistency: a trusted label without cryptographic verification, but the overall risk is low given the limited scope."
+    },
+    "reviewer_2": {
+      "classification": "L1",
+      "confidence": "medium",
+      "reasoning": "The manifest declares a minimal 'read' scope but the description implies discovery/search functionality that might involve broader metadata exposure. However, no concrete unsafe chain or exploit was evidenced. Primary concern is metadata inconsistency between declared scope and described capabilities."
+    }
+  },
+  {
+    "artifact": "daytonaio/daytona",
+    "source": "github_mcp",
+    "code_availability": "source_available",
+    "consensus": "L1",
+    "agreement": true,
+    "reviewer_1": {
+      "classification": "L1",
+      "confidence": "high",
+      "reasoning": "The tool is explicitly read-only (manifest scope 'read', annotation claims read_only) and published by a trusted entity (daytonaio). While `signed -> false` is a metadata inconsistency suggesting the package isn't cryptographically signed, this alone doesn't create an exploitable vulnerability (L3/L4) or an unsafe cross-layer chain (L2). The primary risk is limited to potential integrity concerns for package distribution, which is a metadata-level issue."
+    },
+    "reviewer_2": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    }
+  },
+  {
+    "artifact": "debpalash/OmniVoice-Studio",
+    "source": "github_mcp",
+    "code_availability": "source_available",
+    "consensus": "L1",
+    "agreement": true,
+    "reviewer_1": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    },
+    "reviewer_2": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    }
+  },
+  {
+    "artifact": "deedy5/ddgs",
+    "source": "github_mcp",
+    "code_availability": "source_available",
+    "consensus": "L1",
+    "agreement": true,
+    "reviewer_1": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": "{\n  \"classification\": \"L2\",\n  \"confidence\": \""
+    },
+    "reviewer_2": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    }
+  },
+  {
+    "artifact": "dgunning/edgartools",
+    "source": "github_mcp",
+    "code_availability": "source_available",
+    "consensus": "L1",
+    "agreement": true,
+    "reviewer_1": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    },
+    "reviewer_2": {
+      "classification": "L1",
+      "confidence": "medium",
+      "reasoning": "The tool exhibits minimal security risk, operating with read-only scope, trusted server governance, and no conflicting policy findings. The only minor inconsistency is the absence of a signature, which slightly reduces verifiability but does not introduce a functional vulnerability. The metadata correctly reflects the tool's intended read-only data analysis purpose."
+    }
+  },
+  {
+    "artifact": "diegosouzapw/OmniRoute",
+    "source": "github_mcp",
+    "code_availability": "source_available",
+    "consensus": "L1",
+    "agreement": true,
+    "reviewer_1": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    },
+    "reviewer_2": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    }
+  },
+  {
+    "artifact": "dimensionalOS/dimos",
+    "source": "github_mcp",
+    "code_availability": "source_available",
+    "consensus": "L2",
+    "agreement": false,
+    "reviewer_1": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    },
+    "reviewer_2": {
+      "classification": "L2",
+      "confidence": "medium",
+      "reasoning": "工具的能力声明（控制物理硬件）与其宣称的‘只读’权限和发现的文件读取能力之间存在显著不一致。这种矛盾构成了一个潜在的跨层不安全链条，表明工具可能拥有未声明的、更广泛的系统访问权限，超出了其明确声明的安全边界。"
+    }
+  },
+  {
+    "artifact": "dnhkng/GLaDOS",
+    "source": "github_mcp",
+    "code_availability": "source_available",
+    "consensus": "L1",
+    "agreement": true,
+    "reviewer_1": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    },
+    "reviewer_2": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    }
+  },
+  {
+    "artifact": "docling-project/docling",
+    "source": "github_mcp",
+    "code_availability": "source_available",
+    "consensus": "L1",
+    "agreement": true,
+    "reviewer_1": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    },
+    "reviewer_2": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    }
+  },
+  {
+    "artifact": "doobidoo/mcp-memory-service",
+    "source": "github_mcp",
+    "code_availability": "source_available",
+    "consensus": "L1",
+    "agreement": true,
+    "reviewer_1": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    },
+    "reviewer_2": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    }
+  },
+  {
+    "artifact": "dosco/graphjin",
+    "source": "github_mcp",
+    "code_availability": "source_available",
+    "consensus": "L1",
+    "agreement": true,
+    "reviewer_1": {
+      "classification": "L1",
+      "confidence": "medium",
+      "reasoning": "Primary risk is metadata inconsistency: manifest claims only 'read' scope for a tool that compiles queries to databases, which typically requires write access for full functionality. The 'read_only' annotation contradicts typical database interaction patterns. While trusted_server label exists, unsigned code with database access potential poses elevated risk."
+    },
+    "reviewer_2": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    }
+  },
+  {
+    "artifact": "dream-num/univer",
+    "source": "github_mcp",
+    "code_availability": "source_available",
+    "consensus": "L1",
+    "agreement": true,
+    "reviewer_1": {
+      "classification": "L1",
+      "confidence": "medium",
+      "reasoning": "The metadata declares a read-only annotation, which aligns with the manifest scope ['read'] and the tool's stated purpose. However, the lack of a signature (`signed -> false`) introduces a minor governance concern. There is no evidence of cross-layer unsafe chains, confirmed replay attacks, or an exploitable vulnerability. This primarily presents as a metadata governance inconsistency."
+    },
+    "reviewer_2": {
+      "classification": "L1",
+      "confidence": "high",
+      "reasoning": "工具权限为只读（scope: read），且元数据声明与治理信息一致（read_only, trusted_server）。签名缺失属于元数据完整性不足，但在严格只读权限下无法构成跨层攻击链，因此仅归类为元数据层面的低风险发现。"
+    }
+  },
+  {
+    "artifact": "electerm/electerm",
+    "source": "github_mcp",
+    "code_availability": "source_available",
+    "consensus": "L1",
+    "agreement": true,
+    "reviewer_1": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": "```json\n{\n  \"classification\": \"L1\",\n  \"confidence\": \"medium\",\n  \"reasoning\": \"存在元数据不一致：1) 工具功能强大（SSH/SFTP/RDP等），但Manifest仅声明'read'权限，功能描述"
+    },
+    "reviewer_2": {
+      "classification": "L1",
+      "confidence": "medium",
+      "reasoning": "The tool exhibits a metadata inconsistency: it is labeled as 'trusted_server' but also has an 'untrusted' source label and is not signed. While the manifest scopes ('read') and read-only annotation suggest a limited, safe profile, the conflicting trust indicators require clarification. No evidence of an active exploit or unsafe chain is provided in the findings."
+    }
+  },
+  {
+    "artifact": "evalstate/fast-agent",
+    "source": "github_mcp",
+    "code_availability": "source_available",
+    "consensus": "L1",
+    "agreement": true,
+    "reviewer_1": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    },
+    "reviewer_2": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    }
+  },
+  {
+    "artifact": "exa-labs/exa-mcp-server",
+    "source": "github_mcp",
+    "code_availability": "source_available",
+    "consensus": "L2",
+    "agreement": false,
+    "reviewer_1": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    },
+    "reviewer_2": {
+      "classification": "L2",
+      "confidence": "medium",
+      "reasoning": "The tool declares a read-only scope and claims read-only annotation, but its core functionality (web crawling) inherently involves sending requests to external web servers and receiving their responses. This creates a cross-layer unsafe chain: a 'read' scope in the MCP manifest does not restrict the tool from performing network requests, potentially leaking information about internal systems, queries, or user context to external endpoints. Additionally, the lack of a cryptographic signature (signed: false) introduces an integrity and authenticity risk for the tool's code and execution. These issues together form an explainable unsafe chain not caught by metadata-only checks."
+    }
+  },
+  {
+    "artifact": "facebook/memlab",
+    "source": "github_mcp",
+    "code_availability": "source_available",
+    "consensus": "L1",
+    "agreement": true,
+    "reviewer_1": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    },
+    "reviewer_2": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    }
+  },
+  {
+    "artifact": "feeluown/FeelUOwn",
+    "source": "github_mcp",
+    "code_availability": "source_available",
+    "consensus": "L1",
+    "agreement": true,
+    "reviewer_1": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    },
+    "reviewer_2": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    }
+  },
+  {
+    "artifact": "freecodexyz/free-code",
+    "source": "github_mcp",
+    "code_availability": "source_available",
+    "consensus": "L1",
+    "agreement": true,
+    "reviewer_1": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    },
+    "reviewer_2": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    }
+  },
+  {
+    "artifact": "garrytan/gbrain",
+    "source": "github_mcp",
+    "code_availability": "source_available",
+    "consensus": "L1",
+    "agreement": true,
+    "reviewer_1": {
+      "classification": "L1",
+      "confidence": "low",
+      "reasoning": ""
+    },
+    "reviewer_2": {
+      "classification": "L1",
+      "confidence": "high",
+      "reasoning": "The tool declares only 'read' scope and is annotated as read-only, published by a trusted entity. No inconsistent metadata or policy violations are present, and the absence of a signature in this context does not create an unsafe chain."
+    }
   }
 ]

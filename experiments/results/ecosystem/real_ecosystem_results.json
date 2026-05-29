@@ -9,8 +9,8 @@
     "official_registry_mcp": 100
   },
   "code_availability": {
-    "manifest_only": 928,
-    "source_available": 75
+    "manifest_only": 802,
+    "source_available": 201
   },
   "languages": {
     "python": 307,
@@ -171,13 +171,13 @@
     }
   ],
   "llm_review": {
-    "total_reviewed": 86,
-    "reviewer_agreement_rate": 0.7790697674418605,
+    "total_reviewed": 235,
+    "reviewer_agreement_rate": 0.8382978723404255,
     "classifications": {
-      "L1": 66,
-      "L2": 20
+      "L1": 195,
+      "L2": 40
     },
-    "l2_plus_count": 20,
+    "l2_plus_count": 40,
     "l2_plus_artifacts": [
       "GLips/Figma-Context-MCP",
       "builderz-labs/mission-control",
@@ -198,7 +198,27 @@
       "ai.agentdm/agentdm",
       "ai.cirra/salesforce-mcp",
       "financial-datasets/mcp-server",
-      "JHSeo-git/my-first-mcp-2"
+      "JHSeo-git/my-first-mcp-2",
+      "54yyyu/zotero-mcp",
+      "Arize-ai/phoenix",
+      "EpicenterHQ/epicenter",
+      "HKUDS/DeepTutor",
+      "HKUDS/Vibe-Trading",
+      "HKUDS/nanobot",
+      "Hiram-Wong/zyfun",
+      "Memento-Teams/Memento",
+      "OpenBMB/ChatDev",
+      "Q00/ouroboros",
+      "SolaceLabs/solace-agent-mesh",
+      "The-Pocket/PocketFlow",
+      "TracecatHQ/tracecat",
+      "Upsonic/Upsonic",
+      "aiming-lab/AutoResearchClaw",
+      "basicmachines-co/basic-memory",
+      "boyter/scc",
+      "crewAIInc/crewAI",
+      "dimensionalOS/dimos",
+      "exa-labs/exa-mcp-server"
     ]
   }
 }
