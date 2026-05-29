@@ -9,8 +9,8 @@
     "official_registry_mcp": 100
   },
   "code_availability": {
-    "manifest_only": 802,
-    "source_available": 201
+    "manifest_only": 493,
+    "source_available": 510
   },
   "languages": {
     "python": 307,
