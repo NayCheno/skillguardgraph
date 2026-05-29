@@ -8,9 +8,9 @@
   "server_main_calls": 1,
   "tool_registry_total": 18,
   "latency_ms": {
-    "p50": 100.89,
-    "p95": 108.164,
-    "max": 108.164
+    "p50": 122.965,
+    "p95": 138.919,
+    "max": 138.919
   },
   "acceptance": {
     "all_cases_executed": true,
@@ -26,7 +26,7 @@
       "raw_url": "https://raw.githubusercontent.com/ahujasid/blender-mcp/main/main.py",
       "source_path": "main.py",
       "description": "GitHub Python entrypoint that delegates to blender_mcp.server.main.",
-      "duration_ms": 100.89,
+      "duration_ms": 122.965,
       "events": [
         {
           "kind": "blender_server_main"
@@ -45,7 +45,7 @@
       "raw_url": "https://raw.githubusercontent.com/BeehiveInnovations/pal-mcp-server/main/server.py",
       "source_path": "server.py",
       "description": "GitHub Python MCP server entrypoint with a populated tool registry.",
-      "duration_ms": 108.164,
+      "duration_ms": 138.919,
       "events": [],
       "result": {
         "tool_count": 18,
@@ -54,7 +54,7 @@
         "server_name": "pal-server"
       },
       "stdout": "",
-      "stderr": "2026-05-29 06:08:08,724 - root - INFO - Logging to: logs\\mcp_server.log\n2026-05-29 06:08:08,724 - root - INFO - Process PID: 77736\n2026-05-29 06:08:08,724 - sandbox_fixture - DEBUG - PAL_MCP_FORCE_ENV_OVERRIDE disabled - system environment variables take precedence\n2026-05-29 06:08:08,725 - sandbox_fixture - INFO - All tools enabled (DISABLED_TOOLS not set)\n"
+      "stderr": "2026-05-29 08:44:31,111 - root - INFO - Logging to: logs\\mcp_server.log\n2026-05-29 08:44:31,111 - root - INFO - Process PID: 66308\n2026-05-29 08:44:31,111 - sandbox_fixture - DEBUG - PAL_MCP_FORCE_ENV_OVERRIDE disabled - system environment variables take precedence\n2026-05-29 08:44:31,111 - sandbox_fixture - INFO - All tools enabled (DISABLED_TOOLS not set)\n"
     }
   ]
 }

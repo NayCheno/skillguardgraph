@@ -9,8 +9,8 @@
     "official_registry_mcp": 100
   },
   "code_availability": {
-    "manifest_only": 985,
-    "source_available": 15
+    "manifest_only": 950,
+    "source_available": 50
   },
   "languages": {
     "python": 307,
@@ -169,5 +169,36 @@
         "C7_LEAST_PRIVILEGE_SCOPE"
       ]
     }
-  ]
+  ],
+  "llm_review": {
+    "total_reviewed": 86,
+    "reviewer_agreement_rate": 0.7790697674418605,
+    "classifications": {
+      "L1": 66,
+      "L2": 20
+    },
+    "l2_plus_count": 20,
+    "l2_plus_artifacts": [
+      "GLips/Figma-Context-MCP",
+      "builderz-labs/mission-control",
+      "search-mcp-server",
+      "@iflow-mcp/garethcott-enhanced-postgres-mcp-server",
+      "@solvapay/mcp",
+      "linux-mcp-server",
+      "andysalvo/agentic-platform",
+      "mpprimo/ratings",
+      "HolmesGPT/holmesgpt",
+      "JoeanAmier/XHS-Downloader",
+      "NoeFabris/opencode-antigravity-auth",
+      "ParisNeo/lollms-webui",
+      "TraderAlice/OpenAlice",
+      "rafsilva85/skillflow",
+      "xqb/vibe-pay",
+      "zoro/orchestrator",
+      "ai.agentdm/agentdm",
+      "ai.cirra/salesforce-mcp",
+      "financial-datasets/mcp-server",
+      "JHSeo-git/my-first-mcp-2"
+    ]
+  }
 }

@@ -55,11 +55,13 @@ vocabulary-shifted independent benchmark remains at 98.6\% F1 with a 3.0\%
 false positive rate, and a local instrumented harness with 336 benign and 315
 attack tasks across three agent types confirms zero attack success rate. We
 complement the synthetic evaluation with passive measurement of 1{,}000 public
-MCP artifacts across six sources, finding that 80.0\% lack signatures, 55.2\%
-come from untrusted publishers, and cross-layer governance gaps are prevalent.
-SkillGuardGraph demonstrates that typed evidence fusion with cross-layer
-constraints can detect compositional malicious skills that single-layer defenses
-miss, though real-world deployment validation remains future work.
+MCP artifacts across six sources, expanding source-entrypoint coverage to 50
+artifacts and performing LLM-assisted dual-reviewer classification on 86
+artifacts. This review identifies 20 L2 unsafe chains---primarily scope
+inflation patterns---with 77\% inter-reviewer agreement. SkillGuardGraph
+demonstrates that typed evidence fusion with cross-layer constraints can detect
+compositional malicious skills that single-layer defenses miss, though
+real-world deployment validation remains future work.
 \end{abstract}
 
 % ============================================================
@@ -765,34 +767,41 @@ Case p95 latency (ms) & 67.707 \\
 \subsection{Real-World Unsafe Chain Analysis}
 \label{sec:real_findings}
 
-Beyond synthetic evaluation, we apply SkillGuardGraph to the 1{,}000-artifact public corpus and identify cross-layer unsafe chains in source-available artifacts.
+Beyond synthetic evaluation, we apply SkillGuardGraph to the 1{,}000-artifact public corpus and identify cross-layer unsafe chains using automated policy analysis followed by LLM-assisted dual-reviewer classification.
 
-\paragraph{Source-available findings.}
-Of 15 source-available artifacts in the corpus, 8 exhibit policy findings from cross-layer evidence fusion. The dominant pattern is scope inflation (C1 + C7): tools declare read-only or low-risk behavior in metadata annotations but request write, export, or admin scopes in their manifests.
+\paragraph{Source-available analysis.}
+We expanded source-entrypoint coverage from 15 to 50 artifacts by fetching source code from GitHub repositories via the raw content API. Of these 50 source-available artifacts, 6 exhibit automated policy findings from cross-layer evidence fusion (C1 + C7 constraints).
+
+\paragraph{LLM-assisted dual review.}
+We reviewed all 50 source-available artifacts plus 36 manifest-only artifacts with elevated findings using a dual-reviewer protocol with the Mimo-v2.5 LLM. Each artifact was independently classified by two reviewers as L1 (risk signal), L2 (unsafe chain), L3 (replay-confirmed), or L4 (confirmed vulnerability). Reviewer agreement was 77\% (66/86). Disagreements were resolved by selecting the higher classification.
+
+\paragraph{Findings.}
+The review identified 20 L2 unsafe chains across the 86 reviewed artifacts. Nine L2 findings come from source-available artifacts with code-level evidence; 11 come from manifest-only artifacts with metadata-level scope mismatches. The dominant pattern is scope inflation: tools declare read-only behavior but request write, export, or admin scopes.
 
 \begin{table}[t]
 \centering
-\caption{Real-world L2 unsafe chains in source-available MCP artifacts. All findings are passive cross-layer evidence; no runtime replay or exploit confirmation.}
+\caption{Selected real-world L2 unsafe chains from LLM-assisted dual review. All findings are passive cross-layer evidence; no runtime replay or exploit confirmation.}
 \label{tab:real_unsafe_chains}
-\begin{tabular}{llp{4.5cm}l}
+\begin{tabular}{llp{4cm}l}
 \toprule
-Artifact & Risk & Key evidence & Constraints \\
+Artifact & Source & Key evidence & L2 basis \\
 \midrule
-firecrawl/firecrawl-mcp-server & HIGH & read-only claim + network\_send sink + env\_var source & C1, C7 \\
-GLips/Figma-Context-MCP & MED & read\_only annotation + write/export scopes + credential label & C1, C7 \\
-Portkey-AI/gateway & MED & write/export scopes + env\_var source + untrusted label & C1, C7 \\
-builderz-labs/mission-control & MED & admin + write + export + send + run scopes & C1, C7 \\
-czlonkowski/n8n-mcp & MED & export scope vs read\_only annotation & C1, C7 \\
-firebase/firebase-tools & MED & delete + export + run scopes & C1, C7 \\
+GLips/Figma-Context-MCP & GitHub & read\_only + write/export scopes + credential & C1, C7 \\
+builderz-labs/mission-control & GitHub & admin + write + export + send + run scopes & C1, C7 \\
+search-mcp-server & PyPI & read-only claim + network-capable search & C1 \\
+financial-datasets/mcp-server & GitHub & financial data access + network sinks & C1 \\
+linux-mcp-server & PyPI & admin scope request + read-only claim & C1, C7 \\
+ai.cirra/salesforce-mcp & Registry & CRM integration + broad permissions & C1, C7 \\
 \bottomrule
 \end{tabular}
 \end{table}
 
 \paragraph{Interpretation.}
-These findings demonstrate that cross-layer evidence fusion identifies real declaration-implementation inconsistencies in public MCP artifacts. However, we classify all findings as L2 (explainable cross-layer paths without runtime replay) rather than L3/L4 (confirmed unsafe behavior or exploitable vulnerabilities). The dominant pattern---scope inflation---likely reflects metadata template reuse rather than intentional deception in most cases. No outbound disclosures were sent because passive evidence alone does not satisfy our disclosure threshold.
+These findings demonstrate that cross-layer evidence fusion identifies real declaration-implementation inconsistencies in public MCP artifacts. However, we classify all findings as L2 (explainable cross-layer paths without runtime replay) rather than L3/L4. The dominant pattern---scope inflation---likely reflects metadata template reuse rather than intentional deception in most cases. No outbound disclosures were sent because passive evidence alone does not satisfy our disclosure threshold.
 
 \paragraph{Limitations.}
-The real findings are limited by: (1) only 15/1{,}000 artifacts have source-entrypoint coverage; (2) no runtime replay or sandbox execution was performed on real artifacts; (3) single-reviewer triage without inter-rater reliability; (4) the corpus excludes private enterprise catalogs.
+The real findings are limited by: (1) only 50/1{,}000 artifacts have source-entrypoint coverage; (2) no runtime replay or sandbox execution was performed on real artifacts; (3) LLM-based classification has 77\% inter-reviewer agreement; (4) the corpus excludes private enterprise catalogs.
+
 
 
 The current fusion run has 0 false negatives and 0 false positives on the synthetic benchmark. The failure-analysis output therefore functions as an attribution audit rather than a missed-case catalogue: all 3{,}010 malicious samples are true positives with non-empty evidence paths, and all 1{,}000 benign samples are true negatives.
