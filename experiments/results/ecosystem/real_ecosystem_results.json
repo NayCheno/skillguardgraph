@@ -1,5 +1,5 @@
 {
-  "total_samples": 1003,
+  "total_samples": 2027,
   "sources": {
     "github_mcp": 300,
     "npm_mcp": 200,
@@ -9,8 +9,8 @@
     "official_registry_mcp": 100
   },
   "code_availability": {
-    "manifest_only": 493,
-    "source_available": 510
+    "manifest_only": 1013,
+    "source_available": 1014
   },
   "languages": {
     "python": 307,
