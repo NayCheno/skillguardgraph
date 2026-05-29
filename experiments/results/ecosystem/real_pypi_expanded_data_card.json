@@ -1,0 +1,55 @@
+{
+  "crawl_started_goal": "Passive real-public MCP/tool/package/space measurement",
+  "crawl_completed_at": "2026-05-29T01:19:30Z",
+  "target_samples": 100,
+  "actual_samples": 100,
+  "enabled_sources": [
+    "pypi_mcp"
+  ],
+  "source_details": {
+    "pypi_mcp": {
+      "seed_packages": [
+        "mcp",
+        "fastmcp",
+        "zeromcp",
+        "mcp-server",
+        "mcp-servers",
+        "python-mcp-server",
+        "mcp-server-framework",
+        "linux-mcp-server",
+        "search-mcp-server",
+        "cve-mcp-server",
+        "ms-fabric-mcp-server",
+        "iflow-mcp_loonghao-pypi-query-mcp-server",
+        "modelcontextprotocol",
+        "modelcontextprotocol-client",
+        "flask-mcp-server",
+        "chuk-mcp-server",
+        "pypi-query-mcp-server",
+        "mcp-server-creator",
+        "autodoc-mcp",
+        "mcp-clipboard"
+      ],
+      "metadata_api": "https://pypi.org/pypi/<name>/json",
+      "simple_index_limit": "target*2"
+    }
+  },
+  "source_quotas": null,
+  "source_budget": 50,
+  "dedup_rule": "Deduplicate by source-specific artifact identifier (GitHub full_name, npm package name, PyPI package name, Hugging Face space id, or Smithery qualifiedName); retain linked_repository when an upstream package points to GitHub.",
+  "filter_rule": "Collect public GitHub MCP repositories, npm MCP-related packages, discovered PyPI MCP packages, Hugging Face Spaces returned by MCP-related search terms, and hosted Smithery registry entries returned by MCP-related search terms; include metadata-only samples when bounded source probing finds no recognized entrypoint.",
+  "version_rule": "Record GitHub default_branch plus timestamps; record npm/PyPI package version metadata; record Hugging Face Space sha and created/lastModified timestamps when exposed; record Smithery createdAt plus deployment metadata when exposed.",
+  "license_rule": "Record SPDX identifier when the upstream API provides one; otherwise mark unknown.",
+  "availability_rule": {
+    "manifest_only": 97,
+    "source_available": 3
+  },
+  "safety_boundary": "Passive metadata/source collection only; no third-party code execution, no destructive calls, no credential use.",
+  "limitations": [
+    "GitHub, npm, PyPI, Hugging Face, Smithery, and official MCP Registry coverage are query- or discovery-biased and incomplete.",
+    "Repository-level, package-level, space-level, and hosted-registry signals do not prove deployable vulnerabilities.",
+    "Manifest-only samples retain metadata evidence but weak implementation coverage.",
+    "npm, PyPI, and Hugging Face source coverage depends on linked public files when present.",
+    "Public hosted-registry coverage (Smithery and the official MCP Registry) still does not include private enterprise catalogs."
+  ]
+}

@@ -1,64 +1,21 @@
 {
-  "total_samples": 1003,
+  "total_samples": 100,
   "sources": {
-    "github_mcp": 300,
-    "npm_mcp": 200,
-    "pypi_mcp": 150,
-    "hf_spaces_mcp": 150,
-    "smithery_mcp": 100,
-    "official_registry_mcp": 100
+    "pypi_mcp": 100
   },
   "code_availability": {
-    "manifest_only": 928,
-    "source_available": 75
+    "manifest_only": 97,
+    "source_available": 3
   },
   "languages": {
-    "python": 307,
-    "go": 9,
-    "typescript": 90,
-    "c#": 2,
-    "javascript": 10,
-    "swift": 1,
-    "dart": 1,
-    "unknown": 215,
-    "rust": 5,
-    "kotlin": 2,
-    "java": 2,
-    "jupyter notebook": 2,
-    "html": 2,
-    "shell": 3,
-    "c++": 2,
-    "less": 1,
-    "static": 4,
-    "gradio": 98,
-    "docker": 37,
-    "streamlit": 7,
-    "remote": 200
+    "python": 100
   },
   "licenses": {
-    "MIT": 296,
-    "AGPL-3.0": 17,
-    "GPL-3.0": 8,
-    "Apache-2.0": 115,
-    "unknown": 481,
-    "NOASSERTION": 29,
-    "BSD-3-Clause": 1,
-    "CC-BY-SA-4.0": 1,
-    "CC0-1.0": 5,
-    "BSD-2-Clause": 2,
-    "Unlicense": 1,
-    "UNLICENSED": 1,
-    "ISC": 12,
-    "BUSL-1.1": 1,
-    "SEE LICENSE IN ../LICENSE": 2,
-    "FSL-1.1-MIT": 3,
-    "AGPL-3.0-only": 1,
-    "SEE LICENSE IN LICENSE": 4,
-    "SEE LICENSE IN LICENSE.md": 1,
-    "Proprietary": 1,
-    "EPL-2.0 OR GPL-2.0-only WITH Classpath-exception-2.0": 1,
-    "MPL-2.0": 1,
-    "GPLV3": 1,
+    "MIT": 31,
+    "unknown": 53,
+    "Apache 2.0": 1,
+    "Apache-2.0": 4,
+    "MIT License": 1,
     "Copyright (c) 2025–2026 1up.ai. All rights reserved.\n        \n        PROPRIETARY SOFTWARE LICENSE\n        \n        This software and associated documentation files (the \"Software\") are the\n        proprietary property of 1up.ai.\n        \n        Permission is hereby granted to any person who obtains a copy of this Software\n        to use it solely for the purpose of accessing and interacting with the 1up\n        platform, subject to the following conditions:\n        \n        1. You may NOT redistribute, sublicense, sell, or otherwise transfer copies of\n           the Software to any third party.\n        \n        2. You may NOT modify, adapt, merge, or create derivative works based on the\n           Software.\n        \n        3. You may NOT reverse engineer, decompile, or disassemble the Software, except\n           to the extent that such activity is expressly permitted by applicable law.\n        \n        4. You may NOT use the Software to build a competing product or service.\n        \n        THE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\n        IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS\n        FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL 1UP.AI BE LIABLE\n        FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,\n        TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR\n        THE USE OR OTHER DEALINGS IN THE SOFTWARE.": 1,
     "MIT License\n        \n        Copyright (c) 2026 CSOAI-ORG / MEOK AI Labs\n        \n        Permission is hereby granted, free of charge, to any person obtaining a copy\n        of this software and associated documentation files (the \"Software\"), to deal\n        in the Software without restriction, including without limitation the rights\n        to use, copy, modify, merge, publish, distribute, sublicense, and/or sell\n        copies of the Software, and to permit persons to whom the Software is\n        furnished to do so, subject to the following conditions:\n        \n        The above copyright notice and this permission notice shall be included in all\n        copies or substantial portions of the Software.\n        \n        THE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\n        IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\n        FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\n        AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\n        LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\n        OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\n        SOFTWARE.": 2,
     "A2CR Source-Available License Notice\n        BUSL-1.1 style terms\n        \n        Copyright (c) 2026 A2CR\n        \n        IMPORTANT:\n        This repository is source-available, not OSI-approved open source.\n        The official A2CR MCP client is made public so users can inspect it, use it,\n        contribute fixes, and connect AI agents to the official A2CR service.\n        \n        The licensed work is:\n        \n          a2cr-mcp, including the local stdio MCP wrapper, package source code,\n          public examples, and wrapper tests in this repository.\n        \n        Additional Use Grant:\n        \n        You may use the Licensed Work for personal use, internal business use,\n        research, evaluation, contribution, documentation, testing, and for connecting\n        to the official A2CR hosted service at https://a2cr.app.\n        \n        Internal business use does not include offering the Licensed Work, or a service\n        substantially based on it, to third parties as a hosted, managed, or relay\n        service.\n        \n        Commercial Restriction:\n        \n        Offering a competing hosted or managed A2CR-compatible relay service based on\n        the Licensed Work, including the official A2CR MCP client, requires a\n        commercial license from A2CR.\n        \n        Change Date:\n        \n          2030-05-13\n        \n        Change License:\n        \n          Apache License, Version 2.0\n        \n        On the Change Date, the Licensed Work will be made available under the Change\n        License.\n        \n        Specification License Separation:\n        \n        The WorkBaton Format specification is licensed separately. See\n        docs/spec/LICENSE.md. You may implement the WorkBaton Format without permission,\n        subject to the trademark rules in TRADEMARK.md.\n        \n        Disclaimer:\n        \n        These terms are intended to express A2CR's source-available/open-core project\n        model. They should be reviewed by a qualified legal professional before major\n        commercial use, enforcement, or relicensing decisions.\n        \n        THE LICENSED WORK IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\n        IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\n        FITNESS FOR A PARTICULAR PURPOSE, AND NONINFRINGEMENT.\n        ": 1,
@@ -66,139 +23,38 @@
     "# Proprietary Software License for Abacum MCP Server\n        \n        **Copyright (c) 2025, Abacum. All rights reserved.**\n        \n        This software, including all source code, executables, and accompanying files (collectively, the \"Software\"), is the confidential and proprietary property of Abacum and its licensors.\n        \n        **1. Grant of Use:**\n        This license grants Abacum a non-exclusive, non-transferable, royalty-free, perpetual license to:\n        (a) Use the Software solely for Abacum's clients and internal business purposes.\n        (b) Copy the Software only as necessary for deployment, backup, and internal testing required for Abacum's internal business operations.\n        \n        **2. Restrictions:**\n        Except as expressly permitted by this license, Abacum is prohibited from:\n        (a) Redistributing, sublicensing, leasing, selling, or otherwise transferring the Software or any copies thereof to any third party.\n        (b) Modifying, adapting, reverse engineering, de-compiling, disassembling, or creating derivative works of the Software.\n        (c) Allowing any party outside of Abacum to access, view, or utilize the source code or executables.\n        \n        **3. No Warranty:**\n        The Software is provided \"AS IS,\" without warranty of any kind, express or implied. Abacum disclaims all warranties, including, but not limited to, the implied warranties of merchantability, fitness for a particular purpose, and non-infringement.": 1,
     "MIT License  Copyright (c) 2025 Simon Kansara  Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the \"Software\"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:  The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.  THE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.": 1,
     "MIT License\n        \n        Copyright (c) 2026 Scrape Technology\n        \n        Permission is hereby granted, free of charge, to any person obtaining a copy\n        of this software and associated documentation files (the \"Software\"), to deal\n        in the Software without restriction, including without limitation the rights\n        to use, copy, modify, merge, publish, distribute, sublicense, and/or sell\n        copies of the Software, and to permit persons to whom the Software is\n        furnished to do so, subject to the following conditions:\n        \n        The above copyright notice and this permission notice shall be included in all\n        copies or substantial portions of the Software.\n        \n        THE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\n        IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\n        FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\n        AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\n        LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\n        OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\n        SOFTWARE.": 1,
-    "MIT License\n        \n        Copyright (c) 2026 MEOK AI Labs\n        \n        Permission is hereby granted, free of charge, to any person obtaining a copy\n        of this software and associated documentation files (the \"Software\"), to deal\n        in the Software without restriction, including without limitation the rights\n        to use, copy, modify, merge, publish, distribute, sublicense, and/or sell\n        copies of the Software, and to permit persons to whom the Software is\n        furnished to do so, subject to the following conditions:\n        \n        The above copyright notice and this permission notice shall be included in all\n        copies or substantial portions of the Software.\n        \n        THE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\n        IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\n        FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\n        AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\n        LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\n        OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\n        SOFTWARE.": 2,
-    "GPL-3.0-or-later": 2,
-    "MIT License\n        \n        Copyright (c) 2026 Adelaida Diaz-Roa and contributors\n        \n        Permission is hereby granted, free of charge, to any person obtaining a copy\n        of this software and associated documentation files (the \"Software\"), to deal\n        in the Software without restriction, including without limitation the rights\n        to use, copy, modify, merge, publish, distribute, sublicense, and/or sell\n        copies of the Software, and to permit persons to whom the Software is\n        furnished to do so, subject to the following conditions:\n        \n        The above copyright notice and this permission notice shall be included in all\n        copies or substantial portions of the Software.\n        \n        THE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\n        IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\n        FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\n        AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\n        LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\n        OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\n        SOFTWARE.\n        ": 1,
-    "MIT License": 1,
-    "Apache 2.0": 1
+    "MIT License\n        \n        Copyright (c) 2026 MEOK AI Labs\n        \n        Permission is hereby granted, free of charge, to any person obtaining a copy\n        of this software and associated documentation files (the \"Software\"), to deal\n        in the Software without restriction, including without limitation the rights\n        to use, copy, modify, merge, publish, distribute, sublicense, and/or sell\n        copies of the Software, and to permit persons to whom the Software is\n        furnished to do so, subject to the following conditions:\n        \n        The above copyright notice and this permission notice shall be included in all\n        copies or substantial portions of the Software.\n        \n        THE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\n        IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\n        FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\n        AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\n        LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\n        OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\n        SOFTWARE.": 1,
+    "AGPL-3.0": 1
   },
   "risk_patterns": {
-    "description_mismatch": {
-      "count": 7,
-      "rate": 0.007
-    },
     "instruction_like": {
       "count": 2,
-      "rate": 0.002
+      "rate": 0.02
     },
     "missing_signature": {
-      "count": 800,
-      "rate": 0.8
-    },
-    "open_world_network": {
-      "count": 199,
-      "rate": 0.199
+      "count": 100,
+      "rate": 1.0
     },
     "scope_inflation": {
-      "count": 31,
-      "rate": 0.031
+      "count": 2,
+      "rate": 0.02
     },
     "untrusted_publisher": {
-      "count": 552,
-      "rate": 0.552
+      "count": 98,
+      "rate": 0.98
     }
   },
   "severity": {
-    "low": 963,
-    "medium": 35,
-    "high": 2
+    "low": 97,
+    "medium": 3
   },
   "per_source_risk": {
-    "github_mcp": {
-      "count": 300,
-      "mean_score": 0.133,
-      "max_score": 10.0,
-      "high_risk_count": 2
-    },
-    "npm_mcp": {
-      "count": 200,
-      "mean_score": 0.12,
-      "max_score": 6.0,
-      "high_risk_count": 0
-    },
     "pypi_mcp": {
-      "count": 150,
-      "mean_score": 0.16,
-      "max_score": 6.0,
-      "high_risk_count": 0
-    },
-    "hf_spaces_mcp": {
-      "count": 150,
-      "mean_score": 0.0,
-      "max_score": 0.0,
-      "high_risk_count": 0
-    },
-    "smithery_mcp": {
       "count": 100,
-      "mean_score": 1.2,
-      "max_score": 6.0,
-      "high_risk_count": 0
-    },
-    "official_registry_mcp": {
-      "count": 100,
-      "mean_score": 0.12,
+      "mean_score": 0.18,
       "max_score": 6.0,
       "high_risk_count": 0
     }
   },
-  "top_high_risk": [
-    {
-      "repo": "firecrawl/firecrawl-mcp-server",
-      "url": "https://github.com/firecrawl/firecrawl-mcp-server",
-      "license": "MIT",
-      "stars": 6401,
-      "code_availability": "source_available",
-      "policy_risk": "high",
-      "policy_decision": "hitl",
-      "policy_score": 10.0,
-      "findings": [
-        "C1_DECLARED_READONLY_BUT_WRITE_SCOPE"
-      ]
-    },
-    {
-      "repo": "idosal/git-mcp",
-      "url": "https://github.com/idosal/git-mcp",
-      "license": "Apache-2.0",
-      "stars": null,
-      "code_availability": "source_available",
-      "policy_risk": "high",
-      "policy_decision": "hitl",
-      "policy_score": 10.0,
-      "findings": [
-        "C1_DECLARED_READONLY_BUT_WRITE_SCOPE",
-        "C7_LEAST_PRIVILEGE_SCOPE"
-      ]
-    }
-  ],
-  "llm_review": {
-    "total_reviewed": 86,
-    "reviewer_agreement_rate": 0.7790697674418605,
-    "classifications": {
-      "L1": 66,
-      "L2": 20
-    },
-    "l2_plus_count": 20,
-    "l2_plus_artifacts": [
-      "GLips/Figma-Context-MCP",
-      "builderz-labs/mission-control",
-      "search-mcp-server",
-      "@iflow-mcp/garethcott-enhanced-postgres-mcp-server",
-      "@solvapay/mcp",
-      "linux-mcp-server",
-      "andysalvo/agentic-platform",
-      "mpprimo/ratings",
-      "HolmesGPT/holmesgpt",
-      "JoeanAmier/XHS-Downloader",
-      "NoeFabris/opencode-antigravity-auth",
-      "ParisNeo/lollms-webui",
-      "TraderAlice/OpenAlice",
-      "rafsilva85/skillflow",
-      "xqb/vibe-pay",
-      "zoro/orchestrator",
-      "ai.agentdm/agentdm",
-      "ai.cirra/salesforce-mcp",
-      "financial-datasets/mcp-server",
-      "JHSeo-git/my-first-mcp-2"
-    ]
-  }
+  "top_high_risk": []
 }
